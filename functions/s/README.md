@@ -23,7 +23,7 @@
     - Build command: CLOUDFLARE_ENV=production pnpm -F <PACKAGE_NAME> build
     - Deploy command: pnpm -F <PACKAGE_NAME> exec wrangler deploy
   - Build watch paths
-    - Include paths: functions/<PACKAGE_NAME>/\* functions/oui/\* functions/shared/\*
+    - Include paths: functions/<PACKAGE_NAME>/\* functions/oui/\* functions/shared/\* functions/ui/\*
 
 ## D1
 
