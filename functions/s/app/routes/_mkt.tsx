@@ -29,7 +29,7 @@ export default function RouteComponent({}: Route.ComponentProps) {
   );
 }
 
-export function SiteHeader() {
+function SiteHeader() {
   const routeLoaderData =
     useRouteLoaderData<Route.ComponentProps["loaderData"]>("routes/_mkt");
   return (
@@ -91,19 +91,13 @@ export function SiteHeader() {
   );
 }
 
-export function MainNav() {
+function MainNav() {
   return (
     <div className="mr-4 hidden md:flex">
       <Oui.Link href="/" className="mr-4 flex items-center gap-2 lg:mr-6">
-        {/* Assuming you have a logo component or SVG */}
         {/* <Logo className="h-6 w-6" /> */}
         <span className="hidden font-bold lg:inline-block">SaaS</span>
       </Oui.Link>
-      <Rac.Link href="/" className="mr-4 flex items-center gap-2 lg:mr-6">
-        {/* Assuming you have a logo component or SVG */}
-        {/* <Logo className="h-6 w-6" /> */}
-        <span className="hidden font-bold lg:inline-block">SaaS</span>
-      </Rac.Link>
       <nav className="flex items-center gap-4 text-sm xl:gap-6">
         <Oui.Link
           href="/pricing"
@@ -113,14 +107,6 @@ export function MainNav() {
         >
           Pricing
         </Oui.Link>
-        <Rac.Link
-          href="/pricing"
-          className={
-            "text-foreground/80 data-[hovered]:text-foreground/80 text-lg transition-colors"
-          }
-        >
-          Pricing
-        </Rac.Link>
       </nav>
     </div>
   );
