@@ -7,6 +7,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { IdentityMgr } from '~/lib/IdentityMgr'
 import * as ReactRouter from '~/lib/ReactRouter'
 
+/*
+#fetch https://react-spectrum.adobe.com/react-aria/GridList.html
+#fetch https://react-spectrum.adobe.com/react-aria/ListBox.html
+*/
+
 export const loader = ReactRouter.routeEffect(({ context }) =>
   Effect.gen(function* () {
     const account = yield* Effect.fromNullable(context.get(ReactRouter.appLoadContext).account)
