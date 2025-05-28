@@ -82,21 +82,15 @@ function SiteHeader() {
                   </Oui.Button>
                 </Rac.Form>
               ) : (
-                <Oui.Link
+                <Rac.Link
                   className={Oui.buttonClassName({ variant: "outline" })}
-                  // onClick with e.preventDefault() bypasses client-side routing (Rac.RouterProvider) to hit the Hono OpenAuth endpoint directly.
-                  // onPress seems to cause a page flash.
-                  // href is not needed since RAC will render as span with link role.
-                  onClick={(e: React.MouseEvent<Element>) => {
-                    e.preventDefault();
-                    if (routeLoaderData?.authenticateUrlAbsolute) {
-                      window.location.href =
-                        routeLoaderData.authenticateUrlAbsolute;
-                    }
+                  onPress={() => {
+                    // Bypass client-side routing (Rac.RouterProvider) to hit the Hono OpenAuth endpoint directly.
+                    window.location.href = "/authenticate";
                   }}
                 >
                   Sign In
-                </Oui.Link>
+                </Rac.Link>
               )}
             </nav>
           </div>

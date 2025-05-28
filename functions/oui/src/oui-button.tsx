@@ -9,7 +9,8 @@ import { tv } from "tailwind-variants";
  * Derived from shadcn Button
  */
 export const buttonStyles = tv({
-  base: "data-[focus-visible]:border-ring data-[focus-visible]:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium outline-none transition-all data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[focus-visible]:ring-[3px] [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  // Explicit cursor-pointer for Rac.Link structured with span.
+  base: "data-[focus-visible]:border-ring data-[focus-visible]:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium outline-none transition-all data-[disabled]:pointer-events-none data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 data-[focus-visible]:ring-[3px] [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   variants: {
     variant: {
       default:
@@ -42,19 +43,25 @@ export const buttonStyles = tv({
 });
 
 type T = Parameters<
-          Extract<
-            React.ComponentProps<typeof Rac.Button>["className"],
-            (...args: any) => any
-          >
-        >[0]
+  Extract<
+    React.ComponentProps<typeof Rac.Button>["className"],
+    (...args: any) => any
+  >
+>[0];
 
-export const buttonClassName = (props: VariantProps<typeof buttonStyles>) =>
-(renderProps: Partial<Parameters<
-          Extract<
-            React.ComponentProps<typeof Rac.Button>["className"],
-            (...args: any) => any
-          >
-        >[0]>) => buttonStyles({...renderProps, ...props });
+export const buttonClassName =
+  (props: VariantProps<typeof buttonStyles>) =>
+  (
+    renderProps: Partial<
+      Parameters<
+        Extract<
+          React.ComponentProps<typeof Rac.Button>["className"],
+          (...args: any) => any
+        >
+      >[0]
+    >,
+  ) =>
+    buttonStyles({ ...renderProps, ...props });
 
 export interface ButtonProps
   extends Rac.ButtonProps,
