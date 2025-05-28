@@ -77,7 +77,9 @@ function SiteHeader() {
                   method="post"
                   className="grid w-full max-w-sm gap-6"
                 >
-                  <Oui.Button type="submit">Sign Out</Oui.Button>
+                  <Oui.Button type="submit" variant="outline">
+                    Sign Out
+                  </Oui.Button>
                 </Rac.Form>
               ) : (
                 <Oui.Link
