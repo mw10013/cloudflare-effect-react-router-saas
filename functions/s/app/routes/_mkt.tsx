@@ -1,3 +1,4 @@
+import type { MouseEvent } from "react";
 import type { Route } from "./+types/_mkt";
 import * as Oui from "@workspace/oui";
 import { Effect } from "effect";
@@ -5,15 +6,19 @@ import * as Rac from "react-aria-components";
 import { Outlet, useRouteLoaderData } from "react-router";
 import * as ReactRouter from "~/lib/ReactRouter";
 
-export const loader = ReactRouter.routeEffect(({ context }: Route.LoaderArgs) =>
-  Effect.gen(function* () {
-    const appLoacContext = context.get(ReactRouter.appLoadContext);
-    yield* Effect.log({
-      message: "_mkt: loader",
-      sessionUser: appLoacContext.session.get("sessionUser"),
-    });
-    return { sessionUser: appLoacContext.session.get("sessionUser") };
-  }),
+export const loader = ReactRouter.routeEffect(
+  ({ request, context }: Route.LoaderArgs) =>
+    Effect.gen(function* () {
+      const appLoacContext = context.get(ReactRouter.appLoadContext);
+      yield* Effect.log({
+        message: "_mkt: loader",
+        sessionUser: appLoacContext.session.get("sessionUser"),
+      });
+      return {
+        sessionUser: appLoacContext.session.get("sessionUser"),
+        authenticateUrlAbsolute: `${new URL(request.url).origin}/authenticate`,
+      };
+    }),
 );
 
 export default function RouteComponent({}: Route.ComponentProps) {
@@ -75,13 +80,21 @@ function SiteHeader() {
                   <Oui.Button type="submit">Sign Out</Oui.Button>
                 </Rac.Form>
               ) : (
-                // Use <a> instead of Rac.Link to bypass Rac.RouterProvider and hit the Hono OpenAuth endpoint directly
-                <a
-                  href="/authenticate"
-                  className="text-foreground/80 hover:text-foreground/80 transition-colors"
+                <Oui.Link
+                  className={Oui.buttonClassName({ variant: "outline" })}
+                  // onClick with e.preventDefault() bypasses client-side routing (Rac.RouterProvider) to hit the Hono OpenAuth endpoint directly.
+                  // onPress seems to cause a page flash.
+                  // href is not needed since RAC will render as span with link role.
+                  onClick={(e: React.MouseEvent<Element>) => {
+                    e.preventDefault();
+                    if (routeLoaderData?.authenticateUrlAbsolute) {
+                      window.location.href =
+                        routeLoaderData.authenticateUrlAbsolute;
+                    }
+                  }}
                 >
                   Sign In
-                </a>
+                </Oui.Link>
               )}
             </nav>
           </div>
