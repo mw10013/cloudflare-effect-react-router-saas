@@ -128,7 +128,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="min-h-svh font-sans antialiased">
+      {/* shadcn app/layout RootLayout */}
+      <body className="background min-h-svh font-sans antialiased">
         <RouterProvider navigate={navigate} useHref={useHrefEx}>
           {children}
           <TailwindIndicator />

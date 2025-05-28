@@ -9,7 +9,7 @@ import { buttonStyles } from "./oui-button";
  */
 export const linkStyles = tv({
   extend: baseStyles,
-  base: "text-sm underline-offset-4",
+  base: "underline-offset-4",
   variants: {
     underline: {
       none: "no-underline",
