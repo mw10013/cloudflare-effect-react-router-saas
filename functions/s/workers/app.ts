@@ -8,6 +8,7 @@ import * as Q from '~/lib/Queue'
 import { appLoadContext, makeRuntime } from '../app/lib/ReactRouter'
 import * as Api from './Api'
 import * as OpenAuth from './OpenAuth'
+import type { Permission } from '~/lib/Policy'
 
 export { StripeDurableObject } from '~/lib/StripeDurableObject'
 
@@ -21,7 +22,8 @@ declare module 'react-router' {
     openAuth: ReturnType<typeof OpenAuth.make> & { client: Client; redirectUri: string }
     session: Session<SessionData>
     sessionAction: 'commit' | 'destroy'
-    account?: AccountWithUser
+    account?: AccountWithUser    
+    permissions: Set<Permission>;
   }
 }
 
@@ -49,7 +51,8 @@ export default {
             runtime,
             openAuth: { ...openAuth, client: openAuthClient, redirectUri: `${origin}/callback` },
             session: undefined as unknown as Session<SessionData>, // middleware populates
-            sessionAction: 'commit'
+            sessionAction: 'commit',
+            permissions: new Set<Permission>(),
           } satisfies AppLoadContext
         ]
       ])
