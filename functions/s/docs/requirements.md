@@ -65,8 +65,7 @@
 
   **Account Management (`account`)**
 
-  - `account:read_settings` - View general account settings.
-  - `account:edit_settings` - Modify general account settings.
+  - The 'admin' role has full capabilities for managing account settings.
 
   **Member Management (`member`)**
 
@@ -78,39 +77,18 @@
 
   **Billing Management (`billing`)**
 
-  - `billing:read_subscription` - View current subscription details and plan.
-  - `billing:manage_subscription` - Change subscription plan, update payment methods, or cancel the subscription.
-  - `billing:read_invoices` - View and download past invoices.
-
-  **Content Management (`content`)** (Represents general resources within the account)
-
-  - `content:create` - Create new content/resources.
-  - `content:read` - Read/view content/resources.
-  - `content:update` - Modify/edit existing content/resources.
-  - `content:delete` - Delete content/resources.
+  - The 'admin' role has full capabilities for managing billing, subscriptions, and invoices.
 
   ### Role Definitions (Customer Account Members)
 
   Each role grants a specific set of permissions from the catalogue:
 
-  - **admin** - Grants the following permissions:
-    - `account:read_settings`
-    - `account:edit_settings`
+  - **admin** - Grants full account and billing management capabilities, plus the following member management permissions:
     - `member:read_list`
     - `member:invite`
     - `member:revoke`
     - `member:edit_role`
-    - `billing:read_subscription`
-    - `billing:manage_subscription`
-    - `billing:read_invoices`
-    - `content:create`
-    - `content:read`
-    - `content:update`
-    - `content:delete`
   - **member** - Grants the following permissions:
-    - `content:create`
-    - `content:read`
-    - `content:update`
     - `member:read_list` (To see collaborators)
     - `account:read_settings` (To view non-sensitive account information)
 
