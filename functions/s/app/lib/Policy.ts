@@ -1,8 +1,9 @@
+import type { AccountMemberRole } from "~/lib/Domain";
 import { Context, Effect, Schema } from "effect";
 import { type NonEmptyReadonlyArray } from "effect/Array";
 import { UnknownException } from "effect/Cause";
 
-export type PermissionAction = "read" | "manage" | "delete";
+export type PermissionAction = "edit"; // Only 'edit' is explicitly used for a defined permission
 export type PermissionConfig = Record<string, ReadonlyArray<PermissionAction>>;
 
 export type InferPermissions<T extends PermissionConfig> = {
@@ -24,13 +25,27 @@ export const makePermissions = <T extends PermissionConfig>(
 // ==========================================
 
 const Permissions = makePermissions({
-  __test: ["read", "manage", "delete"],
+  member: ["edit"],
+  // __test: ["read", "manage", "delete"], // Retaining __test for now if it serves a purpose, or remove if not
 } as const);
 
 export const Permission = Schema.Literal(...Permissions).annotations({
   identifier: "Permission",
 });
 export type Permission = typeof Permission.Type;
+
+export const getAccountMemberRolePermissions = (
+  role: AccountMemberRole,
+): ReadonlySet<Permission> => {
+  const allRolePermissions: Record<
+    AccountMemberRole,
+    ReadonlySet<Permission>
+  > = {
+    admin: new Set<Permission>(["member:edit"]),
+    member: new Set<Permission>([]),
+  };
+  return allRolePermissions[role];
+};
 
 // ==========================================
 // Authentication Middleware
