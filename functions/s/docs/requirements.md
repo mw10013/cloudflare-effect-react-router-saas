@@ -54,22 +54,80 @@
 
 ## Role-Based Access Control
 
-- Account members are assigned one of the following roles:
-  - admin - Can manage account settings, billing, and members; full access to all account resources
-  - editor - Can create and modify content but cannot manage account settings or members
-  - viewer - Read-only access to account resources
+- Account members are assigned one of the following roles. These roles are defined by a specific set of granular permissions detailed below:
+
+  - admin
+  - editor
+  - viewer
+
+  ### Permissions Catalogue (Customer Accounts)
+
+  This catalogue lists the granular permissions available for customer accounts. Roles are composed of these permissions.
+
+  **Account Management (`account`)**
+
+  - `account:read_settings` - View general account settings.
+  - `account:edit_settings` - Modify general account settings.
+
+  **Member Management (`member`)**
+
+  - `member:read_list` - View the list of account members, their roles, and statuses.
+  - `member:invite` - Invite new customers to become account members.
+  - `member:revoke` - Remove an existing member from the account.
+  - `member:edit_role` - Change the role of an existing account member.
+  - `member:leave_account` - Allows a member to leave the account they are part of.
+
+  **Billing Management (`billing`)**
+
+  - `billing:read_subscription` - View current subscription details and plan.
+  - `billing:manage_subscription` - Change subscription plan, update payment methods, or cancel the subscription.
+  - `billing:read_invoices` - View and download past invoices.
+
+  **Content Management (`content`)** (Represents general resources within the account)
+
+  - `content:create` - Create new content/resources.
+  - `content:read` - Read/view content/resources.
+  - `content:update` - Modify/edit existing content/resources.
+  - `content:delete` - Delete content/resources.
+
+  ### Role Definitions (Customer Account Members)
+
+  Each role grants a specific set of permissions from the catalogue:
+
+  - **admin** - Grants the following permissions:
+    - `account:read_settings`
+    - `account:edit_settings`
+    - `member:read_list`
+    - `member:invite`
+    - `member:revoke`
+    - `member:edit_role`
+    - `billing:read_subscription`
+    - `billing:manage_subscription`
+    - `billing:read_invoices`
+    - `content:create`
+    - `content:read`
+    - `content:update`
+    - `content:delete`
+  - **editor** - Grants the following permissions:
+    - `content:create`
+    - `content:read`
+    - `content:update`
+    - `member:read_list` (To see collaborators)
+    - `account:read_settings` (To view non-sensitive account information)
+  - **viewer** - Grants the following permissions:
+    - `content:read`
+    - `member:read_list` (To see collaborators)
+    - `account:read_settings` (To view non-sensitive account information)
+    - `billing:read_subscription` (To view non-sensitive subscription information like plan name)
 
 - Access scope:
+
   - All roles are scoped to the entire account
   - Fine-grained resource-level permissions deferred for future implementation
 
 - Authorization checks:
-  - API endpoints should verify member role before allowing actions
-  - UI should conditionally render elements based on user's role
-  - Basic actions mapping:
-    - admin: all actions permitted
-    - editor: create/edit/view content, no account management
-    - viewer: view-only operations
+  - API endpoints should verify member role (and thereby their permissions) before allowing actions.
+  - UI should conditionally render elements based on user's role (and thereby their permissions).
 
 ## User Deletion Strategy
 
@@ -98,6 +156,13 @@
 - Staffers operate the administrative application
 - Staffers cannot be account members
 - Staffers cannot access /app/\*
+
+## Policy System
+
+- A Policy is a rule or set of conditions that determines if a user is permitted to perform an action or access a resource, often by evaluating required permissions.
+- **Permission**: A specific, granular capability within the system, typically expressed in a `domain:action` format (e.g., `account:manage_members`, `billing:view_invoices`, `content:edit`).
+  - Permissions form the fundamental units of access control.
+  - User roles (e.g., admin, editor, viewer) will be defined by the set of permissions they grant.
 
 ## Deferred Requirements
 
