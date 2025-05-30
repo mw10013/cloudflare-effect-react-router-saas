@@ -60,9 +60,36 @@ const accountMiddleware: Route.unstable_MiddlewareFunction =
       if (!account) {
         return yield* Effect.fail(redirect("/app"));
       }
+      const accountMember = yield* Effect.fromNullable(
+        appLoadContext.session.get("sessionUser"),
+      ).pipe(
+        Effect.flatMap((sessionUser) =>
+          IdentityMgr.getAccountMemberForAccount({
+            accountId,
+            userId: sessionUser.userId,
+          }),
+        ),
+        Effect.tap((accountMember) =>
+          Effect.log(
+            `accountMiddleware: Fetched account member for account ${accountId}`,
+            accountMember,
+          ),
+        ),
+        Effect.tapError((e) =>
+          Effect.logError(
+            `accountMiddleware: Error fetching account membership for account ${accountId}`,
+            e,
+          ),
+        ),
+        Effect.orElseSucceed(() => null),
+      );
+      if (!accountMember) {
+        return yield* Effect.fail(redirect("/app"));
+      }
       context.set(ReactRouter.appLoadContext, {
         ...appLoadContext,
         account,
+        accountMember,
       });
     }),
   );
