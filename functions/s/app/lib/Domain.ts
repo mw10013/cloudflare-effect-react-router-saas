@@ -44,8 +44,8 @@ export type AccountWithUser = Schema.Schema.Type<typeof AccountWithUser>
 export const AccountMemberStatus = Schema.Literal('pending', 'active') // Must align with AccountMemberStatus table
 export type AccountMemberStatus = Schema.Schema.Type<typeof UserType>
 
-export const AccountMemberRole = Schema.Literal('admin', 'editor', 'viewer') // Must align with AccountMemberRole table
-export type AccountMemberRole = Schema.Schema.Type<typeof UserType>
+export const AccountMemberRole = Schema.Literal('admin', 'member') // Must align with AccountMemberRole table
+export type AccountMemberRole = Schema.Schema.Type<typeof AccountMemberRole>
 
 export const AccountMember = Schema.Struct({
   accountMemberId: Schema.Number,

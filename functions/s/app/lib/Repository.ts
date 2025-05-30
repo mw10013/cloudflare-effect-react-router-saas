@@ -270,7 +270,7 @@ select json_group_array(json_object(
               .prepare(
                 `
 insert into AccountMember (userId, accountId, status, role) 
-values ((select userId from User where email = ?), ?, 'pending', 'editor') returning *							
+values ((select userId from User where email = ?), ?, 'pending', 'member') returning *							
 							`
               )
               .bind(email, accountId)

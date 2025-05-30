@@ -26,8 +26,7 @@ insert into
   AccountMemberRole (accountMemberRoleId)
 values
   ('admin'),
-  ('editor'),
-  ('viewer');
+  ('member');
 
 --> statement-breakpoint
 create table AccountMember (

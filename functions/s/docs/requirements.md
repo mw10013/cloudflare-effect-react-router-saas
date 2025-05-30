@@ -57,8 +57,7 @@
 - Account members are assigned one of the following roles. These roles are defined by a specific set of granular permissions detailed below:
 
   - admin
-  - editor
-  - viewer
+  - member
 
   ### Permissions Catalogue (Customer Accounts)
 
@@ -108,17 +107,12 @@
     - `content:read`
     - `content:update`
     - `content:delete`
-  - **editor** - Grants the following permissions:
+  - **member** - Grants the following permissions:
     - `content:create`
     - `content:read`
     - `content:update`
     - `member:read_list` (To see collaborators)
     - `account:read_settings` (To view non-sensitive account information)
-  - **viewer** - Grants the following permissions:
-    - `content:read`
-    - `member:read_list` (To see collaborators)
-    - `account:read_settings` (To view non-sensitive account information)
-    - `billing:read_subscription` (To view non-sensitive subscription information like plan name)
 
 - Access scope:
 
