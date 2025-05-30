@@ -1,17 +1,29 @@
-import * as HttpApiMiddleware from "@effect/platform/HttpApiMiddleware";
+import { Context, Effect, Schema } from "effect";
 import { type NonEmptyReadonlyArray } from "effect/Array";
-import * as Context from "effect/Context";
-import * as Effect from "effect/Effect";
-import * as Schema from "effect/Schema";
-import * as CustomHttpApiError from "./CustomHttpApiError.js";
-import { type UserId } from "./EntityIds.js";
-import * as internal from "./internal/policy.js";
+import { UnknownException } from "effect/Cause";
+
+export type PermissionAction = "read" | "manage" | "delete";
+export type PermissionConfig = Record<string, ReadonlyArray<PermissionAction>>;
+
+export type InferPermissions<T extends PermissionConfig> = {
+  [K in keyof T]: T[K][number] extends PermissionAction
+    ? `${K & string}:${T[K][number]}`
+    : never;
+}[keyof T];
+
+export const makePermissions = <T extends PermissionConfig>(
+  config: T,
+): Array<InferPermissions<T>> => {
+  return Object.entries(config).flatMap(([domain, actions]) =>
+    actions.map((action) => `${domain}:${action}` as InferPermissions<T>),
+  );
+};
 
 // ==========================================
 // Permissions
 // ==========================================
 
-const Permissions = internal.makePermissions({
+const Permissions = makePermissions({
   __test: ["read", "manage", "delete"],
 } as const);
 
@@ -28,18 +40,19 @@ export class CurrentUser extends Context.Tag("CurrentUser")<
   CurrentUser,
   {
     readonly sessionId: string;
-    readonly userId: UserId;
+    // readonly userId: UserId;
+    readonly userId: number;
     readonly permissions: Set<Permission>;
   }
 >() {}
 
-export class UserAuthMiddleware extends HttpApiMiddleware.Tag<UserAuthMiddleware>()(
-  "UserAuthMiddleware",
-  {
-    failure: CustomHttpApiError.Unauthorized,
-    provides: CurrentUser,
-  },
-) {}
+// export class UserAuthMiddleware extends HttpApiMiddleware.Tag<UserAuthMiddleware>()(
+//   "UserAuthMiddleware",
+//   {
+//     failure: CustomHttpApiError.Unauthorized,
+//     provides: CurrentUser,
+//   },
+// ) {}
 
 // ==========================================
 // Policy
@@ -48,11 +61,11 @@ export class UserAuthMiddleware extends HttpApiMiddleware.Tag<UserAuthMiddleware
 /**
  * Represents an access policy that can be evaluated against the current user.
  * A policy is a function that returns Effect.void if access is granted,
- * or fails with a CustomHttpApiError.Forbidden if access is denied.
+ * or fails with an UnknownException if access is denied.
  */
 type Policy<E = never, R = never> = Effect.Effect<
   void,
-  CustomHttpApiError.Forbidden | E,
+  UnknownException | E, // Updated to use UnknownException
   CurrentUser | R
 >;
 
@@ -64,14 +77,12 @@ export const policy = <E, R>(
   message?: string,
 ): Policy<E, R> =>
   Effect.flatMap(CurrentUser, (user) =>
-    Effect.flatMap(predicate(user), (result) =>
-      result
-        ? Effect.void
-        : Effect.fail(
-            message !== undefined
-              ? new CustomHttpApiError.Forbidden({ message })
-              : new CustomHttpApiError.Forbidden(),
-          ),
+    Effect.flatMap(
+      predicate(user),
+      (result) =>
+        result
+          ? Effect.void
+          : Effect.fail(new UnknownException(undefined, message)), // Updated to use new UnknownException
     ),
   );
 
