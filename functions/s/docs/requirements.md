@@ -72,7 +72,6 @@
   - `member:read_list` - View the list of account members, their roles, and statuses.
   - `member:invite` - Invite new customers to become account members.
   - `member:revoke` - Remove an existing member from the account.
-  - `member:edit_role` - Change the role of an existing account member.
   - `member:leave_account` - Allows a member to leave the account they are part of.
 
   **Billing Management (`billing`)**
@@ -87,10 +86,9 @@
     - `member:read_list`
     - `member:invite`
     - `member:revoke`
-    - `member:edit_role`
   - **member** - Grants the following permissions:
     - `member:read_list` (To see collaborators)
-    - `account:read_settings` (To view non-sensitive account information)
+    - `member:leave_account`
 
 - Access scope:
 
@@ -131,10 +129,12 @@
 
 ## Policy System
 
-- A Policy is a rule or set of conditions that determines if a user is permitted to perform an action or access a resource, often by evaluating required permissions.
-- **Permission**: A specific, granular capability within the system, typically expressed in a `domain:action` format (e.g., `account:manage_members`, `billing:view_invoices`, `content:edit`).
-  - Permissions form the fundamental units of access control.
-  - User roles (e.g., admin, editor, viewer) will be defined by the set of permissions they grant.
+- A Policy is a rule or set of conditions that determines if a user is permitted to perform an action or access a resource. Policies can be based on:
+  - **Role-based permissions**: Granular capabilities (e.g., `member:invite`) assigned to user roles.
+  - **Attribute-Based Access Control (ABAC)**: Contextual information about the user, the resource being accessed, and the environment (e.g., a user can only accept an invitation specifically addressed to them and currently in a 'pending' state).
+- **Permission**: A specific, granular capability within the system, typically expressed in a `domain:action` format (e.g., `member:invite`).
+  - Permissions form the fundamental units of role-based access control.
+  - User roles (e.g., admin, member) are defined by the set of permissions they grant.
 
 ## Deferred Requirements
 
