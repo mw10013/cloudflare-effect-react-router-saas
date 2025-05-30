@@ -91,6 +91,7 @@
 - Authorization checks:
   - API endpoints should verify member role (and thereby their permissions) before allowing actions.
   - UI should conditionally render elements based on user's role (and thereby their permissions).
+  - Permissions are determined based on the user's role in the context of the current account being accessed. These permissions are made available on a per-request basis within the application's load context to facilitate these checks.
 
 ## User Deletion Strategy
 
