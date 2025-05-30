@@ -69,10 +69,7 @@
 
   **Member Management (`member`)**
 
-  - `member:read_list` - View the list of account members, their roles, and statuses.
-  - `member:invite` - Invite new customers to become account members.
-  - `member:revoke` - Remove an existing member from the account.
-  - `member:leave_account` - Allows a member to leave the account they are part of.
+  - `member:edit` - Invite new members and revoke existing members' access.
 
   **Billing Management (`billing`)**
 
@@ -83,12 +80,8 @@
   Each role grants a specific set of permissions from the catalogue:
 
   - **admin** - Grants full account and billing management capabilities, plus the following member management permissions:
-    - `member:read_list`
-    - `member:invite`
-    - `member:revoke`
-  - **member** - Grants the following permissions:
-    - `member:read_list` (To see collaborators)
-    - `member:leave_account`
+    - `member:edit`
+  - **member** - This role allows members to participate in the account. Specific actions like leaving the account are governed by attribute-based access control (e.g., a member can leave an account if they are not the owner).
 
 - Access scope:
 
