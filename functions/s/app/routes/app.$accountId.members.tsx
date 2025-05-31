@@ -11,6 +11,7 @@ import {
 } from "@workspace/ui/components/ui/card";
 import { Effect, Schema } from "effect";
 import * as Rac from "react-aria-components";
+import { redirect } from "react-router";
 import { IdentityMgr } from "~/lib/IdentityMgr";
 import * as ReactRouter from "~/lib/ReactRouter";
 
@@ -79,7 +80,6 @@ export const action = ReactRouter.routeEffect(
               )),
             }),
           };
-          break;
         case "revoke":
           yield* IdentityMgr.revokeAccountMembership({
             accountMemberId: formData.accountMemberId,
@@ -88,16 +88,11 @@ export const action = ReactRouter.routeEffect(
             message: `Account membership revoked: accountMemberId: ${formData.accountMemberId}`,
             formData,
           };
-          break;
         case "leave":
           yield* IdentityMgr.leaveAccountMembership({
             accountMemberId: formData.accountMemberId,
           });
-          return {
-            message: `Account membership left: accountMemberId: ${formData.accountMemberId}`,
-            formData,
-          };
-          break;
+          return redirect("/app");
         default:
           return yield* Effect.fail(new Error("Invalid intent"));
       }
