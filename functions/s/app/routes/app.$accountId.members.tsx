@@ -52,7 +52,10 @@ export const action = ReactRouter.routeEffect(
           ),
         }),
         Schema.Struct({
-          intent: Schema.Literal("revoke"),
+          intent: Schema.Union(
+            Schema.Literal("revoke"),
+            Schema.Literal("leave"),
+          ),
           accountMemberId: Schema.NumberFromString,
         }),
       );
@@ -83,6 +86,15 @@ export const action = ReactRouter.routeEffect(
           });
           return {
             message: `Account membership revoked: accountMemberId: ${formData.accountMemberId}`,
+            formData,
+          };
+          break;
+        case "leave":
+          yield* IdentityMgr.leaveAccountMembership({
+            accountMemberId: formData.accountMemberId,
+          });
+          return {
+            message: `Account membership left: accountMemberId: ${formData.accountMemberId}`,
             formData,
           };
           break;
