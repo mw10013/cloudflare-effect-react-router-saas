@@ -23,11 +23,13 @@ import * as ReactRouter from "~/lib/ReactRouter";
 export const loader = ReactRouter.routeEffect(({ context }) =>
   Effect.gen(function* () {
     const loadContext = context.get(ReactRouter.appLoadContext);
-    const account = yield* Effect.fromNullable(loadContext.account);
-    const members = yield* IdentityMgr.getAccountMembers(account);
+    const accountMember = yield* Effect.fromNullable(loadContext.accountMember);
+    const members = yield* IdentityMgr.getAccountMembers(accountMember.account);
     return {
       members,
-      accountId: account.accountId,
+      userId: accountMember.userId,
+      accountId: accountMember.accountId,
+      ownerId: accountMember.account.userId,
       permissions: Array.from(loadContext.permissions) as Permission[],
     };
   }),
