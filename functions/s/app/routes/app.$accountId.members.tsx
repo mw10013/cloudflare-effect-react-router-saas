@@ -123,6 +123,7 @@ export default function RouteComponent({
               label="Email Addresses"
               type="text"
               placeholder="e.g., user1@example.com, user2@example.com"
+              isDisabled={!canInviteMembers}
             />
           </CardContent>
           <CardFooter className="flex justify-end">
