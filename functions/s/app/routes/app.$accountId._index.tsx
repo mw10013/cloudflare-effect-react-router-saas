@@ -20,6 +20,8 @@ export const loader = ReactRouter.routeEffect(({ context }) =>
       context.get(ReactRouter.appLoadContext).session.get("sessionUser"),
     );
     return {
+      sessionUser,
+      accountMember: context.get(ReactRouter.appLoadContext).accountMember,
       invitations: yield* IdentityMgr.getInvitations(sessionUser),
     };
   }),
@@ -53,13 +55,14 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
 );
 
 export default function RouteComponent({
-  loaderData: { invitations },
+  loaderData: { invitations, ...loaderData },
 }: Route.ComponentProps) {
   const submit = useSubmit();
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const nativeEvent = event.nativeEvent;
+    // https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent
     if (nativeEvent instanceof SubmitEvent) {
       const submitter = nativeEvent.submitter;
       if (
@@ -143,26 +146,7 @@ export default function RouteComponent({
           </CardContent>
         </Card>
       )}
-      {/* <Card>
-        <CardHeader>
-          <CardTitle>Accounts</CardTitle>
-          <CardDescription>Accounts you are a member of.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ul className="flex flex-col gap-4">
-            {accounts.map((a) => (
-              <li key={a.accountId} className="flex items-center justify-between gap-4 border-b pb-4 last:border-b-0 last:pb-0">
-                <div className="flex-grow">
-                  <Rac.Link href={`/app/${a.accountId}`} className="text-sm font-medium hover:underline">
-                    {a.user.email}
-                  </Rac.Link>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card> */}
-      <pre className="text-xs">{JSON.stringify({ invitations }, null, 2)}</pre>
+      <pre>{JSON.stringify({ loaderData }, null, 2)}</pre>
     </div>
   );
 }

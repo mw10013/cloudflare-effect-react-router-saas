@@ -16,7 +16,6 @@ import type { SessionData } from "./lib/Domain";
 import { createWorkersKVSessionStorage } from "@react-router/cloudflare";
 import { Effect } from "effect";
 import * as ReactRouter from "~/lib/ReactRouter";
-import { TailwindIndicator } from "./components/tailwind-indicator";
 
 declare module "react-aria-components" {
   interface RouterConfig {
@@ -132,7 +131,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body className="background min-h-svh font-sans antialiased">
         <RouterProvider navigate={navigate} useHref={useHrefEx}>
           {children}
-          <TailwindIndicator />
           <ScrollRestoration />
           <Scripts />
         </RouterProvider>

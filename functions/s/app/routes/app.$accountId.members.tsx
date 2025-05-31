@@ -26,10 +26,11 @@ export const loader = ReactRouter.routeEffect(({ context }) =>
     const accountMember = yield* Effect.fromNullable(loadContext.accountMember);
     const members = yield* IdentityMgr.getAccountMembers(accountMember.account);
     return {
-      members,
+      accountMember,
       userId: accountMember.userId,
       ownerId: accountMember.account.userId,
       canEdit: loadContext.permissions.has("member:edit"),
+      members,
     };
   }),
 );
@@ -109,7 +110,7 @@ export const action = ReactRouter.routeEffect(
  * | Leave account  | No            | N/A     | Yes (if not owner)        |
  */
 export default function RouteComponent({
-  loaderData: { members, userId, ownerId, canEdit },
+  loaderData: { members, userId, ownerId, canEdit, accountMember },
   actionData,
 }: Route.ComponentProps) {
   return (
@@ -243,6 +244,7 @@ export default function RouteComponent({
         {JSON.stringify(
           {
             actionData,
+            accountMember,
             members,
             userId,
             ownerId,
