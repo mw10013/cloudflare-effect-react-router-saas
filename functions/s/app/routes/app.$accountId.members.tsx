@@ -92,6 +92,15 @@ export const action = ReactRouter.routeEffect(
     }),
 );
 
+/**
+ * ## Member Management Capabilities
+ *
+ * | Action             | Account Owner | Permission: `member:edit` | ABAC: User is this Member |
+ * | :----------------- | :------------ | :------------------------ | :------------------------ |
+ * | Invite members     | N/A           | Yes                       | N/A                       |
+ * | Revoke member      | N/A           | Yes                       | N/A                       |
+ * | Leave account      | No            | N/A                       | Yes (if not owner)        |
+ */
 export default function RouteComponent({
   loaderData: { members, accountId, permissions },
   actionData,
