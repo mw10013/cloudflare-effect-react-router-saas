@@ -30,6 +30,7 @@ import * as Rac from "react-aria-components";
 import { Outlet, redirect, useNavigate } from "react-router";
 import { Account, AccountWithUser } from "~/lib/Domain";
 import { IdentityMgr } from "~/lib/IdentityMgr";
+import * as Policy from "~/lib/Policy";
 import * as ReactRouter from "~/lib/ReactRouter";
 
 const accountMiddleware: Route.unstable_MiddlewareFunction =
@@ -86,10 +87,12 @@ const accountMiddleware: Route.unstable_MiddlewareFunction =
       if (!accountMember) {
         return yield* Effect.fail(redirect("/app"));
       }
+
       context.set(ReactRouter.appLoadContext, {
         ...appLoadContext,
         account,
         accountMember,
+        permissions: Policy.getAccountMemberRolePermissions(accountMember.role),
       });
     }),
   );
