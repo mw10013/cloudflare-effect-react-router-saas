@@ -1,4 +1,3 @@
-import type { Permission } from "~/lib/Policy";
 import type { Route } from "./+types/app.$accountId.members";
 import * as Oui from "@workspace/oui";
 import { SchemaEx } from "@workspace/shared";
@@ -28,9 +27,8 @@ export const loader = ReactRouter.routeEffect(({ context }) =>
     return {
       members,
       userId: accountMember.userId,
-      accountId: accountMember.accountId,
       ownerId: accountMember.account.userId,
-      permissions: Array.from(loadContext.permissions) as Permission[],
+      canEdit: loadContext.permissions.has("member:edit"),
     };
   }),
 );
@@ -104,12 +102,9 @@ export const action = ReactRouter.routeEffect(
  * | Leave account      | No            | N/A                       | Yes (if not owner)        |
  */
 export default function RouteComponent({
-  loaderData: { members, accountId, permissions, userId, ownerId },
+  loaderData: { members, userId, ownerId, canEdit },
   actionData,
 }: Route.ComponentProps) {
-  const canInviteMembers = permissions.includes("member:edit");
-  const canEditMembers = permissions.includes("member:edit");
-
   return (
     <div className="space-y-8">
       <header>
@@ -136,7 +131,7 @@ export default function RouteComponent({
               label="Email Addresses"
               type="text"
               placeholder="e.g., user1@example.com, user2@example.com"
-              isDisabled={!canInviteMembers}
+              isDisabled={!canEdit}
             />
           </CardContent>
           <CardFooter className="flex justify-end">
@@ -145,9 +140,9 @@ export default function RouteComponent({
               name="intent"
               value="invite"
               variant="outline"
-              isDisabled={!canInviteMembers}
+              isDisabled={!canEdit}
               aria-label={
-                canInviteMembers
+                canEdit
                   ? "Send Invites"
                   : "Invite action disabled: Requires 'member:edit' permission"
               }
@@ -171,7 +166,7 @@ export default function RouteComponent({
               {members.map((member) => {
                 const isCurrentUser = member.user.userId === userId;
                 const isOwner = member.user.userId === ownerId;
-                const canRevokeThisMember = canEditMembers && !isOwner;
+                const canRevokeThisMember = canEdit && !isOwner;
                 const canLeaveAccount = isCurrentUser && !isOwner;
 
                 return (
@@ -183,19 +178,9 @@ export default function RouteComponent({
                       <span className="text-sm font-medium">
                         {member.user.email}
                       </span>
-                      {isOwner && (
-                        <span className="text-muted-foreground text-xs">
-                          Account Owner
-                        </span>
-                      )}
-                      {isCurrentUser && !isOwner && (
-                        <span className="text-muted-foreground text-xs">
-                          This is you
-                        </span>
-                      )}
                     </div>
                     <div className="flex gap-2">
-                      {isCurrentUser ? (
+                      {isCurrentUser && canLeaveAccount && (
                         <Rac.Form method="post">
                           <input
                             type="hidden"
@@ -208,17 +193,13 @@ export default function RouteComponent({
                             value="leave"
                             variant="outline"
                             size="sm"
-                            isDisabled={!canLeaveAccount}
-                            aria-label={
-                              !canLeaveAccount
-                                ? "Leave account action disabled: Account owner cannot leave"
-                                : "Leave this account"
-                            }
+                            aria-label="Leave this account"
                           >
-                            Leave Account
+                            Leave
                           </Oui.Button>
                         </Rac.Form>
-                      ) : (
+                      )}
+                      {!isCurrentUser && canRevokeThisMember && (
                         <Rac.Form method="post">
                           <input
                             type="hidden"
@@ -231,16 +212,9 @@ export default function RouteComponent({
                             value="revoke"
                             variant="outline"
                             size="sm"
-                            isDisabled={!canRevokeThisMember}
-                            aria-label={
-                              !canEditMembers
-                                ? "Revoke action disabled: Requires 'member:edit' permission"
-                                : isOwner
-                                  ? "Revoke action disabled: Cannot revoke account owner"
-                                  : `Revoke access for ${member.user.email}`
-                            }
+                            aria-label={`Revoke access for ${member.user.email}`}
                           >
-                            Revoke Access
+                            Revoke
                           </Oui.Button>
                         </Rac.Form>
                       )}
@@ -258,7 +232,13 @@ export default function RouteComponent({
       </Card>
       <pre>
         {JSON.stringify(
-          { actionData, members, accountId, permissions, userId, ownerId },
+          {
+            actionData,
+            members,
+            userId,
+            ownerId,
+            canEdit,
+          },
           null,
           2,
         )}
