@@ -417,31 +417,28 @@ where accountMemberId = ?`,
           d1.run,
         ),
 
+      /**
+       * Deletes an account member.
+       * This operation will not delete the account owner.
+       */
       deleteAccountMember: ({
         accountMemberId,
-        skipIfOwner,
-      }: Pick<AccountMember, "accountMemberId"> & { skipIfOwner?: boolean }) =>
-        skipIfOwner
-          ? pipe(
-              d1
-                .prepare(
-                  `
+      }: Pick<AccountMember, "accountMemberId">) =>
+        pipe(
+          d1
+            .prepare(
+              `
 with t as (
-	select accountMemberId
+	select am.accountMemberId
 	from AccountMember am inner join Account a on a.accountId = am.accountId
-	where am.accountMemberId = ? and a.userId <> am.userId)
+	where am.accountMemberId = ?1 and a.userId <> am.userId
+)
 delete from AccountMember
 where accountMemberId in (select accountMemberId from t)`,
-                )
-                .bind(accountMemberId),
-              d1.run,
             )
-          : pipe(
-              d1
-                .prepare(`delete from AccountMember where accountMemberId = ?`)
-                .bind(accountMemberId),
-              d1.run,
-            ),
+            .bind(accountMemberId),
+          d1.run,
+        ),
 
       /**
        * Identifies emails that cannot be invited to an account for various reasons.
