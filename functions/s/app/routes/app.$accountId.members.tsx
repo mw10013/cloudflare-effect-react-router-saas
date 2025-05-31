@@ -104,10 +104,12 @@ export const action = ReactRouter.routeEffect(
  * | Leave account      | No            | N/A                       | Yes (if not owner)        |
  */
 export default function RouteComponent({
-  loaderData: { members, accountId, permissions },
+  loaderData: { members, accountId, permissions, userId, ownerId },
   actionData,
 }: Route.ComponentProps) {
   const canInviteMembers = permissions.includes("member:edit");
+  const canEditMembers = permissions.includes("member:edit");
+
   return (
     <div className="space-y-8">
       <header>
@@ -166,32 +168,86 @@ export default function RouteComponent({
         <CardContent>
           {members && members.length > 0 ? (
             <ul className="divide-border divide-y">
-              {members.map((member) => (
-                <li
-                  key={member.accountMemberId}
-                  className="flex flex-wrap items-center justify-between gap-4 py-4"
-                >
-                  <span className="text-sm font-medium">
-                    {member.user.email}
-                  </span>
-                  <Rac.Form method="post">
-                    <input
-                      type="hidden"
-                      name="accountMemberId"
-                      value={member.accountMemberId}
-                    />
-                    <Oui.Button
-                      type="submit"
-                      name="intent"
-                      value="revoke"
-                      variant="outline"
-                      size="sm"
-                    >
-                      Revoke Access
-                    </Oui.Button>
-                  </Rac.Form>
-                </li>
-              ))}
+              {members.map((member) => {
+                const isCurrentUser = member.user.userId === userId;
+                const isOwner = member.user.userId === ownerId;
+                const canRevokeThisMember = canEditMembers && !isOwner;
+                const canLeaveAccount = isCurrentUser && !isOwner;
+
+                return (
+                  <li
+                    key={member.accountMemberId}
+                    className="flex flex-wrap items-center justify-between gap-4 py-4"
+                  >
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium">
+                        {member.user.email}
+                      </span>
+                      {isOwner && (
+                        <span className="text-muted-foreground text-xs">
+                          Account Owner
+                        </span>
+                      )}
+                      {isCurrentUser && !isOwner && (
+                        <span className="text-muted-foreground text-xs">
+                          This is you
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex gap-2">
+                      {isCurrentUser ? (
+                        <Rac.Form method="post">
+                          <input
+                            type="hidden"
+                            name="accountMemberId"
+                            value={member.accountMemberId}
+                          />
+                          <Oui.Button
+                            type="submit"
+                            name="intent"
+                            value="leave"
+                            variant="outline"
+                            size="sm"
+                            isDisabled={!canLeaveAccount}
+                            aria-label={
+                              !canLeaveAccount
+                                ? "Leave account action disabled: Account owner cannot leave"
+                                : "Leave this account"
+                            }
+                          >
+                            Leave Account
+                          </Oui.Button>
+                        </Rac.Form>
+                      ) : (
+                        <Rac.Form method="post">
+                          <input
+                            type="hidden"
+                            name="accountMemberId"
+                            value={member.accountMemberId}
+                          />
+                          <Oui.Button
+                            type="submit"
+                            name="intent"
+                            value="revoke"
+                            variant="outline"
+                            size="sm"
+                            isDisabled={!canRevokeThisMember}
+                            aria-label={
+                              !canEditMembers
+                                ? "Revoke action disabled: Requires 'member:edit' permission"
+                                : isOwner
+                                  ? "Revoke action disabled: Cannot revoke account owner"
+                                  : `Revoke access for ${member.user.email}`
+                            }
+                          >
+                            Revoke Access
+                          </Oui.Button>
+                        </Rac.Form>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           ) : (
             <p className="text-muted-foreground text-sm">
@@ -202,7 +258,7 @@ export default function RouteComponent({
       </Card>
       <pre>
         {JSON.stringify(
-          { actionData, members, accountId, permissions },
+          { actionData, members, accountId, permissions, userId, ownerId },
           null,
           2,
         )}
