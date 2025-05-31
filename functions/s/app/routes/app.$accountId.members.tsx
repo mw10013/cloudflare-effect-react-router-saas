@@ -131,8 +131,8 @@ export default function RouteComponent({
             Enter email addresses separated by commas to send invitations.
           </CardDescription>
         </CardHeader>
-        <Rac.Form method="post">
-          <CardContent className="space-y-4">
+        <CardContent>
+          <Rac.Form method="post" className="grid gap-6">
             <Oui.TextFieldEx
               name="emails"
               label="Email Addresses"
@@ -140,8 +140,6 @@ export default function RouteComponent({
               placeholder="e.g., user1@example.com, user2@example.com"
               isDisabled={!canEdit}
             />
-          </CardContent>
-          <CardFooter className="flex justify-end">
             <Oui.Button
               type="submit"
               name="intent"
@@ -153,11 +151,12 @@ export default function RouteComponent({
                   ? "Send Invites"
                   : "Invite action disabled: Requires 'member:edit' permission"
               }
+              className="justify-self-end"
             >
               Send Invites
             </Oui.Button>
-          </CardFooter>
-        </Rac.Form>
+          </Rac.Form>
+        </CardContent>
       </Card>
 
       <Card>
