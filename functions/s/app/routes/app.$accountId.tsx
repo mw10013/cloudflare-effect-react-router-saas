@@ -28,7 +28,12 @@ import {
 } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { Outlet, redirect, useNavigate } from "react-router";
-import { Account, AccountWithUser } from "~/lib/Domain";
+import {
+  Account,
+  AccountMemberWithAccount,
+  AccountWithUser,
+  SessionUser,
+} from "~/lib/Domain";
 import { IdentityMgr } from "~/lib/IdentityMgr";
 import * as Policy from "~/lib/Policy";
 import * as ReactRouter from "~/lib/ReactRouter";
@@ -106,19 +111,24 @@ export const loader = ReactRouter.routeEffect(({ context }) =>
       appLoadContext.session.get("sessionUser"),
     );
     return {
-      account: yield* Effect.fromNullable(appLoadContext.account),
+      accountMember: yield* Effect.fromNullable(appLoadContext.accountMember),
       accounts: yield* IdentityMgr.getAccounts(sessionUser),
+      sessionUser,
     };
   }),
 );
 
 export default function RouteComponent({
-  loaderData: { account, accounts },
+  loaderData: { accountMember, accounts, sessionUser },
 }: Route.ComponentProps) {
   return (
     <div className="">
       <SidebarProvider>
-        <AppSidebar account={account} accounts={accounts} />
+        <AppSidebar
+          accountMember={accountMember}
+          accounts={accounts}
+          sessionUser={sessionUser}
+        />
         <main>
           <SidebarTrigger />
           <div className="flex flex-col gap-2 p-6">
@@ -131,24 +141,26 @@ export default function RouteComponent({
 }
 
 export function AppSidebar({
-  account,
+  accountMember,
   accounts,
+  sessionUser,
 }: {
-  account: AccountWithUser;
+  accountMember: AccountMemberWithAccount;
   accounts: AccountWithUser[];
+  sessionUser: SessionUser;
 }) {
   const items = [
     {
       id: "Account Home",
-      href: `/app/${account.accountId}`,
+      href: `/app/${accountMember.account.accountId}`,
     },
     {
       id: "Members",
-      href: `/app/${account.accountId}/members`,
+      href: `/app/${accountMember.account.accountId}/members`,
     },
     {
       id: "Billing",
-      href: `/app/${account.accountId}/billing`,
+      href: `/app/${accountMember.account.accountId}/billing`,
     },
   ];
 
@@ -168,7 +180,7 @@ export function AppSidebar({
           {accounts.length > 0 && (
             <AccountSwitcher
               accounts={accounts}
-              currentAccountId={account.accountId}
+              currentAccountId={accountMember.account.accountId}
             />
           )}
         </div>
@@ -189,9 +201,8 @@ export function AppSidebar({
       <SidebarFooter>
         <NavUser
           user={{
-            // NavUser now uses the user from the current account
-            name: account.user.name ?? account.user.email,
-            email: account.user.email,
+            name: sessionUser.email,
+            email: sessionUser.email,
             avatar: "/avatars/shadcn.jpg",
           }}
         />
@@ -204,7 +215,7 @@ export function AccountSwitcher({
   accounts,
   currentAccountId,
 }: {
-  accounts: AccountWithUser[]; // Updated prop type
+  accounts: AccountWithUser[];
   currentAccountId: number;
 }) {
   const navigate = useNavigate();
@@ -213,13 +224,10 @@ export function AccountSwitcher({
   );
 
   if (!activeAccount) {
-    // This case should ideally be handled by the check in AppSidebar
-    // or if accounts list is empty.
     return null;
   }
 
   const handleAccountSelection = (key: React.Key) => {
-    // key will be accountId as a string
     navigate(`/app/${key}`);
   };
 
@@ -233,7 +241,6 @@ export function AccountSwitcher({
           className="h-auto flex-1 items-center justify-between p-0 text-left font-medium data-[hovered]:bg-transparent"
         >
           <div className="grid leading-tight">
-            {/* Display user's email as the account name */}
             <span className="truncate font-medium">
               {activeAccount.user.email}
             </span>
