@@ -86,6 +86,10 @@ export class IdentityMgr extends Effect.Service<IdentityMgr>()("IdentityMgr", {
         accountMemberId,
       }: Pick<AccountMember, "accountMemberId">) =>
         repository.deleteAccountMember({ accountMemberId }),
+      leaveAccountMembership: ({
+        accountMemberId,
+      }: Pick<AccountMember, "accountMemberId">) =>
+        repository.deleteAccountMember({ accountMemberId }),
 
       getAccountMembers: ({ accountId }: Pick<Account, "accountId">) =>
         repository.getAccountMembers({ accountId }),
