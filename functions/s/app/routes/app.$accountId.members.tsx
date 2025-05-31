@@ -1,3 +1,4 @@
+import type { Permission } from "~/lib/Policy";
 import type { Route } from "./+types/app.$accountId.members";
 import * as Oui from "@workspace/oui";
 import { SchemaEx } from "@workspace/shared";
@@ -21,16 +22,13 @@ import * as ReactRouter from "~/lib/ReactRouter";
 
 export const loader = ReactRouter.routeEffect(({ context }) =>
   Effect.gen(function* () {
-    const account = yield* Effect.fromNullable(
-      context.get(ReactRouter.appLoadContext).account,
-    );
+    const loadContext = context.get(ReactRouter.appLoadContext);
+    const account = yield* Effect.fromNullable(loadContext.account);
     const members = yield* IdentityMgr.getAccountMembers(account);
-    console.log(`permissions`, {
-      permissions: context.get(ReactRouter.appLoadContext).permissions,
-    });
     return {
       members,
       accountId: account.accountId,
+      permissions: Array.from(loadContext.permissions) as Permission[],
     };
   }),
 );
@@ -95,9 +93,10 @@ export const action = ReactRouter.routeEffect(
 );
 
 export default function RouteComponent({
-  loaderData: { members, accountId },
+  loaderData: { members, accountId, permissions },
   actionData,
 }: Route.ComponentProps) {
+  const canInviteMembers = permissions.includes("member:edit");
   return (
     <div className="space-y-8">
       <header>
@@ -132,6 +131,12 @@ export default function RouteComponent({
               name="intent"
               value="invite"
               variant="outline"
+              isDisabled={!canInviteMembers}
+              aria-label={
+                canInviteMembers
+                  ? "Send Invites"
+                  : "Invite action disabled: Requires 'member:edit' permission"
+              }
             >
               Send Invites
             </Oui.Button>
@@ -183,7 +188,13 @@ export default function RouteComponent({
           )}
         </CardContent>
       </Card>
-      <pre>{JSON.stringify({ actionData, members, accountId }, null, 2)}</pre>
+      <pre>
+        {JSON.stringify(
+          { actionData, members, accountId, permissions },
+          null,
+          2,
+        )}
+      </pre>
     </div>
   );
 }
