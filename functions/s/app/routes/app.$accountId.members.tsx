@@ -174,10 +174,13 @@ export default function RouteComponent({
                     key={member.accountMemberId}
                     className="flex flex-wrap items-center justify-between gap-4 py-4"
                   >
-                    <div className="flex flex-col">
-                      <span className="text-sm font-medium">
-                        {member.user.email}
-                      </span>
+                    <div className="flex items-center gap-2 text-sm font-medium">
+                      {member.user.email}
+                      {member.status === "pending" && (
+                        <span className="text-muted-foreground text-xs font-normal">
+                          Pending
+                        </span>
+                      )}
                     </div>
                     <div className="flex gap-2">
                       {isCurrentUser && canLeaveAccount && (
