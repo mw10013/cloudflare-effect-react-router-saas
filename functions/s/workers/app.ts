@@ -29,7 +29,6 @@ declare module "react-router" {
     };
     session: Session<SessionData>;
     sessionAction: "commit" | "destroy";
-    account?: AccountWithUser;
     accountMember?: AccountMemberWithAccount;
     permissions: ReadonlySet<Permission>;
   }

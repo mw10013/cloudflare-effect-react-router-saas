@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card";
@@ -72,11 +71,11 @@ export const action = ReactRouter.routeEffect(
             invite: yield* IdentityMgr.invite({
               emails: formData.emails,
               ...(yield* Effect.fromNullable(
-                context.get(ReactRouter.appLoadContext).account,
+                context.get(ReactRouter.appLoadContext).accountMember,
               ).pipe(
-                Effect.map((account) => ({
-                  accountId: account.accountId,
-                  accountEmail: account.user.email,
+                Effect.map((accountMember) => ({
+                  accountId: accountMember.accountId,
+                  accountEmail: accountMember.account.user.email,
                 })),
               )),
             }),

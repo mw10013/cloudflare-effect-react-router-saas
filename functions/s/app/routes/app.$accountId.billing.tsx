@@ -14,7 +14,7 @@ import * as ReactRouter from "~/lib/ReactRouter";
 import { Stripe } from "~/lib/Stripe";
 
 export const loader = ReactRouter.routeEffect(({ context }) =>
-  Effect.fromNullable(context.get(ReactRouter.appLoadContext).account).pipe(
+  Effect.fromNullable(context.get(ReactRouter.appLoadContext).accountMember?.account).pipe(
     Effect.map((account) => ({ account })),
   ),
 );
@@ -23,7 +23,7 @@ export const action = ReactRouter.routeEffect(
   ({ request, context }: Route.ActionArgs) =>
     Effect.gen(function* () {
       const account = yield* Effect.fromNullable(
-        context.get(ReactRouter.appLoadContext).account,
+        context.get(ReactRouter.appLoadContext).accountMember?.account,
       );
       if (!account.stripeCustomerId || !account.stripeProductId) {
         return redirect("/pricing");
