@@ -1,7 +1,6 @@
 import type { AccountMemberRole } from "~/lib/Domain";
 import { Context, Effect, Schema } from "effect";
 import { type NonEmptyReadonlyArray } from "effect/Array";
-import { UnknownException } from "effect/Cause";
 import { AppLoadContext } from "~/lib/ReactRouter";
 
 export type PermissionAction = "edit";
@@ -76,11 +75,11 @@ export const getAccountMemberRolePermissions = (
 /**
  * Represents an access policy that can be evaluated against the current user.
  * A policy is a function that returns Effect.void if access is granted,
- * or fails with an UnknownException if access is denied.
+ * or fails with a Response if access is denied.
  */
 type Policy<E = never, R = never> = Effect.Effect<
   void,
-  UnknownException | E, // Updated to use UnknownException
+  Response | E,
   AppLoadContext | R
 >;
 
@@ -94,12 +93,10 @@ export const policy = <E, R>(
   message?: string,
 ): Policy<E, R> =>
   Effect.flatMap(AppLoadContext, (context) =>
-    Effect.flatMap(
-      predicate(context),
-      (result) =>
-        result
-          ? Effect.void
-          : Effect.fail(new UnknownException(undefined, message)), // Updated to use new UnknownException
+    Effect.flatMap(predicate(context), (result) =>
+      result
+        ? Effect.void
+        : Effect.fail(new Response(message ?? "Forbidden", { status: 403 })),
     ),
   );
 
