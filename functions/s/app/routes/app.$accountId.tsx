@@ -49,23 +49,6 @@ const accountMiddleware: Route.unstable_MiddlewareFunction =
       const accountId = yield* Schema.decodeUnknown(AccountIdFromPath)(
         params.accountId,
       );
-      const account = yield* Effect.fromNullable(
-        appLoadContext.session.get("sessionUser"),
-      ).pipe(
-        Effect.flatMap((sessionUser) =>
-          IdentityMgr.getAccountForMember({
-            accountId,
-            userId: sessionUser.userId,
-          }),
-        ),
-        Effect.tapError((e) =>
-          Effect.log(`accountMiddleware accountId error:`, e),
-        ),
-        Effect.orElseSucceed(() => null),
-      );
-      if (!account) {
-        return yield* Effect.fail(redirect("/app"));
-      }
       const accountMember = yield* Effect.fromNullable(
         appLoadContext.session.get("sessionUser"),
       ).pipe(
@@ -75,27 +58,13 @@ const accountMiddleware: Route.unstable_MiddlewareFunction =
             userId: sessionUser.userId,
           }),
         ),
-        Effect.tap((accountMember) =>
-          Effect.log(
-            `accountMiddleware: Fetched account member for account ${accountId}`,
-            accountMember,
-          ),
-        ),
-        Effect.tapError((e) =>
-          Effect.logError(
-            `accountMiddleware: Error fetching account membership for account ${accountId}`,
-            e,
-          ),
-        ),
         Effect.orElseSucceed(() => null),
       );
       if (!accountMember) {
         return yield* Effect.fail(redirect("/app"));
       }
-
       context.set(ReactRouter.appLoadContext, {
         ...appLoadContext,
-        account,
         accountMember,
         permissions: Policy.getAccountMemberRolePermissions(accountMember.role),
       });
