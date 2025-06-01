@@ -28,16 +28,34 @@ export const routeEffect =
       props: P,
     ) => Effect.Effect<
       A,
-      E,
+      E | Response,
       | AppLoadContext
       | ManagedRuntime.ManagedRuntime.Context<RrAppLoadContext["runtime"]>
     >,
   ) =>
   (props: P) =>
-    f(props).pipe(
-      Effect.provideService(AppLoadContext, props.context.get(appLoadContext)),
-      props.context.get(appLoadContext).runtime.runPromise,
-    );
+    f(props)
+      .pipe(
+        Effect.provideService(
+          AppLoadContext,
+          props.context.get(appLoadContext),
+        ),
+        (effect) =>
+          props.context.get(appLoadContext).runtime.runPromiseExit(effect),
+      )
+      .then(
+        Exit.match({
+          onSuccess: (value) => value,
+          onFailure: (cause) => {
+            if (Cause.isFailType(cause) && cause.error instanceof Response) {
+              throw cause.error;
+            }
+            throw new Error(
+              `Route effect failed with unhandled cause: ${Cause.pretty(cause)}`,
+            );
+          },
+        }),
+      );
 
 /**
  * Creates a React Router middleware function from an Effect.
@@ -113,4 +131,23 @@ export const makeRemixRuntime = <R, E>(layer: Layer.Layer<R, E, never>) => {
 
 export const loader = loaderFunction(() => TodoRepo.getAllTodos);
 
+*/
+
+/*
+export const routeEffect =
+  <A, E, P extends { context: unstable_RouterContextProvider }>(
+    f: (
+      props: P,
+    ) => Effect.Effect<
+      A,
+      E,
+      | AppLoadContext
+      | ManagedRuntime.ManagedRuntime.Context<RrAppLoadContext["runtime"]>
+    >,
+  ) =>
+  (props: P) =>
+    f(props).pipe(
+      Effect.provideService(AppLoadContext, props.context.get(appLoadContext)),
+      props.context.get(appLoadContext).runtime.runPromise,
+    );
 */
