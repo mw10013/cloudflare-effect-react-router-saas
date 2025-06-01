@@ -54,12 +54,26 @@ const inviteMembers = (emails: ReadonlyArray<string>) =>
   );
 
 const revokeMember = (accountMemberId: AccountMember["accountMemberId"]) =>
-  IdentityMgr.revokeAccountMembership({ accountMemberId }).pipe(
+  ReactRouter.AppLoadContext.pipe(
+    Effect.flatMap((appLoadContext) =>
+      Effect.fromNullable(appLoadContext.accountMember?.account.accountId).pipe(
+        Effect.flatMap((accountId) =>
+          IdentityMgr.revokeAccountMembership({ accountMemberId, accountId }),
+        ),
+      ),
+    ),
     Policy.withPolicy(Policy.permission("member:edit")),
   );
 
 const leaveAccount = (accountMemberId: AccountMember["accountMemberId"]) =>
-  IdentityMgr.leaveAccountMembership({ accountMemberId }).pipe(
+  ReactRouter.AppLoadContext.pipe(
+    Effect.flatMap((appLoadContext) =>
+      Effect.fromNullable(appLoadContext.accountMember?.userId).pipe(
+        Effect.flatMap((userId) =>
+          IdentityMgr.leaveAccountMembership({ accountMemberId, userId }),
+        ),
+      ),
+    ),
     Effect.map(() => redirect("/app")),
     Policy.withPolicy(
       Policy.all(

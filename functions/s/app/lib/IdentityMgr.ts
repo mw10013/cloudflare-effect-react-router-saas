@@ -82,16 +82,19 @@ export class IdentityMgr extends Effect.Service<IdentityMgr>()("IdentityMgr", {
         }),
       declineInvitation: ({
         accountMemberId,
-      }: Pick<AccountMember, "accountMemberId">) =>
-        repository.deleteAccountMember({ accountMemberId }),
+        userId,
+      }: Pick<AccountMember, "accountMemberId" | "userId">) =>
+        repository.deletePendingAccountMemberForUser({ accountMemberId, userId }),
       revokeAccountMembership: ({
         accountMemberId,
-      }: Pick<AccountMember, "accountMemberId">) =>
-        repository.deleteAccountMember({ accountMemberId }),
+        accountId,
+      }: Pick<AccountMember, "accountMemberId" | "accountId">) =>
+        repository.deleteAccountMember({ accountMemberId, accountId }),
       leaveAccountMembership: ({
         accountMemberId,
-      }: Pick<AccountMember, "accountMemberId">) =>
-        repository.deleteAccountMember({ accountMemberId }),
+        userId,
+      }: Pick<AccountMember, "accountMemberId" | "userId">) =>
+        repository.deleteOwnActiveAccountMembership({ accountMemberId, userId }),
 
       getAccountMembers: ({ accountId }: Pick<Account, "accountId">) =>
         repository.getAccountMembers({ accountId }),

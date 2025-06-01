@@ -51,6 +51,7 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
       case "decline":
         yield* IdentityMgr.declineInvitation({
           accountMemberId: formData.accountMemberId,
+          userId: sessionUser.userId,
         });
         break;
       default:
