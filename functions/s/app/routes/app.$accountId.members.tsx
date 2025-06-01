@@ -39,31 +39,33 @@ export const loader = ReactRouter.routeEffect(() =>
 );
 
 const revokeMember = (accountMemberId: AccountMember["accountMemberId"]) =>
-  Effect.gen(function* () {
-    yield* IdentityMgr.revokeAccountMembership({ accountMemberId });
-    return {
-      message: `Account membership revoked: accountMemberId: ${accountMemberId}`,
-    };
-  });
+  IdentityMgr.revokeAccountMembership({ accountMemberId }).pipe(
+    Policy.withPolicy(Policy.permission("member:edit")),
+  );
 
 const inviteMembers = (emails: ReadonlyArray<string>) =>
   Effect.gen(function* () {
-    const appLoadContext = yield* ReactRouter.AppLoadContext;
-    const accountMember = yield* Effect.fromNullable(
-      appLoadContext.accountMember,
+    const accountMember = yield* ReactRouter.AppLoadContext.pipe(
+      Effect.flatMap((appLoadContext) =>
+        Effect.fromNullable(appLoadContext.accountMember),
+      ),
     );
-    return yield* IdentityMgr.invite({
+    yield* IdentityMgr.invite({
       emails,
       accountId: accountMember.accountId,
       accountEmail: accountMember.account.user.email,
     });
-  });
+  }).pipe(Policy.withPolicy(Policy.permission("member:edit")));
 
 const leaveAccount = (accountMemberId: AccountMember["accountMemberId"]) =>
   Effect.gen(function* () {
     yield* IdentityMgr.leaveAccountMembership({ accountMemberId });
     return redirect("/app");
-  });
+  }).pipe(
+    Policy.withPolicy(
+      Policy.all(Policy.isSelf(accountMemberId), Policy.isNotOwner),
+    ),
+  );
 
 export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
   Effect.gen(function* () {
@@ -93,24 +95,11 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
     });
     switch (formData.intent) {
       case "invite":
-        return {
-          invite: yield* inviteMembers(formData.emails).pipe(
-            Policy.withPolicy(Policy.permission("member:edit")),
-          ),
-        };
+        return yield* inviteMembers(formData.emails);
       case "revoke":
-        return yield* revokeMember(formData.accountMemberId).pipe(
-          Policy.withPolicy(Policy.permission("member:edit")),
-        );
+        return yield* revokeMember(formData.accountMemberId);
       case "leave":
-        return yield* leaveAccount(formData.accountMemberId).pipe(
-          Policy.withPolicy(
-            Policy.all(
-              Policy.isSelf(formData.accountMemberId),
-              Policy.isNotOwner,
-            ),
-          ),
-        );
+        return yield* leaveAccount(formData.accountMemberId);
       default:
         return yield* Effect.fail(new Error("Invalid intent"));
     }
