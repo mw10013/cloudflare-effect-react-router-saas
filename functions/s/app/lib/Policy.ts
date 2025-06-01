@@ -2,8 +2,9 @@ import type { AccountMemberRole } from "~/lib/Domain";
 import { Context, Effect, Schema } from "effect";
 import { type NonEmptyReadonlyArray } from "effect/Array";
 import { UnknownException } from "effect/Cause";
+import { AppLoadContext } from "~/lib/ReactRouter";
 
-export type PermissionAction = "edit"; // Only 'edit' is explicitly used for a defined permission
+export type PermissionAction = "edit";
 export type PermissionConfig = Record<string, ReadonlyArray<PermissionAction>>;
 
 export type InferPermissions<T extends PermissionConfig> = {
@@ -26,7 +27,6 @@ export const makePermissions = <T extends PermissionConfig>(
 
 const Permissions = makePermissions({
   member: ["edit"],
-  // __test: ["read", "manage", "delete"], // Retaining __test for now if it serves a purpose, or remove if not
 } as const);
 
 export const Permission = Schema.Literal(...Permissions).annotations({
@@ -51,15 +51,15 @@ export const getAccountMemberRolePermissions = (
 // Authentication Middleware
 // ==========================================
 
-export class CurrentUser extends Context.Tag("CurrentUser")<
-  CurrentUser,
-  {
-    readonly sessionId: string;
-    // readonly userId: UserId;
-    readonly userId: number;
-    readonly permissions: Set<Permission>;
-  }
->() {}
+// export class CurrentUser extends Context.Tag("CurrentUser")<
+//   CurrentUser,
+//   {
+//     readonly sessionId: string;
+//     // readonly userId: UserId;
+//     readonly userId: number;
+//     readonly permissions: Set<Permission>;
+//   }
+// >() {}
 
 // export class UserAuthMiddleware extends HttpApiMiddleware.Tag<UserAuthMiddleware>()(
 //   "UserAuthMiddleware",
@@ -81,19 +81,21 @@ export class CurrentUser extends Context.Tag("CurrentUser")<
 type Policy<E = never, R = never> = Effect.Effect<
   void,
   UnknownException | E, // Updated to use UnknownException
-  CurrentUser | R
+  AppLoadContext | R
 >;
 
 /**
  * Creates a policy from a predicate function that evaluates the current user.
  */
 export const policy = <E, R>(
-  predicate: (user: CurrentUser["Type"]) => Effect.Effect<boolean, E, R>,
+  predicate: (
+    context: Context.Tag.Service<typeof AppLoadContext>,
+  ) => Effect.Effect<boolean, E, R>,
   message?: string,
 ): Policy<E, R> =>
-  Effect.flatMap(CurrentUser, (user) =>
+  Effect.flatMap(AppLoadContext, (context) =>
     Effect.flatMap(
-      predicate(user),
+      predicate(context),
       (result) =>
         result
           ? Effect.void
@@ -134,4 +136,23 @@ export const any = <E, R>(
  * Creates a policy that checks if the current user has a specific permission.
  */
 export const permission = (requiredPermission: Permission): Policy =>
-  policy((user) => Effect.succeed(user.permissions.has(requiredPermission)));
+  policy((context) =>
+    Effect.succeed(context.permissions.has(requiredPermission)),
+  );
+
+/**
+ * Creates a policy that checks if the current user is the subject of the action.
+ */
+export const isSelf = (accountMemberId: number): Policy =>
+  policy((context) =>
+    Effect.succeed(context.accountMember?.accountMemberId === accountMemberId),
+  );
+
+/**
+ * Creates a policy that checks if the current user is not the account owner.
+ */
+export const isNotOwner: Policy = policy((context) =>
+  Effect.succeed(
+    context.accountMember?.userId !== context.accountMember?.account.userId,
+  ),
+);

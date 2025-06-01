@@ -1,3 +1,4 @@
+import type { AccountMember } from "~/lib/Domain";
 import type { Route } from "./+types/app.$accountId.members";
 import * as Oui from "@workspace/oui";
 import { SchemaEx } from "@workspace/shared";
@@ -12,6 +13,7 @@ import { Effect, Schema } from "effect";
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
 import { IdentityMgr } from "~/lib/IdentityMgr";
+import * as Policy from "~/lib/Policy";
 import * as ReactRouter from "~/lib/ReactRouter";
 
 /*
@@ -22,7 +24,9 @@ import * as ReactRouter from "~/lib/ReactRouter";
 export const loader = ReactRouter.routeEffect(() =>
   Effect.gen(function* () {
     const appLoadContext = yield* ReactRouter.AppLoadContext;
-    const accountMember = yield* Effect.fromNullable(appLoadContext.accountMember);
+    const accountMember = yield* Effect.fromNullable(
+      appLoadContext.accountMember,
+    );
     const members = yield* IdentityMgr.getAccountMembers(accountMember.account);
     return {
       accountMember,
@@ -34,69 +38,83 @@ export const loader = ReactRouter.routeEffect(() =>
   }),
 );
 
-export const action = ReactRouter.routeEffect(
-  ({ request, context }: Route.ActionArgs) =>
-    Effect.gen(function* () {
-      const FormDataSchema = Schema.Union(
-        Schema.Struct({
-          intent: Schema.Literal("invite"),
-          emails: Schema.transform(
-            Schema.compose(Schema.NonEmptyString, Schema.split(",")),
-            Schema.Array(Schema.String),
-            {
-              strict: false,
-              decode: (emails) => [
-                ...new Set(emails.map((email) => email.trim())),
-              ],
-              encode: (emails) => emails,
-            },
+const revokeMember = (accountMemberId: AccountMember["accountMemberId"]) =>
+  Effect.gen(function* () {
+    yield* IdentityMgr.revokeAccountMembership({ accountMemberId });
+    return {
+      message: `Account membership revoked: accountMemberId: ${accountMemberId}`,
+    };
+  });
+
+const inviteMembers = (emails: ReadonlyArray<string>) =>
+  Effect.gen(function* () {
+    const appLoadContext = yield* ReactRouter.AppLoadContext;
+    const accountMember = yield* Effect.fromNullable(
+      appLoadContext.accountMember,
+    );
+    return yield* IdentityMgr.invite({
+      emails,
+      accountId: accountMember.accountId,
+      accountEmail: accountMember.account.user.email,
+    });
+  });
+
+const leaveAccount = (accountMemberId: AccountMember["accountMemberId"]) =>
+  Effect.gen(function* () {
+    yield* IdentityMgr.leaveAccountMembership({ accountMemberId });
+    return redirect("/app");
+  });
+
+export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
+  Effect.gen(function* () {
+    const FormDataSchema = Schema.Union(
+      Schema.Struct({
+        intent: Schema.Literal("invite"),
+        emails: Schema.transform(
+          Schema.compose(Schema.NonEmptyString, Schema.split(",")),
+          Schema.Array(Schema.String),
+          {
+            strict: false,
+            decode: (emails) => [
+              ...new Set(emails.map((email) => email.trim())),
+            ],
+            encode: (emails) => emails,
+          },
+        ),
+      }),
+      Schema.Struct({
+        intent: Schema.Union(Schema.Literal("revoke"), Schema.Literal("leave")),
+        accountMemberId: Schema.NumberFromString,
+      }),
+    );
+    const formData = yield* SchemaEx.decodeRequestFormData({
+      request,
+      schema: FormDataSchema,
+    });
+    switch (formData.intent) {
+      case "invite":
+        return {
+          invite: yield* inviteMembers(formData.emails).pipe(
+            Policy.withPolicy(Policy.permission("member:edit")),
           ),
-        }),
-        Schema.Struct({
-          intent: Schema.Union(
-            Schema.Literal("revoke"),
-            Schema.Literal("leave"),
+        };
+      case "revoke":
+        return yield* revokeMember(formData.accountMemberId).pipe(
+          Policy.withPolicy(Policy.permission("member:edit")),
+        );
+      case "leave":
+        return yield* leaveAccount(formData.accountMemberId).pipe(
+          Policy.withPolicy(
+            Policy.all(
+              Policy.isSelf(formData.accountMemberId),
+              Policy.isNotOwner,
+            ),
           ),
-          accountMemberId: Schema.NumberFromString,
-        }),
-      );
-      const formData = yield* SchemaEx.decodeRequestFormData({
-        request,
-        schema: FormDataSchema,
-      });
-      switch (formData.intent) {
-        case "invite":
-          return {
-            formData,
-            invite: yield* IdentityMgr.invite({
-              emails: formData.emails,
-              ...(yield* Effect.fromNullable(
-                context.get(ReactRouter.appLoadContext).accountMember,
-              ).pipe(
-                Effect.map((accountMember) => ({
-                  accountId: accountMember.accountId,
-                  accountEmail: accountMember.account.user.email,
-                })),
-              )),
-            }),
-          };
-        case "revoke":
-          yield* IdentityMgr.revokeAccountMembership({
-            accountMemberId: formData.accountMemberId,
-          });
-          return {
-            message: `Account membership revoked: accountMemberId: ${formData.accountMemberId}`,
-            formData,
-          };
-        case "leave":
-          yield* IdentityMgr.leaveAccountMembership({
-            accountMemberId: formData.accountMemberId,
-          });
-          return redirect("/app");
-        default:
-          return yield* Effect.fail(new Error("Invalid intent"));
-      }
-    }),
+        );
+      default:
+        return yield* Effect.fail(new Error("Invalid intent"));
+    }
+  }),
 );
 
 /**
