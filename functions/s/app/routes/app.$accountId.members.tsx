@@ -38,30 +38,29 @@ export const loader = ReactRouter.routeEffect(() =>
   }),
 );
 
+const inviteMembers = (emails: ReadonlyArray<string>) =>
+  ReactRouter.AppLoadContext.pipe(
+    Effect.flatMap((appLoadContext) =>
+      Effect.fromNullable(appLoadContext.accountMember),
+    ),
+    Effect.flatMap((accountMember) =>
+      IdentityMgr.invite({
+        emails,
+        accountId: accountMember.accountId,
+        accountEmail: accountMember.account.user.email,
+      }),
+    ),
+    Policy.withPolicy(Policy.permission("member:edit")),
+  );
+
 const revokeMember = (accountMemberId: AccountMember["accountMemberId"]) =>
   IdentityMgr.revokeAccountMembership({ accountMemberId }).pipe(
     Policy.withPolicy(Policy.permission("member:edit")),
   );
 
-const inviteMembers = (emails: ReadonlyArray<string>) =>
-  Effect.gen(function* () {
-    const accountMember = yield* ReactRouter.AppLoadContext.pipe(
-      Effect.flatMap((appLoadContext) =>
-        Effect.fromNullable(appLoadContext.accountMember),
-      ),
-    );
-    yield* IdentityMgr.invite({
-      emails,
-      accountId: accountMember.accountId,
-      accountEmail: accountMember.account.user.email,
-    });
-  }).pipe(Policy.withPolicy(Policy.permission("member:edit")));
-
 const leaveAccount = (accountMemberId: AccountMember["accountMemberId"]) =>
-  Effect.gen(function* () {
-    yield* IdentityMgr.leaveAccountMembership({ accountMemberId });
-    return redirect("/app");
-  }).pipe(
+  IdentityMgr.leaveAccountMembership({ accountMemberId }).pipe(
+    Effect.map(() => redirect("/app")),
     Policy.withPolicy(
       Policy.all(Policy.isSelf(accountMemberId), Policy.isNotOwner),
     ),
