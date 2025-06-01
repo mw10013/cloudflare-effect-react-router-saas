@@ -19,16 +19,16 @@ import * as ReactRouter from "~/lib/ReactRouter";
 #fetch https://react-spectrum.adobe.com/react-aria/ListBox.html
 */
 
-export const loader = ReactRouter.routeEffect(({ context }) =>
+export const loader = ReactRouter.routeEffect(() =>
   Effect.gen(function* () {
-    const loadContext = context.get(ReactRouter.appLoadContext);
-    const accountMember = yield* Effect.fromNullable(loadContext.accountMember);
+    const appLoadContext = yield* ReactRouter.AppLoadContext;
+    const accountMember = yield* Effect.fromNullable(appLoadContext.accountMember);
     const members = yield* IdentityMgr.getAccountMembers(accountMember.account);
     return {
       accountMember,
       userId: accountMember.userId,
       ownerId: accountMember.account.userId,
-      canEdit: loadContext.permissions.has("member:edit"),
+      canEdit: appLoadContext.permissions.has("member:edit"),
       members,
     };
   }),
