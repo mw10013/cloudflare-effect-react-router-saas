@@ -402,18 +402,20 @@ values ((select userId from User where email = ?), ?, 'pending', 'member') retur
           ]);
         }),
 
+      /** Updates the status of an account member, guarded by userId. */
       updateAccountMemberStatus: ({
         accountMemberId,
+        userId,
         status,
-      }: Pick<AccountMember, "accountMemberId" | "status">) =>
+      }: Pick<AccountMember, "accountMemberId" | "userId" | "status">) =>
         pipe(
           d1
             .prepare(
               `
-update AccountMember set status = ?
-where accountMemberId = ?`,
+update AccountMember set status = ?1
+where accountMemberId = ?2 and userId = ?3`,
             )
-            .bind(status, accountMemberId),
+            .bind(status, accountMemberId, userId),
           d1.run,
         ),
 

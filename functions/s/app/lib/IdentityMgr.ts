@@ -73,9 +73,11 @@ export class IdentityMgr extends Effect.Service<IdentityMgr>()("IdentityMgr", {
         repository.getAccountMembersForUser({ userId, status: "pending" }),
       acceptInvitation: ({
         accountMemberId,
-      }: Pick<AccountMember, "accountMemberId">) =>
+        userId,
+      }: Pick<AccountMember, "accountMemberId" | "userId">) =>
         repository.updateAccountMemberStatus({
           accountMemberId,
+          userId,
           status: "active",
         }),
       declineInvitation: ({

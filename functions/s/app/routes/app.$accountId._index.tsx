@@ -29,6 +29,10 @@ export const loader = ReactRouter.routeEffect(({ context }) =>
 
 export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
   Effect.gen(function* () {
+    const appLoadContext = yield* ReactRouter.AppLoadContext;
+    const sessionUser = yield* Effect.fromNullable(
+      appLoadContext.session.get("sessionUser"),
+    );
     const FormDataSchema = Schema.Struct({
       accountMemberId: Schema.NumberFromString,
       intent: Schema.Literal("accept", "decline"),
@@ -41,6 +45,7 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
       case "accept":
         yield* IdentityMgr.acceptInvitation({
           accountMemberId: formData.accountMemberId,
+          userId: sessionUser.userId,
         });
         break;
       case "decline":
