@@ -62,7 +62,10 @@ const leaveAccount = (accountMemberId: AccountMember["accountMemberId"]) =>
   IdentityMgr.leaveAccountMembership({ accountMemberId }).pipe(
     Effect.map(() => redirect("/app")),
     Policy.withPolicy(
-      Policy.all(Policy.isSelf(accountMemberId), Policy.isNotOwner),
+      Policy.all(
+        Policy.isCurrentAccountMember(accountMemberId),
+        Policy.isCurrentAccountMemberNotAccountOwner,
+      ),
     ),
   );
 

@@ -141,17 +141,18 @@ export const permission = (requiredPermission: Permission): Policy =>
   );
 
 /**
- * Creates a policy that checks if the current user is the subject of the action.
+ * Checks if the provided `accountMemberId` is that of the current account
+ * member (the session user acting in the context of the current account).
  */
-export const isSelf = (accountMemberId: number): Policy =>
+export const isCurrentAccountMember = (accountMemberId: number): Policy =>
   policy((context) =>
     Effect.succeed(context.accountMember?.accountMemberId === accountMemberId),
   );
 
 /**
- * Creates a policy that checks if the current user is not the account owner.
+ * Checks if the current account member is not the owner of the account.
  */
-export const isNotOwner: Policy = policy((context) =>
+export const isCurrentAccountMemberNotAccountOwner: Policy = policy((context) =>
   Effect.succeed(
     context.accountMember?.userId !== context.accountMember?.account.userId,
   ),
