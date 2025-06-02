@@ -83,6 +83,13 @@ const leaveAccount = (accountMemberId: AccountMember["accountMemberId"]) =>
     ),
   );
 
+/*
+#fetch https://effect.website/docs/schema/transformations/
+#fetch https://effect.website/docs/schema/error-messages/
+#fetch https://effect.website/docs/schema/annotations/
+#fetch https://effect.website/docs/schema/error-formatters/
+*/
+
 export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
   Effect.gen(function* () {
     const FormDataSchema = Schema.Union(
@@ -105,7 +112,12 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
               return validatedEmails.join(",");
             },
           },
-        ),
+        ).annotations({
+          message: () => ({
+            message: "Please provide at least one valid email address.",
+            override: true,
+          }),
+        }),
       }),
       Schema.Struct({
         intent: Schema.Union(Schema.Literal("revoke"), Schema.Literal("leave")),
