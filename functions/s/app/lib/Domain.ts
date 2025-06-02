@@ -1,13 +1,14 @@
 import { Schema } from "effect";
 
 /*
-#fetch https://effect.website/docs/schema/advanced-usage/#branded-types
-#fetch https://effect.website/docs/code-style/branded-types/
-#fetch https://effect.website/docs/schema/advanced-usage/
-#fetch https://effect.website/docs/schema/transformations/#composition
 #fetch https://effect.website/docs/schema/basic-usage/
 #fetch https://effect.website/docs/schema/filters/
+#fetch https://effect.website/docs/schema/transformations/
 #fetch https://effect.website/docs/schema/advanced-usage/
+
+#fetch https://effect.website/docs/schema/advanced-usage/#branded-types
+#fetch https://effect.website/docs/code-style/branded-types/
+#fetch https://effect.website/docs/schema/transformations/#composition
 */
 
 /**

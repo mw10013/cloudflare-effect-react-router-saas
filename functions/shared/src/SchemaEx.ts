@@ -1,5 +1,6 @@
-import { Data, Effect, ParseResult, Predicate, Schema } from 'effect'
-import * as Rac from 'react-aria-components'
+import { Data, Effect, ParseResult, Predicate, Schema } from "effect";
+import * as Rac from "react-aria-components";
+import { EmailSchema } from "../../s/app/lib/Domain"; // Adjusted import path
 
 /*
 
@@ -13,37 +14,44 @@ Trim: A transform schema. It takes any String$, applies the .trim() action durin
 export const DataFromResult = <A, I>(DataSchema: Schema.Schema<A, I>) =>
   Schema.transform(
     Schema.Struct({
-      data: Schema.String
+      data: Schema.String,
     }),
     Schema.parseJson(DataSchema),
     {
       strict: true,
       decode: (result) => result.data,
-      encode: (value) => ({ data: value })
-    }
-  )
+      encode: (value) => ({ data: value }),
+    },
+  );
 
-export const FormDataFromSelf = Schema.instanceOf(FormData).annotations({ identifier: 'FormDataFromSelf' })
+export const FormDataFromSelf = Schema.instanceOf(FormData).annotations({
+  identifier: "FormDataFromSelf",
+});
 // https://discord.com/channels/795981131316985866/847382157861060618/threads/1270826681505939517
 // https://raw.githubusercontent.com/react-hook-form/resolvers/refs/heads/dev/effect-ts/src/effect-ts.ts
 
-export const FileFromSelf = Schema.instanceOf(File).annotations({ identifier: 'FileFromSelf' })
+export const FileFromSelf = Schema.instanceOf(File).annotations({
+  identifier: "FileFromSelf",
+});
 
 export const RecordFromFormData = Schema.transform(
   FormDataFromSelf,
-  Schema.Record({ key: Schema.String, value: Schema.Union(Schema.Trim, FileFromSelf) }),
+  Schema.Record({
+    key: Schema.String,
+    value: Schema.Union(Schema.Trim, FileFromSelf),
+  }),
   {
     strict: false,
     decode: (formData) => Object.fromEntries(formData.entries()),
     encode: (data) => {
-      const formData = new FormData()
+      const formData = new FormData();
       for (const [key, value] of Object.entries(data)) {
-        formData.append(key, value)
+        formData.append(key, value);
       }
-      return formData
-    }
-  }
-).annotations({ identifier: 'RecordFromFormData' })
+      return formData;
+    },
+  },
+).annotations({ identifier: "RecordFromFormData" });
 
 /**
  * Creates a schema that decodes a `FormData` object into the structure
@@ -62,65 +70,78 @@ export const RecordFromFormData = Schema.transform(
  *	)
  *	const formData = yield* Effect.tryPromise(() => request.formData()).pipe(Effect.flatMap(Schema.decode(FormDataSchema)))
  */
-export const SchemaFromFormData = <A, I extends Record<string, string | File>, R>(schema: Schema.Schema<A, I, R>) =>
-  Schema.compose(RecordFromFormData, schema, { strict: false })
+export const SchemaFromFormData = <
+  A,
+  I extends Record<string, string | File>,
+  R,
+>(
+  schema: Schema.Schema<A, I, R>,
+) => Schema.compose(RecordFromFormData, schema, { strict: false });
 
 // Defined to prevent ts(2742) from inferred non-portable types.
-export type ValidationErrors = NonNullable<Rac.FormProps['validationErrors']>
+export type ValidationErrors = NonNullable<Rac.FormProps["validationErrors"]>;
 
-export const parseErrorToValidationErrors = (error: ParseResult.ParseError): ValidationErrors => {
-  const validationErrors: ValidationErrors = {}
-  const issues = ParseResult.ArrayFormatter.formatErrorSync(error)
+export const parseErrorToValidationErrors = (
+  error: ParseResult.ParseError,
+): ValidationErrors => {
+  const validationErrors: ValidationErrors = {};
+  const issues = ParseResult.ArrayFormatter.formatErrorSync(error);
   for (const issue of issues) {
-    const key = issue.path.join('.')
+    const key = issue.path.join(".");
     if (!validationErrors[key]) {
-      validationErrors[key] = issue.message
-    } else if (typeof validationErrors[key] === 'string') {
-      validationErrors[key] = [validationErrors[key], issue.message]
+      validationErrors[key] = issue.message;
+    } else if (typeof validationErrors[key] === "string") {
+      validationErrors[key] = [validationErrors[key], issue.message];
     } else {
-      validationErrors[key].push(issue.message)
+      validationErrors[key].push(issue.message);
     }
   }
-  return validationErrors
-}
+  return validationErrors;
+};
 
-export class ValidationError extends Data.TaggedError('ValidationError')<{
-  message: string
-  validationErrors: ValidationErrors
-  cause: ParseResult.ParseError
+export class ValidationError extends Data.TaggedError("ValidationError")<{
+  message: string;
+  validationErrors: ValidationErrors;
+  cause: ParseResult.ParseError;
 }> {}
 
-export const decodeRequestFormData = <A, I extends Record<string, string | File>, R>({
+export const decodeRequestFormData = <
+  A,
+  I extends Record<string, string | File>,
+  R,
+>({
   request,
-  schema
+  schema,
 }: {
-  request: Request
-  schema: Schema.Schema<A, I, R>
+  request: Request;
+  schema: Schema.Schema<A, I, R>;
 }) =>
   Effect.tryPromise(() => request.formData()).pipe(
-    Effect.flatMap(Schema.decode(SchemaFromFormData(schema), { errors: 'all' })),
+    Effect.flatMap(
+      Schema.decode(SchemaFromFormData(schema), { errors: "all" }),
+    ),
     Effect.mapError((e) =>
       ParseResult.isParseError(e)
         ? new ValidationError({
-            message: 'Validation failed',
+            message: "Validation failed",
             validationErrors: parseErrorToValidationErrors(e),
-            cause: e
+            cause: e,
           })
-        : e
+        : e,
     ),
     Effect.tap((data) =>
       Effect.logTrace({
         message: `decodeRequestFormData succeeded`,
-        data
-      })
+        data,
+      }),
     ),
-    Effect.tapErrorTag('ValidationError', (error) =>
+    Effect.tapErrorTag("ValidationError", (error) =>
       Effect.logTrace({
         message: `decodeRequestFormData failed with ValidationError`,
-        validationErrors: error.validationErrors
-      })
-    )
-  )
+        validationErrors: error.validationErrors,
+      }),
+    ),
+  );
 
 /**
  * Catches `ValidationError` from an Effect and transforms it into a success
@@ -128,15 +149,19 @@ export const decodeRequestFormData = <A, I extends Record<string, string | File>
  * error channel `E` are preserved.
  */
 export const catchValidationError = <A, E, R>(
-  self: Effect.Effect<A, E | ValidationError, R>
-): Effect.Effect<A | { validationErrors: ValidationErrors }, Exclude<E, ValidationError>, R> =>
+  self: Effect.Effect<A, E | ValidationError, R>,
+): Effect.Effect<
+  A | { validationErrors: ValidationErrors },
+  Exclude<E, ValidationError>,
+  R
+> =>
   Effect.matchEffect(self, {
     onFailure: (error) =>
-      Predicate.isTagged('ValidationError')(error)
+      Predicate.isTagged("ValidationError")(error)
         ? Effect.succeed({ validationErrors: error.validationErrors })
         : Effect.fail(error as Exclude<E, ValidationError>), // Type assertion confirms 'error' is narrowed to E excluding ValidationError.
-    onSuccess: Effect.succeed
-  })
+    onSuccess: Effect.succeed,
+  });
 
 /*  
 export const catchValidationError = <A, E, R>(
@@ -151,3 +176,34 @@ export const catchValidationError = <A, E, R>(
     // when E is generic. The assertion bridges this inference gap.
   }) as Effect.Effect<A | { validationErrors: ValidationErrors }, Exclude<E, ValidationError>, R>
 */
+
+// Helper function based on Effect documentation for creating a schema for ReadonlySet
+// from an array of encoded items. It applies itemSchema to each element.
+const ReadonlySetFromArray = <A, I, R>(
+  itemSchema: Schema.Schema<A, I, R>,
+): Schema.Schema<ReadonlySet<A>, ReadonlyArray<I>, R> =>
+  Schema.transform(
+    Schema.Array(itemSchema), // Source schema: decodes I[] to A[]
+    Schema.ReadonlySetFromSelf(Schema.typeSchema(itemSchema)), // Target schema: represents Set<A> using the Type of itemSchema
+    {
+      strict: true,
+      // `items` are already decoded to type A by Schema.Array(itemSchema)
+      decode: (items: ReadonlyArray<A>) => new Set(items),
+      // `set` contains items of type A, Schema.Array(itemSchema) handles encoding A[] to I[]
+      encode: (set: ReadonlySet<A>) => Array.from(set.values()),
+    },
+  );
+
+/**
+ * Schema for a comma-separated string of emails.
+ * Decodes into a `ReadonlySet<Email>`.
+ * Individual emails are validated using `EmailSchema` (handles trimming, format, and non-empty).
+ * If any email in the string is invalid, the entire decoding process will fail.
+ */
+export const CommaSeparatedEmailsSchema = Schema.compose(
+  Schema.compose(Schema.NonEmptyString, Schema.split(",")),
+  ReadonlySetFromArray(EmailSchema),
+);
+export type CommaSeparatedEmails = Schema.Schema.Type<
+  typeof CommaSeparatedEmailsSchema
+>;
