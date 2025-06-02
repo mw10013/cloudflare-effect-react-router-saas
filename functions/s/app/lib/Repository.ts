@@ -326,30 +326,6 @@ where am.userId = ? and am.status = ?`,
           ),
         ),
 
-      /**
-       * Deletes an active account membership for the specified user, ensuring the user is not the account owner.
-       * This is used when a user decides to leave an account.
-       */
-      deleteOwnActiveAccountMembership: ({
-        accountMemberId,
-        userId,
-      }: Pick<AccountMember, "accountMemberId" | "userId">) =>
-        pipe(
-          d1
-            .prepare(
-              `
-with t as (
-  select am.accountMemberId 
-  from AccountMember am 
-  inner join Account a on a.accountId = am.accountId 
-  where am.accountMemberId = ?1 and am.userId = ?2 and am.status = 'active' and a.userId <> am.userId
-)
-delete from AccountMember where accountMemberId in (select accountMemberId from t)`,
-            )
-            .bind(accountMemberId, userId),
-          d1.run,
-        ),
-
       getAccountMembers: ({ accountId }: Pick<Account, "accountId">) =>
         pipe(
           d1
@@ -467,7 +443,7 @@ where accountMemberId in (select accountMemberId from t)`,
           d1.run,
         ),
 
-      deletePendingAccountMemberForUser: ({
+      deleteAccountMemberPending: ({
         accountMemberId,
         userId,
       }: Pick<AccountMember, "accountMemberId" | "userId">) =>
@@ -475,6 +451,26 @@ where accountMemberId in (select accountMemberId from t)`,
           d1
             .prepare(
               `delete from AccountMember where accountMemberId = ?1 and userId = ?2 and status = 'pending'`,
+            )
+            .bind(accountMemberId, userId),
+          d1.run,
+        ),
+
+      deleteAccountMemberActive: ({
+        accountMemberId,
+        userId,
+      }: Pick<AccountMember, "accountMemberId" | "userId">) =>
+        pipe(
+          d1
+            .prepare(
+              `
+with t as (
+  select am.accountMemberId 
+  from AccountMember am 
+  inner join Account a on a.accountId = am.accountId 
+  where am.accountMemberId = ?1 and am.userId = ?2 and am.status = 'active' and a.userId <> am.userId
+)
+delete from AccountMember where accountMemberId in (select accountMemberId from t)`,
             )
             .bind(accountMemberId, userId),
           d1.run,
