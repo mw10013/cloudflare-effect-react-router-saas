@@ -90,13 +90,20 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
         intent: Schema.Literal("invite"),
         emails: Schema.transform(
           Schema.compose(Schema.NonEmptyString, Schema.split(",")),
-          Schema.Array(Schema.String),
+          Schema.NonEmptyArray(Schema.NonEmptyString),
           {
             strict: false,
-            decode: (emails) => [
-              ...new Set(emails.map((email) => email.trim())),
-            ],
-            encode: (emails) => emails,
+            decode: (
+              emailsFromSplit: ReadonlyArray<string>,
+            ): ReadonlyArray<string> => {
+              const processedEmails = emailsFromSplit
+                .map((email) => email.trim())
+                .filter((email) => email !== "");
+              return [...new Set(processedEmails)];
+            },
+            encode: (validatedEmails: ReadonlyArray<string>): string => {
+              return validatedEmails.join(",");
+            },
           },
         ),
       }),
@@ -119,7 +126,7 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
       default:
         return yield* Effect.fail(new Error("Invalid intent"));
     }
-  }),
+  }).pipe(SchemaEx.catchValidationError),
 );
 
 /**
