@@ -34,6 +34,18 @@ export type Email = Schema.Schema.Type<typeof Email>;
 export const UserId = Schema.Number.pipe(Schema.brand("UserId"));
 export type UserId = Schema.Schema.Type<typeof UserId>;
 
+export const AccountId = Schema.Number.pipe(Schema.brand("AccountId"));
+export type AccountId = Schema.Schema.Type<typeof AccountId>;
+
+export const AccountMemberId = Schema.Number.pipe(
+  Schema.brand("AccountMemberId"),
+);
+export type AccountMemberId = Schema.Schema.Type<typeof AccountMemberId>;
+
+export const AccountMemberIdFromString = Schema.NumberFromString.pipe(
+  Schema.brand("AccountMemberId"),
+);
+
 export const UserType = Schema.Literal("customer", "staffer"); // Must align with UserType table
 export type UserType = Schema.Schema.Type<typeof UserType>;
 
@@ -59,7 +71,7 @@ export const SessionData = Schema.Struct({
 export type SessionData = Schema.Schema.Type<typeof SessionData>;
 
 export const Account = Schema.Struct({
-  accountId: Schema.Number,
+  accountId: AccountId,
   userId: UserId,
   stripeCustomerId: Schema.NullOr(Schema.String),
   stripeSubscriptionId: Schema.NullOr(Schema.String),
@@ -84,9 +96,9 @@ export const AccountMemberRole = Schema.Literal("admin", "member"); // Must alig
 export type AccountMemberRole = Schema.Schema.Type<typeof AccountMemberRole>;
 
 export const AccountMember = Schema.Struct({
-  accountMemberId: Schema.Number,
+  accountMemberId: AccountMemberId,
   userId: UserId,
-  accountId: Schema.Number,
+  accountId: AccountId,
   status: AccountMemberStatus,
   role: AccountMemberRole,
 });

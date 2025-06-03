@@ -12,7 +12,7 @@ import {
 import { Effect, Schema } from "effect";
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
-import { Email } from "~/lib/Domain";
+import { AccountMemberIdFromString, Email } from "~/lib/Domain";
 import { IdentityMgr } from "~/lib/IdentityMgr";
 import * as Policy from "~/lib/Policy";
 import * as ReactRouter from "~/lib/ReactRouter";
@@ -119,7 +119,7 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
       }),
       Schema.Struct({
         intent: Schema.Union(Schema.Literal("revoke"), Schema.Literal("leave")),
-        accountMemberId: Schema.NumberFromString,
+        accountMemberId: AccountMemberIdFromString,
       }),
     );
     const formData = yield* SchemaEx.decodeRequestFormData({
