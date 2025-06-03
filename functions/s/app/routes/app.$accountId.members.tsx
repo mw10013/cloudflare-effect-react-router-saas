@@ -128,13 +128,17 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
     });
     switch (formData.intent) {
       case "invite":
-        return yield* inviteMembers(formData.emails);
+        yield* inviteMembers(formData.emails);
+        break;
       case "revoke":
-        return yield* revokeMember(formData.accountMemberId);
+        yield* revokeMember(formData.accountMemberId);
+        break;
       case "leave":
-        return yield* leaveAccount(formData.accountMemberId);
+        yield* leaveAccount(formData.accountMemberId);
+        break;
       default:
-        return yield* Effect.fail(new Error("Invalid intent"));
+        yield* Effect.fail(new Error("Invalid intent"));
+        break;
     }
   }).pipe(SchemaEx.catchValidationError),
 );
@@ -175,11 +179,7 @@ export default function RouteComponent({
           <Rac.Form
             method="post"
             className="grid gap-6"
-            validationErrors={
-              actionData && "validationErrors" in actionData
-                ? actionData.validationErrors
-                : undefined
-            }
+            validationErrors={actionData?.validationErrors}
           >
             <Oui.TextFieldEx
               name="emails"
