@@ -85,6 +85,11 @@ const leaveAccount = (accountMemberId: AccountMember["accountMemberId"]) =>
   );
 
 /*
+#fetch https://effect.website/docs/schema/basic-usage/
+#fetch https://effect.website/docs/schema/filters/
+#fetch https://effect.website/docs/schema/transformations/
+#fetch https://effect.website/docs/schema/advanced-usage/
+
 #fetch https://effect.website/docs/schema/transformations/
 #fetch https://effect.website/docs/schema/error-messages/
 #fetch https://effect.website/docs/schema/annotations/
@@ -99,30 +104,18 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
         emails: Schema.compose(
           Schema.compose(Schema.NonEmptyString, Schema.split(",")),
           Schema.ReadonlySet(Email),
-        ),
-        // emails: Schema.transform(
-        //   Schema.compose(Schema.NonEmptyString, Schema.split(",")),
-        //   Schema.NonEmptyArray(Schema.NonEmptyString),
-        //   {
-        //     strict: false,
-        //     decode: (
-        //       emailsFromSplit: ReadonlyArray<string>,
-        //     ): ReadonlyArray<string> => {
-        //       const processedEmails = emailsFromSplit
-        //         .map((email) => email.trim())
-        //         .filter((email) => email !== "");
-        //       return [...new Set(processedEmails)];
-        //     },
-        //     encode: (validatedEmails: ReadonlyArray<string>): string => {
-        //       return validatedEmails.join(",");
-        //     },
-        //   },
-        // ).annotations({
-        //   message: () => ({
-        //     message: "Please provide at least one valid email address.",
-        //     override: true,
-        //   }),
-        // }),
+        )
+          .annotations({
+            message: () => ({
+              message: "Please provide valid email addresses.",
+              override: true,
+            }),
+          })
+          .pipe(
+            Schema.filter((s: ReadonlySet<Email>) => s.size <= 3, {
+              message: () => "Too many email addresses.",
+            }),
+          ),
       }),
       Schema.Struct({
         intent: Schema.Union(Schema.Literal("revoke"), Schema.Literal("leave")),
@@ -179,7 +172,11 @@ export default function RouteComponent({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Rac.Form method="post" className="grid gap-6">
+          <Rac.Form
+            method="post"
+            className="grid gap-6"
+            validationErrors={actionData?.validationErrors}
+          >
             <Oui.TextFieldEx
               name="emails"
               label="Email Addresses"
