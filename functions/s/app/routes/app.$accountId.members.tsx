@@ -175,7 +175,11 @@ export default function RouteComponent({
           <Rac.Form
             method="post"
             className="grid gap-6"
-            validationErrors={actionData?.validationErrors}
+            validationErrors={
+              actionData && "validationErrors" in actionData
+                ? actionData.validationErrors
+                : undefined
+            }
           >
             <Oui.TextFieldEx
               name="emails"
