@@ -1,6 +1,5 @@
 import { Data, Effect, ParseResult, Predicate, Schema } from "effect";
 import * as Rac from "react-aria-components";
-import { Email } from "../../s/app/lib/Domain"; // Adjusted import path
 
 /*
 
@@ -162,49 +161,3 @@ export const catchValidationError = <A, E, R>(
         : Effect.fail(error as Exclude<E, ValidationError>), // Type assertion confirms 'error' is narrowed to E excluding ValidationError.
     onSuccess: Effect.succeed,
   });
-
-/*  
-export const catchValidationError = <A, E, R>(
-  self: Effect.Effect<A, E | ValidationError, R>
-): Effect.Effect<A | { validationErrors: ValidationErrors }, Exclude<E, ValidationError>, R> =>
-  Effect.catchTag(self, 'ValidationError', (error) => {
-    const validationError = error as ValidationError
-    return Effect.succeed({ validationErrors: validationError.validationErrors })
-    // Necessary assertion: TypeScript infers the error channel after catchTag as
-    // `Exclude<E | ValidationError, { _tag: "ValidationError" }>` (structural exclusion).
-    // This is not directly assignable to the desired `Exclude<E, ValidationError>` (nominal exclusion)
-    // when E is generic. The assertion bridges this inference gap.
-  }) as Effect.Effect<A | { validationErrors: ValidationErrors }, Exclude<E, ValidationError>, R>
-*/
-
-// Helper function based on Effect documentation for creating a schema for ReadonlySet
-// from an array of encoded items. It applies itemSchema to each element.
-const ReadonlySetFromArray = <A, I, R>(
-  itemSchema: Schema.Schema<A, I, R>,
-): Schema.Schema<ReadonlySet<A>, ReadonlyArray<I>, R> =>
-  Schema.transform(
-    Schema.Array(itemSchema), // Source schema: decodes I[] to A[]
-    Schema.ReadonlySetFromSelf(Schema.typeSchema(itemSchema)), // Target schema: represents Set<A> using the Type of itemSchema
-    {
-      strict: true,
-      // `items` are already decoded to type A by Schema.Array(itemSchema)
-      decode: (items: ReadonlyArray<A>) => new Set(items),
-      // `set` contains items of type A, Schema.Array(itemSchema) handles encoding A[] to I[]
-      encode: (set: ReadonlySet<A>) => Array.from(set.values()),
-    },
-  );
-
-/**
- * Schema for a comma-separated string of emails.
- * Decodes into a `ReadonlySet<Email>`.
- * Individual emails are validated using `EmailSchema` (handles trimming, format, and non-empty).
- * If any email in the string is invalid, the entire decoding process will fail.
- */
-export const CommaSeparatedEmailsSchema = Schema.compose(
-  Schema.compose(Schema.NonEmptyString, Schema.split(",")),
-  // ReadonlySetFromArray(EmailSchema),
-  Schema.ReadonlySet(Email),
-);
-export type CommaSeparatedEmails = Schema.Schema.Type<
-  typeof CommaSeparatedEmailsSchema
->;
