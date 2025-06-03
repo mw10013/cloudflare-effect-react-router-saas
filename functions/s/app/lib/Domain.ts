@@ -31,11 +31,14 @@ export const Email = Schema.compose(Schema.Trim, Schema.Lowercase).pipe(
 );
 export type Email = Schema.Schema.Type<typeof Email>;
 
+export const UserId = Schema.Number.pipe(Schema.brand("UserId"));
+export type UserId = Schema.Schema.Type<typeof UserId>;
+
 export const UserType = Schema.Literal("customer", "staffer"); // Must align with UserType table
 export type UserType = Schema.Schema.Type<typeof UserType>;
 
 export const User = Schema.Struct({
-  userId: Schema.Number,
+  userId: UserId,
   name: Schema.NullOr(Schema.String),
   email: Email,
   userType: UserType,
@@ -57,7 +60,7 @@ export type SessionData = Schema.Schema.Type<typeof SessionData>;
 
 export const Account = Schema.Struct({
   accountId: Schema.Number,
-  userId: Schema.Number,
+  userId: UserId,
   stripeCustomerId: Schema.NullOr(Schema.String),
   stripeSubscriptionId: Schema.NullOr(Schema.String),
   stripeProductId: Schema.NullOr(Schema.String),
@@ -82,7 +85,7 @@ export type AccountMemberRole = Schema.Schema.Type<typeof AccountMemberRole>;
 
 export const AccountMember = Schema.Struct({
   accountMemberId: Schema.Number,
-  userId: Schema.Number,
+  userId: UserId,
   accountId: Schema.Number,
   status: AccountMemberStatus,
   role: AccountMemberRole,

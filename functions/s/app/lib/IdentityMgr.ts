@@ -3,6 +3,12 @@ import { Account, AccountMember, User } from "./Domain";
 import * as Q from "./Queue";
 import { Repository } from "./Repository";
 
+/*
+#fetch https://effect.website/docs/data-types/data/
+#fetch https://effect.website/docs/schema/classes/
+#fetch https://effect.website/docs/schema/basic-usage/#structs
+*/
+
 export const IdentityMgrLimits = Object.freeze({
   maxAccountMembers: 5,
 });
