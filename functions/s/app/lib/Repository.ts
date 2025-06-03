@@ -374,7 +374,7 @@ select json_group_array(json_object(
         emails,
         accountId,
       }: Pick<Account, "accountId"> & {
-        readonly emails: readonly User["email"][];
+        readonly emails: ReadonlySet<User["email"]>;
       }) =>
         Effect.gen(function* () {
           yield* Effect.log("Repository: createAccountMembers", {
@@ -395,11 +395,11 @@ values ((select userId from User where email = ?), ?, 'pending', 'member') retur
               )
               .bind(email, accountId),
           ];
-          return yield* d1.batch([
-            ...emails.flatMap((email) =>
+          return yield* d1.batch(
+            [...emails].flatMap((email) =>
               createAccountMemberStatements({ email, accountId }),
             ),
-          ]);
+          );
         }),
 
       /** Updates the status of an account member, guarded by userId. */
@@ -487,7 +487,7 @@ delete from AccountMember where accountMemberId in (select accountMemberId from 
         emails,
         accountId,
       }: Pick<Account, "accountId"> & {
-        readonly emails: readonly User["email"][];
+        readonly emails: ReadonlySet<User["email"]>;
       }) =>
         Effect.gen(function* () {
           const DataSchema = Schema.Struct({
@@ -495,7 +495,7 @@ delete from AccountMember where accountMemberId in (select accountMemberId from 
             pending: Schema.Array(Schema.String),
             active: Schema.Array(Schema.String),
           });
-          const emailPlaceholders = emails.map(() => `(?)`).join(",");
+          const emailPlaceholders = [...emails].map(() => `(?)`).join(",");
           return yield* pipe(
             d1
               .prepare(

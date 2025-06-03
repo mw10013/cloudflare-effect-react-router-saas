@@ -107,7 +107,7 @@ export class IdentityMgr extends Effect.Service<IdentityMgr>()("IdentityMgr", {
         accountId,
         accountEmail,
       }: Pick<Account, "accountId"> & {
-        readonly emails: readonly User["email"][];
+        readonly emails: ReadonlySet<User["email"]>;
         readonly accountEmail: User["email"];
       }) =>
         Effect.gen(function* () {
@@ -116,7 +116,7 @@ export class IdentityMgr extends Effect.Service<IdentityMgr>()("IdentityMgr", {
             accountId,
           });
           if (
-            accountMemberCount + emails.length >
+            accountMemberCount + emails.size >
             IdentityMgrLimits.maxAccountMembers
           ) {
             return yield* Effect.fail(
@@ -157,7 +157,7 @@ export class IdentityMgr extends Effect.Service<IdentityMgr>()("IdentityMgr", {
           }
           yield* repository.createAccountMembers({ emails, accountId });
           const from = yield* Config.nonEmptyString("COMPANY_EMAIL");
-          const payloads = emails.map((email) => ({
+          const payloads = [...emails].map((email) => ({
             type: "email" as const,
             to: email,
             from,

@@ -14,7 +14,7 @@ import { Schema } from "effect";
 /**
  * Derived from https://github.com/lucas-barake/effect-monorepo/blob/main/packages/domain/src/SchemaUtils.ts
  */
-export const EmailSchema = Schema.compose(Schema.Trim, Schema.Lowercase).pipe(
+export const Email = Schema.compose(Schema.Trim, Schema.Lowercase).pipe(
   Schema.minLength(1, {
     message: () => "Email is required",
   }),
@@ -29,7 +29,7 @@ export const EmailSchema = Schema.compose(Schema.Trim, Schema.Lowercase).pipe(
   ),
   Schema.brand("Email"),
 );
-export type Email = Schema.Schema.Type<typeof EmailSchema>;
+export type Email = Schema.Schema.Type<typeof Email>;
 
 export const UserType = Schema.Literal("customer", "staffer"); // Must align with UserType table
 export type UserType = Schema.Schema.Type<typeof UserType>;
@@ -37,7 +37,7 @@ export type UserType = Schema.Schema.Type<typeof UserType>;
 export const User = Schema.Struct({
   userId: Schema.Number,
   name: Schema.NullOr(Schema.String),
-  email: EmailSchema,
+  email: Email,
   userType: UserType,
   createdAt: Schema.DateFromString,
   updatedAt: Schema.DateFromString,

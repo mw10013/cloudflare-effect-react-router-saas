@@ -1,6 +1,6 @@
 import { Data, Effect, ParseResult, Predicate, Schema } from "effect";
 import * as Rac from "react-aria-components";
-import { EmailSchema } from "../../s/app/lib/Domain"; // Adjusted import path
+import { Email } from "../../s/app/lib/Domain"; // Adjusted import path
 
 /*
 
@@ -202,7 +202,8 @@ const ReadonlySetFromArray = <A, I, R>(
  */
 export const CommaSeparatedEmailsSchema = Schema.compose(
   Schema.compose(Schema.NonEmptyString, Schema.split(",")),
-  ReadonlySetFromArray(EmailSchema),
+  // ReadonlySetFromArray(EmailSchema),
+  Schema.ReadonlySet(Email),
 );
 export type CommaSeparatedEmails = Schema.Schema.Type<
   typeof CommaSeparatedEmailsSchema

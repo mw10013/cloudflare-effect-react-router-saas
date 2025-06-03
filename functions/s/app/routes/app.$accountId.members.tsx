@@ -1,4 +1,4 @@
-import type { AccountMember } from "~/lib/Domain";
+import type { AccountMember, User } from "~/lib/Domain";
 import type { Route } from "./+types/app.$accountId.members";
 import * as Oui from "@workspace/oui";
 import { SchemaEx } from "@workspace/shared";
@@ -12,6 +12,7 @@ import {
 import { Effect, Schema } from "effect";
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
+import { Email } from "~/lib/Domain";
 import { IdentityMgr } from "~/lib/IdentityMgr";
 import * as Policy from "~/lib/Policy";
 import * as ReactRouter from "~/lib/ReactRouter";
@@ -38,7 +39,7 @@ export const loader = ReactRouter.routeEffect(() =>
   }),
 );
 
-const inviteMembers = (emails: ReadonlyArray<string>) =>
+const inviteMembers = (emails: ReadonlySet<User["email"]>) =>
   ReactRouter.AppLoadContext.pipe(
     Effect.flatMap((appLoadContext) =>
       Effect.fromNullable(appLoadContext.accountMember),
@@ -95,29 +96,33 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
     const FormDataSchema = Schema.Union(
       Schema.Struct({
         intent: Schema.Literal("invite"),
-        emails: Schema.transform(
+        emails: Schema.compose(
           Schema.compose(Schema.NonEmptyString, Schema.split(",")),
-          Schema.NonEmptyArray(Schema.NonEmptyString),
-          {
-            strict: false,
-            decode: (
-              emailsFromSplit: ReadonlyArray<string>,
-            ): ReadonlyArray<string> => {
-              const processedEmails = emailsFromSplit
-                .map((email) => email.trim())
-                .filter((email) => email !== "");
-              return [...new Set(processedEmails)];
-            },
-            encode: (validatedEmails: ReadonlyArray<string>): string => {
-              return validatedEmails.join(",");
-            },
-          },
-        ).annotations({
-          message: () => ({
-            message: "Please provide at least one valid email address.",
-            override: true,
-          }),
-        }),
+          Schema.ReadonlySet(Email),
+        ),
+        // emails: Schema.transform(
+        //   Schema.compose(Schema.NonEmptyString, Schema.split(",")),
+        //   Schema.NonEmptyArray(Schema.NonEmptyString),
+        //   {
+        //     strict: false,
+        //     decode: (
+        //       emailsFromSplit: ReadonlyArray<string>,
+        //     ): ReadonlyArray<string> => {
+        //       const processedEmails = emailsFromSplit
+        //         .map((email) => email.trim())
+        //         .filter((email) => email !== "");
+        //       return [...new Set(processedEmails)];
+        //     },
+        //     encode: (validatedEmails: ReadonlyArray<string>): string => {
+        //       return validatedEmails.join(",");
+        //     },
+        //   },
+        // ).annotations({
+        //   message: () => ({
+        //     message: "Please provide at least one valid email address.",
+        //     override: true,
+        //   }),
+        // }),
       }),
       Schema.Struct({
         intent: Schema.Union(Schema.Literal("revoke"), Schema.Literal("leave")),
