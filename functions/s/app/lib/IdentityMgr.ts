@@ -1,4 +1,4 @@
-import { Config, Effect } from "effect";
+import { Config, Effect, Schema } from "effect";
 import { Account, AccountMember, User } from "./Domain";
 import * as Q from "./Queue";
 import { Repository } from "./Repository";
@@ -12,6 +12,13 @@ import { Repository } from "./Repository";
 export const IdentityMgrLimits = Object.freeze({
   maxAccountMembers: 5,
 });
+
+export class InviteError extends Schema.TaggedError<InviteError>()(
+  "InviteError",
+  {
+    message: Schema.String,
+  },
+) {}
 
 export class IdentityMgr extends Effect.Service<IdentityMgr>()("IdentityMgr", {
   accessors: true,
@@ -126,9 +133,9 @@ export class IdentityMgr extends Effect.Service<IdentityMgr>()("IdentityMgr", {
             IdentityMgrLimits.maxAccountMembers
           ) {
             return yield* Effect.fail(
-              new Error(
-                `Account member count exceeds the maximum limit of ${IdentityMgrLimits.maxAccountMembers}.`,
-              ),
+              new InviteError({
+                message: `Account member count exceeds the maximum limit of ${IdentityMgrLimits.maxAccountMembers}.`,
+              }),
             );
           }
           const invalidInviteEmails =
@@ -158,7 +165,9 @@ export class IdentityMgr extends Effect.Service<IdentityMgr>()("IdentityMgr", {
               );
             }
             return yield* Effect.fail(
-              new Error(`Invalid invite emails: ${details.join(", ")}`),
+              new InviteError({
+                message: `Invalid invite emails: ${details.join(", ")}`,
+              }),
             );
           }
           yield* repository.createAccountMembers({ emails, accountId });

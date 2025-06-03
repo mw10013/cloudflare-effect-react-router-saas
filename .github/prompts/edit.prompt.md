@@ -15,5 +15,9 @@ description: "Edit prompt"
 #fetch https://effect.website/docs/schema/transformations/
 #fetch https://effect.website/docs/schema/advanced-usage/
 #fetch https://effect.website/docs/schema/classes/
+#fetch https://effect.website/docs/schema/error-messages/
+#fetch https://effect.website/docs/schema/annotations/
+#fetch https://effect.website/docs/schema/error-formatters/
+
 
 NO GENERATED COMMENTS

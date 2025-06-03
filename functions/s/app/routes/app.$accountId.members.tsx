@@ -13,7 +13,7 @@ import { Effect, Schema } from "effect";
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
 import { AccountMemberIdFromString, Email } from "~/lib/Domain";
-import { IdentityMgr } from "~/lib/IdentityMgr";
+import { IdentityMgr, InviteError } from "~/lib/IdentityMgr";
 import * as Policy from "~/lib/Policy";
 import * as ReactRouter from "~/lib/ReactRouter";
 
@@ -84,18 +84,6 @@ const leaveAccount = (accountMemberId: AccountMember["accountMemberId"]) =>
     ),
   );
 
-/*
-#fetch https://effect.website/docs/schema/basic-usage/
-#fetch https://effect.website/docs/schema/filters/
-#fetch https://effect.website/docs/schema/transformations/
-#fetch https://effect.website/docs/schema/advanced-usage/
-
-#fetch https://effect.website/docs/schema/transformations/
-#fetch https://effect.website/docs/schema/error-messages/
-#fetch https://effect.website/docs/schema/annotations/
-#fetch https://effect.website/docs/schema/error-formatters/
-*/
-
 export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
   Effect.gen(function* () {
     const FormDataSchema = Schema.Union(
@@ -140,7 +128,12 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
         yield* Effect.fail(new Error("Invalid intent"));
         break;
     }
-  }).pipe(SchemaEx.catchValidationError),
+  }).pipe(
+    SchemaEx.catchValidationError,
+    Effect.catchTag("InviteError", (error) =>
+      Effect.succeed({ validationErrors: { emails: error.message } }),
+    ),
+  ),
 );
 
 /**
