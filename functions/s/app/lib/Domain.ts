@@ -37,9 +37,7 @@ export type UserId = Schema.Schema.Type<typeof UserId>;
 export const AccountId = Schema.Number.pipe(Schema.brand("AccountId"));
 export type AccountId = Schema.Schema.Type<typeof AccountId>;
 
-const _AccountMemberIdBase = Schema.Number;
-
-export const AccountMemberId = _AccountMemberIdBase.pipe(
+export const AccountMemberId = Schema.Number.pipe(
   Schema.brand("AccountMemberId"),
 );
 export type AccountMemberId = Schema.Schema.Type<typeof AccountMemberId>;
