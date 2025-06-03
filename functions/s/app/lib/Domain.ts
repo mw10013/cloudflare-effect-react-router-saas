@@ -38,7 +38,7 @@ export const AccountMemberIdFromString = Schema.NumberFromString.pipe(
 export const UserType = Schema.Literal("customer", "staffer"); // Must align with UserType table
 export type UserType = Schema.Schema.Type<typeof UserType>;
 
-export const User = Schema.Struct({
+export class User extends Schema.Class<User>("User")({
   userId: UserId,
   name: Schema.NullOr(Schema.String),
   email: Email,
@@ -46,20 +46,25 @@ export const User = Schema.Struct({
   createdAt: Schema.DateFromString,
   updatedAt: Schema.DateFromString,
   deletedAt: Schema.NullOr(Schema.DateFromString),
-});
-export type User = Schema.Schema.Type<typeof User>;
+}) {}
 
-export const UserSubject = User.pick("userId", "email", "userType");
+// Use .pipe() for Schema.pick to ensure correct type inference with Schema.Class
+export const UserSubject = User.pipe(
+  Schema.pick("userId", "email", "userType"),
+);
+export interface UserSubject extends Schema.Schema.Type<typeof UserSubject> {}
 
-export const SessionUser = User.pick("userId", "email", "userType");
-export type SessionUser = Schema.Schema.Type<typeof SessionUser>;
+export const SessionUser = User.pipe(
+  Schema.pick("userId", "email", "userType"),
+);
+export interface SessionUser extends Schema.Schema.Type<typeof SessionUser> {}
 
 export const SessionData = Schema.Struct({
   sessionUser: Schema.optional(SessionUser),
 });
 export type SessionData = Schema.Schema.Type<typeof SessionData>;
 
-export const Account = Schema.Struct({
+export class Account extends Schema.Class<Account>("Account")({
   accountId: AccountId,
   userId: UserId,
   stripeCustomerId: Schema.NullOr(Schema.String),
@@ -67,14 +72,13 @@ export const Account = Schema.Struct({
   stripeProductId: Schema.NullOr(Schema.String),
   planName: Schema.NullOr(Schema.String),
   subscriptionStatus: Schema.NullOr(Schema.String),
-});
-export type Account = Schema.Schema.Type<typeof Account>;
+}) {}
 
-export const AccountWithUser = Schema.Struct({
-  ...Account.fields,
+export class AccountWithUser extends Account.extend<AccountWithUser>(
+  "AccountWithUser",
+)({
   user: User,
-});
-export type AccountWithUser = Schema.Schema.Type<typeof AccountWithUser>;
+}) {}
 
 export const AccountMemberStatus = Schema.Literal("pending", "active"); // Must align with AccountMemberStatus table
 export type AccountMemberStatus = Schema.Schema.Type<
@@ -84,41 +88,34 @@ export type AccountMemberStatus = Schema.Schema.Type<
 export const AccountMemberRole = Schema.Literal("admin", "member"); // Must align with AccountMemberRole table
 export type AccountMemberRole = Schema.Schema.Type<typeof AccountMemberRole>;
 
-export const AccountMember = Schema.Struct({
-  accountMemberId: AccountMemberId,
-  userId: UserId,
-  accountId: AccountId,
-  status: AccountMemberStatus,
-  role: AccountMemberRole,
-});
-export type AccountMember = Schema.Schema.Type<typeof AccountMember>;
+export class AccountMember extends Schema.Class<AccountMember>("AccountMember")(
+  {
+    accountMemberId: AccountMemberId,
+    userId: UserId,
+    accountId: AccountId,
+    status: AccountMemberStatus,
+    role: AccountMemberRole,
+  },
+) {}
 
-export const AccountMemberWithUser = Schema.Struct({
-  ...AccountMember.fields,
+export class AccountMemberWithUser extends AccountMember.extend<AccountMemberWithUser>(
+  "AccountMemberWithUser",
+)({
   user: User,
-});
-export type AccountMemberWithUser = Schema.Schema.Type<
-  typeof AccountMemberWithUser
->;
+}) {}
 
-export const AccountMemberWithAccount = Schema.Struct({
-  ...AccountMember.fields,
+export class AccountMemberWithAccount extends AccountMember.extend<AccountMemberWithAccount>(
+  "AccountMemberWithAccount",
+)({
   account: AccountWithUser,
-});
-export type AccountMemberWithAccount = Schema.Schema.Type<
-  typeof AccountMemberWithAccount
->;
+}) {}
 
-export const AccountWithAccountMembers = Schema.Struct({
-  ...Account.fields,
+export class AccountWithAccountMembers extends Account.extend<AccountWithAccountMembers>(
+  "AccountWithAccountMembers",
+)({
   accountMembers: Schema.Array(AccountMemberWithUser),
-});
-export type AccountWithAccountMembers = Schema.Schema.Type<
-  typeof AccountWithAccountMembers
->;
+}) {}
 
-export const Customer = Schema.Struct({
-  ...User.fields,
+export class Customer extends User.extend<Customer>("Customer")({
   account: AccountWithAccountMembers,
-});
-export type Customer = Schema.Schema.Type<typeof Customer>;
+}) {}
