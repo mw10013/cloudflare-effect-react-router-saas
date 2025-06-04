@@ -1,0 +1,188 @@
+# Managing Services
+
+## Managing Services with Effect
+
+The Effect library simplifies managing dependencies by leveraging the type system. Instead of manually passing services or environment objects around, Effect allows you to declare service dependencies directly in the function’s type signature using the `Requirements` parameter in the `Effect` type:
+
+```
+Effect<Success, Error, Requirements>
+```
+
+### Key Concepts
+
+1. **Dependency Declaration**: Specify what services a function needs directly in its type, pushing the complexity of dependency management into the type system.
+2. **Service Provision**: Use `Effect.provideService` to make a service implementation available to the functions that need it. This ensures consistent access to required services across the application.
+
+This approach abstracts away manual service handling, letting developers focus on business logic while the compiler ensures all dependencies are correctly managed. It also makes code more maintainable and scalable.
+
+---
+
+## Creating a Service
+
+To create a new service, you need:
+
+1. **A unique identifier**.
+2. **A type describing the possible operations of the service**.
+
+### Example: Random Number Generator Service
+
+```typescript
+import { Context, Effect } from "effect";
+
+class Random extends Context.Tag("MyRandomService")<
+  Random,
+  { readonly next: Effect.Effect<number> }
+>() {}
+```
+
+The `Random` value acts as a tag in Effect, representing the service and allowing Effect to locate and use it at runtime.
+
+---
+
+## Using the Service
+
+### Example: Accessing the Random Service
+
+```typescript
+import { Context, Effect } from "effect";
+
+class Random extends Context.Tag("MyRandomService")<
+  Random,
+  { readonly next: Effect.Effect<number> }
+>() {}
+
+const program = Effect.gen(function* () {
+  const random = yield* Random;
+  const randomNumber = yield* random.next;
+  console.log(`random number: ${randomNumber}`);
+});
+```
+
+The `Requirements` type parameter of the `program` variable includes `Random`, indicating that the program requires the `Random` service to execute successfully.
+
+---
+
+## Providing a Service Implementation
+
+### Example: Random Number Implementation
+
+```typescript
+import { Context, Effect } from "effect";
+
+class Random extends Context.Tag("MyRandomService")<
+  Random,
+  { readonly next: Effect.Effect<number> }
+>() {}
+
+const program = Effect.gen(function* () {
+  const random = yield* Random;
+  const randomNumber = yield* random.next;
+  console.log(`random number: ${randomNumber}`);
+});
+
+const runnable = Effect.provideService(program, Random, {
+  next: Effect.sync(() => Math.random()),
+});
+
+Effect.runPromise(runnable);
+```
+
+---
+
+## Extracting the Service Type
+
+### Example: Retrieve Service Type
+
+```typescript
+import { Context, Effect } from "effect";
+
+class Random extends Context.Tag("MyRandomService")<
+  Random,
+  { readonly next: Effect.Effect<number> }
+>() {}
+
+type RandomShape = Context.Tag.Service<Random>;
+```
+
+---
+
+## Using Multiple Services
+
+### Example: Random and Logger Services
+
+```typescript
+import { Context, Effect } from "effect";
+
+class Random extends Context.Tag("MyRandomService")<
+  Random,
+  { readonly next: Effect.Effect<number> }
+>() {}
+
+class Logger extends Context.Tag("MyLoggerService")<
+  Logger,
+  { readonly log: (message: string) => Effect.Effect<void> }
+>() {}
+
+const program = Effect.gen(function* () {
+  const random = yield* Random;
+  const logger = yield* Logger;
+
+  const randomNumber = yield* random.next;
+  yield* logger.log(String(randomNumber));
+});
+
+const runnable = program.pipe(
+  Effect.provideService(Random, { next: Effect.sync(() => Math.random()) }),
+  Effect.provideService(Logger, {
+    log: (message) => Effect.sync(() => console.log(message)),
+  }),
+);
+
+Effect.runPromise(runnable);
+```
+
+---
+
+## Optional Services
+
+### Example: Handling Optional Services
+
+```typescript
+import { Context, Effect, Option } from "effect";
+
+class Random extends Context.Tag("MyRandomService")<
+  Random,
+  { readonly next: Effect.Effect<number> }
+>() {}
+
+const program = Effect.gen(function* () {
+  const maybeRandom = yield* Effect.serviceOption(Random);
+  const randomNumber = Option.isNone(maybeRandom)
+    ? -1
+    : yield* maybeRandom.value.next;
+  console.log(randomNumber);
+});
+
+Effect.runPromise(program);
+```
+
+---
+
+## Handling Services with Dependencies
+
+### Example: Logger Service with Configuration Dependency
+
+```typescript
+import { Context, Effect } from "effect";
+
+class Config extends Context.Tag("Config")<Config, {}>() {}
+
+class Logger extends Context.Tag("MyLoggerService")<
+  Logger,
+  { readonly log: (message: string) => Effect.Effect<void> }
+>() {}
+```
+
+Use layers to manage dependencies during service construction. Layers act as constructors for creating services, handling dependencies at the construction level rather than the service level.
+
+---
