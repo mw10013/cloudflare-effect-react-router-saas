@@ -54,6 +54,7 @@ export const UserSubject = User.pipe(
 );
 export interface UserSubject extends Schema.Schema.Type<typeof UserSubject> {}
 
+// Use .pipe() for Schema.pick to ensure correct type inference with Schema.Class
 export const SessionUser = User.pipe(
   Schema.pick("userId", "email", "userType"),
 );
