@@ -1,8 +1,9 @@
 import type { Stripe as StripeType } from 'stripe'
 import { ConfigEx, ErrorEx } from '@workspace/shared'
-import { Cause, Config, ConfigError, Effect, Either, Option, Predicate, Redacted } from 'effect'
+import { Cause, Config, ConfigError, Effect, Either, Option, Predicate, Redacted, Schema } from 'effect'
 import { Stripe as StripeClass } from 'stripe'
 import { IdentityMgr } from './IdentityMgr'
+import { Email, type UserId } from './Domain'
 
 export class Stripe extends Effect.Service<Stripe>()('Stripe', {
   accessors: true,
@@ -112,7 +113,7 @@ export class Stripe extends Effect.Service<Stripe>()('Stripe', {
         ),
       getSubscriptionForCustomer,
       // https://github.com/t3dotgg/stripe-recommendations?tab=readme-ov-file#checkout-flow
-      ensureStripeCustomerId: ({ userId, email }: { userId: number; email: string }) =>
+      ensureStripeCustomerId: ({ userId, email }: { userId: UserId; email: Email }) =>
         Effect.gen(function* () {
           const account = yield* identityMgr.getAccountForUser({ userId })
           if (account.stripeCustomerId)
@@ -319,9 +320,10 @@ export class Stripe extends Effect.Service<Stripe>()('Stripe', {
           )
 
           // Ensure customers
-          const iterable = ['motio1@mail.com', 'motio2@mail.com', 'u@u.com', 'u1@u.com'].map((email) =>
+          const iterable = ['motio1@mail.com', 'motio2@mail.com', 'u@u.com', 'u1@u.com'].map((s) =>
             Effect.gen(function* () {
-              const user = yield* identityMgr.provisionUser({ email })
+              const email = yield* Schema.decode(Email)(s);
+              const user = yield* identityMgr.provisionUser({ email });
               const customer = yield* Effect.tryPromise(() =>
                 stripe.customers.list({
                   email,
