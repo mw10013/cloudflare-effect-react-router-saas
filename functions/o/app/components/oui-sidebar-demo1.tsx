@@ -14,12 +14,8 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarInset,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarProvider,
 } from "@workspace/ui/components/ui/sidebar";
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
 
 /*
 #fetch https://ui.shadcn.com/docs/components/sidebar
@@ -30,27 +26,22 @@ const items = [
   {
     id: "Home",
     href: "/",
-    icon: Home,
   },
   {
     id: "Inbox",
     href: "#",
-    icon: Inbox,
   },
   {
     id: "Calendar",
     href: "#",
-    icon: Calendar,
   },
   {
     id: "Search",
     href: "#",
-    icon: Search,
   },
   {
     id: "Settings",
     href: "#",
-    icon: Settings,
   },
 ];
 
@@ -59,17 +50,12 @@ function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>List Box1</SidebarGroupLabel>
+          <SidebarGroupLabel>List Box</SidebarGroupLabel>
           <SidebarGroupContent>
             <Oui.SidebarListBox aria-label="List Box" items={items}>
               {(item) => (
-                <Oui.SidebarListBoxItem
-                  key={item.id}
-                  href={item.href}
-                  textValue={item.id}
-                >
-                  <item.icon />
-                  <span>{item.id}</span>
+                <Oui.SidebarListBoxItem key={item.id} href={item.href}>
+                  {item.id}
                 </Oui.SidebarListBoxItem>
               )}
             </Oui.SidebarListBox>
