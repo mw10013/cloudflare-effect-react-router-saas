@@ -1,5 +1,6 @@
+import type { VariantProps } from "tailwind-variants";
 import * as Rac from "react-aria-components";
-import { tv, VariantProps } from "tailwind-variants";
+import { tv } from "tailwind-variants";
 
 /*
 #fetch https://react-spectrum.adobe.com/react-aria/Modal.html

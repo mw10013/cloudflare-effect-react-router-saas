@@ -11,6 +11,7 @@ import {
 import { Effect, Schema } from "effect";
 import * as Rac from "react-aria-components";
 import { useSubmit } from "react-router";
+import { AccountMemberId, AccountMemberIdFromString } from "~/lib/Domain";
 import { IdentityMgr } from "~/lib/IdentityMgr";
 import * as ReactRouter from "~/lib/ReactRouter";
 
@@ -29,13 +30,14 @@ export const loader = ReactRouter.routeEffect(({ context }) =>
 
 export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
   Effect.gen(function* () {
-    const appLoadContext = yield* ReactRouter.AppLoadContext;
-    const sessionUser = yield* Effect.fromNullable(
-      appLoadContext.session.get("sessionUser"),
+    const userId = yield* ReactRouter.AppLoadContext.pipe(
+      Effect.flatMap((appLoadContext) =>
+        Effect.fromNullable(appLoadContext.session.get("sessionUser")?.userId),
+      ),
     );
     const FormDataSchema = Schema.Struct({
-      accountMemberId: Schema.NumberFromString,
       intent: Schema.Literal("accept", "decline"),
+      accountMemberId: AccountMemberIdFromString,
     });
     const formData = yield* SchemaEx.decodeRequestFormData({
       request,
@@ -45,13 +47,13 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
       case "accept":
         yield* IdentityMgr.acceptInvitation({
           accountMemberId: formData.accountMemberId,
-          userId: sessionUser.userId,
+          userId,
         });
         break;
       case "decline":
         yield* IdentityMgr.declineInvitation({
           accountMemberId: formData.accountMemberId,
-          userId: sessionUser.userId,
+          userId,
         });
         break;
       default:
