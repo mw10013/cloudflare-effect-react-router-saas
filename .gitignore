@@ -3,9 +3,6 @@
 # Package Managers
 node_modules/
 
-# Editor Configs
-# .vscode
-
 # Build Outputs
 out/
 build
@@ -15,19 +12,14 @@ build.log
 # Cloudflare
 .wrangler/
 .dev.vars
+.env
 
 # React Router
 .react-router/
 
-# Generated
-functions/app/public/tailwind.css
-
 # Tests
 test-results/
 playwright-report/
-
-# SST
-.sst/
 
 # Miscellaneous
 .cache/
