@@ -7,7 +7,7 @@
     "clean:wrangler": "pnpm -r clean:wrangler",
     "clean:etc": "pnpm -r clean:etc",
     "format": "prettier --write .",
-    "lint": "oxlint . --ignore-pattern \"functions/r1\" --ignore-pattern \"functions/i\""
+    "lint": "oxlint . --ignore-pattern \"functions/r1\" --ignore-pattern \"functions/i\" --fix"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.4.1",

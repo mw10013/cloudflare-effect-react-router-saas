@@ -32,7 +32,7 @@ let resp = await aws.fetch('https://email.us-east-1.amazonaws.com/v2/email/outbo
 				},
 				Body: {
 					Text: {
-						Data: 'This is aws4fetch email.'.replace(/<br\s*[\/]?>/gi, '\n')
+						Data: 'This is aws4fetch email.'.replace(/<br\s*[/]?>/gi, '\n')
 					}
 				}
 			}
