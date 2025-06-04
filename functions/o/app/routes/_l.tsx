@@ -100,6 +100,10 @@ const items = [
     href: "/demo/sidebar",
   },
   {
+    id: "Sidebar1",
+    href: "/demo/sidebar1",
+  },
+  {
     id: "Slider",
     href: "/demo/slider",
   },
