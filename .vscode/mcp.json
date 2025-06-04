@@ -1,0 +1,18 @@
+{
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "cloudflareAccessToken",
+      "description": "Cloudflare Access Token for MCP",
+      "password": true
+    }
+  ],
+  "servers": {
+    "cf-browser-rendering": {
+      "url": "https://browser.mcp.cloudflare.com/sse",
+      "headers": {
+        "Authorization": "Bearer ${input:cloudflareAccessToken}"
+      }
+    }
+  }
+}

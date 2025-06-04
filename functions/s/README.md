@@ -131,12 +131,10 @@ export const appMiddleware: Route.unstable_MiddlewareFunction =
 
 ## Prompt
 
-```
-#fetch https://effect.website/docs/error-management/two-error-types/
-#fetch https://effect.website/docs/error-management/expected-errors/
-#fetch https://effect.website/docs/error-management/unexpected-errors/
-#fetch https://effect.website/docs/getting-started/running-effects/
-#fetch https://effect.website/docs/runtime/
-```
-
 - https://deepwiki.com/Effect-TS/effect
+
+## Cloudflare
+
+- curl "https://api.cloudflare.com/client/v4/accounts/87997fc2724b0127effb8e4524989975/tokens/verify" \
+     -H "Authorization: Bearer <TOKEN>"
+
