@@ -5,7 +5,6 @@ import { PanelLeftIcon } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
 import { tv } from "tailwind-variants";
-// Ensure VariantProps is imported
 import { composeTailwindRenderProps } from "./oui-base";
 import { Button } from "./oui-button";
 
