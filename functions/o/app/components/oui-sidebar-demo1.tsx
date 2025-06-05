@@ -80,7 +80,11 @@ function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
-        <Rac.Tree<TreeNode> aria-label="Files" items={treeItems}>
+        <Rac.Tree<TreeNode>
+          aria-label="Files"
+          items={treeItems}
+          defaultExpandedKeys={["Parent", "Parent1"]}
+        >
           {function renderItem(item) {
             return (
               <TreeItem key={item.id} title={item.id} id={item.id}>
