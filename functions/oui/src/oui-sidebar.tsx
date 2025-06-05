@@ -154,39 +154,31 @@ export const SidebarListBoxItem = <T extends object>({
 
 export interface SidebarTreeNodeEx {
   id: string;
+  title?: string;
   children?: SidebarTreeNodeEx[];
 }
 
-export function SidebarTreeItemContentEx(props: {
-  children?: React.ReactNode;
-  id: string;
-}) {
-  return <Rac.TreeItemContent>{props.children}</Rac.TreeItemContent>;
+export function SidebarTreeItemContentEx({
+  children,
+  ...props
+}: Rac.TreeItemContentProps) {
+  return <Rac.TreeItemContent {...props}>{children}</Rac.TreeItemContent>;
 }
 
 export interface SidebarTreeItemPropsEx extends Partial<Rac.TreeItemProps> {
   title: string;
-  id: string;
 }
 
-export function SidebarTreeItemEx(props: SidebarTreeItemPropsEx) {
+export function SidebarTreeItemEx({
+  title,
+  children,
+  ...props
+}: SidebarTreeItemPropsEx) {
   return (
-    <Rac.TreeItem textValue={props.title} id={props.id}>
-      <SidebarTreeItemContentEx id={props.id}>
-        {props.title}
-      </SidebarTreeItemContentEx>
-      {props.children}
+    <Rac.TreeItem textValue={title} {...props}>
+      <SidebarTreeItemContentEx>{title}</SidebarTreeItemContentEx>
+      {children}
     </Rac.TreeItem>
-  );
-}
-
-export function renderSidebarTreeNodeEx(item: SidebarTreeNodeEx) {
-  return (
-    <SidebarTreeItemEx key={item.id} title={item.id} id={item.id}>
-      <Rac.Collection items={item.children}>
-        {renderSidebarTreeNodeEx}
-      </Rac.Collection>
-    </SidebarTreeItemEx>
   );
 }
 
@@ -195,7 +187,11 @@ export function SidebarTreeEx(props: Rac.TreeProps<SidebarTreeNodeEx>) {
     <Rac.Tree {...props}>
       {function renderSidebarTreeNodeEx(item) {
         return (
-          <SidebarTreeItemEx key={item.id} title={item.id} id={item.id}>
+          <SidebarTreeItemEx
+            key={item.id}
+            id={item.id}
+            title={item.title ?? item.id}
+          >
             <Rac.Collection items={item.children}>
               {renderSidebarTreeNodeEx}
             </Rac.Collection>
