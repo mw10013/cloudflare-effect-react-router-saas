@@ -8,12 +8,6 @@ import { tv } from "tailwind-variants";
 import { composeTailwindRenderProps } from "./oui-base";
 import { Button } from "./oui-button";
 
-/*
-#fetch https://ui.shadcn.com/docs/components/sidebar
-#fetch https://react-spectrum.adobe.com/react-aria/ListBox.html
-#fetch https://react-spectrum.adobe.com/react-aria/examples/contact-list.html
-*/
-
 export function SidebarTrigger({
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledBy,
@@ -157,3 +151,39 @@ export const SidebarListBoxItem = <T extends object>({
     />
   );
 };
+
+export interface SidebarTreeNodeEx {
+  id: string;
+  children?: SidebarTreeNodeEx[];
+}
+
+export function SidebarTreeItemContentEx(props: {
+  children?: React.ReactNode;
+  id: string;
+}) {
+  return <Rac.TreeItemContent>{props.children}</Rac.TreeItemContent>;
+}
+
+export interface SidebarTreeItemPropsEx extends Partial<Rac.TreeItemProps> {
+  title: string;
+  id: string;
+}
+
+export function SidebarTreeItemEx(props: SidebarTreeItemPropsEx) {
+  return (
+    <Rac.TreeItem textValue={props.title} id={props.id}>
+      <SidebarTreeItemContentEx id={props.id}>
+        {props.title}
+      </SidebarTreeItemContentEx>
+      {props.children}
+    </Rac.TreeItem>
+  );
+}
+
+export function renderSidebarTreeNodeEx(item: SidebarTreeNodeEx) {
+  return (
+    <SidebarTreeItemEx key={item.id} title={item.id} id={item.id}>
+      <Rac.Collection items={item.children}>{renderSidebarTreeNodeEx}</Rac.Collection>
+    </SidebarTreeItemEx>
+  );
+}

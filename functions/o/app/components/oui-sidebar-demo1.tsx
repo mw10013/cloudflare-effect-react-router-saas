@@ -42,12 +42,7 @@ const items = [
   },
 ];
 
-interface TreeNode {
-  id: string;
-  children?: TreeNode[];
-}
-
-const treeItems: TreeNode[] = [
+const treeItems: Oui.SidebarTreeNodeEx[] = [
   {
     id: "Parent",
     children: [{ id: "Child" }, { id: "Child1" }, { id: "Child2" }],
@@ -58,42 +53,16 @@ const treeItems: TreeNode[] = [
   },
 ];
 
-function TreeItemContent(props: { children?: React.ReactNode; id: string }) {
-  return <Rac.TreeItemContent>{props.children}</Rac.TreeItemContent>;
-}
-
-interface TreeItemProps extends Partial<Rac.TreeItemProps> {
-  title: string;
-  id: string;
-}
-
-function TreeItem(props: TreeItemProps) {
-  return (
-    <Rac.TreeItem textValue={props.title} id={props.id}>
-      <TreeItemContent id={props.id}>{props.title}</TreeItemContent>
-      {props.children}
-    </Rac.TreeItem>
-  );
-}
-
 function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
-        <Rac.Tree<TreeNode>
+        <Rac.Tree<Oui.SidebarTreeNodeEx>
           aria-label="Files"
           items={treeItems}
           defaultExpandedKeys={["Parent", "Parent1"]}
         >
-          {function renderItem(item) {
-            return (
-              <TreeItem key={item.id} title={item.id} id={item.id}>
-                <Rac.Collection items={item.children}>
-                  {renderItem}
-                </Rac.Collection>
-              </TreeItem>
-            );
-          }}
+          {Oui.renderSidebarTreeNodeEx}
         </Rac.Tree>
         <SidebarGroup>
           <SidebarGroupLabel>List Box</SidebarGroupLabel>
