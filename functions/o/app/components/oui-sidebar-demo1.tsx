@@ -1,3 +1,4 @@
+import * as React from "react";
 import * as Oui from "@workspace/oui";
 import {
   Breadcrumb,
@@ -16,8 +17,7 @@ import {
   SidebarInset,
   SidebarProvider,
 } from "@workspace/ui/components/ui/sidebar";
-import * as Rac from 'react'
-
+import * as Rac from "react-aria-components";
 
 const items = [
   {
@@ -49,27 +49,48 @@ interface TreeNode {
 
 const treeItems: TreeNode[] = [
   {
-    id: 'Parent',
-    children: [
-      { id: 'Child' },
-      { id: 'Child1' },
-      { id: 'Child2' },
-    ],
+    id: "Parent",
+    children: [{ id: "Child" }, { id: "Child1" }, { id: "Child2" }],
   },
   {
-    id: 'Parent1',
-    children: [
-      { id: 'Child3' },
-      { id: 'Child4' },
-    ],
+    id: "Parent1",
+    children: [{ id: "Child3" }, { id: "Child4" }],
   },
 ];
+
+function TreeItemContent(props: { children?: React.ReactNode; id: string }) {
+  return <Rac.TreeItemContent>{props.children}</Rac.TreeItemContent>;
+}
+
+interface TreeItemProps extends Partial<Rac.TreeItemProps> {
+  title: string;
+  id: string;
+}
+
+function TreeItem(props: TreeItemProps) {
+  return (
+    <Rac.TreeItem textValue={props.title} id={props.id}>
+      <TreeItemContent id={props.id}>{props.title}</TreeItemContent>
+      {props.children}
+    </Rac.TreeItem>
+  );
+}
 
 function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
-        
+        <Rac.Tree<TreeNode> aria-label="Files" items={treeItems}>
+          {function renderItem(item) {
+            return (
+              <TreeItem key={item.id} title={item.id} id={item.id}>
+                <Rac.Collection items={item.children}>
+                  {renderItem}
+                </Rac.Collection>
+              </TreeItem>
+            );
+          }}
+        </Rac.Tree>
         <SidebarGroup>
           <SidebarGroupLabel>List Box</SidebarGroupLabel>
           <SidebarGroupContent>
