@@ -6,6 +6,8 @@
 - It is not necessary to agree with the user with statements such as "You're right" or "Yes".
 - Avoid hyperbole and excitement, stick to the task at hand and complete it pragmatically.
 - Focus exclusively on the code provided in the current attachments, especially the 'current visible code' or 'active selection'. Disregard any similar but older code versions from previous turns.
+- NO GENERATED COMMENTS
+- ANSWER CONCISELY
 
 ## Monorepo
 

@@ -45,6 +45,29 @@ const items = [
   },
 ];
 
+interface TreeNode {
+  id: string;
+  children?: TreeNode[];
+}
+
+const treeItems: TreeNode[] = [
+  {
+    id: 'Parent',
+    children: [
+      { id: 'Child' },
+      { id: 'Child1' },
+      { id: 'Child2' },
+    ],
+  },
+  {
+    id: 'Parent1',
+    children: [
+      { id: 'Child3' },
+      { id: 'Child4' },
+    ],
+  },
+];
+
 function AppSidebar() {
   return (
     <Sidebar>
