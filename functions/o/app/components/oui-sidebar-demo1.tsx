@@ -16,11 +16,8 @@ import {
   SidebarInset,
   SidebarProvider,
 } from "@workspace/ui/components/ui/sidebar";
+import * as Rac from 'react'
 
-/*
-#fetch https://ui.shadcn.com/docs/components/sidebar
-#fetch https://react-spectrum.adobe.com/react-aria/examples/contact-list.html
-*/
 
 const items = [
   {
