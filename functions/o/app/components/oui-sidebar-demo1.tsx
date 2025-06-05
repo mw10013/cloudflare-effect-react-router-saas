@@ -57,13 +57,11 @@ function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
-        <Rac.Tree<Oui.SidebarTreeNodeEx>
-          aria-label="Files"
+        <Oui.SidebarTreeEx
+          aria-label="Tree"
           items={treeItems}
           defaultExpandedKeys={["Parent", "Parent1"]}
-        >
-          {Oui.renderSidebarTreeNodeEx}
-        </Rac.Tree>
+        />
         <SidebarGroup>
           <SidebarGroupLabel>List Box</SidebarGroupLabel>
           <SidebarGroupContent>

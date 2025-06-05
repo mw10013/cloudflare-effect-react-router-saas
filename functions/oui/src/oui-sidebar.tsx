@@ -183,7 +183,25 @@ export function SidebarTreeItemEx(props: SidebarTreeItemPropsEx) {
 export function renderSidebarTreeNodeEx(item: SidebarTreeNodeEx) {
   return (
     <SidebarTreeItemEx key={item.id} title={item.id} id={item.id}>
-      <Rac.Collection items={item.children}>{renderSidebarTreeNodeEx}</Rac.Collection>
+      <Rac.Collection items={item.children}>
+        {renderSidebarTreeNodeEx}
+      </Rac.Collection>
     </SidebarTreeItemEx>
+  );
+}
+
+export function SidebarTreeEx(props: Rac.TreeProps<SidebarTreeNodeEx>) {
+  return (
+    <Rac.Tree {...props}>
+      {function renderSidebarTreeNodeEx(item) {
+        return (
+          <SidebarTreeItemEx key={item.id} title={item.id} id={item.id}>
+            <Rac.Collection items={item.children}>
+              {renderSidebarTreeNodeEx}
+            </Rac.Collection>
+          </SidebarTreeItemEx>
+        );
+      }}
+    </Rac.Tree>
   );
 }
