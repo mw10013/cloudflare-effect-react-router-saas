@@ -165,7 +165,7 @@ export function SidebarTreeItemContentEx({
   ...props
 }: Rac.TreeItemContentProps) {
   return (
-    <Rac.TreeItemContent {...props} className="group/label text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sm">
+    <Rac.TreeItemContent {...props}>
       {(renderProps) => {
         return (
           <div className="group/label text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sm">
@@ -204,6 +204,9 @@ export function SidebarTreeItemEx({
   );
 }
 
+/**
+ * Derived from SidebarGroup
+ */
 export function SidebarTreeEx(props: Rac.TreeProps<SidebarTreeNodeEx>) {
   return (
     <Rac.Tree {...props}>
@@ -213,6 +216,7 @@ export function SidebarTreeEx(props: Rac.TreeProps<SidebarTreeNodeEx>) {
             key={item.id}
             id={item.id}
             title={item.title ?? item.id}
+            className="relative flex w-full min-w-0 flex-col p-2"
           >
             <Rac.Collection items={item.children}>
               {renderSidebarTreeNodeEx}
