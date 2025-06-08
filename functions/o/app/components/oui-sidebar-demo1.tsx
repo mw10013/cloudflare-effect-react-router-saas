@@ -25,6 +25,7 @@ import {
   SidebarMenuItem,
   SidebarProvider,
 } from "@workspace/ui/components/ui/sidebar";
+import { isActive } from "effect/RuntimeFlagsPatch";
 import { ChevronRight } from "lucide-react";
 import * as Rac from "react-aria-components";
 
@@ -137,6 +138,7 @@ const data = {
         {
           title: "Project Structure",
           url: "#",
+          isActive: true,
         },
       ],
     },
