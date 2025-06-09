@@ -168,7 +168,13 @@ export function SidebarTreeItemContentEx({
     <Rac.TreeItemContent {...props}>
       {(renderProps) => {
         return (
-          <div className="group/label text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sm">
+          <div
+            className={twMerge(
+              "text-sidebar-foreground/70 ring-sidebar-ring outline-hidden flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+              "group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0",
+              "group/label text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sm",
+            )}
+          >
             {typeof children === "function" ? children(renderProps) : children}
             {renderProps.hasChildItems && (
               <Button slot="chevron" variant="ghost" size="icon">
@@ -209,14 +215,13 @@ export function SidebarTreeItemEx({
  */
 export function SidebarTreeEx(props: Rac.TreeProps<SidebarTreeNodeEx>) {
   return (
-    <Rac.Tree {...props}>
+    <Rac.Tree {...props} className="relative flex w-full min-w-0 flex-col p-2">
       {function renderSidebarTreeNodeEx(item) {
         return (
           <SidebarTreeItemEx
             key={item.id}
             id={item.id}
             title={item.title ?? item.id}
-            className="relative flex w-full min-w-0 flex-col p-2"
           >
             <Rac.Collection items={item.children}>
               {renderSidebarTreeNodeEx}
@@ -227,56 +232,3 @@ export function SidebarTreeEx(props: Rac.TreeProps<SidebarTreeNodeEx>) {
     </Rac.Tree>
   );
 }
-
-/*
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  return (
-    <Sidebar {...props}>
-      <SidebarHeader>
-        <VersionSwitcher
-          versions={data.versions}
-          defaultVersion={data.versions[0]}
-        />
-        <SearchForm />
-      </SidebarHeader>
-      <SidebarContent className="gap-0">
-        {data.navMain.map((item) => (
-          <Collapsible
-            key={item.title}
-            title={item.title}
-            defaultOpen
-            className="group/collapsible"
-          >
-            <SidebarGroup>
-              <SidebarGroupLabel
-                asChild
-                className="group/label text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-              >
-                <CollapsibleTrigger>
-                  {item.title}{" "}
-                  <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
-                </CollapsibleTrigger>
-              </SidebarGroupLabel>
-              <CollapsibleContent>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {item.items.map((item) => (
-                      <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton asChild isActive={item.isActive}>
-                          <a href={item.url}>{item.title}</a>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </CollapsibleContent>
-            </SidebarGroup>
-          </Collapsible>
-        ))}
-      </SidebarContent>
-      <SidebarRail />
-    </Sidebar>
-  )
-}
-
-*/
