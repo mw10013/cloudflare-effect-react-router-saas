@@ -160,6 +160,14 @@ export interface SidebarTreeNodeEx {
 
 export const sidebarTreeItemContextExStyles = tv({});
 
+/*
+<button type="button" aria-controls="radix-«ro»" aria-expanded="true" data-state="open" data-slot="sidebar-group-label" data-sidebar="group-label" 
+class="ring-sidebar-ring outline-hidden flex h-8 shrink-0 items-center rounded-md px-2 font-medium transition-[margin,opacity] duration-200 ease-linear 
+focus-visible:ring-2 
+[&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0 group/label text-sidebar-foreground 
+hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sm">
+*/
+
 export function SidebarTreeItemContentEx({
   children,
   ...props
@@ -170,17 +178,23 @@ export function SidebarTreeItemContentEx({
         return (
           <div
             className={twMerge(
-              "text-sidebar-foreground/70 ring-sidebar-ring outline-hidden flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
-              "group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0",
-              "group/label text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sm",
+              "text-sidebar-foreground ring-sidebar-ring outline-hidden flex h-8 shrink-0 items-center rounded-md px-2 text-sm font-medium transition-[margin,opacity] duration-200 ease-linear [&>svg]:size-4 [&>svg]:shrink-0",
+              renderProps.isHovered &&
+                "bg-sidebar-accent text-sidebar-accent-foreground",
+              renderProps.isFocusVisible && "ring-2",
             )}
           >
             {typeof children === "function" ? children(renderProps) : children}
             {renderProps.hasChildItems && (
-              <Button slot="chevron" variant="ghost" size="icon">
+              <Button
+                slot="chevron"
+                variant="ghost"
+                size="icon"
+                className="ml-auto"
+              >
                 <ChevronRight
                   className={twMerge(
-                    "ml-auto transition-transform",
+                    "transition-transform",
                     renderProps.isExpanded && "rotate-90",
                   )}
                 />
@@ -203,7 +217,7 @@ export function SidebarTreeItemEx({
   ...props
 }: SidebarTreeItemPropsEx) {
   return (
-    <Rac.TreeItem textValue={title} {...props}>
+    <Rac.TreeItem textValue={title} {...props} className="outline-none">
       <SidebarTreeItemContentEx>{title}</SidebarTreeItemContentEx>
       {children}
     </Rac.TreeItem>
