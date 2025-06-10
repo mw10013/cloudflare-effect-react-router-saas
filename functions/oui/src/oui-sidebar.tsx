@@ -224,11 +224,22 @@ export interface SidebarTreeItemPropsEx extends Partial<Rac.TreeItemProps> {
 
 export function SidebarTreeItemEx({
   title,
+  className,
   children,
   ...props
 }: SidebarTreeItemPropsEx) {
   return (
-    <Rac.TreeItem textValue={title} {...props} className="outline-none">
+    <Rac.TreeItem
+      textValue={title}
+      {...props}
+      className={Rac.composeRenderProps(className, (className, renderProps) =>
+        twMerge(
+          "outline-none",
+          renderProps.hasChildItems && "mt-4 first:mt-0",
+          className,
+        ),
+      )}
+    >
       <SidebarTreeItemContentEx>{title}</SidebarTreeItemContentEx>
       {children}
     </Rac.TreeItem>
