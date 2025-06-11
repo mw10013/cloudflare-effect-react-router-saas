@@ -133,23 +133,7 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
-        <Oui.SidebarTreeEx
-          aria-label="Components"
-          items={items}
-          // defaultExpandedKeys={["Parent", "Parent1"]}
-        />
-        <SidebarGroup>
-          <SidebarGroupLabel>Components</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <Oui.SidebarListBox aria-label="Components" items={items}>
-              {(item) => (
-                <Oui.SidebarListBoxItem key={item.id} href={item.href}>
-                  {item.id}
-                </Oui.SidebarListBoxItem>
-              )}
-            </Oui.SidebarListBox>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <Oui.SidebarTreeEx aria-label="Components" items={items} />
       </SidebarContent>
     </Sidebar>
   );

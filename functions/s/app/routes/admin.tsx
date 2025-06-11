@@ -3,9 +3,6 @@ import * as Oui from "@workspace/oui";
 import {
   Sidebar,
   SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarProvider,
 } from "@workspace/ui/components/ui/sidebar";
 import { Effect } from "effect";
@@ -60,18 +57,7 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Admin Panel</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <Oui.SidebarListBox aria-label="Admin Panel" items={items}>
-              {(item) => (
-                <Oui.SidebarListBoxItem key={item.id} href={item.href}>
-                  {item.id}
-                </Oui.SidebarListBoxItem>
-              )}
-            </Oui.SidebarListBox>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <Oui.SidebarTreeEx aria-label="Admin Navigation" items={items} />
       </SidebarContent>
     </Sidebar>
   );

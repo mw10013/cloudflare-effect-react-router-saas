@@ -155,17 +155,7 @@ export function AppSidebar({
         </div>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <Oui.SidebarListBox aria-label="Account Navigation" items={items}>
-              {(item) => (
-                <Oui.SidebarListBoxItem key={item.id} href={item.href}>
-                  {item.id}
-                </Oui.SidebarListBoxItem>
-              )}
-            </Oui.SidebarListBox>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <Oui.SidebarTreeEx aria-label="Account Navigation" items={items} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser
