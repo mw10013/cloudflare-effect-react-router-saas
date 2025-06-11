@@ -3,8 +3,8 @@ packages:
 
 catalog:
   "@aws-sdk/client-sesv2": 3.777.0
-  "@cloudflare/vite-plugin": 1.1.1
-  "@cloudflare/workers-types": 4.20250425.0
+  "@cloudflare/vite-plugin": 1.5.1
+  "@cloudflare/workers-types": 4.20250610.0
   "@openauthjs/openauth": 0.4.3
   "@paralleldrive/cuid2": 2.2.2
   "@react-router/cloudflare": 7.6.0
@@ -37,5 +37,5 @@ catalog:
   typescript: 5.8.2
   vite: 6.3.5
   vite-tsconfig-paths: 5.1.4
-  wrangler: 4.14.4
+  wrangler: 4.19.2
   zx: 8.5.5
