@@ -46,8 +46,8 @@ catalogs:
       specifier: 3.16.5
       version: 3.16.5
     hono:
-      specifier: 4.7.8
-      version: 4.7.8
+      specifier: 4.7.11
+      version: 4.7.11
     isbot:
       specifier: 5.1.26
       version: 5.1.26
@@ -395,7 +395,7 @@ importers:
     dependencies:
       '@openauthjs/openauth':
         specifier: 'catalog:'
-        version: 0.4.3(arctic@2.3.4)(hono@4.7.8)
+        version: 0.4.3(arctic@2.3.4)(hono@4.7.11)
       '@react-router/cloudflare':
         specifier: 'catalog:'
         version: 7.6.0(@cloudflare/workers-types@4.20250425.0)(react-router@7.6.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(tsup@8.4.0(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.2)(yaml@2.7.1))(typescript@5.8.2)
@@ -416,7 +416,7 @@ importers:
         version: 3.16.5
       hono:
         specifier: 'catalog:'
-        version: 4.7.8
+        version: 4.7.11
       isbot:
         specifier: 'catalog:'
         version: 5.1.26
@@ -3805,8 +3805,8 @@ packages:
   headers-polyfill@4.0.3:
     resolution: {integrity: sha512-IScLbePpkvO846sIwOtOTDjutRMWdXdJmXdMvk6gCBHxFO8d+QKOQedyZSxFTTFYRSmlgSTDtXqqq4pcenBXLQ==}
 
-  hono@4.7.8:
-    resolution: {integrity: sha512-PCibtFdxa7/Ldud9yddl1G81GjYaeMYYTq4ywSaNsYbB1Lug4mwtOMJf2WXykL0pntYwmpRJeOI3NmoDgD+Jxw==}
+  hono@4.7.11:
+    resolution: {integrity: sha512-rv0JMwC0KALbbmwJDEnxvQCeJh+xbS3KEWW5PC9cMJ08Ur9xgatI0HmtgYZfOdOSOeYsp5LO2cOhdI8cLEbDEQ==}
     engines: {node: '>=16.9.0'}
 
   hosted-git-info@6.1.3:
@@ -6091,12 +6091,12 @@ snapshots:
 
   '@open-draft/until@2.1.0': {}
 
-  '@openauthjs/openauth@0.4.3(arctic@2.3.4)(hono@4.7.8)':
+  '@openauthjs/openauth@0.4.3(arctic@2.3.4)(hono@4.7.11)':
     dependencies:
       '@standard-schema/spec': 1.0.0-beta.3
       arctic: 2.3.4
       aws4fetch: 1.0.20
-      hono: 4.7.8
+      hono: 4.7.11
       jose: 5.9.6
 
   '@oslojs/asn1@1.0.0':
@@ -8725,7 +8725,7 @@ snapshots:
 
   headers-polyfill@4.0.3: {}
 
-  hono@4.7.8: {}
+  hono@4.7.11: {}
 
   hosted-git-info@6.1.3:
     dependencies:
