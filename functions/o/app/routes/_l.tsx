@@ -10,7 +10,7 @@ import {
 } from "@workspace/ui/components/ui/sidebar";
 import { Outlet } from "react-router";
 
-const items = [
+const items: Oui.SidebarTreeNodeEx[] = [
   {
     id: "Accordion",
     href: "/demo/accordion",
@@ -133,6 +133,11 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
+        <Oui.SidebarTreeEx
+          aria-label="Components"
+          items={items}
+          // defaultExpandedKeys={["Parent", "Parent1"]}
+        />
         <SidebarGroup>
           <SidebarGroupLabel>Components</SidebarGroupLabel>
           <SidebarGroupContent>
