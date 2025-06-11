@@ -227,6 +227,7 @@ export function SidebarTreeItemEx({
         twMerge(
           "outline-none",
           renderProps.hasChildItems && "mt-4 first:mt-0",
+          renderProps.isFocusVisible && "relative z-10",
           className,
         ),
       )}
