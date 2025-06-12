@@ -130,8 +130,12 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
     }
   }).pipe(
     SchemaEx.catchValidationError,
-    Effect.catchTag("InviteError", (error) =>
-      Effect.succeed({ validationErrors: { emails: error.message } }),
+    // Using `Effect.catchIf` because `Effect.catchTag` would prevent other errors
+    // from propagating to the main `routeEffect` handler unless explicitly re-thrown.
+    Effect.catchIf(
+      (e: unknown): e is InviteError => e instanceof InviteError,
+      (error: InviteError) =>
+        Effect.succeed({ validationErrors: { emails: error.message } }),
     ),
   ),
 );
