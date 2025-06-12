@@ -135,6 +135,36 @@ export const appMiddleware: Route.unstable_MiddlewareFunction =
 
 ## Cloudflare
 
-- curl "https://api.cloudflare.com/client/v4/accounts/87997fc2724b0127effb8e4524989975/tokens/verify" \
-     -H "Authorization: Bearer <TOKEN>"
+- curl "https://api.cloudflare.com/client/v4/accounts/CLOUDFLARE_ACCOUNT_ID/tokens/verify" \
+   -H "Authorization: Bearer <TOKEN>"
 
+## AI
+
+```
+curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=GEMINI_API_KEY" \
+  -H 'Content-Type: application/json' \
+  -X POST \
+  -d '{
+    "contents": [
+      {
+        "parts": [
+          {
+            "text": "ping"
+          }
+        ]
+      }
+    ]
+  }'
+```
+
+```
+curl "https://api.cloudflare.com/client/v4/user/tokens/verify" \
+  -H "Authorization: Bearer CF_AIG_TOKEN"
+```
+
+```
+curl https://gateway.ai.cloudflare.com/v1/CLOUDFLARE_ACCOUNT_ID/saas-ai-gateway/workers-ai/@cf/meta/llama-3.1-8b-instruct \
+ --header 'Authorization: Bearer <WORKER_AI_API_TOKEN>' \
+ --header 'Content-Type: application/json' \
+ --data '{"prompt": "ping"}'
+```
