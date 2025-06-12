@@ -1,7 +1,6 @@
 import type { Client } from "@openauthjs/openauth/client";
 import type {
   AccountMemberWithAccount,
-  AccountWithUser,
   SessionData,
 } from "~/lib/Domain";
 import type { Permission } from "~/lib/Policy";
