@@ -69,6 +69,9 @@
       }
     ]
   },
+  "ai": {
+    "binding": "AI"
+  },
   "env": {
     "production": {
       "observability": {
@@ -130,6 +133,9 @@
             // "dead_letter_queue": "<QUEUE-ID"
           }
         ]
+      },
+      "ai": {
+        "binding": "AI"
       }
     }
   }

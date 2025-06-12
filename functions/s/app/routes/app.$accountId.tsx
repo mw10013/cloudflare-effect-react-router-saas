@@ -124,6 +124,10 @@ export function AppSidebar({
       href: `/app/${accountMember.account.accountId}`,
     },
     {
+      id: "AI",
+      href: `/app/${accountMember.account.accountId}/ai`,
+    },
+    {
       id: "Members",
       href: `/app/${accountMember.account.accountId}/members`,
     },
