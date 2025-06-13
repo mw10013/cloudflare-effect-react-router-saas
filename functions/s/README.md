@@ -137,6 +137,8 @@ export const appMiddleware: Route.unstable_MiddlewareFunction =
 
 ## AI
 
+- https://github.com/googleapis/js-genai/issues/324
+
 ```
 curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=GEMINI_API_KEY" \
   -H 'Content-Type: application/json' \
