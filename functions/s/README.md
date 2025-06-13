@@ -135,9 +135,6 @@ export const appMiddleware: Route.unstable_MiddlewareFunction =
 
 ## Cloudflare
 
-- curl "https://api.cloudflare.com/client/v4/accounts/CLOUDFLARE_ACCOUNT_ID/tokens/verify" \
-   -H "Authorization: Bearer <TOKEN>"
-
 ## AI
 
 ```
@@ -155,11 +152,6 @@ curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:g
       }
     ]
   }'
-```
-
-```
-curl "https://api.cloudflare.com/client/v4/user/tokens/verify" \
-  -H "Authorization: Bearer CF_AIG_TOKEN"
 ```
 
 ```
