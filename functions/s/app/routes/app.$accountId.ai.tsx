@@ -20,7 +20,7 @@ export const loader = ReactRouter.routeEffect(() =>
 export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
   Effect.gen(function* () {
     const FormDataSchema = Schema.Struct({
-      intent: Schema.Literal("ai"),
+      intent: Schema.Literal("ai", "openai"),
     });
     const formData = yield* SchemaEx.decodeRequestFormData({
       request,
@@ -44,6 +44,8 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
           }),
         );
         return { response: JSON.stringify(response) };
+      case "openai":
+        return { response: "OpenAI request sent" };
       default:
         yield* Effect.fail(new Error("Invalid intent"));
         break;
@@ -91,6 +93,15 @@ export default function RouteComponent({
               className="justify-self-end"
             >
               Send AI Request
+            </Oui.Button>
+            <Oui.Button
+              type="submit"
+              name="intent"
+              value="openai"
+              variant="outline"
+              className="justify-self-end"
+            >
+              Send OpenAI Request
             </Oui.Button>
           </Rac.Form>
         </CardContent>

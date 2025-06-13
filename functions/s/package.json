@@ -41,6 +41,7 @@
     "hono": "catalog:",
     "isbot": "catalog:",
     "lucide-react": "catalog:",
+    "openai": "catalog:",
     "react": "catalog:",
     "react-aria-components": "catalog:",
     "react-dom": "catalog:",

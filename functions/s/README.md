@@ -168,3 +168,11 @@ curl https://gateway.ai.cloudflare.com/v1/CLOUDFLARE_ACCOUNT_ID/saas-ai-gateway/
  --header 'Content-Type: application/json' \
  --data '{"prompt": "ping"}'
 ```
+
+```
+curl https://gateway.ai.cloudflare.com/v1/1422451be59cc2401532ad67d92ae773/saas-ai-gateway/openai/chat/completions \
+  --header 'cf-aig-authorization: Bearer {CF_AIG_TOKEN}' \
+  --header 'Authorization: Bearer OPENAI_TOKEN' \
+  --header 'Content-Type: application/json' \
+  --data '{"model": "gpt-3.5-turbo", "messages": [{"role": "user", "content": "What is Cloudflare?"}]}'
+  ```
