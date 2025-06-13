@@ -8,9 +8,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card";
+import { generateText } from "ai";
 import { Config, ConfigError, Effect, Either, Schema } from "effect";
 import OpenAI from "openai";
 import * as Rac from "react-aria-components";
+import { createWorkersAI } from "workers-ai-provider";
 import * as ReactRouter from "~/lib/ReactRouter";
 
 export const loader = ReactRouter.routeEffect(() =>
@@ -20,7 +22,7 @@ export const loader = ReactRouter.routeEffect(() =>
 export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
   Effect.gen(function* () {
     const FormDataSchema = Schema.Struct({
-      intent: Schema.Literal("ai", "openai"),
+      intent: Schema.Literal("ai", "openai", "vercel"),
     });
     const formData = yield* SchemaEx.decodeRequestFormData({
       request,
@@ -66,7 +68,18 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
           catch: (unknown) =>
             new Error(`OpenAI API request failed: ${unknown}`),
         });
-
+        return { response };
+      }
+      case "vercel": {
+        const workersai = createWorkersAI({ binding: ai });
+        const response = yield* Effect.tryPromise({
+          try: () =>
+            generateText({
+              model: workersai("@cf/meta/llama-3.1-8b-instruct"),
+              prompt: "ping pong, ding...",
+            }),
+          catch: (unknown) => new Error(`Vercel AI request failed: ${unknown}`),
+        });
         return { response };
       }
       default:
@@ -125,6 +138,15 @@ export default function RouteComponent({
               className="justify-self-end"
             >
               Send OpenAI Request
+            </Oui.Button>
+            <Oui.Button
+              type="submit"
+              name="intent"
+              value="vercel"
+              variant="outline"
+              className="justify-self-end"
+            >
+              Send Vercel Request
             </Oui.Button>
           </Rac.Form>
         </CardContent>

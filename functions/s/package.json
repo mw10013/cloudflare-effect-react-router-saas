@@ -31,11 +31,13 @@
     "script": "node --env-file=.dev.vars"
   },
   "dependencies": {
+    "@ai-sdk/react": "catalog:",
     "@openauthjs/openauth": "catalog:",
     "@react-router/cloudflare": "catalog:",
     "@workspace/oui": "workspace:*",
     "@workspace/shared": "workspace:*",
     "@workspace/ui": "workspace:*",
+    "ai": "catalog:",
     "aws4fetch": "catalog:",
     "effect": "catalog:",
     "hono": "catalog:",
@@ -48,7 +50,8 @@
     "react-router": "catalog:",
     "stripe": "catalog:",
     "tailwind-merge": "catalog:",
-    "tailwind-variants": "catalog:"
+    "tailwind-variants": "catalog:",
+    "workers-ai-provider": "catalog:"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "catalog:",
