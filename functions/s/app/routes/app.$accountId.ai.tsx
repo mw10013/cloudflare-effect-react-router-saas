@@ -81,13 +81,13 @@ export default function RouteComponent({
   actionData,
 }: Route.ComponentProps) {
   return (
-    <div className="space-y-8">
+    <div className="flex flex-col gap-8">
       <header>
         <h1 className="text-3xl font-bold tracking-tight">AI</h1>
         <p className="text-muted-foreground text-sm"></p>
       </header>
 
-      <Card>
+      <Card className="w-fit">
         <CardHeader>
           <CardTitle>Prompt</CardTitle>
           <CardDescription></CardDescription>
@@ -129,8 +129,6 @@ export default function RouteComponent({
           </Rac.Form>
         </CardContent>
       </Card>
-
-      {/* {actionData && 'response' in actionData && <pre>{actionData.response}</pre>} */}
 
       <pre>
         {JSON.stringify(
