@@ -9,8 +9,8 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import { Config, ConfigError, Effect, Either, Schema } from "effect";
+import OpenAI from "openai";
 import * as Rac from "react-aria-components";
-import { InviteError } from "~/lib/IdentityMgr";
 import * as ReactRouter from "~/lib/ReactRouter";
 
 export const loader = ReactRouter.routeEffect(() =>
@@ -35,17 +35,40 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
             ),
       ),
     );
+    const [cfAccountId, workersAiApiToken, aiGatewayToken] = yield* Config.all([
+      Config.nonEmptyString("CF_ACCOUNT_ID"),
+      Config.nonEmptyString("CF_WORKERS_AI_API_TOKEN"),
+      Config.nonEmptyString("CF_AI_GATEWAY_TOKEN"),
+    ]);
 
     switch (formData.intent) {
       case "ai":
-        const response = yield* Effect.tryPromise(() =>
-          ai.run("@cf/meta/llama-3.2-1b-instruct", {
-            prompt: "What is micro saas",
-          }),
-        );
-        return { response: JSON.stringify(response) };
-      case "openai":
-        return { response: "OpenAI request sent" };
+        const response = yield* Effect.tryPromise({
+          try: () =>
+            ai.run("@cf/meta/llama-3.2-1b-instruct", {
+              prompt: "What is micro saas",
+            }),
+          catch: (unknown) => new Error(`AI request failed: ${unknown}`),
+        });
+        return { response };
+      case "openai": {
+        const openai = new OpenAI({
+          apiKey: workersAiApiToken,
+          baseURL: `https://api.cloudflare.com/client/v4/accounts/${cfAccountId}/ai/v1`,
+        });
+
+        const response = yield* Effect.tryPromise({
+          try: () =>
+            openai.chat.completions.create({
+              messages: [{ role: "user", content: "ping" }],
+              model: "@cf/meta/llama-3.1-8b-instruct",
+            }),
+          catch: (unknown) =>
+            new Error(`OpenAI API request failed: ${unknown}`),
+        });
+
+        return { response };
+      }
       default:
         yield* Effect.fail(new Error("Invalid intent"));
         break;
@@ -106,6 +129,8 @@ export default function RouteComponent({
           </Rac.Form>
         </CardContent>
       </Card>
+
+      {/* {actionData && 'response' in actionData && <pre>{actionData.response}</pre>} */}
 
       <pre>
         {JSON.stringify(
