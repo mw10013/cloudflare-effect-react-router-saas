@@ -11,9 +11,8 @@ import { tv } from "tailwind-variants";
 export const tw = (strings: TemplateStringsArray, ...values: string[]) =>
   String.raw({ raw: strings.raw }, ...values);
 
-const bStyles = tw`data-[focus-visible]:border-ring data-[focus-visible]:ring-ring/50 outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[focus-visible]:ring-[3px]`;
+export const bStyles = tw`data-[focus-visible]:border-ring data-[focus-visible]:ring-ring/50 outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[focus-visible]:ring-[3px]`;
 
-const styles1 = tw`data-[focus-visible]:border-ring data-[focus-visible]:ring-ring/50 outline-none data-[focus-visible]:ring-[3px]`;
 
 /**
  * Base styles for OUI components, including focus visibility and disabled states.

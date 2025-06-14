@@ -83,7 +83,11 @@ export function OuiLinkDemo() {
                   label={
                     <div className="flex items-center">
                       <Oui.Label>Password</Oui.Label>
-                      <Oui.Link href="#" className="ml-auto inline-block">
+                      <Oui.Link
+                        href="#"
+                        className="ml-auto inline-block text-sm"
+                        underline="hover"
+                      >
                         Forgot your password?
                       </Oui.Link>
                     </div>
