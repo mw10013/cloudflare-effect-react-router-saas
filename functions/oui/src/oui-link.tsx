@@ -1,7 +1,7 @@
 import type { VariantProps } from "tailwind-variants";
 import * as Rac from "react-aria-components";
 import { tv } from "tailwind-variants";
-import { bStyles } from "./oui-base";
+import { baseStyles } from "./oui-base";
 import { buttonStyles } from "./oui-button";
 
 /*
@@ -18,7 +18,7 @@ chrome agent
  * Derived from shadcn CardDemo.
  */
 export const linkStyles = tv({
-  base: [bStyles, "underline-offset-4"],
+  base: [baseStyles, "underline-offset-4"],
   variants: {
     underline: {
       none: "no-underline",

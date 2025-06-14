@@ -1,8 +1,6 @@
 import { Check } from "lucide-react";
 import * as Rac from "react-aria-components";
-import { tv } from "tailwind-variants";
-import { baseStyles, bStyles, composeTailwindRenderProps } from "./oui-base";
-import { Text } from "./oui-text";
+import { baseStyles, composeTailwindRenderProps } from "./oui-base";
 
 /*
 #fetch https://react-spectrum.adobe.com/react-aria/ListBox.html
@@ -36,7 +34,7 @@ export const ListBoxItem = <T extends object>({
       props.textValue || (typeof children === "string" ? children : undefined)
     }
     className={composeTailwindRenderProps(className, [
-      bStyles,
+      baseStyles,
       "data-[focused]:bg-accent data-[focused]:text-accent-foreground data-[hovered]:bg-accent data-[hovered]:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
     ])}
     // className={Rac.composeRenderProps(className, (className, renderProps) =>
