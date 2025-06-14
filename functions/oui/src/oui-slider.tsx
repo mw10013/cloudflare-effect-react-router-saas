@@ -1,25 +1,26 @@
-import React from 'react'
-import * as Rac from 'react-aria-components'
-import { tv } from 'tailwind-variants'
-import { baseStyles } from './oui-base'
-import { Label } from './oui-label'
+import React from "react";
+import * as Rac from "react-aria-components";
+import { tv } from "tailwind-variants";
+import { bStyles } from "./oui-base";
+import { Label } from "./oui-label";
 
 export const sliderStyles = tv({
-  base: 'w-full space-y-2',
-})
+  base: "w-full space-y-2",
+});
 
 // TODO: Slider: vertical, multiple
 export const Slider = ({ className, ...props }: Rac.SliderProps) => (
   <Rac.Slider
     {...props}
     className={Rac.composeRenderProps(className, (className, renderProps) =>
-      sliderStyles({ ...renderProps, className })
-    )}></Rac.Slider>
-)
+      sliderStyles({ ...renderProps, className }),
+    )}
+  ></Rac.Slider>
+);
 
 export const sliderOutputStyles = tv({
-  base: 'text-sm font-medium tabular-nums',
-})
+  base: "text-sm font-medium tabular-nums",
+});
 
 export const SliderOutput = ({
   className,
@@ -28,31 +29,32 @@ export const SliderOutput = ({
   <Rac.SliderOutput
     {...props}
     className={Rac.composeRenderProps(className, (className, renderProps) =>
-      sliderOutputStyles({ ...renderProps, className })
-    )}></Rac.SliderOutput>
-)
+      sliderOutputStyles({ ...renderProps, className }),
+    )}
+  ></Rac.SliderOutput>
+);
 
 export const sliderTrackStyles = tv({
   slots: {
-    rootStyles: 'h-4',
+    rootStyles: "h-4",
     trackStyles:
-      'absolute top-[50%] h-1.5 w-full translate-y-[-50%] rounded-full bg-primary/20',
+      "bg-primary/20 absolute top-[50%] h-1.5 w-full translate-y-[-50%] rounded-full",
     fillStyles:
-      'absolute top-[50%] h-1.5 translate-y-[-50%] rounded-full bg-primary',
+      "bg-primary absolute top-[50%] h-1.5 translate-y-[-50%] rounded-full",
   },
   variants: {
     isDisabled: {
       true: {
-        rootStyles: 'opacity-50',
+        rootStyles: "opacity-50",
       },
     },
   },
-})
+});
 
 export interface SliderTrackProps
-  extends Omit<Rac.SliderTrackProps, 'children'>,
+  extends Omit<Rac.SliderTrackProps, "children">,
     Rac.SliderTrackProps {
-  children?: React.ReactNode
+  children?: React.ReactNode;
 }
 
 export const SliderTrack = ({
@@ -60,49 +62,53 @@ export const SliderTrack = ({
   children,
   ...props
 }: SliderTrackProps) => {
-  const { rootStyles, trackStyles, fillStyles } = sliderTrackStyles()
+  const { rootStyles, trackStyles, fillStyles } = sliderTrackStyles();
   return (
     <Rac.SliderTrack
       className={Rac.composeRenderProps(className, (className, renderProps) =>
-        rootStyles({ ...renderProps, className })
+        rootStyles({ ...renderProps, className }),
       )}
-      {...props}>
+      {...props}
+    >
       {({ state }) => (
         <>
           <div className={trackStyles()} />
           <div
             className={fillStyles()}
             style={{
-              width: state.getThumbPercent(0) * 100 + '%',
+              width: state.getThumbPercent(0) * 100 + "%",
             }}
           />
           {children}
         </>
       )}
     </Rac.SliderTrack>
-  )
-}
+  );
+};
 
 export const sliderThumbStyles = tv({
-  extend: baseStyles,
-  base: 'top-[50%] size-4 rounded-full border border-primary/50 bg-background shadow transition-colors',
+  base: [
+    bStyles,
+    "border-primary/50 bg-background top-[50%] size-4 rounded-full border shadow transition-colors",
+  ],
   variants: {
     isDisabled: {
-      true: 'opacity-100',
+      true: "data-[disabled]:opacity-100",
     },
   },
-})
+});
 
 export const SliderThumb = ({ className, ...props }: Rac.SliderThumbProps) => (
   <Rac.SliderThumb
     {...props}
     className={Rac.composeRenderProps(className, (className, renderProps) =>
-      sliderThumbStyles({ ...renderProps, className })
-    )}></Rac.SliderThumb>
-)
+      sliderThumbStyles({ ...renderProps, className }),
+    )}
+  ></Rac.SliderThumb>
+);
 
 export interface SliderExProps extends Rac.SliderProps {
-  label?: string
+  label?: string;
 }
 
 export const SliderEx = ({ label, ...props }: SliderExProps) => (
@@ -115,4 +121,4 @@ export const SliderEx = ({ label, ...props }: SliderExProps) => (
       <SliderThumb />
     </SliderTrack>
   </Slider>
-)
+);
