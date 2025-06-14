@@ -1,9 +1,8 @@
 import React from "react";
 import { ChevronDown } from "lucide-react";
 import * as Rac from "react-aria-components";
-import { twMerge } from "tailwind-merge";
 import { tv } from "tailwind-variants";
-import { baseStyles, composeTailwindRenderProps } from "./oui-base";
+import { composeTailwindRenderProps } from "./oui-base";
 import { Heading } from "./oui-heading";
 
 /*

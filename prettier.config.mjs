@@ -16,8 +16,15 @@ const config = {
   importOrderParserPlugins: ["typescript", "jsx", "decorators-legacy"],
   importOrderTypeScriptVersion: "5.8.2",
 
-  // Default tailwindFunctions, can be overridden per project if needed
-  tailwindFunctions: ["tv", "composeTailwindRenderProps"],
+  // https://github.com/tailwindlabs/prettier-plugin-tailwindcss?tab=readme-ov-file#sorting-classes-in-function-calls
+  // https://github.com/tailwindlabs/prettier-plugin-tailwindcss?tab=readme-ov-file#sorting-classes-in-template-literals
+  tailwindFunctions: [
+    "tw",
+    "twMerge",
+    "twJoin",
+    "tv",
+    "composeTailwindRenderProps",
+  ],
 
   plugins: [
     "prettier-plugin-sql",
@@ -53,12 +60,6 @@ const config = {
         // For Tailwind v4, specify a representative stylesheet
         // Using project 'o's stylesheet as context for oui's own source files
         tailwindStylesheet: "./functions/o/app/app.css",
-      },
-    },
-    {
-      files: ["./functions/r/**"],
-      options: {
-        tailwindStylesheet: "./functions/r/app/app.css",
       },
     },
     {

@@ -3,6 +3,19 @@ import { twMerge } from "tailwind-merge";
 import { tv } from "tailwind-variants";
 
 /**
+ * A tagged template literal function that acts like an identity function for Tailwind CSS class strings.
+ * Its primary purpose is to enable `prettier-plugin-tailwindcss` to sort classes in standalone
+ * string literals or template literals not otherwise covered by the plugin (e.g., outside JSX `className`).
+ * @see {@link https://github.com/tailwindlabs/prettier-plugin-tailwindcss?tab=readme-ov-file#sorting-classes-in-template-literals}
+ */
+export const tw = (strings: TemplateStringsArray, ...values: string[]) =>
+  String.raw({ raw: strings.raw }, ...values);
+
+const bStyles = tw`data-[focus-visible]:border-ring data-[focus-visible]:ring-ring/50 outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[focus-visible]:ring-[3px]`;
+
+const styles1 = tw`data-[focus-visible]:border-ring data-[focus-visible]:ring-ring/50 outline-none data-[focus-visible]:ring-[3px]`;
+
+/**
  * Base styles for OUI components, including focus visibility and disabled states.
  * Shadcn UI generally uses a custom ring (`ring-ring/50 ring-[3px]`) with `outline-none` for `focus-visible`.
  * Deviations occur for specific components:
