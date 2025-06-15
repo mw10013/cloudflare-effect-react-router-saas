@@ -11,60 +11,18 @@ import {
 } from "@workspace/ui/components/ui/card";
 import { generateText, streamText } from "ai";
 import { Config, ConfigError, Effect, Either, Schema } from "effect";
-import OpenAI from "openai";
 import * as Rac from "react-aria-components";
 import { useHref } from "react-router";
-import { createWorkersAI } from "workers-ai-provider";
 import * as ReactRouter from "~/lib/ReactRouter";
 
 export const loader = ReactRouter.routeEffect(() =>
   Effect.gen(function* () {}),
 );
 
-export const action = async ({ request, context }: Route.ActionArgs) => {
-  const appLoadContext = context.get(ReactRouter.appLoadContext);
-  const { messages }: any = await request.json();
-  const ai = appLoadContext.cloudflare.env.AI;
-  const workersai = createWorkersAI({ binding: ai });
-  const result = streamText({
-    model: workersai("@cf/meta/llama-3.1-8b-instruct"),
-    messages,
-  });
-  const response = result.toDataStreamResponse();
-  console.log("toDataStreamResponse:", {
-    isInstanceOfResponse: response instanceof Response,
-    response,
-  });
-  return response;
-};
-
-// export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
-//   Effect.gen(function* () {
-//     const { messages }: any = yield* Effect.tryPromise(() => request.json());
-//     const ai = yield* ConfigEx.object("AI").pipe(
-//       Config.mapOrFail((object) =>
-//         "autorag" in object && typeof object.autorag === "function"
-//           ? Either.right(object as Ai)
-//           : Either.left(
-//               ConfigError.InvalidData([], `Expected AI but received ${object}`),
-//             ),
-//       ),
-//     );
-//     const workersai = createWorkersAI({ binding: ai });
-//     const result = streamText({
-//       model: workersai("@cf/meta/llama-3.1-8b-instruct"),
-//       messages,
-//     });
-//     yield* Effect.log({ messages, result });
-//     return result.toDataStreamResponse();
-//   }),
-// );
-
 export default function RouteComponent({
   loaderData,
   actionData,
 }: Route.ComponentProps) {
-  // const href = useHref(".");
   const href = useHref("./api");
   const { messages, input, handleInputChange, handleSubmit, error } = useChat({
     api: href,
@@ -104,9 +62,6 @@ export default function RouteComponent({
         {JSON.stringify(
           {
             error,
-            // href,
-            messages,
-            input,
             loaderData,
             actionData,
           },

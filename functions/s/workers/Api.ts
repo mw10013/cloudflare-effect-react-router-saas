@@ -1,8 +1,6 @@
 import type { AppLoadContext } from "react-router";
-import { streamText } from "ai";
 import { Effect, ManagedRuntime, Predicate } from "effect";
 import * as Hono from "hono";
-import { createWorkersAI } from "workers-ai-provider";
 import { Stripe } from "~/lib/Stripe";
 
 type AppEnv = {
@@ -71,16 +69,5 @@ export function make({ runtime }: { runtime: AppEnv["Variables"]["runtime"] }) {
     "/api/stripe/webhook",
     handler((c) => Stripe.handleWebhook(c.req.raw)),
   );
-  app.post("/api/chat", async (c) => {
-    const { messages } = await c.req.json<{ messages: any[] }>();
-    const workersai = createWorkersAI({ binding: c.env.AI });
-    const result = streamText({
-      model: workersai("@cf/meta/llama-3.1-8b-instruct"),
-      messages,
-    });
-
-    return result.toDataStreamResponse();
-  });
-
   return app;
 }
