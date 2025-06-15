@@ -1,26 +1,38 @@
-import type { AppLoadContext } from 'react-router'
-import { Effect, ManagedRuntime, Predicate } from 'effect'
-import * as Hono from 'hono'
-import { Stripe } from '~/lib/Stripe'
+import type { AppLoadContext } from "react-router";
+import { streamText } from "ai";
+import { Effect, ManagedRuntime, Predicate } from "effect";
+import * as Hono from "hono";
+import { createWorkersAI } from "workers-ai-provider";
+import { Stripe } from "~/lib/Stripe";
 
 type AppEnv = {
-  Bindings: Env
+  Bindings: Env;
   Variables: {
-    runtime: AppLoadContext['runtime']
-  }
-}
+    runtime: AppLoadContext["runtime"];
+  };
+};
 
 export const handler =
   <A, E>(
     h: (
       ...args: Parameters<Hono.Handler<AppEnv>>
-    ) => Effect.Effect<A | Promise<A>, E, ManagedRuntime.ManagedRuntime.Context<Parameters<Hono.Handler<AppEnv>>[0]['var']['runtime']>>
+    ) => Effect.Effect<
+      A | Promise<A>,
+      E,
+      ManagedRuntime.ManagedRuntime.Context<
+        Parameters<Hono.Handler<AppEnv>>[0]["var"]["runtime"]
+      >
+    >,
   ) =>
   (...args: Parameters<Hono.Handler<AppEnv>>) =>
     h(...args).pipe(
-      Effect.flatMap((response) => (Predicate.isPromise(response) ? Effect.tryPromise(() => response) : Effect.succeed(response))),
-      args[0].var.runtime.runPromise
-    )
+      Effect.flatMap((response) =>
+        Predicate.isPromise(response)
+          ? Effect.tryPromise(() => response)
+          : Effect.succeed(response),
+      ),
+      args[0].var.runtime.runPromise,
+    );
 
 export const middleware =
   <A, E>(
@@ -29,34 +41,46 @@ export const middleware =
     ) => Effect.Effect<
       Awaited<ReturnType<Hono.MiddlewareHandler>>,
       E,
-      ManagedRuntime.ManagedRuntime.Context<Parameters<Hono.Handler<AppEnv>>[0]['var']['runtime']>
-    >
+      ManagedRuntime.ManagedRuntime.Context<
+        Parameters<Hono.Handler<AppEnv>>[0]["var"]["runtime"]
+      >
+    >,
   ) =>
   (...args: Parameters<Hono.MiddlewareHandler<AppEnv>>) =>
-    mw(...args).pipe(args[0].var.runtime.runPromise)
+    mw(...args).pipe(args[0].var.runtime.runPromise);
 
-
-export function make({ runtime }: { runtime: AppEnv['Variables']['runtime'] }) {
-  const app = new Hono.Hono<AppEnv>()
+export function make({ runtime }: { runtime: AppEnv["Variables"]["runtime"] }) {
+  const app = new Hono.Hono<AppEnv>();
   app.use(async (c, next) => {
-    c.set('runtime', runtime)
-    await next()
-  })
+    c.set("runtime", runtime);
+    await next();
+  });
 
   app.get(
-    '/api/stripe/checkout',
+    "/api/stripe/checkout",
     handler((c) =>
       Effect.gen(function* () {
-        const sessionId = c.req.query('sessionId')
-        if (!sessionId) return c.redirect('/pricing')
-        yield* Stripe.finalizeCheckoutSession(sessionId)
-        return c.redirect('/app/billing')
-      })
-    )
-  )
+        const sessionId = c.req.query("sessionId");
+        if (!sessionId) return c.redirect("/pricing");
+        yield* Stripe.finalizeCheckoutSession(sessionId);
+        return c.redirect("/app/billing");
+      }),
+    ),
+  );
   app.post(
-    '/api/stripe/webhook',
-    handler((c) => Stripe.handleWebhook(c.req.raw))
-  )
-  return app
+    "/api/stripe/webhook",
+    handler((c) => Stripe.handleWebhook(c.req.raw)),
+  );
+  app.post("/api/chat", async (c) => {
+    const { messages } = await c.req.json<{ messages: any[] }>();
+    const workersai = createWorkersAI({ binding: c.env.AI });
+    const result = streamText({
+      model: workersai("@cf/meta/llama-3.1-8b-instruct"),
+      messages,
+    });
+
+    return result.toDataStreamResponse();
+  });
+
+  return app;
 }

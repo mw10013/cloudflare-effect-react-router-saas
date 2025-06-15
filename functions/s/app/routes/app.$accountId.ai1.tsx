@@ -1,4 +1,5 @@
 import type { Route } from "./+types/app.$accountId.ai1";
+import { useChat } from "@ai-sdk/react";
 import * as Oui from "@workspace/oui";
 import { ConfigEx, SchemaEx } from "@workspace/shared";
 import {
@@ -8,10 +9,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card";
-import { generateText } from "ai";
+import { generateText, streamText } from "ai";
 import { Config, ConfigError, Effect, Either, Schema } from "effect";
 import OpenAI from "openai";
 import * as Rac from "react-aria-components";
+import { useHref } from "react-router";
 import { createWorkersAI } from "workers-ai-provider";
 import * as ReactRouter from "~/lib/ReactRouter";
 
@@ -21,13 +23,7 @@ export const loader = ReactRouter.routeEffect(() =>
 
 export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
   Effect.gen(function* () {
-    const FormDataSchema = Schema.Struct({
-      intent: Schema.Literal("ai", "openai", "vercel"),
-    });
-    const formData = yield* SchemaEx.decodeRequestFormData({
-      request,
-      schema: FormDataSchema,
-    });
+    const { messages }: any = yield* Effect.tryPromise(() => request.json());
     const ai = yield* ConfigEx.object("AI").pipe(
       Config.mapOrFail((object) =>
         "autorag" in object && typeof object.autorag === "function"
@@ -37,124 +33,66 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
             ),
       ),
     );
-    const [cfAccountId, workersAiApiToken, aiGatewayToken] = yield* Config.all([
-      Config.nonEmptyString("CF_ACCOUNT_ID"),
-      Config.nonEmptyString("CF_WORKERS_AI_API_TOKEN"),
-      Config.nonEmptyString("CF_AI_GATEWAY_TOKEN"),
-    ]);
+    const workersai = createWorkersAI({ binding: ai });
+    const result = streamText({
+      model: workersai("@cf/meta/llama-3.1-8b-instruct"),
+      messages,
+    });
+    yield* Effect.log({ messages, result });
 
-    switch (formData.intent) {
-      case "ai":
-        const response = yield* Effect.tryPromise({
-          try: () =>
-            ai.run("@cf/meta/llama-3.2-1b-instruct", {
-              prompt: "What is micro saas",
-            }),
-          catch: (unknown) => new Error(`AI request failed: ${unknown}`),
-        });
-        return { response };
-      case "openai": {
-        const openai = new OpenAI({
-          apiKey: workersAiApiToken,
-          baseURL: `https://api.cloudflare.com/client/v4/accounts/${cfAccountId}/ai/v1`,
-        });
-
-        const response = yield* Effect.tryPromise({
-          try: () =>
-            openai.chat.completions.create({
-              messages: [{ role: "user", content: "ping" }],
-              model: "@cf/meta/llama-3.1-8b-instruct",
-            }),
-          catch: (unknown) =>
-            new Error(`OpenAI API request failed: ${unknown}`),
-        });
-        return { response };
-      }
-      case "vercel": {
-        const workersai = createWorkersAI({ binding: ai });
-        const response = yield* Effect.tryPromise({
-          try: () =>
-            generateText({
-              model: workersai("@cf/meta/llama-3.1-8b-instruct"),
-              prompt: "ping pong, ding...",
-            }),
-          catch: (unknown) => new Error(`Vercel AI request failed: ${unknown}`),
-        });
-        return { response };
-      }
-      default:
-        yield* Effect.fail(new Error("Invalid intent"));
-        break;
-    }
-  }).pipe(SchemaEx.catchValidationError),
+    // const body = result.textStream.pipeThrough(new TextEncoderStream());
+    // return new Response(body, {
+    //   headers: { "Content-Type": "text/plain; charset=utf-8" },
+    // });
+    return result.toDataStreamResponse();
+  }),
 );
 
 export default function RouteComponent({
   loaderData,
   actionData,
 }: Route.ComponentProps) {
+  const { messages, input, handleInputChange, handleSubmit, error } = useChat({
+    // api: href,
+    onError: (err) => {
+      console.error("useChat onError:", err);
+    },
+    onResponse: (res) => {
+      console.log("useChat onResponse:", res);
+    },
+    onFinish: (message) => {
+      console.log("useChat onFinish:", message);
+    },
+  });
   return (
-    <div className="flex flex-col gap-8">
-      <header>
-        <h1 className="text-3xl font-bold tracking-tight">AI</h1>
-        <p className="text-muted-foreground text-sm"></p>
-      </header>
-
-      <Card className="w-fit">
-        <CardHeader>
-          <CardTitle>Prompt</CardTitle>
-          <CardDescription></CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Rac.Form
-            method="post"
-            className="grid gap-6"
-            validationErrors={
-              actionData && "validationErrors" in actionData
-                ? actionData.validationErrors
-                : undefined
+    <div className="stretch mx-auto flex w-full max-w-md flex-col py-24">
+      {messages.map((message) => (
+        <div key={message.id} className="whitespace-pre-wrap">
+          {message.role === "user" ? "User: " : "AI: "}
+          {message.parts.map((part, i) => {
+            switch (part.type) {
+              case "text":
+                return <div key={`${message.id}-${i}`}>{part.text}</div>;
             }
-          >
-            {/* <Oui.TextFieldEx
-              name="emails"
-              label="Email Addresses"
-              type="text"
-              placeholder="e.g., user1@example.com, user2@example.com"
-            /> */}
-            <Oui.Button
-              type="submit"
-              name="intent"
-              value="ai"
-              variant="outline"
-              className="justify-self-end"
-            >
-              Send AI Request
-            </Oui.Button>
-            <Oui.Button
-              type="submit"
-              name="intent"
-              value="openai"
-              variant="outline"
-              className="justify-self-end"
-            >
-              Send OpenAI Request
-            </Oui.Button>
-            <Oui.Button
-              type="submit"
-              name="intent"
-              value="vercel"
-              variant="outline"
-              className="justify-self-end"
-            >
-              Send Vercel Request
-            </Oui.Button>
-          </Rac.Form>
-        </CardContent>
-      </Card>
+          })}
+        </div>
+      ))}
 
+      <form onSubmit={handleSubmit}>
+        <input
+          className="fixed bottom-0 mb-8 w-full max-w-md rounded border border-zinc-300 p-2 shadow-xl dark:border-zinc-800 dark:bg-zinc-900"
+          value={input}
+          placeholder="Say something..."
+          onChange={handleInputChange}
+        />
+      </form>
       <pre>
         {JSON.stringify(
           {
+            error,
+            // href,
+            messages,
+            input,
             loaderData,
             actionData,
           },
