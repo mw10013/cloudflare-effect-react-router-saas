@@ -21,39 +21,53 @@ export const loader = ReactRouter.routeEffect(() =>
   Effect.gen(function* () {}),
 );
 
-export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
-  Effect.gen(function* () {
-    const { messages }: any = yield* Effect.tryPromise(() => request.json());
-    const ai = yield* ConfigEx.object("AI").pipe(
-      Config.mapOrFail((object) =>
-        "autorag" in object && typeof object.autorag === "function"
-          ? Either.right(object as Ai)
-          : Either.left(
-              ConfigError.InvalidData([], `Expected AI but received ${object}`),
-            ),
-      ),
-    );
-    const workersai = createWorkersAI({ binding: ai });
-    const result = streamText({
-      model: workersai("@cf/meta/llama-3.1-8b-instruct"),
-      messages,
-    });
-    yield* Effect.log({ messages, result });
+export const action = async ({ request, context }: Route.ActionArgs) => {
+  const appLoadContext = context.get(ReactRouter.appLoadContext);
+  const { messages }: any = await request.json();
+  const ai = appLoadContext.cloudflare.env.AI;
+  const workersai = createWorkersAI({ binding: ai });
+  const result = streamText({
+    model: workersai("@cf/meta/llama-3.1-8b-instruct"),
+    messages,
+  });
+  const response = result.toDataStreamResponse();
+  console.log("toDataStreamResponse:", {
+    isInstanceOfResponse: response instanceof Response,
+    response,
+  });
+  return response;
+};
 
-    // const body = result.textStream.pipeThrough(new TextEncoderStream());
-    // return new Response(body, {
-    //   headers: { "Content-Type": "text/plain; charset=utf-8" },
-    // });
-    return result.toDataStreamResponse();
-  }),
-);
+// export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
+//   Effect.gen(function* () {
+//     const { messages }: any = yield* Effect.tryPromise(() => request.json());
+//     const ai = yield* ConfigEx.object("AI").pipe(
+//       Config.mapOrFail((object) =>
+//         "autorag" in object && typeof object.autorag === "function"
+//           ? Either.right(object as Ai)
+//           : Either.left(
+//               ConfigError.InvalidData([], `Expected AI but received ${object}`),
+//             ),
+//       ),
+//     );
+//     const workersai = createWorkersAI({ binding: ai });
+//     const result = streamText({
+//       model: workersai("@cf/meta/llama-3.1-8b-instruct"),
+//       messages,
+//     });
+//     yield* Effect.log({ messages, result });
+//     return result.toDataStreamResponse();
+//   }),
+// );
 
 export default function RouteComponent({
   loaderData,
   actionData,
 }: Route.ComponentProps) {
+  // const href = useHref(".");
+  const href = useHref("./api");
   const { messages, input, handleInputChange, handleSubmit, error } = useChat({
-    // api: href,
+    api: href,
     onError: (err) => {
       console.error("useChat onError:", err);
     },
