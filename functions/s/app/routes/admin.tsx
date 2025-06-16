@@ -43,14 +43,6 @@ const items = [
     id: "Stripe",
     href: "/admin/stripe",
   },
-  {
-    id: "Effect",
-    href: "/effect",
-  },
-  {
-    id: "Sandbox",
-    href: "/sandbox",
-  },
 ];
 
 export function AppSidebar() {
