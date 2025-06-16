@@ -7,7 +7,7 @@
   "name": "saas",
   "main": "./workers/app.ts",
   "account_id": "1422451be59cc2401532ad67d92ae773",
-  "compatibility_date": "2025-04-25",
+  "compatibility_date": "2025-06-14",
   "compatibility_flags": ["nodejs_compat"],
   "observability": {
     "enabled": true,
