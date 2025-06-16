@@ -2,30 +2,15 @@ import type { Route } from "./+types/app.$accountId";
 import React from "react";
 import * as Oui from "@workspace/oui";
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@workspace/ui/components/ui/avatar";
-import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
   SidebarHeader,
   SidebarProvider,
   SidebarTrigger,
-  useSidebar,
 } from "@workspace/ui/components/ui/sidebar";
 import { Effect, Schema } from "effect";
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react";
+import { ChevronsUpDown, LogOut } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { Outlet, redirect, useNavigate } from "react-router";
 import {
@@ -73,9 +58,9 @@ const accountMiddleware: Route.unstable_MiddlewareFunction =
 
 export const unstable_middleware = [accountMiddleware];
 
-export const loader = ReactRouter.routeEffect(({ context }) =>
+export const loader = ReactRouter.routeEffect(() =>
   Effect.gen(function* () {
-    const appLoadContext = context.get(ReactRouter.appLoadContext);
+    const appLoadContext = yield* ReactRouter.AppLoadContext;
     const sessionUser = yield* Effect.fromNullable(
       appLoadContext.session.get("sessionUser"),
     );
@@ -168,9 +153,7 @@ export function AppSidebar({
       <SidebarFooter>
         <NavUser
           user={{
-            name: sessionUser.email,
             email: sessionUser.email,
-            avatar: "/avatars/shadcn.jpg",
           }}
         />
       </SidebarFooter>
@@ -239,13 +222,9 @@ export function NavUser({
   user,
 }: {
   user: {
-    name: string;
     email: string;
-    avatar: string;
   };
 }) {
-  const { isMobile } = useSidebar();
-
   return (
     <Oui.MenuEx
       className="min-w-56 rounded-lg"
@@ -254,53 +233,17 @@ export function NavUser({
           variant="ghost"
           className="data-[hovered]:bg-sidebar-accent data-[hovered]:text-sidebar-accent-foreground data-[pressed]:bg-sidebar-accent data-[pressed]:text-sidebar-accent-foreground h-12 w-full justify-start overflow-hidden rounded-md p-2 text-left text-sm font-normal"
         >
-          <Avatar className="h-8 w-8 rounded-lg">
-            <AvatarImage src={user.avatar} alt={user.name} />
-            <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-          </Avatar>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-medium">{user.name}</span>
-            <span className="truncate text-xs">{user.email}</span>
+            <span className="truncate font-medium">{user.email}</span>
           </div>
           <ChevronsUpDown className="ml-auto size-4" />
         </Oui.Button>
       }
     >
       <Rac.MenuSection>
-        <Rac.Header>
-          <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-            <Avatar className="h-8 w-8 rounded-lg">
-              <AvatarImage src={user.avatar} alt={user.name} />
-              <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-            </Avatar>
-            <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">{user.name}</span>
-              <span className="truncate text-xs">{user.email}</span>
-            </div>
-          </div>
+        <Rac.Header className="truncate px-1 py-1.5 text-center text-sm font-medium">
+          {user.email}
         </Rac.Header>
-      </Rac.MenuSection>
-      <Oui.Separator variant="menu" />
-      <Rac.MenuSection>
-        <Oui.MenuItem id="upgradeToPro" textValue="Upgrade to Pro">
-          <Sparkles className="mr-2 size-4" />
-          Upgrade to Pro
-        </Oui.MenuItem>
-      </Rac.MenuSection>
-      <Oui.Separator variant="menu" />
-      <Rac.MenuSection>
-        <Oui.MenuItem id="account" textValue="Account">
-          <BadgeCheck className="mr-2 size-4" />
-          Account
-        </Oui.MenuItem>
-        <Oui.MenuItem id="billing" textValue="Billing">
-          <CreditCard className="mr-2 size-4" />
-          Billing
-        </Oui.MenuItem>
-        <Oui.MenuItem id="notifications" textValue="Notifications">
-          <Bell className="mr-2 size-4" />
-          Notifications
-        </Oui.MenuItem>
       </Rac.MenuSection>
       <Oui.Separator variant="menu" />
       <Oui.MenuItem id="signOut" textValue="Sign Out">
