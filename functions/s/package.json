@@ -31,6 +31,7 @@
     "script": "node --env-file=.dev.vars"
   },
   "dependencies": {
+    "@ai-sdk/openai": "catalog:",
     "@ai-sdk/react": "catalog:",
     "@openauthjs/openauth": "catalog:",
     "@react-router/cloudflare": "catalog:",

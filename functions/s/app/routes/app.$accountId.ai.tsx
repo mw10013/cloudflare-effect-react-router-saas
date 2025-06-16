@@ -1,6 +1,6 @@
 import type { Route } from "./+types/app.$accountId.ai";
 import * as Oui from "@workspace/oui";
-import { ConfigEx, SchemaEx } from "@workspace/shared";
+import { SchemaEx } from "@workspace/shared";
 import {
   Card,
   CardContent,
@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import { generateText } from "ai";
-import { Config, ConfigError, Effect, Either, Schema } from "effect";
+import { Effect, Schema } from "effect";
 import OpenAI from "openai";
 import * as Rac from "react-aria-components";
 import { createWorkersAI } from "workers-ai-provider";
@@ -22,47 +22,40 @@ export const loader = ReactRouter.routeEffect(() =>
 export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
   Effect.gen(function* () {
     const FormDataSchema = Schema.Struct({
-      intent: Schema.Literal("ai", "openai", "vercel"),
+      intent: Schema.Literal(
+        "ai",
+        "openai",
+        "vercel",
+        "gateway",
+        "gateway1",
+        "gateway2",
+      ),
     });
     const formData = yield* SchemaEx.decodeRequestFormData({
       request,
       schema: FormDataSchema,
     });
-    const ai = yield* ConfigEx.object("AI").pipe(
-      Config.mapOrFail((object) =>
-        "autorag" in object && typeof object.autorag === "function"
-          ? Either.right(object as Ai)
-          : Either.left(
-              ConfigError.InvalidData([], `Expected AI but received ${object}`),
-            ),
-      ),
-    );
-    const [cfAccountId, workersAiApiToken, aiGatewayToken] = yield* Config.all([
-      Config.nonEmptyString("CF_ACCOUNT_ID"),
-      Config.nonEmptyString("CF_WORKERS_AI_API_TOKEN"),
-      Config.nonEmptyString("CF_AI_GATEWAY_TOKEN"),
-    ]);
-
+    const env = (yield* ReactRouter.AppLoadContext).cloudflare.env;
     switch (formData.intent) {
       case "ai":
         const response = yield* Effect.tryPromise({
           try: () =>
-            ai.run("@cf/meta/llama-3.2-1b-instruct", {
-              prompt: "What is micro saas",
+            env.AI.run("@cf/meta/llama-3.2-1b-instruct", {
+              prompt: "fee fi",
             }),
           catch: (unknown) => new Error(`AI request failed: ${unknown}`),
         });
         return { response };
       case "openai": {
         const openai = new OpenAI({
-          apiKey: workersAiApiToken,
-          baseURL: `https://api.cloudflare.com/client/v4/accounts/${cfAccountId}/ai/v1`,
+          apiKey: env.CF_WORKERS_AI_API_TOKEN,
+          baseURL: `https://api.cloudflare.com/client/v4/accounts/${env.CF_ACCOUNT_ID}/ai/v1`,
         });
 
         const response = yield* Effect.tryPromise({
           try: () =>
             openai.chat.completions.create({
-              messages: [{ role: "user", content: "ping" }],
+              messages: [{ role: "user", content: "fee fi" }],
               model: "@cf/meta/llama-3.1-8b-instruct",
             }),
           catch: (unknown) =>
@@ -71,17 +64,59 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
         return { response };
       }
       case "vercel": {
-        const workersai = createWorkersAI({ binding: ai });
+        const workersai = createWorkersAI({ binding: env.AI });
         const response = yield* Effect.tryPromise({
           try: () =>
             generateText({
               model: workersai("@cf/meta/llama-3.1-8b-instruct"),
-              prompt: "ping pong, ding...",
+              prompt: "fee fi",
             }),
           catch: (unknown) => new Error(`Vercel AI request failed: ${unknown}`),
         });
         return { response };
       }
+      case "gateway": {
+        const response = yield* Effect.tryPromise({
+          try: () =>
+            env.AI.run(
+              "@cf/meta/llama-3.2-1b-instruct",
+              {
+                prompt: "fee fi",
+              },
+              {
+                gateway: {
+                  id: env.CF_AI_GATEWAY_ID,
+                  skipCache: false,
+                  cacheTtl: 3360,
+                },
+              },
+            ),
+          catch: (unknown) => new Error(`AI request failed: ${unknown}`),
+        });
+        return { response };
+      }
+      case "gateway1": {
+        const openai = new OpenAI({
+          apiKey: env.CF_WORKERS_AI_API_TOKEN,
+          baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat/chat/completions`,
+          defaultHeaders: {
+            "cf-aig-authorization": `Bearer ${env.CF_AI_GATEWAY_TOKEN}`,
+          },
+        });
+
+        const response = yield* Effect.tryPromise({
+          try: () =>
+            openai.chat.completions.create({
+              messages: [{ role: "user", content: "abacab" }],
+              // model: "workers-ai/@cf/meta/llama-3.1-8b-instruct",
+              model: "@cf/meta/llama-3.1-8b-instruct",
+            }),
+          catch: (unknown) =>
+            new Error(`OpenAI API request failed: ${unknown}`),
+        });
+        return { response };
+      }
+
       default:
         yield* Effect.fail(new Error("Invalid intent"));
         break;
@@ -115,12 +150,6 @@ export default function RouteComponent({
                 : undefined
             }
           >
-            {/* <Oui.TextFieldEx
-              name="emails"
-              label="Email Addresses"
-              type="text"
-              placeholder="e.g., user1@example.com, user2@example.com"
-            /> */}
             <Oui.Button
               type="submit"
               name="intent"
@@ -147,6 +176,33 @@ export default function RouteComponent({
               className="justify-self-end"
             >
               Send Vercel Request
+            </Oui.Button>
+            <Oui.Button
+              type="submit"
+              name="intent"
+              value="gateway"
+              variant="outline"
+              className="justify-self-end"
+            >
+              Send Gateway Request
+            </Oui.Button>
+            <Oui.Button
+              type="submit"
+              name="intent"
+              value="gateway1"
+              variant="outline"
+              className="justify-self-end"
+            >
+              Send Gateway1 Request
+            </Oui.Button>
+            <Oui.Button
+              type="submit"
+              name="intent"
+              value="gateway2"
+              variant="outline"
+              className="justify-self-end"
+            >
+              Send Gateway2 Request
             </Oui.Button>
           </Rac.Form>
         </CardContent>

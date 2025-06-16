@@ -24,7 +24,8 @@
     "STRIPE_SYNC_BATCH_SIZE": "10",
     "AWS_REGION": "us-east-1",
     "AWS_ENDPOINT": "https://email.us-east-1.amazonaws.com",
-    "CF_ACCOUNT_ID": "1422451be59cc2401532ad67d92ae773"
+    "CF_ACCOUNT_ID": "1422451be59cc2401532ad67d92ae773",
+    "CF_AI_GATEWAY_ID": "saas-ai-gateway"
   },
   "migrations": [
     {
@@ -90,7 +91,8 @@
         "STRIPE_SYNC_BATCH_SIZE": "10",
         "AWS_REGION": "us-east-1",
         "AWS_ENDPOINT": "https://email.us-east-1.amazonaws.com",
-        "CF_ACCOUNT_ID": "1422451be59cc2401532ad67d92ae773"
+        "CF_ACCOUNT_ID": "1422451be59cc2401532ad67d92ae773",
+        "CF_AI_GATEWAY_ID": "saas-ai-gateway"
       },
       "migrations": [
         {

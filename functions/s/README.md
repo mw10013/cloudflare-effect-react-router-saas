@@ -157,10 +157,31 @@ curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:g
 ```
 
 ```
+curl "https://api.cloudflare.com/client/v4/user/tokens/verify" \
+     -H "Authorization: Bearer TOKEN"
+```
+
+```
+curl -X POST https://gateway.ai.cloudflare.com/v1/CLOUDFLARE_ACCOUNT_ID/saas-ai-gateway/workers-ai/v1/chat/completions  \
+  --header 'cf-aig-authorization: Bearer AI_GATEWAY_TOKEN' \
+  --header 'Authorization: Bearer WORKER_AI_API_TOKEN' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "@cf/meta/llama-3.1-8b-instruct",
+    "messages": [
+      {
+        "role": "user",
+        "content": "fee fi"
+      }
+    ]
+  }'
+```
+
+```
 curl https://gateway.ai.cloudflare.com/v1/CLOUDFLARE_ACCOUNT_ID/saas-ai-gateway/workers-ai/@cf/meta/llama-3.1-8b-instruct \
  --header 'Authorization: Bearer <WORKER_AI_API_TOKEN>' \
  --header 'Content-Type: application/json' \
- --data '{"prompt": "ping"}'
+ --data '{"prompt": "fee fi"}'
 ```
 
 ```
