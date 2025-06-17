@@ -36,6 +36,10 @@ const items = [
     href: "/admin",
   },
   {
+    id: "Users",
+    href: "/admin/users",
+  },
+  {
     id: "Customers",
     href: "/admin/customers",
   },
