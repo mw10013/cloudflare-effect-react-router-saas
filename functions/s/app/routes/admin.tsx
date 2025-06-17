@@ -61,14 +61,14 @@ export function AppSidebar() {
 
 export default function RouteComponent() {
   return (
-    <div className="">
-      <SidebarProvider>
-        <AppSidebar />
-        <main>
-          <Oui.SidebarTrigger />
+    <SidebarProvider>
+      <AppSidebar />
+      <main>
+        <Oui.SidebarTrigger className="m-2" />
+        <div className="flex flex-col gap-2 px-4">
           <Outlet />
-        </main>
-      </SidebarProvider>
-    </div>
+        </div>
+      </main>
+    </SidebarProvider>
   );
 }
