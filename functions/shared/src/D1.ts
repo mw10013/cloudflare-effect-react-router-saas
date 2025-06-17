@@ -14,7 +14,7 @@ export class D1 extends Effect.Service<D1>()('D1', {
   effect: Effect.gen(function* () {
     const d1 = yield* ConfigEx.object('D1').pipe(
       Config.mapOrFail((object) =>
-        'prepare' in object && typeof object.prepare === 'function' && 'batch' in object && typeof object.batch === 'function'
+        'prepare' in object && typeof object.prepare === 'function' && 'withSession' in object && typeof object.withSession === 'function'
           ? Either.right(object as D1Database)
           : Either.left(ConfigError.InvalidData([], `Expected a D1 database but received ${object}`))
       )
