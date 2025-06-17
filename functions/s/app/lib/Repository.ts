@@ -84,8 +84,10 @@ select json_group_array(json_object(
   'name', u.name, 
   'email', u.email, 
   'userType', u.userType, 
+  'note', u.note,
 	'createdAt', u.createdAt, 
   'updatedAt', u.updatedAt, 
+  'lockedAt', u.lockedAt,
   'deletedAt', u.deletedAt,
 	'account', json_object(
 		'accountId', a.accountId, 
@@ -106,8 +108,10 @@ select json_group_array(json_object(
         'name', u1.name, 
         'email', u1.email, 
         'userType', u1.userType, 
+        'note', u1.note,
         'createdAt', u1.createdAt, 
         'updatedAt', u1.updatedAt, 
+        'lockedAt', u1.lockedAt,
         'deletedAt', u1.deletedAt
       )
 		)) from AccountMember am inner join User u1 on u1.userId = am.userId where am.accountId = a.accountId)
@@ -153,8 +157,10 @@ select json_object(
 		'name', u.name, 
 		'email', u.email, 
 		'userType', u.userType, 
+    'note', u.note,
 		'createdAt', u.createdAt, 
 		'updatedAt', u.updatedAt, 
+    'lockedAt', u.lockedAt,
 		'deletedAt', u.deletedAt
 	)
 ) as data 
@@ -260,8 +266,10 @@ select json_object(
           'name', u.name,
           'email', u.email,
           'userType', u.userType,
+          'note', u.note,
           'createdAt', u.createdAt,
           'updatedAt', u.updatedAt,
+          'lockedAt', u.lockedAt,
           'deletedAt', u.deletedAt
       )
     )
@@ -308,8 +316,10 @@ select json_group_array(json_object(
       'name', u.name, 
       'email', u.email, 
       'userType', u.userType, 
+      'note', u.note,
       'createdAt', u.createdAt, 
       'updatedAt', u.updatedAt, 
+      'lockedAt', u.lockedAt,
       'deletedAt', u.deletedAt
 		)
   )
@@ -344,8 +354,10 @@ select json_group_array(json_object(
     'name', u.name, 
     'email', u.email, 
     'userType', u.userType, 
+    'note', u.note,
     'createdAt', u.createdAt, 
     'updatedAt', u.updatedAt, 
+    'lockedAt', u.lockedAt,
     'deletedAt', u.deletedAt 
   )
 )) as data from AccountMember am inner join User u on u.userId = am.userId where am.accountId = ?`,

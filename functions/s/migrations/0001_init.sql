@@ -63,9 +63,11 @@ create table User (
   name text not null default '',
   email text not null unique,
   userType text not null references UserType (userTypeId),
+  note text not null default '',
   createdAt text not null default (datetime('now')),
   updatedAt text not null default (datetime('now')),
-  deletedAt TEXT
+  lockedAt text,
+  deletedAt text
 );
 
 --> statement-breakpoint

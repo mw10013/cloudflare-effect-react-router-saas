@@ -6,6 +6,8 @@
 - Guests can access public-facing content only
 - Users must authenticate to access non-public features
 - Each user has a unique email address
+- Each user may have an optional internal note (text, admin-editable)
+- Each user may have an optional `lockedAt` timestamp; if set, the user cannot authenticate
 
 ## User Types
 

@@ -43,8 +43,10 @@ export class User extends Schema.Class<User>("User")({
   name: Schema.NullOr(Schema.String),
   email: Email,
   userType: UserType,
+  note: Schema.String,
   createdAt: Schema.DateFromString,
   updatedAt: Schema.DateFromString,
+  lockedAt: Schema.NullOr(Schema.DateFromString),
   deletedAt: Schema.NullOr(Schema.DateFromString),
 }) {}
 
