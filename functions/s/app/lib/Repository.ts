@@ -128,6 +128,29 @@ select json_group_array(json_object(
           ),
         ),
 
+      getUsers: () =>
+        pipe(
+          d1.prepare(
+            `
+select 
+  u.userId, 
+  u.name, 
+  u.email, 
+  u.userType, 
+  u.note,
+  u.createdAt, 
+  u.updatedAt, 
+  u.lockedAt,
+  u.deletedAt
+from User u 
+order by u.email`,
+          ),
+          d1.run,
+          Effect.flatMap((result) =>
+            Schema.decodeUnknown(Schema.Array(User))(result.results),
+          ),
+        ),
+
       getAccountForUser: ({ userId }: Pick<User, "userId">) =>
         pipe(
           d1.prepare(`select * from Account where userId = ?`).bind(userId),

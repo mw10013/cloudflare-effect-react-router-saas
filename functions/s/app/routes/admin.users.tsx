@@ -7,7 +7,7 @@ import { Stripe } from "~/lib/Stripe";
 
 export const loader = ReactRouter.routeEffect(() =>
   Effect.gen(function* () {
-    return { message: "loader", customers: yield* IdentityMgr.getCustomers() };
+    return { message: "loader", users: yield* IdentityMgr.getUsers() };
   }),
 );
 

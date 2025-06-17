@@ -28,6 +28,7 @@ export class IdentityMgr extends Effect.Service<IdentityMgr>()("IdentityMgr", {
     return {
       provisionUser: ({ email }: Pick<User, "email">) =>
         repository.upsertUser({ email }),
+      getUsers: () => repository.getUsers(),
 
       getCustomers: () => repository.getCustomers(),
 
