@@ -112,7 +112,7 @@
         {
           "binding": "D1",
           "database_name": "saas-d1-production",
-          "database_id": "a47de35e-f62e-4abc-8548-0926b8621394" // saas-d1-production
+          "database_id": "565dbc07-6ed4-4fec-b629-45b9c7f46fa7" // saas-d1-production
         }
       ],
       "kv_namespaces": [
