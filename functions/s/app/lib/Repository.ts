@@ -34,9 +34,11 @@ import {
  */
 export class Repository extends Effect.Service<Repository>()("Repository", {
   accessors: true,
-  dependencies: [D1.D1.Default],
+  // dependencies: [D1.D1.Default],
+  dependencies: [D1.D1Session.Default],
   effect: Effect.gen(function* () {
-    const d1 = yield* D1.D1;
+    // const d1 = yield* D1.D1;
+    const d1 = yield* D1.D1Session;
 
     const upsertUserStatements = ({ email }: Pick<User, "email">) => [
       d1

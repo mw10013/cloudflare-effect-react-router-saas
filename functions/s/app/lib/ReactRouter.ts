@@ -3,7 +3,7 @@ import type {
   unstable_MiddlewareFunction,
   unstable_RouterContextProvider,
 } from "react-router";
-import { Cloudflare } from "@workspace/shared";
+import { Cloudflare, D1 } from "@workspace/shared";
 import { Cause, Context, Effect, Exit, Layer, ManagedRuntime } from "effect";
 import { unstable_createContext } from "react-router";
 import { IdentityMgr } from "./IdentityMgr";
@@ -109,6 +109,7 @@ export const makeRuntime = (env: Env) => {
     IdentityMgr.Default,
     Stripe.Default,
     Q.Producer.Default,
+    D1.D1Session.Default,
   ).pipe(Cloudflare.provideLoggerAndConfig(env), ManagedRuntime.make);
 };
 
