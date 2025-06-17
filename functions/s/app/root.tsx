@@ -14,6 +14,7 @@ import {
 import "@workspace/ui/app.css";
 import type { SessionData } from "./lib/Domain";
 import { createWorkersKVSessionStorage } from "@react-router/cloudflare";
+import { D1 } from "@workspace/shared";
 import { Effect } from "effect";
 import * as ReactRouter from "~/lib/ReactRouter";
 
@@ -54,6 +55,11 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
       });
       // yield* Effect.log({ message: `sessionMiddleware: Loaded session`, sessionUser: session.get('sessionUser') })
 
+      const d1SessionBookmark = session.get("d1SessionBookmark");
+      if (d1SessionBookmark) {
+        yield* D1.D1Session.setBookmark(d1SessionBookmark);
+      }
+      yield* Effect.log({ d1SessionBookmark });
       const response = yield* Effect.tryPromise({
         try: () => Promise.resolve(next()),
         catch: (unknown) =>
@@ -76,6 +82,8 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
         );
         return response;
       }
+
+      session.set("d1SessionBookmark", yield* D1.D1Session.getBookmark());
       response.headers.set(
         "Set-Cookie",
         yield* Effect.tryPromise({

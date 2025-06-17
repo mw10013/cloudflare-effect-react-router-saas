@@ -62,7 +62,7 @@ export interface SessionUser extends Schema.Schema.Type<typeof SessionUser> {}
 
 export const SessionData = Schema.Struct({
   sessionUser: Schema.optional(SessionUser),
-  d1SessionBookmark: Schema.optional(Schema.String),
+  d1SessionBookmark: Schema.optional(Schema.Union(Schema.String, Schema.Null)),
 });
 export type SessionData = Schema.Schema.Type<typeof SessionData>;
 
