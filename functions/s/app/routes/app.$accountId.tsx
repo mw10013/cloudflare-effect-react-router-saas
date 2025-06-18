@@ -43,7 +43,7 @@ const accountMiddleware: Route.unstable_MiddlewareFunction =
             userId: sessionUser.userId,
           }),
         ),
-        Effect.orElseSucceed(() => null),
+        Effect.catchTag("NoSuchElementException", () => Effect.succeed(null)),
       );
       if (!accountMember) {
         return yield* Effect.fail(redirect("/app"));

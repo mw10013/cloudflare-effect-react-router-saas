@@ -45,7 +45,6 @@ export class User extends Schema.Class<User>("User")({
   userType: UserType,
   note: Schema.String,
   createdAt: Schema.DateFromString,
-  updatedAt: Schema.DateFromString,
   lockedAt: Schema.NullOr(Schema.DateFromString),
   deletedAt: Schema.NullOr(Schema.DateFromString),
 }) {}
@@ -76,6 +75,7 @@ export class Account extends Schema.Class<Account>("Account")({
   stripeProductId: Schema.NullOr(Schema.String),
   planName: Schema.NullOr(Schema.String),
   subscriptionStatus: Schema.NullOr(Schema.String),
+  createdAt: Schema.DateFromString,
 }) {}
 
 export class AccountWithUser extends Account.extend<AccountWithUser>(

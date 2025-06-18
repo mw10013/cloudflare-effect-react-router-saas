@@ -46,8 +46,7 @@ export class Repository extends Effect.Service<Repository>()("Repository", {
           `
 insert into User (email, userType) values (?, 'customer') 
 on conflict (email) do update set 
-  deletedAt = case when userType = 'staffer' then deletedAt else null end,
-  updatedAt = datetime('now')
+  deletedAt = case when userType = 'staffer' then deletedAt else null end
 returning *`,
         )
         .bind(email),
@@ -86,7 +85,6 @@ select json_group_array(json_object(
   'userType', u.userType, 
   'note', u.note,
 	'createdAt', u.createdAt, 
-  'updatedAt', u.updatedAt, 
   'lockedAt', u.lockedAt,
   'deletedAt', u.deletedAt,
 	'account', json_object(
@@ -97,6 +95,7 @@ select json_group_array(json_object(
     'stripeProductId', a.stripeProductId, 
     'planName', a.planName, 
     'subscriptionStatus', a.subscriptionStatus,
+    'createdAt', a.createdAt,
 		'accountMembers', (select json_group_array(json_object(
 			'accountMemberId', am.accountMemberId, 
       'userId', am.userId, 
@@ -110,7 +109,6 @@ select json_group_array(json_object(
         'userType', u1.userType, 
         'note', u1.note,
         'createdAt', u1.createdAt, 
-        'updatedAt', u1.updatedAt, 
         'lockedAt', u1.lockedAt,
         'deletedAt', u1.deletedAt
       )
@@ -139,7 +137,6 @@ select
   u.userType, 
   u.note,
   u.createdAt, 
-  u.updatedAt, 
   u.lockedAt,
   u.deletedAt
 from User u 
@@ -175,6 +172,7 @@ select json_object(
 	'stripeProductId', a.stripeProductId, 
 	'planName', a.planName, 
 	'subscriptionStatus', a.subscriptionStatus,
+	'createdAt', a.createdAt,
 	'user', json_object(
 		'userId', u.userId, 
 		'name', u.name, 
@@ -182,7 +180,6 @@ select json_object(
 		'userType', u.userType, 
     'note', u.note,
 		'createdAt', u.createdAt, 
-		'updatedAt', u.updatedAt, 
     'lockedAt', u.lockedAt,
 		'deletedAt', u.deletedAt
 	)
@@ -258,7 +255,7 @@ where a.accountId = ?1 and am.userId = ?2 and am.status = 'active'`,
         d1.batch([
           d1
             .prepare(
-              `update User set deletedAt = datetime('now'), updatedAt = datetime('now') where userId = ?`,
+              `update User set deletedAt = datetime('now') where userId = ?`,
             )
             .bind(userId),
           d1
@@ -273,9 +270,7 @@ where a.accountId = ?1 and am.userId = ?2 and am.status = 'active'`,
       undeleteUser: ({ userId }: Pick<User, "userId">) =>
         d1.batch([
           d1
-            .prepare(
-              `update User set deletedAt = null, updatedAt = datetime('now') where userId = ?`,
-            )
+            .prepare(`update User set deletedAt = null where userId = ?`)
             .bind(userId),
           d1
             .prepare(
@@ -286,6 +281,28 @@ where u.userId = ?1`,
             )
             .bind(userId),
         ]),
+
+      lockUser: ({ userId }: { userId: User["userId"] }) =>
+        pipe(
+          d1
+            .prepare(
+              `update User set lockedAt = datetime('now') where userId = ? and deletedAt is null`,
+            )
+            .bind(userId),
+          d1.run,
+          Effect.asVoid,
+        ),
+
+      unlockUser: ({ userId }: { userId: User["userId"] }) =>
+        pipe(
+          d1
+            .prepare(
+              `update User set lockedAt = null where userId = ? and deletedAt is null`,
+            )
+            .bind(userId),
+          d1.run,
+          Effect.asVoid,
+        ),
 
       getAccountMemberForAccount: ({
         accountId,
@@ -310,6 +327,7 @@ select json_object(
       'stripeProductId', a.stripeProductId,
       'planName', a.planName,
       'subscriptionStatus', a.subscriptionStatus,
+      'createdAt', a.createdAt,
       'user', json_object(
           'userId', u.userId,
           'name', u.name,
@@ -317,7 +335,6 @@ select json_object(
           'userType', u.userType,
           'note', u.note,
           'createdAt', u.createdAt,
-          'updatedAt', u.updatedAt,
           'lockedAt', u.lockedAt,
           'deletedAt', u.deletedAt
       )
@@ -360,6 +377,7 @@ select json_group_array(json_object(
     'stripeProductId', a.stripeProductId, 
     'planName', a.planName, 
     'subscriptionStatus', a.subscriptionStatus,
+    'createdAt', a.createdAt,
 		'user', json_object(
 			'userId', u.userId, 
       'name', u.name, 
@@ -367,7 +385,6 @@ select json_group_array(json_object(
       'userType', u.userType, 
       'note', u.note,
       'createdAt', u.createdAt, 
-      'updatedAt', u.updatedAt, 
       'lockedAt', u.lockedAt,
       'deletedAt', u.deletedAt
 		)
@@ -405,7 +422,6 @@ select json_group_array(json_object(
     'userType', u.userType, 
     'note', u.note,
     'createdAt', u.createdAt, 
-    'updatedAt', u.updatedAt, 
     'lockedAt', u.lockedAt,
     'deletedAt', u.deletedAt 
   )

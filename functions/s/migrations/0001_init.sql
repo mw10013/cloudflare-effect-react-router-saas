@@ -53,8 +53,7 @@ create table Account (
   stripeProductId text,
   planName text,
   subscriptionStatus text,
-  createdAt text not null default (datetime('now')),
-  updatedAt text not null default (datetime('now'))
+  createdAt text not null default (datetime('now'))
 );
 
 --> statement-breakpoint
@@ -65,7 +64,6 @@ create table User (
   userType text not null references UserType (userTypeId),
   note text not null default '',
   createdAt text not null default (datetime('now')),
-  updatedAt text not null default (datetime('now')),
   lockedAt text,
   deletedAt text
 );

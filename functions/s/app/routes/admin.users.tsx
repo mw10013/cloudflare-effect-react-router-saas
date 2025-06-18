@@ -9,32 +9,60 @@ export const loader = ReactRouter.routeEffect(() =>
   IdentityMgr.getUsers().pipe(Effect.map((users) => ({ users }))),
 );
 
-// const FormDataSchema = Schema.Union(
-//   Schema.Struct({
-//     intent: Schema.Literal("seed"),
-//   }),
-//   Schema.Struct({
-//     intent: Schema.Literal("sync_stripe_data", "customer_subscription"),
-//     customerId: Schema.NonEmptyString,
-//   }),
-// );
-
 // export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
 //   Effect.gen(function* () {
+//     const FormDataSchema = Schema.Union(
+//       Schema.Struct({
+//         intent: Schema.Literal("invite"),
+//         emails: Schema.compose(
+//           Schema.compose(Schema.NonEmptyString, Schema.split(",")),
+//           Schema.ReadonlySet(Email),
+//         )
+//           .annotations({
+//             message: () => ({
+//               message: "Please provide valid email addresses.",
+//               override: true,
+//             }),
+//           })
+//           .pipe(
+//             Schema.filter((s: ReadonlySet<Email>) => s.size <= 3, {
+//               message: () => "Too many email addresses.",
+//             }),
+//           ),
+//       }),
+//       Schema.Struct({
+//         intent: Schema.Union(Schema.Literal("revoke"), Schema.Literal("leave")),
+//         accountMemberId: AccountMemberIdFromString,
+//       }),
+//     );
 //     const formData = yield* SchemaEx.decodeRequestFormData({
 //       request,
 //       schema: FormDataSchema,
 //     });
-//     let message: string | undefined;
-//     if (formData.intent === "seed") {
-//       yield* Stripe.seed();
-//       message = "Seeded";
+//     switch (formData.intent) {
+//       case "invite":
+//         yield* inviteMembers(formData.emails);
+//         break;
+//       case "revoke":
+//         yield* revokeMember(formData.accountMemberId);
+//         break;
+//       case "leave":
+//         yield* leaveAccount(formData.accountMemberId);
+//         break;
+//       default:
+//         yield* Effect.fail(new Error("Invalid intent"));
+//         break;
 //     }
-//     return {
-//       message,
-//       formData,
-//     };
-//   }).pipe(SchemaEx.catchValidationError),
+//   }).pipe(
+//     SchemaEx.catchValidationError,
+//     // Using `Effect.catchIf` because `Effect.catchTag` would prevent other errors
+//     // from propagating to the main `routeEffect` handler unless explicitly re-thrown.
+//     Effect.catchIf(
+//       (e: unknown): e is InviteError => e instanceof InviteError,
+//       (error: InviteError) =>
+//         Effect.succeed({ validationErrors: { emails: error.message } }),
+//     ),
+//   ),
 // );
 
 export default function RouteComponent({
