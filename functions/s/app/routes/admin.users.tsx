@@ -45,15 +45,15 @@ export default function RouteComponent({
     <Oui.Table aria-label="Users">
       <Oui.TableHeader>
         <Oui.Column isRowHeader className="w-[80px]">
-          userId
+          Id
         </Oui.Column>
-        <Oui.Column>email</Oui.Column>
-        <Oui.Column>name</Oui.Column>
-        <Oui.Column>userType</Oui.Column>
-        <Oui.Column>note</Oui.Column>
-        <Oui.Column>createdAt</Oui.Column>
-        <Oui.Column>lockedAt</Oui.Column>
-        <Oui.Column>deletedAt</Oui.Column>
+        <Oui.Column>Email</Oui.Column>
+        <Oui.Column>Name</Oui.Column>
+        <Oui.Column>Type</Oui.Column>
+        <Oui.Column>Note</Oui.Column>
+        <Oui.Column>Created</Oui.Column>
+        <Oui.Column>Locked</Oui.Column>
+        <Oui.Column>Deleted</Oui.Column>
         <Oui.Column className="w-10 text-right" aria-label="Actions">
           <span className="sr-only">Actions</span>
         </Oui.Column>
