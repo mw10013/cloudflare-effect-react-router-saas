@@ -109,6 +109,13 @@
 - Email change process:
   - When a user changes their email, the corresponding Stripe customer email must be updated
   - System must ensure email synchronization between User and Stripe customer
+- Staffers cannot be soft deleted. Only customers may be soft deleted.
+
+## User Locking
+
+- Any user (customer or staffer) may be locked by setting the `lockedAt` timestamp.
+- A locked user cannot authenticate or access any non-public features.
+- Locking does not affect deletion status or account membership.
 
 ## Data Integrity Constraints
 

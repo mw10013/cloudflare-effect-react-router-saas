@@ -250,55 +250,61 @@ where a.accountId = ?1 and am.userId = ?2 and am.status = 'active'`,
        * Soft deletes a user by setting deletedAt to the current timestamp and removing all AccountMember rows for the user.
        * The user record is retained for Stripe and audit requirements; deletedAt is used to exclude users from active queries.
        * All AccountMember relationships are hard deleted, but the Account is untouched.
+       * No-op for staffers.
        */
       softDeleteUser: ({ userId }: Pick<User, "userId">) =>
         d1.batch([
           d1
             .prepare(
-              `update User set deletedAt = datetime('now') where userId = ?`,
+              `update User set deletedAt = datetime('now') where userId = ? and userType = 'customer'`,
             )
             .bind(userId),
           d1
             .prepare(`delete from AccountMember where userId = ?1`)
-            .bind(userId),
+            .bind(userId), // ok for staffers: they are never in AccountMember
         ]),
 
       /**
        * Undeletes a user by clearing deletedAt and re-inserting the AccountMember row for the user's account.
        * This reactivates the user and restores their account membership if missing. Fails if AccountMember already exists.
+       * No-op for staffers.
        */
       undeleteUser: ({ userId }: Pick<User, "userId">) =>
         d1.batch([
           d1
             .prepare(`update User set deletedAt = null where userId = ?`)
-            .bind(userId),
+            .bind(userId), // ok for staffers: update is a no-op
           d1
             .prepare(
               `insert into AccountMember (userId, accountId, status, role)
 select u.userId, a.accountId, 'active', 'admin'
 from User u inner join Account a on a.userId = u.userId
-where u.userId = ?1`,
+where u.userId = ?1 and u.userType = 'customer'`,
             )
             .bind(userId),
         ]),
 
+      /**
+       * Locks a user by setting lockedAt. Applies regardless of deletedAt; ensures a rehydrated user remains locked if previously locked.
+       */
       lockUser: ({ userId }: { userId: User["userId"] }) =>
         pipe(
           d1
             .prepare(
-              `update User set lockedAt = datetime('now') where userId = ? and deletedAt is null`,
+              `update User set lockedAt = datetime('now') where userId = ?`,
             )
             .bind(userId),
           d1.run,
           Effect.asVoid,
         ),
 
+      /**
+       * Unlocks a user by clearing lockedAt. Applies regardless of deletedAt; allows unlocking even if user is soft deleted.
+       */
       unlockUser: ({ userId }: { userId: User["userId"] }) =>
         pipe(
           d1
-            .prepare(
-              `update User set lockedAt = null where userId = ? and deletedAt is null`,
-            )
+            .prepare(`update User set lockedAt = null where userId = ?`)
             .bind(userId),
           d1.run,
           Effect.asVoid,
