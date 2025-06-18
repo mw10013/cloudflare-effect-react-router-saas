@@ -8,6 +8,7 @@ import {
   AccountWithUser,
   Customer,
   User,
+  UsersPaginated,
 } from "./Domain";
 
 /**
@@ -132,6 +133,46 @@ select json_group_array(json_object(
           d1.run,
           Effect.flatMap((result) =>
             Schema.decodeUnknown(Schema.Array(User))(result.results),
+          ),
+        ),
+
+      getUsersPaginated: ({
+        limit,
+        offset,
+      }: {
+        limit: number;
+        offset: number;
+      }) =>
+        pipe(
+          d1
+            .prepare(
+              `
+select json_object(
+  'users', (
+    select json_group_array(json_object(
+      'userId', u.userId,
+      'name', u.name,
+      'email', u.email,
+      'userType', u.userType,
+      'note', u.note,
+      'createdAt', u.createdAt,
+      'lockedAt', u.lockedAt,
+      'deletedAt', u.deletedAt
+    ))
+    from User u
+    order by u.email
+    limit ? offset ?
+  ),
+  'count', (
+    select count(*) from User
+  )
+) as data`,
+            )
+            .bind(limit, offset),
+          d1.first,
+          Effect.flatMap(Effect.fromNullable),
+          Effect.flatMap(
+            Schema.decodeUnknown(SchemaEx.DataFromResult(UsersPaginated)),
           ),
         ),
 

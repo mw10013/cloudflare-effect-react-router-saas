@@ -126,3 +126,10 @@ export class AccountWithAccountMembers extends Account.extend<AccountWithAccount
 export class Customer extends User.extend<Customer>("Customer")({
   account: AccountWithAccountMembers,
 }) {}
+
+export class UsersPaginated extends Schema.Class<UsersPaginated>(
+  "UsersPaginated",
+)({
+  users: Schema.Array(User),
+  count: Schema.Number,
+}) {}
