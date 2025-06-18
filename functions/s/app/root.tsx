@@ -59,7 +59,7 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
       if (d1SessionBookmark) {
         yield* D1.D1Session.setBookmark(d1SessionBookmark);
       }
-      yield* Effect.log({ d1SessionBookmark });
+      // yield* Effect.log({ d1SessionBookmark });
       const response = yield* Effect.tryPromise({
         try: () => Promise.resolve(next()),
         catch: (unknown) =>
