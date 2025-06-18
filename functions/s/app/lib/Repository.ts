@@ -249,6 +249,11 @@ where a.accountId = ?1 and am.userId = ?2 and am.status = 'active'`,
           Effect.flatMap(Schema.decodeUnknown(User)),
         ),
 
+      /**
+       * Soft deletes a user by setting deletedAt to the current timestamp and removing all AccountMember rows for the user.
+       * The user record is retained for Stripe and audit requirements; deletedAt is used to exclude users from active queries.
+       * All AccountMember relationships are hard deleted, but the Account is untouched.
+       */
       softDeleteUser: ({ userId }: Pick<User, "userId">) =>
         d1.batch([
           d1
@@ -258,6 +263,27 @@ where a.accountId = ?1 and am.userId = ?2 and am.status = 'active'`,
             .bind(userId),
           d1
             .prepare(`delete from AccountMember where userId = ?1`)
+            .bind(userId),
+        ]),
+
+      /**
+       * Undeletes a user by clearing deletedAt and re-inserting the AccountMember row for the user's account.
+       * This reactivates the user and restores their account membership if missing. Fails if AccountMember already exists.
+       */
+      undeleteUser: ({ userId }: Pick<User, "userId">) =>
+        d1.batch([
+          d1
+            .prepare(
+              `update User set deletedAt = null, updatedAt = datetime('now') where userId = ?`,
+            )
+            .bind(userId),
+          d1
+            .prepare(
+              `insert into AccountMember (userId, accountId, status, role)
+select u.userId, a.accountId, 'active', 'admin'
+from User u inner join Account a on a.userId = u.userId
+where u.userId = ?1`,
+            )
             .bind(userId),
         ]),
 
