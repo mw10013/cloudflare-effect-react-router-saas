@@ -2,6 +2,8 @@ import type { Route } from "./+types/admin.users";
 import * as Oui from "@workspace/oui";
 import { SchemaEx } from "@workspace/shared";
 import { Effect, Schema } from "effect";
+import { useFetcher } from "react-router";
+import { UserIdFromString } from "~/lib/Domain";
 import { IdentityMgr } from "~/lib/IdentityMgr";
 import * as ReactRouter from "~/lib/ReactRouter";
 
@@ -9,66 +11,51 @@ export const loader = ReactRouter.routeEffect(() =>
   IdentityMgr.getUsers().pipe(Effect.map((users) => ({ users }))),
 );
 
-// export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
-//   Effect.gen(function* () {
-//     const FormDataSchema = Schema.Union(
-//       Schema.Struct({
-//         intent: Schema.Literal("invite"),
-//         emails: Schema.compose(
-//           Schema.compose(Schema.NonEmptyString, Schema.split(",")),
-//           Schema.ReadonlySet(Email),
-//         )
-//           .annotations({
-//             message: () => ({
-//               message: "Please provide valid email addresses.",
-//               override: true,
-//             }),
-//           })
-//           .pipe(
-//             Schema.filter((s: ReadonlySet<Email>) => s.size <= 3, {
-//               message: () => "Too many email addresses.",
-//             }),
-//           ),
-//       }),
-//       Schema.Struct({
-//         intent: Schema.Union(Schema.Literal("revoke"), Schema.Literal("leave")),
-//         accountMemberId: AccountMemberIdFromString,
-//       }),
-//     );
-//     const formData = yield* SchemaEx.decodeRequestFormData({
-//       request,
-//       schema: FormDataSchema,
-//     });
-//     switch (formData.intent) {
-//       case "invite":
-//         yield* inviteMembers(formData.emails);
-//         break;
-//       case "revoke":
-//         yield* revokeMember(formData.accountMemberId);
-//         break;
-//       case "leave":
-//         yield* leaveAccount(formData.accountMemberId);
-//         break;
-//       default:
-//         yield* Effect.fail(new Error("Invalid intent"));
-//         break;
-//     }
-//   }).pipe(
-//     SchemaEx.catchValidationError,
-//     // Using `Effect.catchIf` because `Effect.catchTag` would prevent other errors
-//     // from propagating to the main `routeEffect` handler unless explicitly re-thrown.
-//     Effect.catchIf(
-//       (e: unknown): e is InviteError => e instanceof InviteError,
-//       (error: InviteError) =>
-//         Effect.succeed({ validationErrors: { emails: error.message } }),
-//     ),
-//   ),
-// );
+export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
+  Effect.gen(function* () {
+    const FormDataSchema = Schema.Struct({
+      intent: Schema.Literal("lock", "unlock", "delete", "undelete"),
+      userId: UserIdFromString,
+    });
+    const formData = yield* SchemaEx.decodeRequestFormData({
+      request,
+      schema: FormDataSchema,
+    });
+    yield* Effect.log({ intent: formData.intent, userId: formData.userId });
+    switch (formData.intent) {
+      case "lock":
+        yield* IdentityMgr.lockUser({ userId: formData.userId });
+        break;
+      case "unlock":
+        yield* IdentityMgr.unlockUser({ userId: formData.userId });
+        break;
+      case "delete":
+        yield* IdentityMgr.softDeleteUser({ userId: formData.userId });
+        break;
+      case "undelete":
+        yield* IdentityMgr.undeleteUser({ userId: formData.userId });
+        break;
+      default:
+        yield* Effect.fail(new Error("Invalid intent"));
+        break;
+    }
+  }),
+);
 
 export default function RouteComponent({
   loaderData,
   actionData,
 }: Route.ComponentProps) {
+  const fetcher = useFetcher();
+  const onAction = (
+    intent: "lock" | "unlock" | "delete" | "undelete",
+    userId: number,
+  ) => {
+    const formData = new FormData();
+    formData.append("intent", intent);
+    formData.append("userId", String(userId));
+    fetcher.submit(formData, { method: "post" });
+  };
   return (
     <Oui.Table aria-label="Users">
       <Oui.TableHeader>
@@ -111,8 +98,36 @@ export default function RouteComponent({
                   </Oui.Button>
                 }
               >
-                <Oui.MenuItem id="lock">Lock</Oui.MenuItem>
-                <Oui.MenuItem id="delete">Delete</Oui.MenuItem>
+                {user.lockedAt ? (
+                  <Oui.MenuItem
+                    id="unlock"
+                    onAction={() => onAction("unlock", user.userId)}
+                  >
+                    Unlock
+                  </Oui.MenuItem>
+                ) : (
+                  <Oui.MenuItem
+                    id="lock"
+                    onAction={() => onAction("lock", user.userId)}
+                  >
+                    Lock
+                  </Oui.MenuItem>
+                )}
+                {user.deletedAt ? (
+                  <Oui.MenuItem
+                    id="undelete"
+                    onAction={() => onAction("undelete", user.userId)}
+                  >
+                    Undelete
+                  </Oui.MenuItem>
+                ) : (
+                  <Oui.MenuItem
+                    id="delete"
+                    onAction={() => onAction("delete", user.userId)}
+                  >
+                    Delete
+                  </Oui.MenuItem>
+                )}
               </Oui.MenuEx>
             </Oui.Cell>
           </Oui.Row>

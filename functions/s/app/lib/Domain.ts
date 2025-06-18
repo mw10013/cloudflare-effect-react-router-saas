@@ -22,6 +22,9 @@ export type Email = Schema.Schema.Type<typeof Email>;
 
 export const UserId = Schema.Number.pipe(Schema.brand("UserId"));
 export type UserId = Schema.Schema.Type<typeof UserId>;
+export const UserIdFromString = Schema.NumberFromString.pipe(
+  Schema.brand("UserId"),
+);
 
 export const AccountId = Schema.Number.pipe(Schema.brand("AccountId"));
 export type AccountId = Schema.Schema.Type<typeof AccountId>;
