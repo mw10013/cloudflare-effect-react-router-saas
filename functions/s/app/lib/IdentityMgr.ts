@@ -42,8 +42,19 @@ export class IdentityMgr extends Effect.Service<IdentityMgr>()("IdentityMgr", {
       undeleteUser: ({ userId }: Pick<User, "userId">) =>
         repository.undeleteUser({ userId }),
 
-      lockUser: ({ userId }: Pick<User, "userId">) =>
-        repository.lockUser({ userId }),
+      /**
+       * Lock a user unless actingStafferId matches userId (no-op if self).
+       */
+      lockUser: ({
+        userId,
+        actingStafferId,
+      }: {
+        userId: User["userId"];
+        actingStafferId: User["userId"];
+      }) =>
+        userId === actingStafferId
+          ? Effect.void
+          : repository.lockUser({ userId }),
       unlockUser: ({ userId }: Pick<User, "userId">) =>
         repository.unlockUser({ userId }),
 

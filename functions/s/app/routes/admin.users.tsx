@@ -14,7 +14,7 @@ export const loader = ReactRouter.routeEffect(() =>
 export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
   Effect.gen(function* () {
     const FormDataSchema = Schema.Struct({
-      intent: Schema.Literal("lock", "unlock", "delete", "undelete"),
+      intent: Schema.Literal("lock", "unlock", "soft_delete", "undelete"),
       userId: UserIdFromString,
     });
     const formData = yield* SchemaEx.decodeRequestFormData({
@@ -24,12 +24,24 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
     yield* Effect.log({ intent: formData.intent, userId: formData.userId });
     switch (formData.intent) {
       case "lock":
-        yield* IdentityMgr.lockUser({ userId: formData.userId });
+        {
+          const actingStafferId = yield* ReactRouter.AppLoadContext.pipe(
+            Effect.flatMap((appLoadContext) =>
+              Effect.fromNullable(
+                appLoadContext.session.get("sessionUser")?.userId,
+              ),
+            ),
+          );
+          yield* IdentityMgr.lockUser({
+            userId: formData.userId,
+            actingStafferId,
+          });
+        }
         break;
       case "unlock":
         yield* IdentityMgr.unlockUser({ userId: formData.userId });
         break;
-      case "delete":
+      case "soft_delete":
         yield* IdentityMgr.softDeleteUser({ userId: formData.userId });
         break;
       case "undelete":
@@ -48,7 +60,7 @@ export default function RouteComponent({
 }: Route.ComponentProps) {
   const fetcher = useFetcher();
   const onAction = (
-    intent: "lock" | "unlock" | "delete" | "undelete",
+    intent: "lock" | "unlock" | "soft_delete" | "undelete",
     userId: number,
   ) => {
     const formData = new FormData();
@@ -122,10 +134,10 @@ export default function RouteComponent({
                   </Oui.MenuItem>
                 ) : (
                   <Oui.MenuItem
-                    id="delete"
-                    onAction={() => onAction("delete", user.userId)}
+                    id="soft_delete"
+                    onAction={() => onAction("soft_delete", user.userId)}
                   >
-                    Delete
+                    Soft Delete
                   </Oui.MenuItem>
                 )}
               </Oui.MenuEx>
