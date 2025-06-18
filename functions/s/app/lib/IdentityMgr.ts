@@ -30,6 +30,18 @@ export class IdentityMgr extends Effect.Service<IdentityMgr>()("IdentityMgr", {
         repository.upsertUser({ email }),
       getUsers: () => repository.getUsers(),
 
+      getUsersPaginated: ({
+        page,
+        pageSize,
+      }: {
+        page: number;
+        pageSize: number;
+      }) =>
+        repository.getUsersPaginated({
+          limit: pageSize,
+          offset: (page - 1) * pageSize,
+        }),
+
       /**
        * Soft delete a user. Deactivates the user and removes all account memberships, but retains the record for audit and Stripe linkage.
        */
