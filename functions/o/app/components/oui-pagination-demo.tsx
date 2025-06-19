@@ -1,13 +1,6 @@
 import * as Oui from "@workspace/oui";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@workspace/ui/components/ui/pagination";
+import * as Rac from "react-aria-components";
+import { twJoin } from "tailwind-merge";
 
 export function OuiPaginationDemo() {
   return (
@@ -23,30 +16,26 @@ export function OuiPaginationDemo() {
         </Oui.ListBoxItemEx1>
         <Oui.ListBoxItemEx1 variant="ghost">Next</Oui.ListBoxItemEx1>
       </Oui.ListBoxEx1>
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      <Rac.ListBox
+        aria-label="test-listbox"
+        orientation="horizontal"
+        selectionMode="single"
+        className="flex flex-row gap-2"
+      >
+        <Rac.ListBoxItem
+          className={twJoin(
+            Oui.baseStyles,
+            "rounded-md px-2.5 py-2 data-[hovered]:bg-red-500",
+          )}
+        >
+          Alpha
+        </Rac.ListBoxItem>
+        <Rac.ListBoxItem className="data-[focus-visible]:border-ring data-[focus-visible]:ring-ring/50 rounded-md px-2.5 py-2 outline-none data-[hovered]:bg-red-500 data-[focus-visible]:ring-[3px]">
+          Beta
+        </Rac.ListBoxItem>
+        {/* <Oui.ListBoxItemEx1 variant="outline">Alpha</Oui.ListBoxItemEx1>
+        <Oui.ListBoxItemEx1 variant="outline">Beta</Oui.ListBoxItemEx1> */}
+      </Rac.ListBox>
     </div>
   );
 }

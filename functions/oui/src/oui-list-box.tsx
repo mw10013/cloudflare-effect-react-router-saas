@@ -95,6 +95,7 @@ export const ListBoxEx1 = <T extends object>({
   <nav aria-label="pagination" className="mx-auto flex w-full justify-center">
     <Rac.ListBox
       orientation="horizontal"
+      selectionMode="single"
       className={composeTailwindRenderProps(
         className,
         "flex flex-row items-center gap-1",
