@@ -85,3 +85,26 @@ export const ListBoxItem = <T extends object>({
 //     <Text slot="description">{description}</Text>
 //   </Rac.ListBoxItem>
 // );
+
+export const ListBoxEx1 = <T extends object>({
+  className,
+  ...props
+}: Rac.ListBoxProps<T>) => (
+  <nav aria-label="pagination" className="mx-auto flex w-full justify-center">
+    <Rac.ListBox
+      orientation="horizontal"
+      className={composeTailwindRenderProps(
+        className,
+        "flex flex-row items-center gap-1",
+      )}
+      {...props}
+    />
+  </nav>
+);
+
+export const ListBoxItemEx1 = <T extends object>({
+  className,
+  ...props
+}: Rac.ListBoxItemProps<T>) => (
+  <Rac.ListBoxItem className={className} {...props} />
+);
