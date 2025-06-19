@@ -13,28 +13,15 @@ export function OuiPaginationDemo() {
   return (
     <div className="flex flex-col gap-6">
       <Oui.ListBoxEx1>
-        <Oui.ListBoxItem className={Oui.buttonClassName({ variant: "ghost" })}>
-          Previous
-        </Oui.ListBoxItem>
-        <Oui.ListBoxItem
-          className={Oui.buttonClassName({ variant: "outline" })}
-        >
-          1
-        </Oui.ListBoxItem>
-        <Oui.ListBoxItem
-          className={Oui.buttonClassName({ variant: "outline", size: "icon" })}
-          aria-current="page"
-        >
+        <Oui.ListBoxItemEx1 variant="ghost">Previous</Oui.ListBoxItemEx1>
+        <Oui.ListBoxItemEx1 variant="outline">1</Oui.ListBoxItemEx1>
+        <Oui.ListBoxItemEx1 variant="outline" size="icon" aria-current="page">
           2
-        </Oui.ListBoxItem>
-        <Oui.ListBoxItem
-          className={Oui.buttonClassName({ variant: "outline", size: "icon" })}
-        >
+        </Oui.ListBoxItemEx1>
+        <Oui.ListBoxItemEx1 variant="outline" size="icon">
           3
-        </Oui.ListBoxItem>
-        <Oui.ListBoxItem className={Oui.buttonClassName({ variant: "ghost" })}>
-          Next
-        </Oui.ListBoxItem>
+        </Oui.ListBoxItemEx1>
+        <Oui.ListBoxItemEx1 variant="ghost">Next</Oui.ListBoxItemEx1>
       </Oui.ListBoxEx1>
       <Pagination>
         <PaginationContent>

@@ -1,6 +1,8 @@
+import type { ButtonProps } from "./oui-button";
 import { Check } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { baseStyles, composeTailwindRenderProps } from "./oui-base";
+import { buttonStyles } from "./oui-button";
 
 /** Styles derived from shadcn SelectItem.
  * https://github.com/adobe/react-spectrum/issues/7601
@@ -102,9 +104,20 @@ export const ListBoxEx1 = <T extends object>({
   </nav>
 );
 
+export interface ListBoxItemEx1Props<T extends object = object>
+  extends Rac.ListBoxItemProps<T>,
+    Pick<ButtonProps, "variant" | "size"> {}
+
 export const ListBoxItemEx1 = <T extends object>({
   className,
+  variant,
+  size,
   ...props
-}: Rac.ListBoxItemProps<T>) => (
-  <Rac.ListBoxItem className={className} {...props} />
+}: ListBoxItemEx1Props<T>) => (
+  <Rac.ListBoxItem
+    className={Rac.composeRenderProps(className, (className, renderProps) =>
+      buttonStyles({ ...renderProps, variant, size, className }),
+    )}
+    {...props}
+  />
 );
