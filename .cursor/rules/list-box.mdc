@@ -1,0 +1,7 @@
+---
+description: 
+globs: **/oui-pagination-demo.tsx,**/oui-list-box.tsx
+alwaysApply: false
+---
+[React Aria ListBox Documentation](mdc:https:/react-spectrum.adobe.com/react-aria/ListBox.html)
+
