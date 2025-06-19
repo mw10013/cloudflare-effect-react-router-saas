@@ -1,8 +1,9 @@
 ---
 description: 
-globs: **/oui-list-box.tsx,**/oui-pagination-demo.tsx
+globs: **/oui-list-box.tsx,**/oui-pagination-demo.tsx,**/admin.users.tsx
 alwaysApply: false
 ---
-The easter egg value is honey
 
-[React Aria Component List Box Documentation](https://react-spectrum.adobe.com/react-aria/ListBox.html)
+- [React Aria Component List Box Documentation](mdc:https:/react-spectrum.adobe.com/react-aria/ListBox.html)
+
+

@@ -94,13 +94,25 @@ export default function RouteComponent({
             <Oui.Cell>{user.userType}</Oui.Cell>
             <Oui.Cell>{user.note}</Oui.Cell>
             <Oui.Cell>
-              {user.createdAt ? new Date(user.createdAt).toLocaleString() : ""}
+              {user.createdAt
+                ? new Intl.DateTimeFormat("en-CA").format(
+                    new Date(user.createdAt),
+                  )
+                : ""}
             </Oui.Cell>
             <Oui.Cell>
-              {user.lockedAt ? new Date(user.lockedAt).toLocaleString() : ""}
+              {user.lockedAt
+                ? new Intl.DateTimeFormat("en-CA").format(
+                    new Date(user.lockedAt),
+                  )
+                : ""}
             </Oui.Cell>
             <Oui.Cell>
-              {user.deletedAt ? new Date(user.deletedAt).toLocaleString() : ""}
+              {user.deletedAt
+                ? new Intl.DateTimeFormat("en-CA").format(
+                    new Date(user.deletedAt),
+                  )
+                : ""}
             </Oui.Cell>
             <Oui.Cell className="text-right">
               <Oui.MenuEx
