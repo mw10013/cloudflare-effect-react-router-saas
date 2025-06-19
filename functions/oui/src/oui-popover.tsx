@@ -22,14 +22,14 @@ import { Dialog } from "./oui-dialog";
  * allowing contextual styling for different trigger types like `MenuTrigger`, `Select`, or `ComboBox`.
  */
 export const popoverStyles = tv({
-  base: "bg-popover text-popover-foreground data-[entering]:animate-in data-[exiting]:animate-out data-[entering]:fade-in-0 data-[exiting]:fade-out-0 data-[entering]:zoom-in-95 data-[exiting]:zoom-out-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2 relative min-w-[8rem] overflow-y-auto overflow-x-hidden rounded-md border shadow-md",
+  base: "bg-popover text-popover-foreground data-[entering]:animate-in data-[exiting]:animate-out data-[entering]:fade-in-0 data-[exiting]:fade-out-0 data-[entering]:zoom-in-95 data-[exiting]:zoom-out-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2 relative min-w-[8rem] overflow-y-auto overflow-x-hidden rounded-md border shadow-md outline-none",
   variants: {
     trigger: {
       DialogTrigger: "min-w-72 p-4",
       MenuTrigger: "",
       SubmenuTrigger: "shadow-lg",
-      Select: "min-w-[var(--trigger-width)]",
-      ComboBox: "min-w-[var(--trigger-width)]",
+      Select: "min-w-[var(--trigger-width)] p-1", // Derived from shadcn SelectPrimitive.Viewport
+      ComboBox: "min-w-[var(--trigger-width)] p-1", // Derived from shadcn SelectPrimitive.Viewport
     },
   },
 });

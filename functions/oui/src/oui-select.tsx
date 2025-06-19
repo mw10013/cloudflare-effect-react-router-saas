@@ -5,17 +5,8 @@ import { twMerge } from "tailwind-merge";
 import { composeTailwindRenderProps } from "./oui-base";
 import { FieldError } from "./oui-field-error";
 import { Label } from "./oui-label";
-import { ListBox } from "./oui-list-box";
 import { Popover } from "./oui-popover";
 import { Text } from "./oui-text";
-
-/*
-#fetch https://react-spectrum.adobe.com/react-aria/Select.html
-#fetch https://react-spectrum.adobe.com/react-aria/ListBox.html
-#fetch https://react-spectrum.adobe.com/react-aria/Popover.html
-#fetch https://react-spectrum.adobe.com/react-aria/collections.html
-#fetch https://react-spectrum.adobe.com/react-aria/styling.html
-*/
 
 export const Select = <T extends object>({
   className,
@@ -109,7 +100,7 @@ export function SelectEx<T extends object>({
       {description && <Text slot="description">{description}</Text>}
       <FieldError>{errorMessage}</FieldError>
       <Popover>
-        <ListBox items={items}>{children}</ListBox>
+        <Rac.ListBox items={items}>{children}</Rac.ListBox>
       </Popover>
     </Select>
   );

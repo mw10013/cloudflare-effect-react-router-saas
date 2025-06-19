@@ -2,24 +2,6 @@ import { Check } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { baseStyles, composeTailwindRenderProps } from "./oui-base";
 
-/*
-#fetch https://react-spectrum.adobe.com/react-aria/ListBox.html
-#fetch https://react-spectrum.adobe.com/react-aria/Select.html
-*/
-
-/** Styles derived from shadcn SelectPrimitive.Viewport. */
-export function ListBox<T extends object>({
-  className,
-  ...props
-}: Rac.ListBoxProps<T>) {
-  return (
-    <Rac.ListBox
-      {...props}
-      className={composeTailwindRenderProps(className, "p-1")}
-    />
-  );
-}
-
 /** Styles derived from shadcn SelectItem.
  * https://github.com/adobe/react-spectrum/issues/7601
  */
@@ -37,9 +19,6 @@ export const ListBoxItem = <T extends object>({
       baseStyles,
       "data-[focused]:bg-accent data-[focused]:text-accent-foreground data-[hovered]:bg-accent data-[hovered]:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
     ])}
-    // className={Rac.composeRenderProps(className, (className, renderProps) =>
-    //   listBoxItemStyles({ ...renderProps, className }),
-    // )}
   >
     {Rac.composeRenderProps(
       children,

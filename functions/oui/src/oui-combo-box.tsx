@@ -6,14 +6,8 @@ import { FieldError } from "./oui-field-error";
 import { Group } from "./oui-group";
 import { Input } from "./oui-input";
 import { Label } from "./oui-label";
-import { ListBox } from "./oui-list-box";
 import { Popover } from "./oui-popover";
 import { Text } from "./oui-text";
-
-/*
-#fetch https://react-spectrum.adobe.com/react-aria/ComboBox.html
-#fetch https://react-spectrum.adobe.com/react-aria/Group.html
-*/
 
 export const ComboBox = <T extends object>({
   className,
@@ -55,7 +49,7 @@ export const ComboBoxEx = <T extends object>({
     {description && <Text slot="description">{description}</Text>}
     <FieldError>{errorMessage}</FieldError>
     <Popover>
-      <ListBox items={items}>{children}</ListBox>
+      <Rac.ListBox items={items}>{children}</Rac.ListBox>
     </Popover>
   </ComboBox>
 );
