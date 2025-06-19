@@ -88,6 +88,17 @@ export const ListBoxItem = <T extends object>({
 //   </Rac.ListBoxItem>
 // );
 
+/**
+ * Horizontal ListBox styled for pagination controls (e.g., page numbers, next/prev).
+ * Example:
+ *  <ListBoxEx1 defaultSelectedKeys={["2"]}>
+ *    <ListBoxItemEx1 id="prev">Previous</ListBoxItemEx1>
+ *    <ListBoxItemEx1 id="1">1</ListBoxItemEx1>
+ *    <ListBoxItemEx1 id="2">2</ListBoxItemEx1>
+ *    <ListBoxItemEx1 id="3">3</ListBoxItemEx1>
+ *    <ListBoxItemEx1 id="next">Next</ListBoxItemEx1>
+ *  </ListBoxEx1>
+ */
 export const ListBoxEx1 = <T extends object>({
   className,
   ...props
@@ -105,19 +116,20 @@ export const ListBoxEx1 = <T extends object>({
   </nav>
 );
 
-export interface ListBoxItemEx1Props<T extends object = object>
-  extends Rac.ListBoxItemProps<T>,
-    Pick<ButtonProps, "variant" | "size"> {}
-
+/**
+ * Pagination item styled as a button. Selected items use outline variant, others use ghost.
+ */
 export const ListBoxItemEx1 = <T extends object>({
   className,
-  variant,
-  size,
   ...props
-}: ListBoxItemEx1Props<T>) => (
+}: Rac.ListBoxItemProps<T>) => (
   <Rac.ListBoxItem
     className={Rac.composeRenderProps(className, (className, renderProps) =>
-      buttonStyles({ ...renderProps, variant, size, className }),
+      buttonStyles({
+        ...renderProps,
+        variant: renderProps.isSelected ? "outline" : "ghost",
+        className,
+      }),
     )}
     {...props}
   />
