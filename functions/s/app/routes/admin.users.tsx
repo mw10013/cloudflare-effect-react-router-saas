@@ -2,7 +2,7 @@ import type { Route } from "./+types/admin.users";
 import * as Oui from "@workspace/oui";
 import { SchemaEx } from "@workspace/shared";
 import { Effect, Schema } from "effect";
-import { redirect, useFetcher, useNavigate } from "react-router";
+import { redirect, useFetcher } from "react-router";
 import { UserIdFromString } from "~/lib/Domain";
 import { IdentityMgr } from "~/lib/IdentityMgr";
 import * as ReactRouter from "~/lib/ReactRouter";
@@ -93,7 +93,6 @@ export default function RouteComponent({
   actionData,
 }: Route.ComponentProps) {
   const fetcher = useFetcher();
-  const navigate = useNavigate();
 
   const onAction = (
     intent: "lock" | "unlock" | "soft_delete" | "undelete",
@@ -103,36 +102,6 @@ export default function RouteComponent({
     formData.append("intent", intent);
     formData.append("userId", String(userId));
     fetcher.submit(formData, { method: "post" });
-  };
-
-  const onPageChange = (pageId: string) => {
-    if (pageId === "prev" && loaderData?.page > 1) {
-      navigate(`/admin/users?page=${loaderData.page - 1}`);
-    } else if (
-      pageId === "next" &&
-      loaderData?.page < (loaderData?.totalPages ?? 1)
-    ) {
-      navigate(`/admin/users?page=${loaderData.page + 1}`);
-    } else if (pageId !== "prev" && pageId !== "next") {
-      navigate(`/admin/users?page=${pageId}`);
-    }
-  };
-
-  const renderPageNumbers = () => {
-    if (!loaderData) return [];
-
-    const pages = [];
-    const totalPages = loaderData.totalPages;
-
-    for (let i = 1; i <= totalPages; i++) {
-      pages.push(
-        <Oui.ListBoxItemEx1 key={i} id={i}>
-          {i}
-        </Oui.ListBoxItemEx1>,
-      );
-    }
-
-    return pages;
   };
 
   return (
@@ -231,18 +200,30 @@ export default function RouteComponent({
       </Oui.Table>
 
       {loaderData && loaderData.totalPages > 1 && (
-        <Oui.ListBoxEx1
-          selectedKeys={[loaderData.page]}
-          onSelectionChange={(keys) => {
-            const selectedKey = Array.from(keys)[0] as string | number;
-            if (selectedKey) {
-              onPageChange(String(selectedKey));
-            }
-          }}
-        >
-          <Oui.ListBoxItemEx1 id="prev">Previous</Oui.ListBoxItemEx1>
-          {renderPageNumbers()}
-          <Oui.ListBoxItemEx1 id="next">Next</Oui.ListBoxItemEx1>
+        <Oui.ListBoxEx1 selectedKeys={[loaderData.page]}>
+          <Oui.ListBoxItemEx1
+            id="prev"
+            href={`/admin/users?page=${loaderData.page > 1 ? loaderData.page - 1 : 1}`}
+            isDisabled={loaderData.page <= 1}
+          >
+            Previous
+          </Oui.ListBoxItemEx1>
+          {Array.from({ length: loaderData.totalPages }, (_, i) => (
+            <Oui.ListBoxItemEx1
+              key={i + 1}
+              id={i + 1}
+              href={`/admin/users?page=${i + 1}`}
+            >
+              {i + 1}
+            </Oui.ListBoxItemEx1>
+          ))}
+          <Oui.ListBoxItemEx1
+            id="next"
+            href={`/admin/users?page=${loaderData.page < loaderData.totalPages ? loaderData.page + 1 : loaderData.totalPages}`}
+            isDisabled={loaderData.page >= loaderData.totalPages}
+          >
+            Next
+          </Oui.ListBoxItemEx1>
         </Oui.ListBoxEx1>
       )}
 
