@@ -160,7 +160,7 @@ with PaginatedUsers as (
     u.lockedAt,
     u.deletedAt
   from User u
-  where ?1 is null or ?1 = '' or u.email like '%' || ?1 || '%'
+  where ?1 = '' or u.email like '%' || ?1 || '%'
   order by u.email
   limit ?2 offset ?3
 ),
@@ -175,7 +175,7 @@ FilteredUsers as (
     u.lockedAt,
     u.deletedAt
   from User u
-  where ?1 is null or ?1 = '' or u.email like '%' || ?1 || '%'
+  where ?1 = '' or u.email like '%' || ?1 || '%'
 )
 select json_object(
   'users', (
@@ -196,11 +196,7 @@ select json_object(
   )
 ) as data`,
             )
-            .bind(
-              filter ?? null,
-              limit,
-              offset,
-            ),
+            .bind(filter ?? "", limit, offset),
           d1.first,
           Effect.flatMap(Effect.fromNullable),
           Effect.flatMap(
