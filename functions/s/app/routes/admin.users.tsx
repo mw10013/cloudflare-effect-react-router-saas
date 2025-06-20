@@ -11,6 +11,7 @@ export const loader = ReactRouter.routeEffect(({ request }: Route.LoaderArgs) =>
   Effect.gen(function* () {
     const url = new URL(request.url);
     const pageParam = url.searchParams.get("page");
+    const filterParam = url.searchParams.get("filter");
 
     const PageSchema = Schema.Union(Schema.Null, Schema.NumberFromString).pipe(
       Schema.transform(Schema.Number, {
@@ -22,12 +23,21 @@ export const loader = ReactRouter.routeEffect(({ request }: Route.LoaderArgs) =>
       }),
     );
 
+    const FilterSchema = Schema.Union(Schema.Null, Schema.String).pipe(
+      Schema.transform(Schema.String, {
+        decode: (input) => input ?? "",
+        encode: (output) => (output === "" ? null : output),
+      }),
+    );
+
     const page = yield* Schema.decodeUnknown(PageSchema)(pageParam);
+    const filter = yield* Schema.decodeUnknown(FilterSchema)(filterParam);
 
     const pageSize = 5;
     const paginatedData = yield* IdentityMgr.getUsersPaginated({
       page,
       pageSize,
+      filter,
     });
     const totalPages = Math.ceil(paginatedData.count / pageSize);
 
@@ -41,6 +51,7 @@ export const loader = ReactRouter.routeEffect(({ request }: Route.LoaderArgs) =>
       page,
       pageSize,
       totalPages,
+      filter,
     };
   }),
 );
@@ -106,6 +117,18 @@ export default function RouteComponent({
 
   return (
     <>
+      <div className="mb-4">
+        <fetcher.Form method="get">
+          <Oui.SearchFieldEx
+            label="Filter Users"
+            description="Filter by email"
+            placeholder="Filter by email..."
+            defaultValue={loaderData?.filter ?? ""}
+            name="filter"
+          />
+        </fetcher.Form>
+      </div>
+
       <Oui.Table aria-label="Users">
         <Oui.TableHeader>
           <Oui.Column isRowHeader className="w-[80px]">
@@ -203,7 +226,7 @@ export default function RouteComponent({
         <Oui.ListBoxEx1 selectedKeys={[loaderData.page]}>
           <Oui.ListBoxItemEx1
             id="prev"
-            href={`/admin/users?page=${loaderData.page > 1 ? loaderData.page - 1 : 1}`}
+            href={`/admin/users?page=${loaderData.page > 1 ? loaderData.page - 1 : 1}${loaderData.filter ? `&filter=${encodeURIComponent(loaderData.filter)}` : ""}`}
             isDisabled={loaderData.page <= 1}
           >
             Previous
@@ -212,14 +235,14 @@ export default function RouteComponent({
             <Oui.ListBoxItemEx1
               key={i + 1}
               id={i + 1}
-              href={`/admin/users?page=${i + 1}`}
+              href={`/admin/users?page=${i + 1}${loaderData.filter ? `&filter=${encodeURIComponent(loaderData.filter)}` : ""}`}
             >
               {i + 1}
             </Oui.ListBoxItemEx1>
           ))}
           <Oui.ListBoxItemEx1
             id="next"
-            href={`/admin/users?page=${loaderData.page < loaderData.totalPages ? loaderData.page + 1 : loaderData.totalPages}`}
+            href={`/admin/users?page=${loaderData.page < loaderData.totalPages ? loaderData.page + 1 : loaderData.totalPages}${loaderData.filter ? `&filter=${encodeURIComponent(loaderData.filter)}` : ""}`}
             isDisabled={loaderData.page >= loaderData.totalPages}
           >
             Next

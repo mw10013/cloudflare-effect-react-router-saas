@@ -139,9 +139,11 @@ select json_group_array(json_object(
       getUsersPaginated: ({
         limit,
         offset,
+        filter,
       }: {
         limit: number;
         offset: number;
+        filter?: string;
       }) =>
         pipe(
           d1
@@ -158,8 +160,22 @@ with PaginatedUsers as (
     u.lockedAt,
     u.deletedAt
   from User u
+  where ?1 is null or ?1 = '' or u.email like '%' || ?1 || '%'
   order by u.email
-  limit ? offset ?
+  limit ?2 offset ?3
+),
+FilteredUsers as (
+  select 
+    u.userId,
+    u.name,
+    u.email,
+    u.userType,
+    u.note,
+    u.createdAt,
+    u.lockedAt,
+    u.deletedAt
+  from User u
+  where ?1 is null or ?1 = '' or u.email like '%' || ?1 || '%'
 )
 select json_object(
   'users', (
@@ -176,11 +192,15 @@ select json_object(
     from PaginatedUsers pu
   ),
   'count', (
-    select count(*) from User
+    select count(*) from FilteredUsers
   )
 ) as data`,
             )
-            .bind(limit, offset),
+            .bind(
+              filter ?? null,
+              limit,
+              offset,
+            ),
           d1.first,
           Effect.flatMap(Effect.fromNullable),
           Effect.flatMap(

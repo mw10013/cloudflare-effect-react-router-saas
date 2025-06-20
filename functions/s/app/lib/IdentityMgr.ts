@@ -33,13 +33,16 @@ export class IdentityMgr extends Effect.Service<IdentityMgr>()("IdentityMgr", {
       getUsersPaginated: ({
         page,
         pageSize,
+        filter,
       }: {
         page: number;
         pageSize: number;
+        filter?: string;
       }) =>
         repository.getUsersPaginated({
           limit: pageSize,
           offset: (page - 1) * pageSize,
+          filter,
         }),
 
       /**
