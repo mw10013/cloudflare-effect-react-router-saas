@@ -25,13 +25,18 @@ import {
  * ```ts
  * import { Repository } from './Repository'
  *
- * // Within an Effect context
  * const program = Effect.gen(function*() {
  *   const repo = yield* Repository
  *   const customers = yield* repo.getCustomers()
  *   // ...
  * })
  * ```
+ *
+ * Domain objects generally map 1:1 to sqlite tables and contain all columns.
+ * SQL queries typically return JSON, especially for nested or composite domain objects.
+ * Use select * for simple, single-table queries where all columns are needed.
+ * Use explicit columns in json_object or nested queries to construct correct shapes.
+ * No use of a.* or b.*; all multi-entity queries use explicit JSON construction.
  */
 export class Repository extends Effect.Service<Repository>()("Repository", {
   accessors: true,
@@ -150,32 +155,10 @@ select json_group_array(json_object(
             .prepare(
               `
 with PaginatedUsers as (
-  select 
-    u.userId,
-    u.name,
-    u.email,
-    u.userType,
-    u.note,
-    u.createdAt,
-    u.lockedAt,
-    u.deletedAt
-  from User u
-  where ?1 = '' or u.email like '%' || ?1 || '%'
-  order by u.email
+  select * from User
+  where ?1 is null or email like '%' || ?1 || '%'
+  order by email
   limit ?2 offset ?3
-),
-FilteredUsers as (
-  select 
-    u.userId,
-    u.name,
-    u.email,
-    u.userType,
-    u.note,
-    u.createdAt,
-    u.lockedAt,
-    u.deletedAt
-  from User u
-  where ?1 = '' or u.email like '%' || ?1 || '%'
 )
 select json_object(
   'users', (
@@ -192,11 +175,11 @@ select json_object(
     from PaginatedUsers pu
   ),
   'count', (
-    select count(*) from FilteredUsers
+    select count(*) from User where ?1 is null or email like '%' || ?1 || '%'
   )
 ) as data`,
             )
-            .bind(filter ?? "", limit, offset),
+            .bind(filter === "" ? null : filter, limit, offset),
           d1.first,
           Effect.flatMap(Effect.fromNullable),
           Effect.flatMap(
