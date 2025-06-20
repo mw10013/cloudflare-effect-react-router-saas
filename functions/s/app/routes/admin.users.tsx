@@ -232,11 +232,11 @@ export default function RouteComponent({
 
       {loaderData && loaderData.totalPages > 1 && (
         <Oui.ListBoxEx1
-          selectedKeys={[String(loaderData.page)]}
+          selectedKeys={[loaderData.page]}
           onSelectionChange={(keys) => {
-            const selectedKey = Array.from(keys)[0] as string;
+            const selectedKey = Array.from(keys)[0] as string | number;
             if (selectedKey) {
-              onPageChange(selectedKey);
+              onPageChange(String(selectedKey));
             }
           }}
         >
