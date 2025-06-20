@@ -6,7 +6,7 @@ export function OuiPaginationDemo() {
       <Oui.ListBoxEx1 defaultSelectedKeys={["2"]}>
         <Oui.ListBoxItemEx1 id="prev">Previous</Oui.ListBoxItemEx1>
         <Oui.ListBoxItemEx1 id="1">1</Oui.ListBoxItemEx1>
-        <Oui.ListBoxItemEx1 id="2" aria-current="page">
+        <Oui.ListBoxItemEx1 id="2">
           2
         </Oui.ListBoxItemEx1>
         <Oui.ListBoxItemEx1 id="3">3</Oui.ListBoxItemEx1>

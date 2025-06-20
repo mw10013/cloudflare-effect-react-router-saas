@@ -2,7 +2,7 @@ import type { Route } from "./+types/admin.users";
 import * as Oui from "@workspace/oui";
 import { SchemaEx } from "@workspace/shared";
 import { Effect, Schema } from "effect";
-import { redirect, useFetcher } from "react-router";
+import { redirect, useFetcher, useNavigate } from "react-router";
 import { UserIdFromString } from "~/lib/Domain";
 import { IdentityMgr } from "~/lib/IdentityMgr";
 import * as ReactRouter from "~/lib/ReactRouter";
@@ -93,6 +93,8 @@ export default function RouteComponent({
   actionData,
 }: Route.ComponentProps) {
   const fetcher = useFetcher();
+  const navigate = useNavigate();
+
   const onAction = (
     intent: "lock" | "unlock" | "soft_delete" | "undelete",
     userId: number,
@@ -102,6 +104,37 @@ export default function RouteComponent({
     formData.append("userId", String(userId));
     fetcher.submit(formData, { method: "post" });
   };
+
+  const onPageChange = (pageId: string) => {
+    if (pageId === "prev" && loaderData?.page > 1) {
+      navigate(`/admin/users?page=${loaderData.page - 1}`);
+    } else if (
+      pageId === "next" &&
+      loaderData?.page < (loaderData?.totalPages ?? 1)
+    ) {
+      navigate(`/admin/users?page=${loaderData.page + 1}`);
+    } else if (pageId !== "prev" && pageId !== "next") {
+      navigate(`/admin/users?page=${pageId}`);
+    }
+  };
+
+  const renderPageNumbers = () => {
+    if (!loaderData) return [];
+
+    const pages = [];
+    const totalPages = loaderData.totalPages;
+
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(
+        <Oui.ListBoxItemEx1 key={i} id={i}>
+          {i}
+        </Oui.ListBoxItemEx1>,
+      );
+    }
+
+    return pages;
+  };
+
   return (
     <>
       <Oui.Table aria-label="Users">
@@ -196,6 +229,23 @@ export default function RouteComponent({
           )}
         </Oui.TableBody>
       </Oui.Table>
+
+      {loaderData && loaderData.totalPages > 1 && (
+        <Oui.ListBoxEx1
+          selectedKeys={[String(loaderData.page)]}
+          onSelectionChange={(keys) => {
+            const selectedKey = Array.from(keys)[0] as string;
+            if (selectedKey) {
+              onPageChange(selectedKey);
+            }
+          }}
+        >
+          <Oui.ListBoxItemEx1 id="prev">Previous</Oui.ListBoxItemEx1>
+          {renderPageNumbers()}
+          <Oui.ListBoxItemEx1 id="next">Next</Oui.ListBoxItemEx1>
+        </Oui.ListBoxEx1>
+      )}
+
       {/* <pre>{JSON.stringify(loaderData, null, 2)}</pre> */}
     </>
   );
