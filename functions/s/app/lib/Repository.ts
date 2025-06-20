@@ -147,21 +147,33 @@ select json_group_array(json_object(
           d1
             .prepare(
               `
+with PaginatedUsers as (
+  select 
+    u.userId,
+    u.name,
+    u.email,
+    u.userType,
+    u.note,
+    u.createdAt,
+    u.lockedAt,
+    u.deletedAt
+  from User u
+  order by u.email
+  limit ? offset ?
+)
 select json_object(
   'users', (
     select json_group_array(json_object(
-      'userId', u.userId,
-      'name', u.name,
-      'email', u.email,
-      'userType', u.userType,
-      'note', u.note,
-      'createdAt', u.createdAt,
-      'lockedAt', u.lockedAt,
-      'deletedAt', u.deletedAt
+      'userId', pu.userId,
+      'name', pu.name,
+      'email', pu.email,
+      'userType', pu.userType,
+      'note', pu.note,
+      'createdAt', pu.createdAt,
+      'lockedAt', pu.lockedAt,
+      'deletedAt', pu.deletedAt
     ))
-    from User u
-    order by u.email
-    limit ? offset ?
+    from PaginatedUsers pu
   ),
   'count', (
     select count(*) from User

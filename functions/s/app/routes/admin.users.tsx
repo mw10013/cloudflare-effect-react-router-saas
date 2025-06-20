@@ -2,13 +2,47 @@ import type { Route } from "./+types/admin.users";
 import * as Oui from "@workspace/oui";
 import { SchemaEx } from "@workspace/shared";
 import { Effect, Schema } from "effect";
-import { useFetcher } from "react-router";
+import { redirect, useFetcher } from "react-router";
 import { UserIdFromString } from "~/lib/Domain";
 import { IdentityMgr } from "~/lib/IdentityMgr";
 import * as ReactRouter from "~/lib/ReactRouter";
 
-export const loader = ReactRouter.routeEffect(() =>
-  IdentityMgr.getUsers().pipe(Effect.map((users) => ({ users }))),
+export const loader = ReactRouter.routeEffect(({ request }: Route.LoaderArgs) =>
+  Effect.gen(function* () {
+    const url = new URL(request.url);
+    const pageParam = url.searchParams.get("page");
+
+    const PageSchema = Schema.Union(Schema.Null, Schema.NumberFromString).pipe(
+      Schema.transform(Schema.Number, {
+        decode: (input) => (input === null ? 1 : input),
+        encode: (output) => (output === 1 ? null : output),
+      }),
+      Schema.filter((n) => n >= 1 && n <= 10, {
+        message: () => "Page must be between 1 and 10",
+      }),
+    );
+
+    const page = yield* Schema.decodeUnknown(PageSchema)(pageParam);
+
+    const pageSize = 5;
+    const paginatedData = yield* IdentityMgr.getUsersPaginated({
+      page,
+      pageSize,
+    });
+    const totalPages = Math.ceil(paginatedData.count / pageSize);
+
+    if (page > totalPages && totalPages > 0) {
+      return yield* Effect.fail(redirect(`/admin/users`));
+    }
+
+    return {
+      users: paginatedData.users,
+      count: paginatedData.count,
+      page,
+      pageSize,
+      totalPages,
+    };
+  }),
 );
 
 export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
@@ -69,94 +103,100 @@ export default function RouteComponent({
     fetcher.submit(formData, { method: "post" });
   };
   return (
-    <Oui.Table aria-label="Users">
-      <Oui.TableHeader>
-        <Oui.Column isRowHeader className="w-[80px]">
-          Id
-        </Oui.Column>
-        <Oui.Column>Email</Oui.Column>
-        <Oui.Column>Name</Oui.Column>
-        <Oui.Column>Type</Oui.Column>
-        <Oui.Column>Note</Oui.Column>
-        <Oui.Column>Created</Oui.Column>
-        <Oui.Column>Locked</Oui.Column>
-        <Oui.Column>Deleted</Oui.Column>
-        <Oui.Column className="w-10 text-right" aria-label="Actions">
-          <span className="sr-only">Actions</span>
-        </Oui.Column>
-      </Oui.TableHeader>
-      <Oui.TableBody items={loaderData?.users ?? []}>
-        {(user) => (
-          <Oui.Row id={user.userId}>
-            <Oui.Cell className="font-mono">{user.userId}</Oui.Cell>
-            <Oui.Cell>{user.email}</Oui.Cell>
-            <Oui.Cell>{user.name}</Oui.Cell>
-            <Oui.Cell>{user.userType}</Oui.Cell>
-            <Oui.Cell>{user.note}</Oui.Cell>
-            <Oui.Cell>
-              {user.createdAt
-                ? new Intl.DateTimeFormat("en-CA").format(
-                    new Date(user.createdAt),
-                  )
-                : ""}
-            </Oui.Cell>
-            <Oui.Cell>
-              {user.lockedAt
-                ? new Intl.DateTimeFormat("en-CA").format(
-                    new Date(user.lockedAt),
-                  )
-                : ""}
-            </Oui.Cell>
-            <Oui.Cell>
-              {user.deletedAt
-                ? new Intl.DateTimeFormat("en-CA").format(
-                    new Date(user.deletedAt),
-                  )
-                : ""}
-            </Oui.Cell>
-            <Oui.Cell className="text-right">
-              <Oui.MenuEx
-                triggerElement={
-                  <Oui.Button variant="ghost" className="size-8 p-0">
-                    <span className="sr-only">Open menu for {user.email}</span>⋮
-                  </Oui.Button>
-                }
-              >
-                {user.lockedAt ? (
-                  <Oui.MenuItem
-                    id="unlock"
-                    onAction={() => onAction("unlock", user.userId)}
-                  >
-                    Unlock
-                  </Oui.MenuItem>
-                ) : (
-                  <Oui.MenuItem
-                    id="lock"
-                    onAction={() => onAction("lock", user.userId)}
-                  >
-                    Lock
-                  </Oui.MenuItem>
-                )}
-                {user.deletedAt ? (
-                  <Oui.MenuItem
-                    id="undelete"
-                    onAction={() => onAction("undelete", user.userId)}
-                  >
-                    Undelete
-                  </Oui.MenuItem>
-                ) : (
-                  <Oui.MenuItem
-                    id="soft_delete"
-                    onAction={() => onAction("soft_delete", user.userId)}
-                  >
-                    Soft Delete
-                  </Oui.MenuItem>
-                )}
-              </Oui.MenuEx>
-            </Oui.Cell>
-          </Oui.Row>
-        )}
-      </Oui.TableBody>
-    </Oui.Table>
+    <>
+      <Oui.Table aria-label="Users">
+        <Oui.TableHeader>
+          <Oui.Column isRowHeader className="w-[80px]">
+            Id
+          </Oui.Column>
+          <Oui.Column>Email</Oui.Column>
+          <Oui.Column>Name</Oui.Column>
+          <Oui.Column>Type</Oui.Column>
+          <Oui.Column>Note</Oui.Column>
+          <Oui.Column>Created</Oui.Column>
+          <Oui.Column>Locked</Oui.Column>
+          <Oui.Column>Deleted</Oui.Column>
+          <Oui.Column className="w-10 text-right" aria-label="Actions">
+            <span className="sr-only">Actions</span>
+          </Oui.Column>
+        </Oui.TableHeader>
+        <Oui.TableBody items={loaderData?.users ?? []}>
+          {(user) => (
+            <Oui.Row id={user.userId}>
+              <Oui.Cell className="font-mono">{user.userId}</Oui.Cell>
+              <Oui.Cell>{user.email}</Oui.Cell>
+              <Oui.Cell>{user.name}</Oui.Cell>
+              <Oui.Cell>{user.userType}</Oui.Cell>
+              <Oui.Cell>{user.note}</Oui.Cell>
+              <Oui.Cell>
+                {user.createdAt
+                  ? new Intl.DateTimeFormat("en-CA").format(
+                      new Date(user.createdAt),
+                    )
+                  : ""}
+              </Oui.Cell>
+              <Oui.Cell>
+                {user.lockedAt
+                  ? new Intl.DateTimeFormat("en-CA").format(
+                      new Date(user.lockedAt),
+                    )
+                  : ""}
+              </Oui.Cell>
+              <Oui.Cell>
+                {user.deletedAt
+                  ? new Intl.DateTimeFormat("en-CA").format(
+                      new Date(user.deletedAt),
+                    )
+                  : ""}
+              </Oui.Cell>
+              <Oui.Cell className="text-right">
+                <Oui.MenuEx
+                  triggerElement={
+                    <Oui.Button variant="ghost" className="size-8 p-0">
+                      <span className="sr-only">
+                        Open menu for {user.email}
+                      </span>
+                      ⋮
+                    </Oui.Button>
+                  }
+                >
+                  {user.lockedAt ? (
+                    <Oui.MenuItem
+                      id="unlock"
+                      onAction={() => onAction("unlock", user.userId)}
+                    >
+                      Unlock
+                    </Oui.MenuItem>
+                  ) : (
+                    <Oui.MenuItem
+                      id="lock"
+                      onAction={() => onAction("lock", user.userId)}
+                    >
+                      Lock
+                    </Oui.MenuItem>
+                  )}
+                  {user.deletedAt ? (
+                    <Oui.MenuItem
+                      id="undelete"
+                      onAction={() => onAction("undelete", user.userId)}
+                    >
+                      Undelete
+                    </Oui.MenuItem>
+                  ) : (
+                    <Oui.MenuItem
+                      id="soft_delete"
+                      onAction={() => onAction("soft_delete", user.userId)}
+                    >
+                      Soft Delete
+                    </Oui.MenuItem>
+                  )}
+                </Oui.MenuEx>
+              </Oui.Cell>
+            </Oui.Row>
+          )}
+        </Oui.TableBody>
+      </Oui.Table>
+      {/* <pre>{JSON.stringify(loaderData, null, 2)}</pre> */}
+    </>
   );
 }
