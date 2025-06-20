@@ -2,7 +2,7 @@ import type { Route } from "./+types/admin.users";
 import * as Oui from "@workspace/oui";
 import { SchemaEx } from "@workspace/shared";
 import { Effect, Schema } from "effect";
-import { redirect, useFetcher } from "react-router";
+import { redirect, useFetcher, useLocation, useNavigate } from "react-router";
 import { UserIdFromString } from "~/lib/Domain";
 import { IdentityMgr } from "~/lib/IdentityMgr";
 import * as ReactRouter from "~/lib/ReactRouter";
@@ -104,6 +104,8 @@ export default function RouteComponent({
   actionData,
 }: Route.ComponentProps) {
   const fetcher = useFetcher();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const onAction = (
     intent: "lock" | "unlock" | "soft_delete" | "undelete",
@@ -118,15 +120,20 @@ export default function RouteComponent({
   return (
     <>
       <div className="mb-4">
-        <fetcher.Form method="get">
-          <Oui.SearchFieldEx
-            label="Filter Users"
-            description="Filter by email"
-            placeholder="Filter by email..."
-            defaultValue={loaderData?.filter ?? ""}
-            name="filter"
-          />
-        </fetcher.Form>
+        <Oui.SearchFieldEx
+          label="Filter Users"
+          description="Filter by email"
+          placeholder="Filter by email..."
+          defaultValue={loaderData?.filter ?? ""}
+          name="filter"
+          onSubmit={(filter: string) => {
+            const params = new URLSearchParams(location.search);
+            params.set("filter", filter);
+            const page = loaderData?.page ?? 1;
+            params.set("page", String(page));
+            navigate(`${location.pathname}?${params.toString()}`);
+          }}
+        />
       </div>
 
       <Oui.Table aria-label="Users">
