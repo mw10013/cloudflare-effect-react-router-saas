@@ -1,24 +1,33 @@
 import type { VariantProps } from "tailwind-variants";
 import * as Rac from "react-aria-components";
 import { tv } from "tailwind-variants";
-
-// https://github.com/nextui-org/tailwind-variants/issues/209 : compoundVariants does not recognize falsy boolean variant
-// https://github.com/nextui-org/tailwind-variants/pull/210 : fix: treat undefined value for compoundVariants as false
+import { baseStyles } from "./oui-base";
 
 /**
  * Derived from shadcn Button
  */
 export const buttonStyles = tv({
-  // Explicit cursor-pointer for Rac.Link structured with span.
-  base: "data-[focus-visible]:border-ring data-[focus-visible]:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium outline-none transition-all data-[disabled]:pointer-events-none data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 data-[focus-visible]:ring-[3px] [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  base: [
+    baseStyles,
+    "inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+    "data-[disabled]:cursor-not-allowed", // Explicit cursor-pointer for Rac.Link structured with span.
+    // Rac.Button does not support aria-invalid or have data-invalid. Below is commented for reference.
+    // "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  ],
   variants: {
     variant: {
       default:
         "bg-primary text-primary-foreground shadow-xs data-[hovered]:bg-primary/90",
-      destructive:
-        "bg-destructive shadow-xs data-[hovered]:bg-destructive/90 data-[focus-visible]:ring-destructive/20 dark:data-[focus-visible]:ring-destructive/40 dark:bg-destructive/60 text-white",
-      outline:
-        "bg-background shadow-xs data-[hovered]:bg-accent data-[hovered]:text-accent-foreground dark:bg-input/30 dark:border-input dark:data-[hovered]:bg-input/50 border",
+      destructive: [
+        "bg-destructive shadow-xs dark:bg-destructive/60 text-white",
+        "data-[hovered]:bg-destructive/90",
+        "data-[focus-visible]:ring-destructive/20 dark:data-[focus-visible]:ring-destructive/40",
+      ],
+      outline: [
+        "bg-background shadow-xs dark:bg-input/30 dark:border-input border",
+        "data-[hovered]:bg-accent data-[hovered]:text-accent-foreground dark:data-[hovered]:bg-input/50",
+        "",
+      ],
       secondary:
         "bg-secondary text-secondary-foreground shadow-xs data-[hovered]:bg-secondary/80",
       ghost:

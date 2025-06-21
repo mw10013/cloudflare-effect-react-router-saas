@@ -1,5 +1,5 @@
-import * as Oui from '@workspace/oui'
-import { ArrowRightIcon, Loader2Icon, SendIcon } from 'lucide-react'
+import * as Oui from "@workspace/oui";
+import { ArrowRightIcon, Loader2Icon, SendIcon } from "lucide-react";
 
 export function OuiButtonDemo() {
   return (
@@ -79,5 +79,5 @@ export function OuiButtonDemo() {
         </Oui.Button>
       </div>
     </div>
-  )
+  );
 }
