@@ -106,8 +106,10 @@ export default function RouteComponent({
 }: Route.ComponentProps) {
   const fetcher = useFetcher();
   const navigate = useNavigate();
-  const location = useLocation();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogState, setDialogState] = useState<{
+    isOpen: boolean;
+    userId?: number;
+  }>({ isOpen: false });
 
   const onAction = (
     intent: "lock" | "unlock" | "soft_delete" | "undelete",
@@ -192,6 +194,7 @@ export default function RouteComponent({
                 >
                   {user.lockedAt ? (
                     <Oui.MenuItem
+                      key="unlock"
                       id="unlock"
                       onAction={() => onAction("unlock", user.userId)}
                     >
@@ -199,6 +202,7 @@ export default function RouteComponent({
                     </Oui.MenuItem>
                   ) : (
                     <Oui.MenuItem
+                      key="lock"
                       id="lock"
                       onAction={() => onAction("lock", user.userId)}
                     >
@@ -207,6 +211,7 @@ export default function RouteComponent({
                   )}
                   {user.deletedAt ? (
                     <Oui.MenuItem
+                      key="undelete"
                       id="undelete"
                       onAction={() => onAction("undelete", user.userId)}
                     >
@@ -214,8 +219,11 @@ export default function RouteComponent({
                     </Oui.MenuItem>
                   ) : (
                     <Oui.MenuItem
+                      key="soft_delete"
                       id="soft_delete"
-                      onAction={() => onAction("soft_delete", user.userId)}
+                      onAction={() => {
+                        setDialogState({ isOpen: true, userId: user.userId });
+                      }}
                     >
                       Soft Delete
                     </Oui.MenuItem>
@@ -255,24 +263,20 @@ export default function RouteComponent({
         </Oui.ListBoxEx1>
       )}
 
-      {/* <pre>{JSON.stringify(loaderData, null, 2)}</pre> */}
-
-      <Oui.Button variant="outline" onPress={() => setIsDialogOpen(true)}>
-        Test Alert Dialog
-      </Oui.Button>
-
       <Oui.DialogEx1
-        isOpen={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
+        isOpen={dialogState.isOpen}
+        onOpenChange={(isOpen) =>
+          setDialogState((prev) => ({ ...prev, isOpen }))
+        }
         role="alertdialog"
       >
         <Oui.DialogHeader>
           <Oui.Heading variant="alert" slot="title">
-            Are you absolutely sure?
+            Safe delete user?
           </Oui.Heading>
           <Oui.DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+            While you can undelete a user, all of its data cannot be restored.
+            Account memberships will be permenently destroyed.
           </Oui.DialogDescription>
         </Oui.DialogHeader>
         <Oui.DialogFooter>
@@ -280,11 +284,19 @@ export default function RouteComponent({
             variant="outline"
             slot="close"
             autoFocus
-            onPress={() => setIsDialogOpen(false)}
+            onPress={() => setDialogState({ isOpen: false })}
           >
             Cancel
           </Oui.Button>
-          <Oui.Button slot="close" onPress={() => setIsDialogOpen(false)}>
+          <Oui.Button
+            slot="close"
+            onPress={() => {
+              if (dialogState.userId) {
+                onAction("soft_delete", dialogState.userId);
+              }
+              setDialogState({ isOpen: false });
+            }}
+          >
             Continue
           </Oui.Button>
         </Oui.DialogFooter>
