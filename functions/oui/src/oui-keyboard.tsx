@@ -1,16 +1,19 @@
-import * as Rac from 'react-aria-components'
-import { tv } from 'tailwind-variants'
+import * as Rac from "react-aria-components";
+import { twMerge } from "tailwind-merge";
 
-// shadcn DropdownMenuShortcut: ml-auto text-xs tracking-widest opacity-60
-// shadcn structures with <div> while rac uses <kbd>.
-// Specify font-sans since <kbd> uses mono font by default.
-export const keyboard = tv({
-  base: 'ml-auto font-sans text-xs tracking-widest opacity-60',
-})
-
+/**
+ * Derived from shadcn DropdownMenuShortcut.
+ */
 export const Keyboard = ({
   className,
   ...props
 }: React.ComponentProps<typeof Rac.Keyboard>) => (
-  <Rac.Keyboard className={keyboard({ className })} {...props} />
-)
+  <Rac.Keyboard
+    className={twMerge(
+      // Specify font-sans since <kbd> uses mono font by default.
+      "ml-auto font-sans text-xs tracking-widest opacity-60",
+      className,
+    )}
+    {...props}
+  />
+);
