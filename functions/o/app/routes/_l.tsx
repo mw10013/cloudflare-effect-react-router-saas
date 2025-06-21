@@ -116,6 +116,10 @@ const items: Oui.SidebarTreeNodeEx[] = [
     href: "/demo/table",
   },
   {
+    id: "Text Area",
+    href: "/demo/text-area",
+  },
+  {
     id: "Text Field",
     href: "/demo/text-field",
   },
