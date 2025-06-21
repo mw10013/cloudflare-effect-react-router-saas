@@ -15,7 +15,6 @@ export const popoverStyles = tv({
     "bg-popover text-popover-foreground relative min-w-[8rem] overflow-y-auto overflow-x-hidden rounded-md border shadow-md outline-none",
     "data-[entering]:animate-in data-[entering]:fade-in-0 data-[entering]:zoom-in-95",
     "data-[exiting]:animate-out data-[exiting]:fade-out-0 data-[exiting]:zoom-out-95",
-    "data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2",
   ],
   variants: {
     trigger: {
@@ -25,17 +24,32 @@ export const popoverStyles = tv({
       Select: "min-w-[var(--trigger-width)] p-1", // Derived from shadcn SelectPrimitive.Viewport
       ComboBox: "min-w-[var(--trigger-width)] p-1", // Derived from shadcn SelectPrimitive.Viewport
     },
+    placement: {
+      top: "data-[placement=top]:slide-in-from-bottom-2",
+      bottom: "data-[placement=bottom]:slide-in-from-top-2",
+      left: "data-[placement=left]:slide-in-from-right-2",
+      right: "data-[placement=right]:slide-in-from-left-2",
+    },
   },
 });
 
 type PopoverStylesTriggerKey = keyof typeof popoverStyles.variants.trigger;
-
 function isPopoverStylesTriggerKey(
   value: unknown,
 ): value is PopoverStylesTriggerKey {
   return (
     typeof value === "string" &&
     Object.keys(popoverStyles.variants.trigger).includes(value)
+  );
+}
+
+type PopoverStylesPlacementKey = keyof typeof popoverStyles.variants.placement;
+function isPopoverStylesPlacementKey(
+  value: unknown,
+): value is PopoverStylesPlacementKey {
+  return (
+    typeof value === "string" &&
+    Object.keys(popoverStyles.variants.placement).includes(value)
   );
 }
 
@@ -48,10 +62,13 @@ export const Popover = ({
     offset={offset}
     className={Rac.composeRenderProps(
       className,
-      (className, { trigger, ...renderProps }) =>
+      (className, { trigger, placement, ...renderProps }) =>
         popoverStyles({
           ...renderProps,
           trigger: isPopoverStylesTriggerKey(trigger) ? trigger : undefined,
+          placement: isPopoverStylesPlacementKey(placement)
+            ? placement
+            : undefined,
           className,
         }),
     )}
