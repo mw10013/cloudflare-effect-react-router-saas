@@ -2,34 +2,22 @@ import React from "react";
 import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { tv } from "tailwind-variants";
+import { composeTailwindRenderProps } from "./oui-base";
 import { Button } from "./oui-button";
 import { Popover } from "./oui-popover";
-
-/*
-#fetch https://react-spectrum.adobe.com/react-aria/Menu.html
-#fetch https://react-spectrum.adobe.com/react-aria/Checkbox.html
-#fetch https://react-spectrum.adobe.com/react-aria/CheckboxGroup.html
-#fetch https://react-spectrum.adobe.com/react-aria/Popover.html
-#fetch https://ui.shadcn.com/docs/components/dropdown-menu
-#fetch https://react-spectrum.adobe.com/react-aria/collections.html
-#fetch https://react-spectrum.adobe.com/react-aria/ListBox.html
-*/
 
 /**
  * Derived from shadcn DropdownMenuContent
  */
-export const menuStyles = tv({
-  base: "w-full min-w-[8rem] overflow-y-auto overflow-x-hidden p-1",
-});
-
 export function Menu<T extends object>({
   className,
   ...props
 }: Rac.MenuProps<T>) {
   return (
     <Rac.Menu
-      className={Rac.composeRenderProps(className, (className, renderProps) =>
-        menuStyles({ ...renderProps, className }),
+      className={composeTailwindRenderProps(
+        className,
+        "w-full min-w-[8rem] overflow-y-auto overflow-x-hidden p-1",
       )}
       {...props}
     />
@@ -42,35 +30,24 @@ export function Menu<T extends object>({
 export const menuItemStyles = tv({
   base: [
     "relative flex cursor-default select-none items-center gap-x-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors",
-    '[&_svg:not([class*="size-"])]:size-4',
-    "[&_svg]:shrink-0",
-    "[&_svg]:pointer-events-none",
-    '[&_svg:not([class*="text-"])]:text-muted-foreground',
+    '[&_svg:not([class*="text-"])]:text-muted-foreground [&_svg:not([class*="size-"])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0',
+    "data-[focused]:bg-accent data-[focused]:text-accent-foreground",
+    "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
   ],
   variants: {
-    isFocused: {
-      true: "bg-accent text-accent-foreground",
-    },
-    isDisabled: {
-      true: "pointer-events-none opacity-50",
+    variant: {
+      default: "",
+      destructive: [
+        "text-destructive [&_svg]:text-destructive",
+        "data-[focused]:bg-destructive/10 data-[focused]:text-destructive dark:data-[focused]:bg-destructive/20",
+      ],
     },
     selectionMode: {
       none: "",
       single: "pl-8",
       multiple: "pl-8",
     },
-    variant: {
-      default: "",
-      destructive: "text-destructive [&_svg]:text-destructive",
-    },
   },
-  compoundVariants: [
-    {
-      variant: "destructive",
-      isFocused: true,
-      className: "bg-destructive/10 text-destructive dark:bg-destructive/20",
-    },
-  ],
   defaultVariants: {
     variant: "default",
     selectionMode: "none",
