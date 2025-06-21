@@ -1,36 +1,30 @@
 import type { VariantProps } from "tailwind-variants";
 import * as Rac from "react-aria-components";
 import { tv } from "tailwind-variants";
+import { composeTailwindRenderProps } from "./oui-base";
 
-/*
-#fetch https://react-spectrum.adobe.com/react-aria/Modal.html
-#fetch https://react-spectrum.adobe.com/react-aria/Dialog.html
-#fetch https://react-spectrum.adobe.com/react-aria/styling.html#tailwind-css-1
-#fetch https://ui.shadcn.com/docs/components/alert-dialog
-#fetch https://ui.shadcn.com/docs/components/dialog
-*/
-
-/**
- * Derived from shadcn DialogOverlay.
- * Includes `fill-mode-forwards` in `isExiting` to prevent animation snapback.
- */
 export const modalOverlayStyles = tv({
   base: "fixed inset-0 z-50 bg-black/50",
   variants: {
     isEntering: {
-      true: "animate-in fade-in-0",
+      true: "data-[entering]:animate-in data-[entering]:fade-in-0",
     },
     isExiting: {
-      true: "animate-out fade-out-0 fill-mode-forwards",
+      true: "data-[exiting]:animate-out data-[exiting]:fade-out-0 data-[exiting]:fill-mode-forwards",
     },
   },
 });
 
+/**
+ * Derived from shadcn DialogOverlay.
+ * Includes `fill-mode-forwards` in `data-[exiting]` to prevent animation snapback.
+ */
 export function ModalOverlay({ className, ...props }: Rac.ModalOverlayProps) {
   return (
     <Rac.ModalOverlay
-      className={Rac.composeRenderProps(className, (className, renderProps) =>
-        modalOverlayStyles({ ...renderProps, className }),
+      className={composeTailwindRenderProps(
+        className,
+        "data-[entering]:animate-in data-[entering]:fade-in-0 data-[exiting]:animate-out data-[exiting]:fade-out-0 data-[exiting]:fill-mode-forwards fixed inset-0 z-50 bg-black/50",
       )}
       {...props}
     />
@@ -39,26 +33,16 @@ export function ModalOverlay({ className, ...props }: Rac.ModalOverlayProps) {
 
 /**
  * Derived from shadcn DialogContent.
- * Includes `fill-mode-forwards` in `isExiting` to prevent animation snapback.
+ * Includes `fill-mode-forwards` in `data-[exiting]` to prevent animation snapback.
  */
-export const modalStyles = tv({
-  base: "bg-background fixed left-[50%] top-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg",
-  variants: {
-    isEntering: {
-      true: "animate-in fade-in-0 zoom-in-95",
-    },
-    isExiting: {
-      true: "animate-out fade-out-0 zoom-out-95 fill-mode-forwards",
-    },
-  },
-});
 
 export function Modal({ className, ...props }: Rac.ModalOverlayProps) {
   return (
     <Rac.Modal
       data-slot="modal"
-      className={Rac.composeRenderProps(className, (className, renderProps) =>
-        modalStyles({ ...renderProps, className }),
+      className={composeTailwindRenderProps(
+        className,
+        "bg-background data-[entering]:animate-in data-[entering]:fade-in-0 data-[entering]:zoom-in-95 data-[exiting]:animate-out data-[exiting]:fade-out-0 data-[exiting]:zoom-out-95 data-[exiting]:fill-mode-forwards fixed left-[50%] top-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg",
       )}
       {...props}
     />
@@ -91,14 +75,8 @@ export function ModalEx({
  * Merges with modalStyles so resets zoom and positioning.
  */
 export const sheetModalStyles = tv({
-  base: "bg-background fixed left-auto top-auto z-50 flex max-w-none translate-x-0 translate-y-0 flex-col gap-4 rounded-none shadow-lg transition ease-in-out sm:max-w-none",
+  base: "bg-background data-[entering]:animate-in data-[entering]:zoom-in-100 data-[exiting]:animate-out data-[exiting]:fill-mode-forwards data-[exiting]:zoom-out-100 fixed left-auto top-auto z-50 flex max-w-none translate-x-0 translate-y-0 flex-col gap-4 rounded-none shadow-lg transition ease-in-out data-[entering]:duration-500 data-[exiting]:duration-300 sm:max-w-none",
   variants: {
-    isEntering: {
-      true: "animate-in zoom-in-100 duration-500",
-    },
-    isExiting: {
-      true: "animate-out fill-mode-forwards zoom-out-100 duration-300",
-    },
     side: {
       right:
         "data-[entering]:slide-in-from-right data-[exiting]:slide-out-to-right inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm",
