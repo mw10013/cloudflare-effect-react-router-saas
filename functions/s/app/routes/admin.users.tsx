@@ -127,11 +127,9 @@ export default function RouteComponent({
           defaultValue={loaderData?.filter ?? ""}
           name="filter"
           onSubmit={(filter: string) => {
-            const params = new URLSearchParams(location.search);
-            params.set("filter", filter);
-            const page = loaderData?.page ?? 1;
-            params.set("page", String(page));
-            navigate(`${location.pathname}?${params.toString()}`);
+            navigate(
+              `./?filter=${encodeURIComponent(filter)}&page=${loaderData?.page ?? 1}`,
+            );
           }}
         />
       </div>
