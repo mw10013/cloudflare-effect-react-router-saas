@@ -6,7 +6,7 @@ const SHEET_SIDES = ["top", "right", "bottom", "left"] as const;
 export function OuiSheetDemo() {
   return (
     <div className="flex flex-col gap-6 md:flex-row">
-      <Oui.DialogEx1
+      <Oui.DialogEx2
         triggerElement={<Oui.Button variant="outline">Open</Oui.Button>}
         side="right"
       >
@@ -40,11 +40,11 @@ export function OuiSheetDemo() {
             </Oui.Button>
           </Oui.DialogFooter>
         </Rac.Form>
-      </Oui.DialogEx1>
+      </Oui.DialogEx2>
 
       <div className="flex flex-wrap gap-2">
         {SHEET_SIDES.map((side) => (
-          <Oui.DialogEx1
+          <Oui.DialogEx2
             key={side}
             triggerElement={
               <Oui.Button variant="outline" className="capitalize">
@@ -85,7 +85,7 @@ export function OuiSheetDemo() {
                 Cancel
               </Oui.Button>
             </Oui.DialogFooter>
-          </Oui.DialogEx1>
+          </Oui.DialogEx2>
         ))}
       </div>
     </div>

@@ -1,11 +1,12 @@
 ---
 description: 
-globs: **/oui-list-box.tsx,**/oui-pagination-demo.tsx,**/admin.users.tsx,**/oui-search-field.tsx
+globs: **/oui-list-box.tsx,**/oui-pagination-demo.tsx,**/admin.users.tsx,**/functions/oui/src/**/*.tsx,**/functions/o/app/**/*.tsx
 alwaysApply: false
 ---
 
 ## React Aria Components (RAC) Documentation
 
+- [Button](https://react-spectrum.adobe.com/react-aria/Button.html)
 - [Dialog](mdc:https:/react-spectrum.adobe.com/react-aria/Dialog.html)
 - [React Aria Component List Box Documentation](mdc:https:/react-spectrum.adobe.com/react-aria/ListBox.html)
 - [React Aria Component Modal Documentation](mdc:https:/react-spectrum.adobe.com/react-aria/Modal.html)

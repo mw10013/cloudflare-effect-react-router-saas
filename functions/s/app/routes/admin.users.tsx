@@ -1,4 +1,5 @@
 import type { Route } from "./+types/admin.users";
+import { useState } from "react";
 import * as Oui from "@workspace/oui";
 import { SchemaEx } from "@workspace/shared";
 import { Effect, Schema } from "effect";
@@ -106,6 +107,7 @@ export default function RouteComponent({
   const fetcher = useFetcher();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const onAction = (
     intent: "lock" | "unlock" | "soft_delete" | "undelete",
@@ -121,8 +123,6 @@ export default function RouteComponent({
     <>
       <div className="mb-4">
         <Oui.SearchFieldEx
-          label="Filter Users"
-          description="Filter by email"
           placeholder="Filter by email..."
           defaultValue={loaderData?.filter ?? ""}
           name="filter"
@@ -258,6 +258,39 @@ export default function RouteComponent({
       )}
 
       {/* <pre>{JSON.stringify(loaderData, null, 2)}</pre> */}
+
+      <Oui.Button variant="outline" onPress={() => setIsDialogOpen(true)}>
+        Test Alert Dialog
+      </Oui.Button>
+
+      <Oui.DialogEx1
+        isOpen={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        role="alertdialog"
+      >
+        <Oui.DialogHeader>
+          <Oui.Heading variant="alert" slot="title">
+            Are you absolutely sure?
+          </Oui.Heading>
+          <Oui.DialogDescription>
+            This action cannot be undone. This will permanently delete your
+            account and remove your data from our servers.
+          </Oui.DialogDescription>
+        </Oui.DialogHeader>
+        <Oui.DialogFooter>
+          <Oui.Button
+            variant="outline"
+            slot="close"
+            autoFocus
+            onPress={() => setIsDialogOpen(false)}
+          >
+            Cancel
+          </Oui.Button>
+          <Oui.Button slot="close" onPress={() => setIsDialogOpen(false)}>
+            Continue
+          </Oui.Button>
+        </Oui.DialogFooter>
+      </Oui.DialogEx1>
     </>
   );
 }

@@ -143,6 +143,36 @@ export function DialogEx({
 }
 
 export interface DialogEx1Props
+  extends DialogProps,
+    Pick<Rac.ModalOverlayProps, "isOpen" | "defaultOpen" | "onOpenChange"> {
+  modalClassName?: string;
+}
+
+/**
+ * A programmatic modal dialog without a trigger element.
+ * The modal is dismissable via an outside press if `role` is not "alertdialog".
+ */
+export function DialogEx1({
+  modalClassName,
+  isOpen,
+  defaultOpen,
+  onOpenChange,
+  ...props
+}: DialogEx1Props) {
+  return (
+    <ModalEx
+      className={modalClassName}
+      isDismissable={props.role !== "alertdialog"}
+      isOpen={isOpen}
+      defaultOpen={defaultOpen}
+      onOpenChange={onOpenChange}
+    >
+      <Dialog {...props} />
+    </ModalEx>
+  );
+}
+
+export interface DialogEx2Props
   extends Omit<DialogProps, "role">, // Prevent 'alertdialog' role
     Pick<VariantProps<typeof sheetModalStyles>, "side"> {
   triggerElement: string | ReactElement;
@@ -150,13 +180,17 @@ export interface DialogEx1Props
   overlayClassName?: string;
 }
 
-export function DialogEx1({
+/**
+ * A sheet modal that slides in from a side of the screen.
+ * The modal is always dismissable via an outside press.
+ */
+export function DialogEx2({
   triggerElement,
   modalClassName,
   overlayClassName,
   side,
   ...props
-}: DialogEx1Props) {
+}: DialogEx2Props) {
   return (
     <Rac.DialogTrigger>
       {typeof triggerElement === "string" ? (
