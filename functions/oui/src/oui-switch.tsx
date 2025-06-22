@@ -1,21 +1,11 @@
 import React from "react";
 import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
-import { tv } from "tailwind-variants";
 import { composeTailwindRenderProps } from "./oui-base";
-import { baseLabelStyles, labelStylesTv } from "./oui-label";
+import { baseLabelStyles } from "./oui-label";
 import { Text } from "./oui-text";
 
-export const switchStyles = tv({
-  extend: labelStylesTv,
-  base: "group",
-});
-
-export interface SwitchProps extends Omit<Rac.SwitchProps, "children"> {
-  children?: React.ReactNode;
-}
-
-export const Switch = ({ className, children, ...props }: SwitchProps) => {
+export const Switch = ({ className, children, ...props }: Rac.SwitchProps) => {
   return (
     <Rac.Switch
       {...props}
