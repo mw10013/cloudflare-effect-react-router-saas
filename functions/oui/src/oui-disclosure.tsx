@@ -2,7 +2,11 @@ import React from "react";
 import { ChevronDown } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { tv } from "tailwind-variants";
-import { composeTailwindRenderProps } from "./oui-base";
+import {
+  composeTailwindRenderProps,
+  disabledStyles,
+  focusVisibleStyles,
+} from "./oui-base";
 import { Heading } from "./oui-heading";
 
 /**
@@ -64,9 +68,11 @@ export function DisclosureButton({
   return (
     <Rac.Button
       slot="trigger"
-      className={Rac.composeRenderProps(className, (className, renderProps) =>
-        rootStyles({ ...renderProps, className }),
-      )}
+      className={composeTailwindRenderProps(className, [
+        focusVisibleStyles,
+        disabledStyles,
+        "flex flex-1 items-start justify-between gap-4 py-4 text-left text-sm font-medium transition-all",
+      ])}
       {...props}
     >
       {(renderProps) => (
