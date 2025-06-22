@@ -5,14 +5,6 @@ import { tv } from "tailwind-variants";
 import { composeTailwindRenderProps } from "./oui-base";
 import { Heading } from "./oui-heading";
 
-/*
-#fetch https://react-spectrum.adobe.com/react-aria/Disclosure.html
-#fetch https://react-spectrum.adobe.com/react-aria/DisclosureGroup.html
-#fetch https://intentui.com/docs/2.x/components/navigation/disclosure
-#fetch https://intentui.com/docs/2.x/components/navigation/disclosure-group
-#fetch https://ui.shadcn.com/docs/components/accordion
-*/
-
 /**
  * Derived from shadcn AccordionItem
  */
