@@ -9,6 +9,9 @@ import { Label } from "./oui-label";
 import { Popover } from "./oui-popover";
 import { Text } from "./oui-text";
 
+type TT<T extends object> = Rac.ComboBoxProps<T>
+type TTT<T extends object> = Pick<Rac.ComboBoxProps<T>, "children">
+
 export interface ComboBoxExProps<T extends object>
   extends Omit<Rac.ComboBoxProps<T>, "children"> {
   label?: React.ReactNode;
