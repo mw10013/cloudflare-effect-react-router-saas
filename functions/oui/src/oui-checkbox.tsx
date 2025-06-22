@@ -4,7 +4,7 @@ import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
 import { tv } from "tailwind-variants";
 import { composeTailwindRenderProps } from "./oui-base";
-import { baseLabelStyles, labelStylesTv } from "./oui-label";
+import { baseLabelStyles } from "./oui-label";
 import { Text } from "./oui-text";
 
 /**
@@ -54,19 +54,19 @@ export function Checkbox({
         "group items-start gap-3",
       ])}
     >
-      {({ isSelected, isIndeterminate, ...renderProps }) => (
+      {(renderProps) => (
         <>
           <span
             data-slot="checkbox-indicator"
             className={checkboxIndicatorStyles({
-              isSelected: isSelected || isIndeterminate,
-              className: indicatorClassName,
               ...renderProps,
+              isSelected: renderProps.isSelected || renderProps.isIndeterminate,
+              className: indicatorClassName,
             })}
           >
-            {isIndeterminate ? (
+            {renderProps.isIndeterminate ? (
               <MinusIcon aria-hidden className={checkboxIconStyles} />
-            ) : isSelected ? (
+            ) : renderProps.isSelected ? (
               <CheckIcon aria-hidden className={checkboxIconStyles} />
             ) : null}
           </span>
