@@ -5,7 +5,7 @@ import { composeTailwindRenderProps } from "./oui-base";
 import { baseLabelStyles } from "./oui-label";
 import { Text } from "./oui-text";
 
-export const Switch = ({ className, children, ...props }: Rac.SwitchProps) => {
+export const Switch = ({ className, ...props }: Rac.SwitchProps) => {
   return (
     <Rac.Switch
       {...props}
@@ -13,9 +13,7 @@ export const Switch = ({ className, children, ...props }: Rac.SwitchProps) => {
         baseLabelStyles,
         "group",
       ])}
-    >
-      {children}
-    </Rac.Switch>
+    />
   );
 };
 
