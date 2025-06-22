@@ -24,7 +24,9 @@ export const tw = (strings: TemplateStringsArray, ...values: string[]) =>
  */
 export const baseStyles = tw`data-[focus-visible]:border-ring data-[focus-visible]:ring-ring/50 outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[focus-visible]:ring-[3px]`;
 
+export const focusVisibleStyles = tw`data-[focus-visible]:border-ring data-[focus-visible]:ring-ring/50 outline-none data-[focus-visible]:ring-[3px]`;
 export const groupFocusVisibleStyles = tw`group-data-[focus-visible]:border-ring group-data-[focus-visible]:ring-ring/50 outline-none group-data-[focus-visible]:ring-[3px]`;
+export const disabledStyles = tw`data-[disabled]:pointer-events-none data-[disabled]:opacity-50`;
 /*
 shadcn button: focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring
 shadcn input: focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]

@@ -1,14 +1,15 @@
 import type { VariantProps } from "tailwind-variants";
 import * as Rac from "react-aria-components";
 import { tv } from "tailwind-variants";
-import { baseStyles } from "./oui-base";
+import { disabledStyles, focusVisibleStyles } from "./oui-base";
 
 /**
  * Derived from shadcn Button
  */
 export const buttonStyles = tv({
   base: [
-    baseStyles,
+    focusVisibleStyles,
+    disabledStyles,
     "inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
     "data-[disabled]:cursor-not-allowed", // Explicit cursor-pointer for Rac.Link structured with span.
     // Rac.Button does not support aria-invalid or have data-invalid. Below is commented for reference.

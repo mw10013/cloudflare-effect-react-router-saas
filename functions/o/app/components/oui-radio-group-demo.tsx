@@ -1,21 +1,20 @@
-import * as Oui from '@workspace/oui'
-import { Label } from '@workspace/ui/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@workspace/ui/components/ui/radio-group'
+import * as Oui from "@workspace/oui";
 
 const plans = [
   {
-    id: 'starter',
-    name: 'Starter Plan',
-    description: 'Perfect for small businesses getting started with our platform',
-    price: '$10'
+    id: "starter",
+    name: "Starter Plan",
+    description:
+      "Perfect for small businesses getting started with our platform",
+    price: "$10",
   },
   {
-    id: 'pro',
-    name: 'Pro Plan',
-    description: 'Advanced features for growing businesses with higher demands',
-    price: '$20'
-  }
-] as const
+    id: "pro",
+    name: "Pro Plan",
+    description: "Advanced features for growing businesses with higher demands",
+    price: "$20",
+  },
+] as const;
 
 export function OuiRadioGroupDemo() {
   return (
@@ -41,11 +40,13 @@ export function OuiRadioGroupDemo() {
           >
             <div className="grid gap-1 font-normal">
               <div className="font-medium">{plan.name}</div>
-              <div className="text-muted-foreground leading-snug">{plan.description}</div>
+              <div className="text-muted-foreground leading-snug">
+                {plan.description}
+              </div>
             </div>
           </Oui.Radio>
         ))}
       </Oui.RadioGroupEx>
     </div>
-  )
+  );
 }

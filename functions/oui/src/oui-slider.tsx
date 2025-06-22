@@ -1,7 +1,7 @@
 import React from "react";
 import * as Rac from "react-aria-components";
 import { tv } from "tailwind-variants";
-import { baseStyles } from "./oui-base";
+import { disabledStyles, focusVisibleStyles } from "./oui-base";
 import { Label } from "./oui-label";
 
 export const sliderStyles = tv({
@@ -88,7 +88,8 @@ export const SliderTrack = ({
 
 export const sliderThumbStyles = tv({
   base: [
-    baseStyles,
+    focusVisibleStyles,
+    disabledStyles,
     "border-primary/50 bg-background top-[50%] size-4 rounded-full border shadow transition-colors",
   ],
   variants: {
