@@ -86,10 +86,8 @@ export const Radio = ({
   );
 };
 
-export interface RadioGroupExProps
-  extends Omit<Rac.RadioGroupProps, "children"> {
+export interface RadioGroupExProps extends Rac.RadioGroupProps {
   label?: React.ReactNode;
-  children?: React.ReactNode;
   description?: React.ReactNode;
   errorMessage?: string | ((validation: Rac.ValidationResult) => string);
 }
@@ -103,10 +101,14 @@ export function RadioGroupEx({
 }: RadioGroupExProps) {
   return (
     <RadioGroup {...props}>
-      {label && <Label className="">{label}</Label>}
-      {description && <Text slot="description">{description}</Text>}
-      {children}
-      <FieldError>{errorMessage}</FieldError>
+      {(renderProps) => (
+        <>
+          {label && <Label className="">{label}</Label>}
+          {description && <Text slot="description">{description}</Text>}
+          {typeof children === "function" ? children(renderProps) : children}
+          <FieldError>{errorMessage}</FieldError>
+        </>
+      )}
     </RadioGroup>
   );
 }
