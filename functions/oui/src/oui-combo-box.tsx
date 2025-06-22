@@ -9,16 +9,6 @@ import { Label } from "./oui-label";
 import { Popover } from "./oui-popover";
 import { Text } from "./oui-text";
 
-export const ComboBox = <T extends object>({
-  className,
-  ...props
-}: Rac.ComboBoxProps<T>) => (
-  <Rac.ComboBox
-    {...props}
-    className={composeTailwindRenderProps(className, "space-y-2")}
-  />
-);
-
 export interface ComboBoxExProps<T extends object>
   extends Omit<Rac.ComboBoxProps<T>, "children"> {
   label?: React.ReactNode;
@@ -38,7 +28,7 @@ export const ComboBoxEx = <T extends object>({
   children,
   ...props
 }: ComboBoxExProps<T>) => (
-  <ComboBox {...props}>
+  <Rac.ComboBox {...props}>
     {label && <Label>{label}</Label>}
     <Group>
       <Input variant="ghost" placeholder={placeholder} />
@@ -51,5 +41,5 @@ export const ComboBoxEx = <T extends object>({
     <Popover>
       <Rac.ListBox items={items}>{children}</Rac.ListBox>
     </Popover>
-  </ComboBox>
+  </Rac.ComboBox>
 );
