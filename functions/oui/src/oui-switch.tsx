@@ -26,11 +26,10 @@ export const SwitchIndicator = () => (
   </div>
 );
 
-export interface SwitchExProps extends Omit<Rac.SwitchProps, "children"> {
+export interface SwitchExProps extends Rac.SwitchProps {
   indicatorPosition?: "start" | "end";
   descriptionClassName?: string;
   description?: React.ReactNode;
-  children?: React.ReactNode;
   containerClassName?: string;
 }
 
@@ -45,7 +44,7 @@ export const SwitchEx = ({
 }: SwitchExProps) => {
   const descriptionId = description ? React.useId() : undefined;
   return (
-    // shadcn FormDemo div: flex flex-col gap-0.5
+    // Derived fromshadcn FormDemo div
     <div className={twMerge("flex flex-col gap-0.5", containerClassName)}>
       <Switch
         {...props}
@@ -55,9 +54,13 @@ export const SwitchEx = ({
         )}
         aria-describedby={descriptionId}
       >
-        {indicatorPosition === "start" && <SwitchIndicator />}
-        {children}
-        {indicatorPosition === "end" && <SwitchIndicator />}
+        {(renderProps) => (
+          <>
+            {indicatorPosition === "start" && <SwitchIndicator />}
+            {typeof children === "function" ? children(renderProps) : children}
+            {indicatorPosition === "end" && <SwitchIndicator />}
+          </>
+        )}
       </Switch>
       {/* TODO: SwitchEx description spacer when indicatorPosition = end */}
       {description && (
@@ -65,8 +68,8 @@ export const SwitchEx = ({
           id={descriptionId}
           slot="description"
           className={twMerge(
-            descriptionClassName,
             props.isDisabled ? "opacity-60" : undefined,
+            descriptionClassName,
           )}
         >
           {description}
