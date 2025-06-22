@@ -7,7 +7,7 @@ export function OuiSwitchDemo() {
       <Oui.SwitchEx
         id="switch-demo-bluetooth"
         defaultSelected
-        className="group-data-[selected]:bg-blue-500 dark:group-data-[selected]:bg-blue-600"
+        indicatorClassName="group-data-[selected]:bg-blue-500 dark:group-data-[selected]:bg-blue-600"
       >
         Bluetooth
       </Oui.SwitchEx>
