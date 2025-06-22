@@ -30,10 +30,8 @@ export const checkboxIndicatorStyles = tv({
 
 export const checkboxIconStyles = "size-3.5";
 
-// Pattern for Reusable Button Wrapper: https://github.com/adobe/react-spectrum/discussions/7511
-export interface CheckboxProps extends Omit<Rac.CheckboxProps, "children"> {
+export interface CheckboxProps extends Rac.CheckboxProps {
   indicatorClassName?: string;
-  children?: React.ReactNode;
 }
 
 /**
@@ -70,7 +68,7 @@ export function Checkbox({
               <CheckIcon aria-hidden className={checkboxIconStyles} />
             ) : null}
           </span>
-          {children}
+          {typeof children === "function" ? children(renderProps) : children}
         </>
       )}
     </Rac.Checkbox>
