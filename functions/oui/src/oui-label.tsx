@@ -1,10 +1,6 @@
 import * as Rac from "react-aria-components";
 import { tv } from "tailwind-variants";
 
-/*
-#fetch https://react-spectrum.adobe.com/react-aria/TextField.html#label-1
-*/
-
 /**
  * Derived from shadcn Label and FormLabel
  */

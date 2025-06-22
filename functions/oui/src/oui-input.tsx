@@ -6,8 +6,8 @@ import { tv } from "tailwind-variants";
 export const inputStyles = tv({
   base: [
     "placeholder:text-muted-foreground dark:bg-input/30 flex h-9 w-full min-w-0 bg-transparent px-3 py-1 text-base outline-none transition-[color,box-shadow] md:text-sm",
-    "selection:bg-primary selection:text-primary-foreground",
     "file:text-foreground file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium",
+    "selection:bg-primary selection:text-primary-foreground",
     "data-[disabled]:pointer-events-none data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
   ],
   variants: {

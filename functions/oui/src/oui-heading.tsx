@@ -1,5 +1,4 @@
 import type { VariantProps } from "tailwind-variants";
-import React from "react";
 import * as Rac from "react-aria-components";
 import { tv } from "tailwind-variants";
 
