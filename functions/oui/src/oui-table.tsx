@@ -1,24 +1,10 @@
-import type { VariantProps } from "tailwind-variants";
 import * as React from "react";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import * as Rac from "react-aria-components";
-import { tv } from "tailwind-variants";
-
-/*
-#fetch https://react-spectrum.adobe.com/react-aria/Table.html
-https://github.com/irsyadadl/intentui/blob/2.x/components/ui/table.tsx
-https://intentui.com/docs/2.x/components/collections/table
-*/
+import { twMerge } from "tailwind-merge";
+import { composeTailwindRenderProps } from "./oui-base";
 
 // Table is not interactive on first click in SSR : https://github.com/adobe/react-spectrum/issues/8239
-
-const tableContainerStyles = tv({
-  base: "relative w-full overflow-x-auto",
-});
-
-const tableStyles = tv({
-  base: "w-full caption-bottom text-sm",
-});
 
 export interface TableProps extends Rac.TableProps {
   containerClassName?: string;
@@ -31,10 +17,13 @@ export function Table({
   ...props
 }: TableProps) {
   return (
-    <div className={tableContainerStyles({ className: containerClassName })}>
+    <div
+      className={twMerge("relative w-full overflow-x-auto", containerClassName)}
+    >
       <Rac.Table
-        className={Rac.composeRenderProps(className, (className, renderProps) =>
-          tableStyles({ ...renderProps, className }),
+        className={composeTailwindRenderProps(
+          className,
+          "w-full caption-bottom text-sm",
         )}
         {...props}
       >
@@ -44,103 +33,69 @@ export function Table({
   );
 }
 
-const tableHeaderStyles = tv({
-  base: "[&_tr]:border-b",
-});
-
-export interface TableHeaderProps<T extends object>
-  extends Rac.TableHeaderProps<T> {}
-
 export function TableHeader<T extends object>({
   className,
   ...props
-}: TableHeaderProps<T>) {
+}: Rac.TableHeaderProps<T>) {
   return (
     <Rac.TableHeader
-      className={Rac.composeRenderProps(className, (className, renderProps) =>
-        tableHeaderStyles({ ...renderProps, className }),
-      )}
+      className={composeTailwindRenderProps(className, "[&_tr]:border-b")}
       {...props}
     />
   );
 }
-
-const tableBodyStyles = tv({
-  base: "[&_tr:last-child]:border-0",
-});
-
-export interface TableBodyProps<T extends object>
-  extends Rac.TableBodyProps<T> {}
 
 export function TableBody<T extends object>({
   className,
   ...props
-}: TableBodyProps<T>) {
+}: Rac.TableBodyProps<T>) {
   return (
     <Rac.TableBody
-      className={Rac.composeRenderProps(className, (className, renderProps) =>
-        tableBodyStyles({ ...renderProps, className }),
+      className={composeTailwindRenderProps(
+        className,
+        "[&_tr:last-child]:border-0",
       )}
       {...props}
     />
   );
 }
 
-const tableFooterStyles = tv({
-  base: "bg-muted/50 border-t font-medium [&>tr]:last:border-b-0",
-});
-
-export interface TableFooterProps
-  extends React.HTMLAttributes<HTMLTableSectionElement> {}
-
-export function TableFooter({ className, ...props }: TableFooterProps) {
-  return <tfoot className={tableFooterStyles({ className })} {...props} />;
+export function TableFooter({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLTableSectionElement>) {
+  return (
+    <tfoot
+      className={twMerge(
+        "bg-muted/50 border-t font-medium [&>tr]:last:border-b-0",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
-const rowStyles = tv({
-  base: "border-b transition-colors",
-  variants: {
-    // [data-hovered] does not work for <Row/>: https://github.com/adobe/react-spectrum/issues/4411
-    isHovered: {
-      true: "bg-muted/50",
-    },
-    isSelected: {
-      true: "bg-muted",
-    },
-    isDisabled: {
-      true: "opacity-50",
-    },
-  },
-});
-
-export interface RowProps<T extends object>
-  extends Rac.RowProps<T>,
-    VariantProps<typeof rowStyles> {}
-
-export function Row<T extends object>({ className, ...props }: RowProps<T>) {
+export function Row<T extends object>({
+  className,
+  ...props
+}: Rac.RowProps<T>) {
   return (
     <Rac.Row
-      className={Rac.composeRenderProps(className, (className, renderProps) =>
-        rowStyles({ ...renderProps, className }),
+      className={composeTailwindRenderProps(
+        className,
+        "data-[hovered]:bg-muted/50 data-[selected]:bg-muted border-b transition-colors data-[disabled]:opacity-50",
       )}
       {...props}
     />
   );
 }
 
-const columnStyles = tv({
-  base: "text-foreground h-10 whitespace-nowrap px-2 text-left align-middle font-medium",
-});
-
-export interface ColumnProps
-  extends Rac.ColumnProps,
-    VariantProps<typeof columnStyles> {}
-
-export function Column({ className, children, ...props }: ColumnProps) {
+export function Column({ className, children, ...props }: Rac.ColumnProps) {
   return (
     <Rac.Column
-      className={Rac.composeRenderProps(className, (className, renderProps) =>
-        columnStyles({ ...renderProps, className }),
+      className={composeTailwindRenderProps(
+        className,
+        "text-foreground h-10 whitespace-nowrap px-2 text-left align-middle font-medium",
       )}
       {...props}
     >
@@ -165,32 +120,26 @@ export function Column({ className, children, ...props }: ColumnProps) {
   );
 }
 
-const cellStyles = tv({
-  base: "whitespace-nowrap p-2 align-middle",
-});
-
-export interface CellProps
-  extends Rac.CellProps,
-    VariantProps<typeof cellStyles> {}
-
-export function Cell({ className, ...props }: CellProps) {
+export function Cell({ className, ...props }: Rac.CellProps) {
   return (
     <Rac.Cell
-      className={Rac.composeRenderProps(className, (className, renderProps) =>
-        cellStyles({ ...renderProps, className }),
+      className={composeTailwindRenderProps(
+        className,
+        "whitespace-nowrap p-2 align-middle",
       )}
       {...props}
     />
   );
 }
 
-const tableCaptionStyles = tv({
-  base: "text-muted-foreground mt-4 text-sm",
-});
-
-export interface TableCaptionProps
-  extends React.HTMLAttributes<HTMLTableCaptionElement> {}
-
-export function TableCaption({ className, ...props }: TableCaptionProps) {
-  return <caption className={tableCaptionStyles({ className })} {...props} />;
+export function TableCaption({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLTableCaptionElement>) {
+  return (
+    <caption
+      className={twMerge("text-muted-foreground mt-4 text-sm", className)}
+      {...props}
+    />
+  );
 }
