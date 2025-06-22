@@ -3,7 +3,7 @@ import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
 import { tv } from "tailwind-variants";
 import { composeTailwindRenderProps } from "./oui-base";
-import { labelStylesTv } from "./oui-label";
+import { baseLabelStyles, labelStylesTv } from "./oui-label";
 import { Text } from "./oui-text";
 
 export const switchStyles = tv({
@@ -19,9 +19,10 @@ export const Switch = ({ className, children, ...props }: SwitchProps) => {
   return (
     <Rac.Switch
       {...props}
-      className={Rac.composeRenderProps(className, (className, renderProps) =>
-        switchStyles({ ...renderProps, className }),
-      )}
+      className={composeTailwindRenderProps(className, [
+        baseLabelStyles,
+        "group",
+      ])}
     >
       {children}
     </Rac.Switch>
