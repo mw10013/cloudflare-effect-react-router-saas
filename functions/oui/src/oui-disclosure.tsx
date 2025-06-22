@@ -1,7 +1,7 @@
 import React from "react";
 import { ChevronDown } from "lucide-react";
 import * as Rac from "react-aria-components";
-import { tv } from "tailwind-variants";
+import { twJoin } from "tailwind-merge";
 import {
   composeTailwindRenderProps,
   disabledStyles,
@@ -24,37 +24,6 @@ export function Disclosure({ className, ...props }: Rac.DisclosureProps) {
   );
 }
 
-export const disclosureButtonStyes = tv({
-  slots: {
-    rootStyles:
-      "flex flex-1 items-start justify-between gap-4 py-4 text-left text-sm font-medium outline-none transition-all",
-    iconStyles:
-      "text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200",
-  },
-  variants: {
-    isExpanded: {
-      true: {
-        iconStyles: "rotate-180",
-      },
-    },
-    isHovered: {
-      true: {
-        rootStyles: "underline",
-      },
-    },
-    isFocusVisible: {
-      true: {
-        rootStyles: "ring-ring/50 ring-[3px]",
-      },
-    },
-    isDisabled: {
-      true: {
-        rootStyles: "pointer-events-none opacity-50",
-      },
-    },
-  },
-});
-
 /**
  * Derived from shadcn AccordionTrigger
  */
@@ -64,43 +33,30 @@ export function DisclosureButton({
   ...props
 }: Rac.ButtonProps) {
   const { isExpanded } = React.useContext(Rac.DisclosureStateContext)!;
-  const { rootStyles, iconStyles } = disclosureButtonStyes({ isExpanded });
   return (
     <Rac.Button
       slot="trigger"
       className={composeTailwindRenderProps(className, [
         focusVisibleStyles,
         disabledStyles,
-        "flex flex-1 items-start justify-between gap-4 py-4 text-left text-sm font-medium transition-all",
+        "flex flex-1 items-start justify-between gap-4 py-4 text-left text-sm font-medium transition-all data-[hovered]:underline",
       ])}
       {...props}
     >
       {(renderProps) => (
         <>
           {typeof children === "function" ? children(renderProps) : children}
-          <ChevronDown className={iconStyles()} />
+          <ChevronDown
+            className={twJoin(
+              "text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200",
+              isExpanded && "rotate-180",
+            )}
+          />
         </>
       )}
     </Rac.Button>
   );
 }
-
-export const disclosurePanelStyles = tv({
-  slots: {
-    rootStyles: "overflow-hidden text-sm",
-    contentStyles: "pb-4 pt-0",
-  },
-  variants: {
-    isExpanded: {
-      true: {
-        rootStyles: "animate-accordion-down",
-      },
-      false: {
-        rootStyles: "animate-accordion-up",
-      },
-    },
-  },
-});
 
 /**
  * Derived from shadcn AccordionContent
@@ -111,16 +67,16 @@ export function DisclosurePanel({
   ...props
 }: Rac.DisclosurePanelProps) {
   const { isExpanded } = React.useContext(Rac.DisclosureStateContext)!;
-  const { rootStyles, contentStyles } = disclosurePanelStyles({ isExpanded });
 
   return (
     <Rac.DisclosurePanel
-      className={Rac.composeRenderProps(className, (className, renderProps) =>
-        rootStyles({ ...renderProps, className }),
-      )}
+      className={composeTailwindRenderProps(className, [
+        "overflow-hidden text-sm",
+        isExpanded ? "animate-accordion-down" : "animate-accordion-up",
+      ])}
       {...props}
     >
-      <div className={contentStyles()}>{children}</div>
+      <div className="pb-4 pt-0">{children}</div>
     </Rac.DisclosurePanel>
   );
 }
