@@ -2,7 +2,11 @@ import React from "react";
 import { CheckIcon, MinusIcon } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
-import { composeTailwindRenderProps } from "./oui-base";
+import {
+  composeTailwindRenderProps,
+  disabledStyles,
+  focusVisibleStyles,
+} from "./oui-base";
 import { baseLabelStyles } from "./oui-label";
 import { Text } from "./oui-text";
 
@@ -34,12 +38,13 @@ export function Checkbox({
             data-slot="checkbox-indicator"
             className={twMerge(
               [
+                focusVisibleStyles,
+                disabledStyles,
+                "data-[disabled]:cursor-not-allowed",
                 "border-input dark:bg-input/30 shadow-xs size-4 shrink-0 rounded-[4px] border outline-none transition-shadow",
                 "data-[selected]:bg-primary data-[selected]:text-primary-foreground dark:data-[selected]:bg-primary data-[selected]:border-primary",
                 "data-[interminate]:bg-primary data-[interminate]:text-primary-foreground dark:data-[interminate]:bg-primary data-[interminate]:border-primary",
                 "data-[invalid]:ring-destructive/20 data-[invalid]:dark:ring-destructive/40 data-[invalid]:border-destructive",
-                "data-[focus-visible]:border-ring data-[focus-visible]:ring-ring/50 data-[focus-visible]:ring-[3px]",
-                "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
               ],
               indicatorClassName,
             )}

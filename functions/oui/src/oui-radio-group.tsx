@@ -2,8 +2,11 @@ import type React from "react";
 import { CircleIcon } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
-import { tv } from "tailwind-variants";
-import { composeTailwindRenderProps } from "./oui-base";
+import {
+  composeTailwindRenderProps,
+  disabledStyles,
+  focusVisibleStyles,
+} from "./oui-base";
 import { FieldError } from "./oui-field-error";
 import { baseLabelStyles, Label } from "./oui-label";
 import { Text } from "./oui-text";
@@ -49,10 +52,10 @@ export const Radio = ({
             data-slot="radio-group-item"
             className={twMerge(
               [
+                focusVisibleStyles,
+                disabledStyles,
                 "border-input text-primary dark:bg-input/30 shadow-xs relative aspect-square size-4 shrink-0 rounded-full border outline-none transition-[color,box-shadow]",
                 "group-data-[invalid]:ring-destructive/20 group-data-[invalid]:dark:ring-destructive/40 group-data-[invalid]:border-destructive",
-                "group-data-[focus-visible]:border-ring group-data-[focus-visible]:ring-ring/50 group-data-[focus-visible]:ring-[3px]",
-                "group-data-[disabled]:cursor-not-allowed group-data-[disabled]:opacity-50",
               ],
               radioGroupItemClassName,
             )}

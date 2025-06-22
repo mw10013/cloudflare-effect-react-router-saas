@@ -1,6 +1,7 @@
 import type { VariantProps } from "tailwind-variants";
 import * as Rac from "react-aria-components";
 import { tv } from "tailwind-variants";
+import { focusVisibleStyles } from "./oui-base";
 
 /** Derived from shadcn Input. */
 export const inputStyles = tv({
@@ -13,8 +14,8 @@ export const inputStyles = tv({
   variants: {
     variant: {
       default: [
+        focusVisibleStyles,
         "border-input shadow-xs rounded-md border",
-        "data-[focus-visible]:border-ring data-[focus-visible]:ring-ring/50 data-[focus-visible]:ring-[3px]",
         "data-[invalid]:border-destructive data-[invalid]:ring-destructive/20 dark:data-[invalid]:ring-destructive/40",
       ],
       ghost: "flex-1",
