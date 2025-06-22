@@ -1,7 +1,10 @@
 import React from "react";
 import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
-import { composeTailwindRenderProps } from "./oui-base";
+import {
+  composeTailwindRenderProps,
+  groupFocusVisibleStyles,
+} from "./oui-base";
 import { baseLabelStyles } from "./oui-label";
 import { Text } from "./oui-text";
 
@@ -27,7 +30,8 @@ export function SwitchIndicator({
   return (
     <div
       className={twMerge(
-        "group-data-[selected]:bg-primary bg-input group-data-[focus-visible]:border-ring group-data-[focus-visible]:ring-ring/50 dark:bg-input/80 shadow-xs inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full border border-transparent outline-none transition-all group-data-[disabled]:cursor-not-allowed group-data-[focus-visible]:ring-[3px]",
+        groupFocusVisibleStyles,
+        "group-data-[selected]:bg-primary bg-input dark:bg-input/80 shadow-xs inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full border border-transparent transition-all group-data-[disabled]:cursor-not-allowed",
         className,
       )}
       {...props}
