@@ -11,6 +11,7 @@ import {
   useHref,
   useNavigate,
 } from "react-router";
+import { Toaster } from "sonner";
 import "@workspace/ui/app.css";
 
 declare module "react-aria-components" {
@@ -57,6 +58,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        <Toaster />
         <RouterProvider navigate={navigate} useHref={useHrefEx}>
           {children}
           <ScrollRestoration />

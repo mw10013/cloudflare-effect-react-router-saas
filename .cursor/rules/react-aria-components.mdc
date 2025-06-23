@@ -1,17 +1,17 @@
 ---
 description: 
-globs: **/oui-list-box.tsx,**/oui-pagination-demo.tsx,**/admin.users.tsx,**/functions/oui/src/**/*.tsx,**/functions/o/app/**/*.tsx
+globs: **/functions/oui/src/**/*.tsx,**/functions/o/app/**/*.tsx,**/functions/s/app/**/*.tsx
 alwaysApply: false
 ---
 
 ## React Aria Components (RAC) Documentation
 
-- [Button](https://react-spectrum.adobe.com/react-aria/Button.html)
+- [Button](mdc:https:/react-spectrum.adobe.com/react-aria/Button.html)
 - [Dialog](mdc:https:/react-spectrum.adobe.com/react-aria/Dialog.html)
 - [React Aria Component List Box Documentation](mdc:https:/react-spectrum.adobe.com/react-aria/ListBox.html)
 - [React Aria Component Modal Documentation](mdc:https:/react-spectrum.adobe.com/react-aria/Modal.html)
 - [@React Aria Component Popover Documentation](mdc:https:/react-spectrum.adobe.com/react-aria/Popover.html)
 - [React Aria Component Search Field Documentation](mdc:https:/react-spectrum.adobe.com/react-aria/SearchField.html)
 - [React Aria Component Text Field Documentation](mdc:https:/react-spectrum.adobe.com/react-aria/TextField.html)
-
+- [Toast](mdc:- Toast: https:/react-spectrum.adobe.com/react-aria/Toast.html)
 
