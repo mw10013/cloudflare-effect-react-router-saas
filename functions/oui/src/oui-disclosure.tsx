@@ -17,7 +17,7 @@ export function Disclosure({ className, ...props }: Rac.DisclosureProps) {
     <Rac.Disclosure
       className={composeTailwindRenderProps(
         className,
-        "border-b last:border-b-0",
+        "group border-b last:border-b-0",
       )}
       {...props}
     />
@@ -32,7 +32,6 @@ export function DisclosureButton({
   children,
   ...props
 }: Rac.ButtonProps) {
-  const { isExpanded } = React.useContext(Rac.DisclosureStateContext)!;
   return (
     <Rac.Button
       slot="trigger"
@@ -46,12 +45,7 @@ export function DisclosureButton({
       {(renderProps) => (
         <>
           {typeof children === "function" ? children(renderProps) : children}
-          <ChevronDown
-            className={twJoin(
-              "text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200",
-              isExpanded && "rotate-180",
-            )}
-          />
+          <ChevronDown className="text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200 group-data-[expanded]:rotate-180" />
         </>
       )}
     </Rac.Button>
@@ -66,14 +60,12 @@ export function DisclosurePanel({
   children,
   ...props
 }: Rac.DisclosurePanelProps) {
-  const { isExpanded } = React.useContext(Rac.DisclosureStateContext)!;
-
   return (
     <Rac.DisclosurePanel
-      className={composeTailwindRenderProps(className, [
-        "overflow-hidden text-sm",
-        isExpanded ? "animate-accordion-down" : "animate-accordion-up",
-      ])}
+      className={composeTailwindRenderProps(
+        className,
+        "group-data-[expanded]:animate-accordion-down group-data-[expanded=false]:animate-accordion-up overflow-hidden text-sm",
+      )}
       {...props}
     >
       <div className="pb-4 pt-0">{children}</div>
