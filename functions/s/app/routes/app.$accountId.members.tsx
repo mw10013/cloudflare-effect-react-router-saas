@@ -15,16 +15,16 @@ import { redirect } from "react-router";
 import { AccountMemberIdFromString, Email } from "~/lib/Domain";
 import { IdentityMgr, InviteError } from "~/lib/IdentityMgr";
 import * as Policy from "~/lib/Policy";
-import * as ReactRouter from "~/lib/ReactRouter";
+import * as ReactRouterEx from "~/lib/ReactRouterEx";
 
 /*
 #fetch https://react-spectrum.adobe.com/react-aria/GridList.html
 #fetch https://react-spectrum.adobe.com/react-aria/ListBox.html
 */
 
-export const loader = ReactRouter.routeEffect(() =>
+export const loader = ReactRouterEx.routeEffect(() =>
   Effect.gen(function* () {
-    const appLoadContext = yield* ReactRouter.AppLoadContext;
+    const appLoadContext = yield* ReactRouterEx.AppLoadContext;
     const accountMember = yield* Effect.fromNullable(
       appLoadContext.accountMember,
     );
@@ -40,7 +40,7 @@ export const loader = ReactRouter.routeEffect(() =>
 );
 
 const inviteMembers = (emails: ReadonlySet<User["email"]>) =>
-  ReactRouter.AppLoadContext.pipe(
+  ReactRouterEx.AppLoadContext.pipe(
     Effect.flatMap((appLoadContext) =>
       Effect.fromNullable(appLoadContext.accountMember),
     ),
@@ -55,7 +55,7 @@ const inviteMembers = (emails: ReadonlySet<User["email"]>) =>
   );
 
 const revokeMember = (accountMemberId: AccountMember["accountMemberId"]) =>
-  ReactRouter.AppLoadContext.pipe(
+  ReactRouterEx.AppLoadContext.pipe(
     Effect.flatMap((appLoadContext) =>
       Effect.fromNullable(appLoadContext.accountMember?.account.accountId).pipe(
         Effect.flatMap((accountId) =>
@@ -67,7 +67,7 @@ const revokeMember = (accountMemberId: AccountMember["accountMemberId"]) =>
   );
 
 const leaveAccount = (accountMemberId: AccountMember["accountMemberId"]) =>
-  ReactRouter.AppLoadContext.pipe(
+  ReactRouterEx.AppLoadContext.pipe(
     Effect.flatMap((appLoadContext) =>
       Effect.fromNullable(appLoadContext.accountMember?.userId).pipe(
         Effect.flatMap((userId) =>
@@ -84,60 +84,63 @@ const leaveAccount = (accountMemberId: AccountMember["accountMemberId"]) =>
     ),
   );
 
-export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
-  Effect.gen(function* () {
-    const FormDataSchema = Schema.Union(
-      Schema.Struct({
-        intent: Schema.Literal("invite"),
-        emails: Schema.compose(
-          Schema.compose(Schema.NonEmptyString, Schema.split(",")),
-          Schema.ReadonlySet(Email),
-        )
-          .annotations({
-            message: () => ({
-              message: "Please provide valid email addresses.",
-              override: true,
-            }),
-          })
-          .pipe(
-            Schema.filter((s: ReadonlySet<Email>) => s.size <= 3, {
-              message: () => "Too many email addresses.",
-            }),
+export const action = ReactRouterEx.routeEffect(
+  ({ request }: Route.ActionArgs) =>
+    Effect.gen(function* () {
+      const FormDataSchema = Schema.Union(
+        Schema.Struct({
+          intent: Schema.Literal("invite"),
+          emails: Schema.compose(
+            Schema.compose(Schema.NonEmptyString, Schema.split(",")),
+            Schema.ReadonlySet(Email),
+          )
+            .annotations({
+              message: () => ({
+                message: "Please provide valid email addresses.",
+                override: true,
+              }),
+            })
+            .pipe(
+              Schema.filter((s: ReadonlySet<Email>) => s.size <= 3, {
+                message: () => "Too many email addresses.",
+              }),
+            ),
+        }),
+        Schema.Struct({
+          intent: Schema.Union(
+            Schema.Literal("revoke"),
+            Schema.Literal("leave"),
           ),
-      }),
-      Schema.Struct({
-        intent: Schema.Union(Schema.Literal("revoke"), Schema.Literal("leave")),
-        accountMemberId: AccountMemberIdFromString,
-      }),
-    );
-    const formData = yield* SchemaEx.decodeRequestFormData({
-      request,
-      schema: FormDataSchema,
-    });
-    switch (formData.intent) {
-      case "invite":
-        yield* inviteMembers(formData.emails);
-        break;
-      case "revoke":
-        yield* revokeMember(formData.accountMemberId);
-        break;
-      case "leave":
-        yield* leaveAccount(formData.accountMemberId);
-        break;
-      default:
-        yield* Effect.fail(new Error("Invalid intent"));
-        break;
-    }
-  }).pipe(
-    SchemaEx.catchValidationError,
-    // Using `Effect.catchIf` because `Effect.catchTag` would prevent other errors
-    // from propagating to the main `routeEffect` handler unless explicitly re-thrown.
-    Effect.catchIf(
-      (e: unknown): e is InviteError => e instanceof InviteError,
-      (error: InviteError) =>
-        Effect.succeed({ validationErrors: { emails: error.message } }),
+          accountMemberId: AccountMemberIdFromString,
+        }),
+      );
+      const formData = yield* SchemaEx.decodeRequestFormData({
+        request,
+        schema: FormDataSchema,
+      });
+      switch (formData.intent) {
+        case "invite":
+          yield* inviteMembers(formData.emails);
+          break;
+        case "revoke":
+          yield* revokeMember(formData.accountMemberId);
+          break;
+        case "leave":
+          yield* leaveAccount(formData.accountMemberId);
+          break;
+        default:
+          return yield* Effect.fail(new Error("Invalid intent"));
+      }
+    }).pipe(
+      SchemaEx.catchValidationError,
+      // Using `Effect.catchIf` because `Effect.catchTag` would prevent other errors
+      // from propagating to the main `routeEffect` handler unless explicitly re-thrown.
+      Effect.catchIf(
+        (e: unknown): e is InviteError => e instanceof InviteError,
+        (error: InviteError) =>
+          Effect.succeed({ validationErrors: { emails: error.message } }),
+      ),
     ),
-  ),
 );
 
 /**

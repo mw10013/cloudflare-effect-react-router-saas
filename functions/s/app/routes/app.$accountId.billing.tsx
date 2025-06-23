@@ -10,20 +10,20 @@ import {
 import { Effect } from "effect";
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
-import * as ReactRouter from "~/lib/ReactRouter";
+import * as ReactRouterEx from "~/lib/ReactRouterEx";
 import { Stripe } from "~/lib/Stripe";
 
-export const loader = ReactRouter.routeEffect(({ context }) =>
-  Effect.fromNullable(context.get(ReactRouter.appLoadContext).accountMember?.account).pipe(
-    Effect.map((account) => ({ account })),
-  ),
+export const loader = ReactRouterEx.routeEffect(({ context }) =>
+  Effect.fromNullable(
+    context.get(ReactRouterEx.appLoadContext).accountMember?.account,
+  ).pipe(Effect.map((account) => ({ account }))),
 );
 
-export const action = ReactRouter.routeEffect(
+export const action = ReactRouterEx.routeEffect(
   ({ request, context }: Route.ActionArgs) =>
     Effect.gen(function* () {
       const account = yield* Effect.fromNullable(
-        context.get(ReactRouter.appLoadContext).accountMember?.account,
+        context.get(ReactRouterEx.appLoadContext).accountMember?.account,
       );
       if (!account.stripeCustomerId || !account.stripeProductId) {
         return redirect("/pricing");

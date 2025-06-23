@@ -21,12 +21,12 @@ import {
 } from "~/lib/Domain";
 import { IdentityMgr } from "~/lib/IdentityMgr";
 import * as Policy from "~/lib/Policy";
-import * as ReactRouter from "~/lib/ReactRouter";
+import * as ReactRouterEx from "~/lib/ReactRouterEx";
 
 const accountMiddleware: Route.unstable_MiddlewareFunction =
-  ReactRouter.middlewareEffect(({ params, context }) =>
+  ReactRouterEx.middlewareEffect(({ params, context }) =>
     Effect.gen(function* () {
-      const appLoadContext = context.get(ReactRouter.appLoadContext);
+      const appLoadContext = context.get(ReactRouterEx.appLoadContext);
       const AccountIdFromPath = Schema.compose(
         Schema.NumberFromString,
         Account.fields.accountId,
@@ -48,7 +48,7 @@ const accountMiddleware: Route.unstable_MiddlewareFunction =
       if (!accountMember) {
         return yield* Effect.fail(redirect("/app"));
       }
-      context.set(ReactRouter.appLoadContext, {
+      context.set(ReactRouterEx.appLoadContext, {
         ...appLoadContext,
         accountMember,
         permissions: Policy.getAccountMemberRolePermissions(accountMember.role),
@@ -58,9 +58,9 @@ const accountMiddleware: Route.unstable_MiddlewareFunction =
 
 export const unstable_middleware = [accountMiddleware];
 
-export const loader = ReactRouter.routeEffect(() =>
+export const loader = ReactRouterEx.routeEffect(() =>
   Effect.gen(function* () {
-    const appLoadContext = yield* ReactRouter.AppLoadContext;
+    const appLoadContext = yield* ReactRouterEx.AppLoadContext;
     const sessionUser = yield* Effect.fromNullable(
       appLoadContext.session.get("sessionUser"),
     );

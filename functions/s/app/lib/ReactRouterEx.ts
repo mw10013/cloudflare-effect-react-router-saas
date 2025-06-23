@@ -1,5 +1,5 @@
 import type {
-  AppLoadContext as RrAppLoadContext,
+  AppLoadContext as ReactRouterAppLoadContext,
   unstable_MiddlewareFunction,
   unstable_RouterContextProvider,
 } from "react-router";
@@ -10,11 +10,12 @@ import { IdentityMgr } from "./IdentityMgr";
 import * as Q from "./Queue";
 import { Stripe } from "./Stripe";
 
-export const appLoadContext = unstable_createContext<RrAppLoadContext>();
+export const appLoadContext =
+  unstable_createContext<ReactRouterAppLoadContext>();
 
 export class AppLoadContext extends Context.Tag("AppLoadContext")<
   AppLoadContext,
-  RrAppLoadContext
+  ReactRouterAppLoadContext
 >() {}
 
 /**
@@ -30,7 +31,9 @@ export const routeEffect =
       A,
       E | Response,
       | AppLoadContext
-      | ManagedRuntime.ManagedRuntime.Context<RrAppLoadContext["runtime"]>
+      | ManagedRuntime.ManagedRuntime.Context<
+          ReactRouterAppLoadContext["runtime"]
+        >
     >,
   ) =>
   (props: P) =>
@@ -80,7 +83,9 @@ export const middlewareEffect =
     ) => Effect.Effect<
       A | undefined,
       E | Response,
-      ManagedRuntime.ManagedRuntime.Context<RrAppLoadContext["runtime"]>
+      ManagedRuntime.ManagedRuntime.Context<
+        ReactRouterAppLoadContext["runtime"]
+      >
     >,
   ) =>
   (

@@ -1,7 +1,7 @@
 import type { AccountMemberRole } from "~/lib/Domain";
 import { Context, Effect, Schema } from "effect";
 import { type NonEmptyReadonlyArray } from "effect/Array";
-import { AppLoadContext } from "~/lib/ReactRouter";
+import { AppLoadContext } from "~/lib/ReactRouterEx";
 
 export type PermissionAction = "edit";
 export type PermissionConfig = Record<string, ReadonlyArray<PermissionAction>>;

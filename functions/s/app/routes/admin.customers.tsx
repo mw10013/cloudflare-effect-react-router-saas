@@ -2,10 +2,10 @@ import type { Route } from './+types/admin.customers'
 import { SchemaEx } from '@workspace/shared'
 import { Effect, Schema } from 'effect'
 import { IdentityMgr } from '~/lib/IdentityMgr'
-import * as ReactRouter from '~/lib/ReactRouter'
+import * as ReactRouterEx from '~/lib/ReactRouterEx'
 import { Stripe } from '~/lib/Stripe'
 
-export const loader = ReactRouter.routeEffect(() =>
+export const loader = ReactRouterEx.routeEffect(() =>
   Effect.gen(function* () {
     return { message: 'loader', customers: yield* IdentityMgr.getCustomers() }
   })
@@ -21,7 +21,7 @@ const FormDataSchema = Schema.Union(
   })
 )
 
-export const action = ReactRouter.routeEffect(
+export const action = ReactRouterEx.routeEffect(
   (
     { request }: Route.ActionArgs // : Effect.Effect<
   ) =>

@@ -3,12 +3,12 @@ import { useState } from "react";
 import * as Oui from "@workspace/oui";
 import { SchemaEx } from "@workspace/shared";
 import { Effect, Schema } from "effect";
-import { redirect, useFetcher, useLocation, useNavigate } from "react-router";
+import { redirect, useFetcher, useNavigate } from "react-router";
 import { UserIdFromString } from "~/lib/Domain";
 import { IdentityMgr } from "~/lib/IdentityMgr";
-import * as ReactRouter from "~/lib/ReactRouter";
+import * as ReactRouterEx from "~/lib/ReactRouterEx";
 
-export const loader = ReactRouter.routeEffect(({ request }: Route.LoaderArgs) =>
+export const loader = ReactRouterEx.routeEffect(({ request }: Route.LoaderArgs) =>
   Effect.gen(function* () {
     const url = new URL(request.url);
     const pageParam = url.searchParams.get("page");
@@ -57,7 +57,7 @@ export const loader = ReactRouter.routeEffect(({ request }: Route.LoaderArgs) =>
   }),
 );
 
-export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
+export const action = ReactRouterEx.routeEffect(({ request }: Route.ActionArgs) =>
   Effect.gen(function* () {
     const FormDataSchema = Schema.Struct({
       intent: Schema.Literal("lock", "unlock", "soft_delete", "undelete"),
@@ -71,7 +71,7 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
     switch (formData.intent) {
       case "lock":
         {
-          const actingStafferId = yield* ReactRouter.AppLoadContext.pipe(
+          const actingStafferId = yield* ReactRouterEx.AppLoadContext.pipe(
             Effect.flatMap((appLoadContext) =>
               Effect.fromNullable(
                 appLoadContext.session.get("sessionUser")?.userId,

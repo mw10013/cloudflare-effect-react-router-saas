@@ -4,12 +4,12 @@ import * as Oui from "@workspace/oui";
 import { Effect } from "effect";
 import * as Rac from "react-aria-components";
 import { Outlet, useRouteLoaderData } from "react-router";
-import * as ReactRouter from "~/lib/ReactRouter";
+import * as ReactRouterEx from "~/lib/ReactRouterEx";
 
-export const loader = ReactRouter.routeEffect(
+export const loader = ReactRouterEx.routeEffect(
   ({ request, context }: Route.LoaderArgs) =>
     Effect.gen(function* () {
-      const appLoacContext = context.get(ReactRouter.appLoadContext);
+      const appLoacContext = context.get(ReactRouterEx.appLoadContext);
       yield* Effect.log({
         message: "_mkt: loader",
         sessionUser: appLoacContext.session.get("sessionUser"),

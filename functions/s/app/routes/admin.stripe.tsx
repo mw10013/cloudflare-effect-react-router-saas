@@ -3,10 +3,10 @@ import * as Oui from '@workspace/oui'
 import { SchemaEx } from '@workspace/shared'
 import { Effect, Schema } from 'effect'
 import * as Rac from 'react-aria-components'
-import * as ReactRouter from '~/lib/ReactRouter'
+import * as ReactRouterEx from '~/lib/ReactRouterEx'
 import { Stripe } from '~/lib/Stripe'
 
-export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
+export const action = ReactRouterEx.routeEffect(({ request }: Route.ActionArgs) =>
   Effect.gen(function* () {
     const FormDataSchema = Schema.Union(
       Schema.Struct({

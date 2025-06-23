@@ -3,27 +3,28 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { streamText } from "ai";
 import { Effect } from "effect";
 import { createWorkersAI } from "workers-ai-provider";
-import * as ReactRouter from "~/lib/ReactRouter";
+import * as ReactRouterEx from "~/lib/ReactRouterEx";
 
-export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
-  Effect.gen(function* () {
-    const { messages } = yield* Effect.tryPromise(
-      () => request.json() as Promise<{ messages: any[] }>,
-    );
-    const workersai = createWorkersAI({
-      binding: (yield* ReactRouter.AppLoadContext).cloudflare.env.AI,
-    });
-    const result = streamText({
-      model: workersai("@cf/meta/llama-3.1-8b-instruct"),
-      messages,
-    });
-    return result.toDataStreamResponse();
-  }),
+export const action = ReactRouterEx.routeEffect(
+  ({ request }: Route.ActionArgs) =>
+    Effect.gen(function* () {
+      const { messages } = yield* Effect.tryPromise(
+        () => request.json() as Promise<{ messages: any[] }>,
+      );
+      const workersai = createWorkersAI({
+        binding: (yield* ReactRouterEx.AppLoadContext).cloudflare.env.AI,
+      });
+      const result = streamText({
+        model: workersai("@cf/meta/llama-3.1-8b-instruct"),
+        messages,
+      });
+      return result.toDataStreamResponse();
+    }),
 );
 
-// export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
+// export const action = ReactRouterEx.routeEffect(({ request }: Route.ActionArgs) =>
 //   Effect.gen(function* () {
-//     const env = (yield* ReactRouter.AppLoadContext).cloudflare.env;
+//     const env = (yield* ReactRouterEx.AppLoadContext).cloudflare.env;
 //     const { messages } = yield* Effect.tryPromise(
 //       () => request.json() as Promise<{ messages: any[] }>,
 //     );

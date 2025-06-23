@@ -16,7 +16,7 @@ import type { SessionData } from "./lib/Domain";
 import { createWorkersKVSessionStorage } from "@react-router/cloudflare";
 import { D1 } from "@workspace/shared";
 import { Effect } from "effect";
-import * as ReactRouter from "~/lib/ReactRouter";
+import * as ReactRouterEx from "~/lib/ReactRouterEx";
 
 declare module "react-aria-components" {
   interface RouterConfig {
@@ -25,9 +25,9 @@ declare module "react-aria-components" {
 }
 
 export const sessionMiddleware: Route.unstable_MiddlewareFunction =
-  ReactRouter.middlewareEffect(({ request, context }, next) =>
+  ReactRouterEx.middlewareEffect(({ request, context }, next) =>
     Effect.gen(function* () {
-      const appLoadContext = context.get(ReactRouter.appLoadContext);
+      const appLoadContext = context.get(ReactRouterEx.appLoadContext);
       const { getSession, commitSession, destroySession } =
         createWorkersKVSessionStorage<SessionData>({
           cookie: {
@@ -48,7 +48,7 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
         try: () => getSession(request.headers.get("Cookie")),
         catch: (unknown) => new Error(`Failed to get session: ${unknown}`),
       });
-      context.set(ReactRouter.appLoadContext, {
+      context.set(ReactRouterEx.appLoadContext, {
         ...appLoadContext,
         session,
         sessionAction: "commit",
@@ -69,7 +69,7 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
                 `sessionMiddleware: downstream middleware/handler failed: ${unknown}`,
               ),
       });
-      const nextAppLoadContext = context.get(ReactRouter.appLoadContext);
+      const nextAppLoadContext = context.get(ReactRouterEx.appLoadContext);
 
       if (nextAppLoadContext.sessionAction === "destroy") {
         response.headers.set(

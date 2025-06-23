@@ -1,9 +1,10 @@
-import type { SessionUser } from '~/lib/Domain'
-import type { Route } from './+types/app.layout'
-import { Effect } from 'effect'
-import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from 'lucide-react'
-import * as Rac from 'react-aria-components'
-import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/ui/avatar'
+import type { SessionUser } from "~/lib/Domain";
+import type { Route } from "./+types/app.layout";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@workspace/ui/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,33 +12,47 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@workspace/ui/components/ui/dropdown-menu'
+  DropdownMenuTrigger,
+} from "@workspace/ui/components/ui/dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
-  useSidebar
-} from '@workspace/ui/components/ui/sidebar'
-import * as ReactRouter from '~/lib/ReactRouter'
-import { Outlet } from 'react-router'
+  useSidebar,
+} from "@workspace/ui/components/ui/sidebar";
+import { Effect } from "effect";
+import {
+  BadgeCheck,
+  Bell,
+  ChevronsUpDown,
+  CreditCard,
+  LogOut,
+  Sparkles,
+} from "lucide-react";
+import * as Rac from "react-aria-components";
+import { Outlet } from "react-router";
+import * as ReactRouterEx from "~/lib/ReactRouterEx";
 
-export const loader = ReactRouter.routeEffect(({ context }: Route.LoaderArgs) =>
-  Effect.gen(function* () {
-    const sessionUser = yield* Effect.fromNullable(context.get(ReactRouter.appLoadContext).session.get('sessionUser'))
-    return { sessionUser }
-  })
-)
+export const loader = ReactRouterEx.routeEffect(
+  ({ context }: Route.LoaderArgs) =>
+    Effect.gen(function* () {
+      const sessionUser = yield* Effect.fromNullable(
+        context.get(ReactRouterEx.appLoadContext).session.get("sessionUser"),
+      );
+      return { sessionUser };
+    }),
+);
 
-export default function RouteComponent({ loaderData: { sessionUser } }: Route.ComponentProps) {
+export default function RouteComponent({
+  loaderData: { sessionUser },
+}: Route.ComponentProps) {
   return (
     <div className="">
       <SidebarProvider>
@@ -50,16 +65,16 @@ export default function RouteComponent({ loaderData: { sessionUser } }: Route.Co
         </main>
       </SidebarProvider>
     </div>
-  )
+  );
 }
 
 export function AppSidebar({ sessionUser }: { sessionUser: SessionUser }) {
   const items = [
     {
-      title: 'SaaS',
-      url: '/'
-    }
-  ]
+      title: "SaaS",
+      url: "/",
+    },
+  ];
   return (
     <Sidebar>
       <SidebarContent>
@@ -83,33 +98,36 @@ export function AppSidebar({ sessionUser }: { sessionUser: SessionUser }) {
       <SidebarFooter>
         <NavUser
           user={{
-            name: 'shadcn',
+            name: "shadcn",
             email: sessionUser.email,
-            avatar: '/avatars/shadcn.jpg'
+            avatar: "/avatars/shadcn.jpg",
           }}
         />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
 
 export function NavUser({
-  user
+  user,
 }: {
   user: {
-    name: string
-    email: string
-    avatar: string
-  }
+    name: string;
+    email: string;
+    avatar: string;
+  };
 }) {
-  const { isMobile } = useSidebar()
+  const { isMobile } = useSidebar();
 
   return (
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+            <SidebarMenuButton
+              size="lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={user.avatar} alt={user.name} />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
@@ -123,7 +141,7 @@ export function NavUser({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? 'bottom' : 'right'}
+            side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
           >
@@ -170,5 +188,5 @@ export function NavUser({
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

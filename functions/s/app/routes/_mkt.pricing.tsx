@@ -4,14 +4,14 @@ import { Effect, Schema } from 'effect'
 import { redirect } from 'react-router'
 import { Button } from '@workspace/ui/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@workspace/ui/components/ui/card' // Import Card components
-import * as ReactRouter from '~/lib/ReactRouter'
+import * as ReactRouterEx from '~/lib/ReactRouterEx'
 import { Stripe } from '~/lib/Stripe'
 
-export const loader = ReactRouter.routeEffect(() => Stripe.getPrices().pipe(Effect.map((prices) => ({ prices }))))
+export const loader = ReactRouterEx.routeEffect(() => Stripe.getPrices().pipe(Effect.map((prices) => ({ prices }))))
 
-export const action = ReactRouter.routeEffect(({ request, context }: Route.ActionArgs) =>
+export const action = ReactRouterEx.routeEffect(({ request, context }: Route.ActionArgs) =>
   Effect.gen(function* () {
-    const sessionUser = context.get(ReactRouter.appLoadContext).session.get('sessionUser')
+    const sessionUser = context.get(ReactRouterEx.appLoadContext).session.get('sessionUser')
     if (!sessionUser) {
       return redirect('/authenticate')
     }

@@ -7,13 +7,13 @@ import {
 } from "@workspace/ui/components/ui/sidebar";
 import { Effect } from "effect";
 import { Outlet, redirect } from "react-router";
-import * as ReactRouter from "~/lib/ReactRouter";
+import * as ReactRouterEx from "~/lib/ReactRouterEx";
 
 export const adminMiddleware: Route.unstable_MiddlewareFunction =
-  ReactRouter.middlewareEffect(({ context }) =>
+  ReactRouterEx.middlewareEffect(({ context }) =>
     Effect.gen(function* () {
       const sessionUser = context
-        .get(ReactRouter.appLoadContext)
+        .get(ReactRouterEx.appLoadContext)
         .session.get("sessionUser");
       if (!sessionUser) {
         return yield* Effect.fail(redirect("/authenticate"));

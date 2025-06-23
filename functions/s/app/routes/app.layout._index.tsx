@@ -13,53 +13,57 @@ import * as Rac from "react-aria-components";
 import { redirect, useSubmit } from "react-router";
 import { AccountMemberIdFromString } from "~/lib/Domain";
 import { IdentityMgr } from "~/lib/IdentityMgr";
-import * as ReactRouter from "~/lib/ReactRouter";
+import * as ReactRouterEx from "~/lib/ReactRouterEx";
 
-export const loader = ReactRouter.routeEffect(({ context }: Route.LoaderArgs) =>
-  Effect.gen(function* () {
-    const sessionUser = yield* Effect.fromNullable(
-      context.get(ReactRouter.appLoadContext).session.get("sessionUser"),
-    );
-    return {
-      invitations: yield* IdentityMgr.getInvitations(sessionUser),
-      accounts: yield* IdentityMgr.getAccounts(sessionUser),
-    };
-  }),
+export const loader = ReactRouterEx.routeEffect(
+  ({ context }: Route.LoaderArgs) =>
+    Effect.gen(function* () {
+      const sessionUser = yield* Effect.fromNullable(
+        context.get(ReactRouterEx.appLoadContext).session.get("sessionUser"),
+      );
+      return {
+        invitations: yield* IdentityMgr.getInvitations(sessionUser),
+        accounts: yield* IdentityMgr.getAccounts(sessionUser),
+      };
+    }),
 );
 
-export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
-  Effect.gen(function* () {
-    const userId = yield* ReactRouter.AppLoadContext.pipe(
-      Effect.flatMap((appLoadContext) =>
-        Effect.fromNullable(appLoadContext.session.get("sessionUser")?.userId),
-      ),
-    );
-    const FormDataSchema = Schema.Struct({
-      intent: Schema.Literal("accept", "decline"),
-      accountMemberId: AccountMemberIdFromString,
-    });
-    const formData = yield* SchemaEx.decodeRequestFormData({
-      request,
-      schema: FormDataSchema,
-    });
-    switch (formData.intent) {
-      case "accept":
-        yield* IdentityMgr.acceptInvitation({
-          accountMemberId: formData.accountMemberId,
-          userId,
-        });
-        break;
-      case "decline":
-        yield* IdentityMgr.declineInvitation({
-          accountMemberId: formData.accountMemberId,
-          userId,
-        });
-        break;
-      default:
-        return yield* Effect.fail(new Error("Invalid intent"));
-    }
-    return redirect("/app");
-  }),
+export const action = ReactRouterEx.routeEffect(
+  ({ request }: Route.ActionArgs) =>
+    Effect.gen(function* () {
+      const userId = yield* ReactRouterEx.AppLoadContext.pipe(
+        Effect.flatMap((appLoadContext) =>
+          Effect.fromNullable(
+            appLoadContext.session.get("sessionUser")?.userId,
+          ),
+        ),
+      );
+      const FormDataSchema = Schema.Struct({
+        intent: Schema.Literal("accept", "decline"),
+        accountMemberId: AccountMemberIdFromString,
+      });
+      const formData = yield* SchemaEx.decodeRequestFormData({
+        request,
+        schema: FormDataSchema,
+      });
+      switch (formData.intent) {
+        case "accept":
+          yield* IdentityMgr.acceptInvitation({
+            accountMemberId: formData.accountMemberId,
+            userId,
+          });
+          break;
+        case "decline":
+          yield* IdentityMgr.declineInvitation({
+            accountMemberId: formData.accountMemberId,
+            userId,
+          });
+          break;
+        default:
+          return yield* Effect.fail(new Error("Invalid intent"));
+      }
+      return redirect("/app");
+    }),
 );
 
 export default function RouteComponent({

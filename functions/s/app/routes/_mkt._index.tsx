@@ -4,11 +4,11 @@ import * as Oui from '@workspace/oui'
 import { Effect } from 'effect'
 import * as Rac from 'react-aria-components'
 import { useRouteLoaderData } from 'react-router'
-import * as ReactRouter from '~/lib/ReactRouter'
+import * as ReactRouterEx from '~/lib/ReactRouterEx'
 
-export const loader = ReactRouter.routeEffect(({ context }: Route.LoaderArgs) =>
+export const loader = ReactRouterEx.routeEffect(({ context }: Route.LoaderArgs) =>
   Effect.gen(function* () {
-    const alc = context.get(ReactRouter.appLoadContext)
+    const alc = context.get(ReactRouterEx.appLoadContext)
     return { message: `ENVIRONMENT: ${alc.cloudflare.env.ENVIRONMENT}` }
   })
 )

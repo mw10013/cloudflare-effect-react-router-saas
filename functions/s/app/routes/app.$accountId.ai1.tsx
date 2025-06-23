@@ -13,9 +13,9 @@ import { generateText, streamText } from "ai";
 import { Config, ConfigError, Effect, Either, Schema } from "effect";
 import * as Rac from "react-aria-components";
 import { useHref } from "react-router";
-import * as ReactRouter from "~/lib/ReactRouter";
+import * as ReactRouterEx from "~/lib/ReactRouterEx";
 
-export const loader = ReactRouter.routeEffect(() =>
+export const loader = ReactRouterEx.routeEffect(() =>
   Effect.gen(function* () {}),
 );
 
