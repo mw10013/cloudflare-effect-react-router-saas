@@ -121,12 +121,16 @@ export default function RouteComponent({
   }>({ isOpen: false, note: "" });
 
   const onAction = (
-    intent: "lock" | "unlock" | "soft_delete" | "undelete",
+    intent: "lock" | "unlock" | "soft_delete" | "undelete" | "edit_note",
     userId: number,
+    note?: string,
   ) => {
     const formData = new FormData();
     formData.append("intent", intent);
     formData.append("userId", String(userId));
+    if (intent === "edit_note" && note !== undefined) {
+      formData.append("note", note);
+    }
     fetcher.submit(formData, { method: "post" });
   };
 
@@ -355,9 +359,12 @@ export default function RouteComponent({
           </Oui.Button>
           <Oui.Button
             slot="close"
-            onPress={() =>
-              setEditNoteState((prev) => ({ ...prev, isOpen: false }))
-            }
+            onPress={() => {
+              if (editNoteState.userId !== undefined) {
+                onAction("edit_note", editNoteState.userId, editNoteState.note);
+              }
+              setEditNoteState((prev) => ({ ...prev, isOpen: false }));
+            }}
           >
             Save
           </Oui.Button>
