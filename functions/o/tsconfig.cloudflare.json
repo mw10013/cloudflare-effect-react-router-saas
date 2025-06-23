@@ -26,6 +26,11 @@
       "@workspace/ui/*": ["../../functions/ui/*"]
     },
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "plugins": [
+      {
+        "name": "@effect/language-service"
+      }
+    ]
   }
 }
