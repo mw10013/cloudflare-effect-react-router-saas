@@ -94,8 +94,7 @@ export const action = ReactRouter.routeEffect(({ request }: Route.ActionArgs) =>
         yield* IdentityMgr.undeleteUser({ userId: formData.userId });
         break;
       default:
-        yield* Effect.fail(new Error("Invalid intent"));
-        break;
+        return yield* Effect.fail(new Error("Invalid intent"));
     }
   }),
 );

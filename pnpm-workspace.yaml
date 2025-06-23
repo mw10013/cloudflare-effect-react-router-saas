@@ -7,6 +7,7 @@ catalog:
   "@aws-sdk/client-sesv2": 3.777.0
   "@cloudflare/vite-plugin": 1.6.0
   "@cloudflare/workers-types": 4.20250614.0
+  "@effect/language-service": 0.21.8
   "@openauthjs/openauth": 0.4.3
   "@paralleldrive/cuid2": 2.2.2
   "@react-router/cloudflare": 7.6.2
