@@ -114,6 +114,11 @@ export default function RouteComponent({
     isOpen: boolean;
     userId?: number;
   }>({ isOpen: false });
+  const [editNoteState, setEditNoteState] = useState<{
+    isOpen: boolean;
+    userId?: number;
+    note: string;
+  }>({ isOpen: false, note: "" });
 
   const onAction = (
     intent: "lock" | "unlock" | "soft_delete" | "undelete",
@@ -232,6 +237,19 @@ export default function RouteComponent({
                       Soft Delete
                     </Oui.MenuItem>
                   )}
+                  <Oui.MenuItem
+                    key="edit_note"
+                    id="edit_note"
+                    onAction={() => {
+                      setEditNoteState({
+                        isOpen: true,
+                        userId: user.userId,
+                        note: user.note ?? "",
+                      });
+                    }}
+                  >
+                    Edit Note
+                  </Oui.MenuItem>
                 </Oui.MenuEx>
               </Oui.Cell>
             </Oui.Row>
@@ -302,6 +320,46 @@ export default function RouteComponent({
             }}
           >
             Continue
+          </Oui.Button>
+        </Oui.DialogFooter>
+      </Oui.DialogEx1>
+
+      <Oui.DialogEx1
+        isOpen={editNoteState.isOpen}
+        onOpenChange={(isOpen) =>
+          setEditNoteState((prev) => ({ ...prev, isOpen }))
+        }
+      >
+        <Oui.DialogHeader>
+          <Oui.Heading slot="title">Edit Note</Oui.Heading>
+        </Oui.DialogHeader>
+        <div>
+          <Oui.Input
+            value={editNoteState.note}
+            onChange={(e) =>
+              setEditNoteState((prev) => ({ ...prev, note: e.target.value }))
+            }
+            placeholder="Enter note..."
+            autoFocus
+          />
+        </div>
+        <Oui.DialogFooter>
+          <Oui.Button
+            variant="outline"
+            slot="close"
+            onPress={() =>
+              setEditNoteState((prev) => ({ ...prev, isOpen: false }))
+            }
+          >
+            Cancel
+          </Oui.Button>
+          <Oui.Button
+            slot="close"
+            onPress={() =>
+              setEditNoteState((prev) => ({ ...prev, isOpen: false }))
+            }
+          >
+            Save
           </Oui.Button>
         </Oui.DialogFooter>
       </Oui.DialogEx1>
