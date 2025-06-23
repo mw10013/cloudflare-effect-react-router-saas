@@ -357,6 +357,20 @@ export default function RouteComponent({
             }
             placeholder="Enter note..."
             autoFocus
+            onFocus={(e) => e.target.select()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                if (editNoteState.userId !== undefined) {
+                  onAction(
+                    "update_note",
+                    editNoteState.userId,
+                    editNoteState.note,
+                  );
+                }
+                setEditNoteState((prev) => ({ ...prev, isOpen: false }));
+              }
+            }}
           />
         </div>
         <Oui.DialogFooter>
