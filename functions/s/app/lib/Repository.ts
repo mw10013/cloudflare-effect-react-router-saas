@@ -349,6 +349,21 @@ where u.userId = ?1 and u.userType = 'customer'`,
           Effect.asVoid,
         ),
 
+      updateUserNote: ({
+        userId,
+        note,
+      }: {
+        userId: User["userId"];
+        note: string;
+      }) =>
+        pipe(
+          d1
+            .prepare(`update User set note = ?1 where userId = ?2`)
+            .bind(note, userId),
+          d1.run,
+          Effect.asVoid,
+        ),
+
       getAccountMemberForAccount: ({
         accountId,
         userId,

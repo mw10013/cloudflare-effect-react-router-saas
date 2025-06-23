@@ -8,95 +8,100 @@ import { UserIdFromString } from "~/lib/Domain";
 import { IdentityMgr } from "~/lib/IdentityMgr";
 import * as ReactRouterEx from "~/lib/ReactRouterEx";
 
-export const loader = ReactRouterEx.routeEffect(({ request }: Route.LoaderArgs) =>
-  Effect.gen(function* () {
-    const url = new URL(request.url);
-    const pageParam = url.searchParams.get("page");
-    const filterParam = url.searchParams.get("filter");
+export const loader = ReactRouterEx.routeEffect(
+  ({ request }: Route.LoaderArgs) =>
+    Effect.gen(function* () {
+      const url = new URL(request.url);
+      const pageParam = url.searchParams.get("page");
+      const filterParam = url.searchParams.get("filter");
 
-    const PageSchema = Schema.Union(Schema.Null, Schema.NumberFromString).pipe(
-      Schema.transform(Schema.Number, {
-        decode: (input) => (input === null ? 1 : input),
-        encode: (output) => (output === 1 ? null : output),
-      }),
-      Schema.filter((n) => n >= 1 && n <= 10, {
-        message: () => "Page must be between 1 and 10",
-      }),
-    );
+      const PageSchema = Schema.Union(
+        Schema.Null,
+        Schema.NumberFromString,
+      ).pipe(
+        Schema.transform(Schema.Number, {
+          decode: (input) => (input === null ? 1 : input),
+          encode: (output) => (output === 1 ? null : output),
+        }),
+        Schema.filter((n) => n >= 1 && n <= 10, {
+          message: () => "Page must be between 1 and 10",
+        }),
+      );
 
-    const FilterSchema = Schema.Union(Schema.Null, Schema.String).pipe(
-      Schema.transform(Schema.String, {
-        decode: (input) => input ?? "",
-        encode: (output) => (output === "" ? null : output),
-      }),
-    );
+      const FilterSchema = Schema.Union(Schema.Null, Schema.String).pipe(
+        Schema.transform(Schema.String, {
+          decode: (input) => input ?? "",
+          encode: (output) => (output === "" ? null : output),
+        }),
+      );
 
-    const page = yield* Schema.decodeUnknown(PageSchema)(pageParam);
-    const filter = yield* Schema.decodeUnknown(FilterSchema)(filterParam);
+      const page = yield* Schema.decodeUnknown(PageSchema)(pageParam);
+      const filter = yield* Schema.decodeUnknown(FilterSchema)(filterParam);
 
-    const pageSize = 5;
-    const paginatedData = yield* IdentityMgr.getUsersPaginated({
-      page,
-      pageSize,
-      filter,
-    });
-    const totalPages = Math.ceil(paginatedData.count / pageSize);
+      const pageSize = 5;
+      const paginatedData = yield* IdentityMgr.getUsersPaginated({
+        page,
+        pageSize,
+        filter,
+      });
+      const totalPages = Math.ceil(paginatedData.count / pageSize);
 
-    if (page > totalPages && totalPages > 0) {
-      return yield* Effect.fail(redirect(`/admin/users`));
-    }
+      if (page > totalPages && totalPages > 0) {
+        return yield* Effect.fail(redirect(`/admin/users`));
+      }
 
-    return {
-      users: paginatedData.users,
-      count: paginatedData.count,
-      page,
-      pageSize,
-      totalPages,
-      filter,
-    };
-  }),
+      return {
+        users: paginatedData.users,
+        count: paginatedData.count,
+        page,
+        pageSize,
+        totalPages,
+        filter,
+      };
+    }),
 );
 
-export const action = ReactRouterEx.routeEffect(({ request }: Route.ActionArgs) =>
-  Effect.gen(function* () {
-    const FormDataSchema = Schema.Struct({
-      intent: Schema.Literal("lock", "unlock", "soft_delete", "undelete"),
-      userId: UserIdFromString,
-    });
-    const formData = yield* SchemaEx.decodeRequestFormData({
-      request,
-      schema: FormDataSchema,
-    });
-    yield* Effect.log({ intent: formData.intent, userId: formData.userId });
-    switch (formData.intent) {
-      case "lock":
-        {
-          const actingStafferId = yield* ReactRouterEx.AppLoadContext.pipe(
-            Effect.flatMap((appLoadContext) =>
-              Effect.fromNullable(
-                appLoadContext.session.get("sessionUser")?.userId,
+export const action = ReactRouterEx.routeEffect(
+  ({ request }: Route.ActionArgs) =>
+    Effect.gen(function* () {
+      const FormDataSchema = Schema.Struct({
+        intent: Schema.Literal("lock", "unlock", "soft_delete", "undelete"),
+        userId: UserIdFromString,
+      });
+      const formData = yield* SchemaEx.decodeRequestFormData({
+        request,
+        schema: FormDataSchema,
+      });
+      yield* Effect.log({ intent: formData.intent, userId: formData.userId });
+      switch (formData.intent) {
+        case "lock":
+          {
+            const actingStafferId = yield* ReactRouterEx.AppLoadContext.pipe(
+              Effect.flatMap((appLoadContext) =>
+                Effect.fromNullable(
+                  appLoadContext.session.get("sessionUser")?.userId,
+                ),
               ),
-            ),
-          );
-          yield* IdentityMgr.lockUser({
-            userId: formData.userId,
-            actingStafferId,
-          });
-        }
-        break;
-      case "unlock":
-        yield* IdentityMgr.unlockUser({ userId: formData.userId });
-        break;
-      case "soft_delete":
-        yield* IdentityMgr.softDeleteUser({ userId: formData.userId });
-        break;
-      case "undelete":
-        yield* IdentityMgr.undeleteUser({ userId: formData.userId });
-        break;
-      default:
-        return yield* Effect.fail(new Error("Invalid intent"));
-    }
-  }),
+            );
+            yield* IdentityMgr.lockUser({
+              userId: formData.userId,
+              actingStafferId,
+            });
+          }
+          break;
+        case "unlock":
+          yield* IdentityMgr.unlockUser({ userId: formData.userId });
+          break;
+        case "soft_delete":
+          yield* IdentityMgr.softDeleteUser({ userId: formData.userId });
+          break;
+        case "undelete":
+          yield* IdentityMgr.undeleteUser({ userId: formData.userId });
+          break;
+        default:
+          return yield* Effect.fail(new Error("Invalid intent"));
+      }
+    }),
 );
 
 export default function RouteComponent({

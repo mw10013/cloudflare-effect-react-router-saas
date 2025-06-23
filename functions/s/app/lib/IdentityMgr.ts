@@ -73,6 +73,14 @@ export class IdentityMgr extends Effect.Service<IdentityMgr>()("IdentityMgr", {
       unlockUser: ({ userId }: Pick<User, "userId">) =>
         repository.unlockUser({ userId }),
 
+      updateUserNote: ({
+        userId,
+        note,
+      }: {
+        userId: User["userId"];
+        note: string;
+      }) => repository.updateUserNote({ userId, note }),
+
       getCustomers: () => repository.getCustomers(),
 
       getAccountForUser: ({ userId }: Pick<User, "userId">) =>
