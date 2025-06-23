@@ -64,16 +64,28 @@ export const loader = ReactRouterEx.routeEffect(
 export const action = ReactRouterEx.routeEffect(
   ({ request }: Route.ActionArgs) =>
     Effect.gen(function* () {
-      const FormDataSchema = Schema.Struct({
-        intent: Schema.Literal("lock", "unlock", "soft_delete", "undelete"),
-        userId: UserIdFromString,
-      });
+      const FormDataSchema = Schema.Union(
+        Schema.Struct({
+          intent: Schema.Literal("lock", "unlock", "soft_delete", "undelete"),
+          userId: UserIdFromString,
+        }),
+        Schema.Struct({
+          intent: Schema.Literal("update_note"),
+          userId: UserIdFromString,
+          note: Schema.String,
+        }),
+      );
       const formData = yield* SchemaEx.decodeRequestFormData({
         request,
         schema: FormDataSchema,
       });
-      yield* Effect.log({ intent: formData.intent, userId: formData.userId });
       switch (formData.intent) {
+        case "update_note":
+          yield* IdentityMgr.updateUserNote({
+            userId: formData.userId,
+            note: formData.note,
+          });
+          break;
         case "lock":
           {
             const actingStafferId = yield* ReactRouterEx.AppLoadContext.pipe(
@@ -121,14 +133,14 @@ export default function RouteComponent({
   }>({ isOpen: false, note: "" });
 
   const onAction = (
-    intent: "lock" | "unlock" | "soft_delete" | "undelete" | "edit_note",
+    intent: "lock" | "unlock" | "soft_delete" | "undelete" | "update_note",
     userId: number,
     note?: string,
   ) => {
     const formData = new FormData();
     formData.append("intent", intent);
     formData.append("userId", String(userId));
-    if (intent === "edit_note" && note !== undefined) {
+    if (intent === "update_note" && note !== undefined) {
       formData.append("note", note);
     }
     fetcher.submit(formData, { method: "post" });
@@ -205,6 +217,19 @@ export default function RouteComponent({
                     </Oui.Button>
                   }
                 >
+                  <Oui.MenuItem
+                    key="edit_note"
+                    id="edit_note"
+                    onAction={() => {
+                      setEditNoteState({
+                        isOpen: true,
+                        userId: user.userId,
+                        note: user.note,
+                      });
+                    }}
+                  >
+                    Edit Note
+                  </Oui.MenuItem>
                   {user.lockedAt ? (
                     <Oui.MenuItem
                       key="unlock"
@@ -241,19 +266,6 @@ export default function RouteComponent({
                       Soft Delete
                     </Oui.MenuItem>
                   )}
-                  <Oui.MenuItem
-                    key="edit_note"
-                    id="edit_note"
-                    onAction={() => {
-                      setEditNoteState({
-                        isOpen: true,
-                        userId: user.userId,
-                        note: user.note ?? "",
-                      });
-                    }}
-                  >
-                    Edit Note
-                  </Oui.MenuItem>
                 </Oui.MenuEx>
               </Oui.Cell>
             </Oui.Row>
@@ -361,7 +373,11 @@ export default function RouteComponent({
             slot="close"
             onPress={() => {
               if (editNoteState.userId !== undefined) {
-                onAction("edit_note", editNoteState.userId, editNoteState.note);
+                onAction(
+                  "update_note",
+                  editNoteState.userId,
+                  editNoteState.note,
+                );
               }
               setEditNoteState((prev) => ({ ...prev, isOpen: false }));
             }}
