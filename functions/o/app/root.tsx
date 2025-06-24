@@ -48,7 +48,7 @@ function useHrefEx(href: string) {
   return resolvedHref;
 }
 
-export const queue = new Rac.UNSTABLE_ToastQueue<Oui.ToastContentEx>();
+export const toastQueue = new Rac.UNSTABLE_ToastQueue<Oui.ToastContentEx>();
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
@@ -62,7 +62,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <Toaster />
-        <Oui.ToastRegionEx queue={queue} />
+        <Oui.ToastRegionEx queue={toastQueue} />
         <Rac.RouterProvider navigate={navigate} useHref={useHrefEx}>
           {children}
           <ScrollRestoration />

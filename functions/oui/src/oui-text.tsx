@@ -8,6 +8,7 @@ export const textStyles = tv({
   variants: {
     slot: {
       label: "text-sm",
+      title: "text-sm",
       description: "text-muted-foreground text-sm",
     },
   },
