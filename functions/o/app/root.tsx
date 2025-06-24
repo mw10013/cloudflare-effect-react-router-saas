@@ -1,6 +1,7 @@
 import type { NavigateOptions } from "react-router";
 import type { Route } from "./+types/root";
-import { RouterProvider } from "react-aria-components";
+import * as Oui from "@workspace/oui";
+import * as Rac from "react-aria-components";
 import {
   isRouteErrorResponse,
   Links,
@@ -47,6 +48,8 @@ function useHrefEx(href: string) {
   return resolvedHref;
 }
 
+export const queue = new Rac.UNSTABLE_ToastQueue<Oui.ToastContentEx>();
+
 export function Layout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   return (
@@ -59,11 +62,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <Toaster />
-        <RouterProvider navigate={navigate} useHref={useHrefEx}>
+        <Oui.ToastRegionEx queue={queue} />
+        <Rac.RouterProvider navigate={navigate} useHref={useHrefEx}>
           {children}
           <ScrollRestoration />
           <Scripts />
-        </RouterProvider>
+        </Rac.RouterProvider>
       </body>
     </html>
   );

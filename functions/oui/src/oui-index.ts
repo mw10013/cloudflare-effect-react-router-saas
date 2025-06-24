@@ -27,6 +27,7 @@ export * from "./oui-sidebar";
 export * from "./oui-slider";
 export * from "./oui-switch";
 export * from "./oui-table";
+export * from "./oui-toast";
 export * from "./oui-text";
 export * from "./oui-text-area";
 export * from "./oui-text-field";
