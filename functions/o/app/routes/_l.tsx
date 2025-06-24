@@ -52,6 +52,10 @@ const items: Oui.SidebarTreeNodeEx[] = [
     href: "/demo/link",
   },
   {
+    id: "List Box",
+    href: "/demo/list-box",
+  },
+  {
     id: "Menu",
     href: "/demo/menu",
   },
@@ -62,10 +66,6 @@ const items: Oui.SidebarTreeNodeEx[] = [
   {
     id: "Number Field",
     href: "/demo/number-field",
-  },
-  {
-    id: "Pagination",
-    href: "/demo/pagination",
   },
   {
     id: "Popover",
