@@ -56,47 +56,53 @@ export function Dialog({
 /**
  * Derived from shadcn DialogHeader
  */
-export const DialogHeader = ({
+export function DialogHeader({
   className,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    {...props}
-    className={twMerge(
-      "flex flex-col gap-2 text-center sm:text-left",
-      className,
-    )}
-  />
-);
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      {...props}
+      className={twMerge(
+        "flex flex-col gap-2 text-center sm:text-left",
+        className,
+      )}
+    />
+  );
+}
 
 /**
  * Derived from shadcn DialogFooter
  */
-export const DialogFooter = ({
+export function DialogFooter({
   className,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    {...props}
-    className={twMerge(
-      "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
-      className,
-    )}
-  />
-);
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      {...props}
+      className={twMerge(
+        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+        className,
+      )}
+    />
+  );
+}
 
 /**
  * Derived from shadcn DialogDescription
  */
-export const DialogDescription = ({
+export function DialogDescription({
   className,
   ...props
-}: React.HTMLAttributes<HTMLParagraphElement>) => (
-  <p
-    {...props}
-    className={twMerge("text-muted-foreground text-sm", className)}
-  />
-);
+}: React.HTMLAttributes<HTMLParagraphElement>) {
+  return (
+    <p
+      {...props}
+      className={twMerge("text-muted-foreground text-sm", className)}
+    />
+  );
+}
 
 export interface DialogExProps extends DialogProps {
   triggerElement: string | ReactElement;

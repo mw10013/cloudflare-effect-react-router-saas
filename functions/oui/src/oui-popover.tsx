@@ -53,28 +53,26 @@ function isPopoverStylesPlacementKey(
   );
 }
 
-export const Popover = ({
-  className,
-  offset = 4,
-  ...props
-}: Rac.PopoverProps) => (
-  <Rac.Popover
-    offset={offset}
-    className={Rac.composeRenderProps(
-      className,
-      (className, { trigger, placement, ...renderProps }) =>
-        popoverStyles({
-          ...renderProps,
-          trigger: isPopoverStylesTriggerKey(trigger) ? trigger : undefined,
-          placement: isPopoverStylesPlacementKey(placement)
-            ? placement
-            : undefined,
-          className,
-        }),
-    )}
-    {...props}
-  />
-);
+export function Popover({ className, offset = 4, ...props }: Rac.PopoverProps) {
+  return (
+    <Rac.Popover
+      offset={offset}
+      className={Rac.composeRenderProps(
+        className,
+        (className, { trigger, placement, ...renderProps }) =>
+          popoverStyles({
+            ...renderProps,
+            trigger: isPopoverStylesTriggerKey(trigger) ? trigger : undefined,
+            placement: isPopoverStylesPlacementKey(placement)
+              ? placement
+              : undefined,
+            className,
+          }),
+      )}
+      {...props}
+    />
+  );
+}
 
 export interface PopoverExProps extends Omit<Rac.PopoverProps, "children"> {
   triggerElement: string | React.ReactElement;

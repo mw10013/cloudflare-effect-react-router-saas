@@ -10,48 +10,50 @@ import { buttonStyles } from "./oui-button";
 /** Styles derived from shadcn SelectItem.
  * https://github.com/adobe/react-spectrum/issues/7601
  */
-export const ListBoxItem = <T extends object>({
+export function ListBoxItem<T extends object>({
   className,
   children,
   ...props
-}: Rac.ListBoxItemProps<T>) => (
-  <Rac.ListBoxItem
-    {...props}
-    textValue={
-      props.textValue || (typeof children === "string" ? children : undefined)
-    }
-    className={composeTailwindRenderProps(className, [
-      focusVisibleStyles,
-      disabledStyles,
-      "relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none",
-      "[&_svg:not([class*='text-'])]:text-muted-foreground [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-      "data-[focused]:bg-accent data-[focused]:text-accent-foreground",
-      "data-[hovered]:bg-accent data-[hovered]:text-accent-foreground",
-    ])}
-  >
-    {Rac.composeRenderProps(
-      children,
-      (
+}: Rac.ListBoxItemProps<T>) {
+  return (
+    <Rac.ListBoxItem
+      {...props}
+      textValue={
+        props.textValue || (typeof children === "string" ? children : undefined)
+      }
+      className={composeTailwindRenderProps(className, [
+        focusVisibleStyles,
+        disabledStyles,
+        "relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none",
+        "[&_svg:not([class*='text-'])]:text-muted-foreground [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "data-[focused]:bg-accent data-[focused]:text-accent-foreground",
+        "data-[hovered]:bg-accent data-[hovered]:text-accent-foreground",
+      ])}
+    >
+      {Rac.composeRenderProps(
         children,
-        renderProps: Parameters<
-          Extract<
-            React.ComponentProps<typeof Rac.ListBoxItem>["children"],
-            (...args: any) => any
-          >
-        >[0],
-      ) => (
-        <>
-          {renderProps.isSelected && (
-            <span className="absolute right-2 flex size-3.5 items-center justify-center">
-              <Check className="size-4" />
-            </span>
-          )}
-          {children}
-        </>
-      ),
-    )}
-  </Rac.ListBoxItem>
-);
+        (
+          children,
+          renderProps: Parameters<
+            Extract<
+              React.ComponentProps<typeof Rac.ListBoxItem>["children"],
+              (...args: any) => any
+            >
+          >[0],
+        ) => (
+          <>
+            {renderProps.isSelected && (
+              <span className="absolute right-2 flex size-3.5 items-center justify-center">
+                <Check className="size-4" />
+              </span>
+            )}
+            {children}
+          </>
+        ),
+      )}
+    </Rac.ListBoxItem>
+  );
+}
 
 /** Styles derived from shadcn CommandItem, adapted for a multi-line layout. */
 // export const listBoxItemExStyles = tv({
@@ -106,38 +108,42 @@ export const ListBoxItem = <T extends object>({
  *    <ListBoxItemEx1 id="next">Next</ListBoxItemEx1>
  *  </ListBoxEx1>
  */
-export const ListBoxEx1 = <T extends object>({
+export function ListBoxEx1<T extends object>({
   className,
   ...props
-}: Rac.ListBoxProps<T>) => (
-  <nav aria-label="pagination" className="mx-auto flex w-full justify-center">
-    <Rac.ListBox
-      orientation="horizontal"
-      selectionMode="single"
-      className={composeTailwindRenderProps(
-        className,
-        "flex flex-row items-center gap-1",
-      )}
-      {...props}
-    />
-  </nav>
-);
+}: Rac.ListBoxProps<T>) {
+  return (
+    <nav aria-label="pagination" className="mx-auto flex w-full justify-center">
+      <Rac.ListBox
+        orientation="horizontal"
+        selectionMode="single"
+        className={composeTailwindRenderProps(
+          className,
+          "flex flex-row items-center gap-1",
+        )}
+        {...props}
+      />
+    </nav>
+  );
+}
 
 /**
  * Pagination item styled as a button. Selected items use outline variant, others use ghost.
  */
-export const ListBoxItemEx1 = <T extends object>({
+export function ListBoxItemEx1<T extends object>({
   className,
   ...props
-}: Rac.ListBoxItemProps<T>) => (
-  <Rac.ListBoxItem
-    className={Rac.composeRenderProps(className, (className, renderProps) =>
-      buttonStyles({
-        ...renderProps,
-        variant: renderProps.isSelected ? "outline" : "ghost",
-        className,
-      }),
-    )}
-    {...props}
-  />
-);
+}: Rac.ListBoxItemProps<T>) {
+  return (
+    <Rac.ListBoxItem
+      className={Rac.composeRenderProps(className, (className, renderProps) =>
+        buttonStyles({
+          ...renderProps,
+          variant: renderProps.isSelected ? "outline" : "ghost",
+          className,
+        }),
+      )}
+      {...props}
+    />
+  );
+}
