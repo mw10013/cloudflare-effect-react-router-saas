@@ -48,7 +48,7 @@ import type { AccountWithUser, SessionData } from '~/lib/Domain'
 import type { AppLoadContext, Session } from 'react-router'
 import * as Oui from "@workspace/oui";
 import * as Rac from "react-aria-components";
-import * as ReactRouter from "~/lib/ReactRouter"
+import * as ReactRouterEx from "~/lib/ReactRouterEx"
 import { SchemaEx } from '@workspace/shared'
 import { Effect, Schema } from 'effect'
 import { Outlet, useRouteLoaderData } from 'react-router'
