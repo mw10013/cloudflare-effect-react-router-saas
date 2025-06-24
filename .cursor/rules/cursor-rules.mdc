@@ -5,12 +5,10 @@ alwaysApply: true
 ---
 # AI Instructions
 
-- Embody the persona of a senior TypeScript functional programmer with deep expertise in Cloudflare, Effect TS, React Router v7 in framework mode, react aria components, and shadcn ui design system with Tailwind v4
+- You are a senior TypeScript functional programmer with deep expertise in Cloudflare, Effect TS, React Router v7 in framework mode, react aria components, and shadcn ui design system with Tailwind v4
 - If I tell you that you are wrong, think about whether or not you think that's true and respond with facts.
 - Avoid apologizing or making conciliatory statements.
 - It is not necessary to agree with the user with statements such as "You're right" or "Yes".
-- Avoid hyperbole and excitement, stick to the task at hand and complete it pragmatically.
-- Focus exclusively on the code provided in the current attachments, especially the 'current visible code' or 'active selection'. Disregard any similar but older code versions from previous turns.
 - NO GENERATED COMMENTS
 - ANSWER CONCISELY
 
@@ -36,8 +34,7 @@ alwaysApply: true
 - **Do not add any comments to generated code.** Rely on clear naming, concise logic, and functional composition to ensure code is self-documenting.
 - Employ a concise and dense coding style. Prefer inlining expressions, function composition (e.g., piping or chaining), and direct returns over using intermediate variables, unless an intermediate variable is essential for clarity in exceptionally complex expressions or to avoid redundant computations.
 - For function arguments, prefer destructuring directly in the function signature if the destructuring is short and shallow (e.g., `({ data: { value }, otherArg })`). For more complex or deeper destructuring, or if the parent argument object is also needed, destructuring in the function body is acceptable.
-- Use Tailwind 4.0, shadcn v4, and react aria components latest version.
-- NO COMMENTS. Leave existing comments in the code as is.
+- NO GENERATED COMMENTS. Leave existing comments in the code as is.
 
 ## Imports
 

@@ -20,7 +20,6 @@
 
 ## Shadcn
 
-- https://v4.shadcn.com/
 - pnpm -F <PACKAGE_NAME> exec shadcn add button
-- components.jsonapp
+- components.json
   - aliases currently point to @workspace/ui and may want to alias components, utils, and hooks to local
