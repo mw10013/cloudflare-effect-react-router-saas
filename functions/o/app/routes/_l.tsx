@@ -99,10 +99,10 @@ const items: Oui.SidebarTreeNodeEx[] = [
     id: "Sidebar1",
     href: "/demo/sidebar1",
   },
-  // {
-  //   id: "Slider",
-  //   href: "/demo/slider",
-  // },
+  {
+    id: "Slider",
+    href: "/demo/slider",
+  },
   {
     id: "Switch",
     href: "/demo/switch",
