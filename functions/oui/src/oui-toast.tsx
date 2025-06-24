@@ -11,10 +11,16 @@ export function ToastRegionEx<T extends ToastContentEx>(
   props: Omit<Rac.ToastRegionProps<T>, "children">,
 ) {
   return (
-    <Rac.UNSTABLE_ToastRegion {...props}>
+    <Rac.UNSTABLE_ToastRegion
+      className="data-[focus-visible]:outline-ring fixed bottom-4 right-4 flex flex-col-reverse gap-2 rounded-lg outline-none data-[focus-visible]:outline-2 data-[focus-visible]:outline-offset-2"
+      {...props}
+    >
       {({ toast }) => (
-        <Rac.UNSTABLE_Toast toast={toast}>
-          <Rac.UNSTABLE_ToastContent>
+        <Rac.UNSTABLE_Toast
+          toast={toast}
+          className="bg-popover text-popover-foreground border-border data-[focus-visible]:outline-ring flex items-center gap-4 rounded-lg border p-3 outline-none data-[focus-visible]:outline-2 data-[focus-visible]:outline-offset-2"
+        >
+          <Rac.UNSTABLE_ToastContent className="flex min-w-0 flex-1 flex-col [&_[slot=title]]:font-bold">
             <Text slot="title">{toast.content.title}</Text>
             <Text slot="description">{toast.content.description}</Text>
           </Rac.UNSTABLE_ToastContent>
