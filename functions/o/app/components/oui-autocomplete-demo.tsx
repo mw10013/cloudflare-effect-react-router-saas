@@ -4,6 +4,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@workspace/ui/components/ui/avatar";
+import * as Rac from "react-aria-components";
 
 export function OuiAutocompleteDemo() {
   return (
@@ -35,7 +36,7 @@ function UserCombobox() {
         placeholder="Select user..."
         searchFieldProps={{ "aria-label": "User", autoFocus: true }}
       >
-        <Oui.ListBox items={users}>
+        <Rac.ListBox items={users}>
           {(item) => (
             <Oui.ListBoxItem id={item.id} textValue={item.username}>
               <div className="flex items-center gap-2">
@@ -52,7 +53,7 @@ function UserCombobox() {
               </div>
             </Oui.ListBoxItem>
           )}
-        </Oui.ListBox>
+        </Rac.ListBox>
       </Oui.AutocompleteEx>
     </Oui.SelectEx1>
   );
@@ -86,9 +87,9 @@ function SearchableSelectDemo() {
         placeholder="Search languages"
         searchFieldProps={{ "aria-label": "Languages", autoFocus: true }}
       >
-        <Oui.ListBox items={languages}>
+        <Rac.ListBox items={languages}>
           {(item) => <Oui.ListBoxItem>{item.name}</Oui.ListBoxItem>}
-        </Oui.ListBox>
+        </Rac.ListBox>
       </Oui.AutocompleteEx>
     </Oui.SelectEx1>
   );
