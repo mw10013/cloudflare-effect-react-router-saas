@@ -18,9 +18,9 @@ export function ToastRegionEx<T extends ToastContentEx>(
       {({ toast }) => (
         <Rac.UNSTABLE_Toast
           toast={toast}
-          className="bg-popover text-popover-foreground border-border data-[focus-visible]:outline-ring flex items-center gap-4 rounded-lg border p-3 outline-none data-[focus-visible]:outline-2 data-[focus-visible]:outline-offset-2"
+          className="bg-popover text-popover-foreground border-border data-[focus-visible]:outline-ring flex items-center gap-4 rounded-lg border p-3 text-sm outline-none data-[focus-visible]:outline-2 data-[focus-visible]:outline-offset-2"
         >
-          <Rac.UNSTABLE_ToastContent className="flex min-w-0 flex-1 flex-col [&_[slot=title]]:font-bold">
+          <Rac.UNSTABLE_ToastContent className="flex min-w-0 flex-1 flex-col [&_[slot=title]]:font-medium">
             <Text slot="title">{toast.content.title}</Text>
             <Text slot="description">{toast.content.description}</Text>
           </Rac.UNSTABLE_ToastContent>
