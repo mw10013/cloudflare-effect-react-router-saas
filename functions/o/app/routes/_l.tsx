@@ -92,10 +92,6 @@ const items: Oui.SidebarTreeNodeEx[] = [
     href: "/demo/separator",
   },
   {
-    id: "Sheet",
-    href: "/demo/sheet",
-  },
-  {
     id: "Sidebar",
     href: "/demo/sidebar",
   },
