@@ -8,7 +8,7 @@ import {
 import { baseLabelStyles } from "./oui-label";
 import { Text } from "./oui-text";
 
-export const Switch = ({ className, ...props }: Rac.SwitchProps) => {
+export function Switch({ className, ...props }: Rac.SwitchProps) {
   return (
     <Rac.Switch
       {...props}
@@ -18,7 +18,7 @@ export const Switch = ({ className, ...props }: Rac.SwitchProps) => {
       ])}
     />
   );
-};
+}
 
 /**
  * Derived from shadcn SwitchPrimitive.Root and SwitchPrimitive.Thumb
@@ -49,7 +49,7 @@ export interface SwitchExProps extends Rac.SwitchProps {
   containerClassName?: string;
 }
 
-export const SwitchEx = ({
+export function SwitchEx({
   indicatorPosition = "start",
   className,
   indicatorClassName,
@@ -58,7 +58,7 @@ export const SwitchEx = ({
   children,
   containerClassName,
   ...props
-}: SwitchExProps) => {
+}: SwitchExProps) {
   const descriptionId = description ? React.useId() : undefined;
   return (
     // Derived fromshadcn FormDemo div
@@ -98,4 +98,4 @@ export const SwitchEx = ({
       )}
     </div>
   );
-};
+}

@@ -32,12 +32,12 @@ export interface RadioProps extends Rac.RadioProps {
  * Derived from shadcn FormDemo FormItem and RadioGroupItem
  * Radix has RadioGroupPrimitive.Item which is separate from label while RAC structures with a label.
  */
-export const Radio = ({
+export function Radio({
   className,
   children,
   radioGroupItemClassName,
   ...props
-}: RadioProps) => {
+}: RadioProps) {
   return (
     <Rac.Radio
       className={composeTailwindRenderProps(className, [
@@ -72,7 +72,7 @@ export const Radio = ({
       )}
     </Rac.Radio>
   );
-};
+}
 
 export interface RadioGroupExProps extends Rac.RadioGroupProps {
   label?: React.ReactNode;

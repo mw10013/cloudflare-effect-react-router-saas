@@ -71,14 +71,14 @@ export interface CheckboxExProps extends Omit<Rac.CheckboxProps, "children"> {
 }
 
 // TODO: CheckboxEx: height discrepency with FormDemo
-export const CheckboxEx = ({
+export function CheckboxEx({
   children,
   descriptionClassName,
   description,
   containerClassName,
   indicatorClassName,
   ...props
-}: CheckboxExProps) => {
+}: CheckboxExProps) {
   const descriptionId = React.useId();
   return (
     <div className={twMerge("flex flex-col gap-1", containerClassName)}>
@@ -101,4 +101,4 @@ export const CheckboxEx = ({
       </div>
     </div>
   );
-};
+}

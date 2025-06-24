@@ -9,30 +9,31 @@ export const sliderStyles = tv({
 });
 
 // TODO: Slider: vertical, multiple
-export const Slider = ({ className, ...props }: Rac.SliderProps) => (
-  <Rac.Slider
-    {...props}
-    className={Rac.composeRenderProps(className, (className, renderProps) =>
-      sliderStyles({ ...renderProps, className }),
-    )}
-  ></Rac.Slider>
-);
+export function Slider({ className, ...props }: Rac.SliderProps) {
+  return (
+    <Rac.Slider
+      {...props}
+      className={Rac.composeRenderProps(className, (className, renderProps) =>
+        sliderStyles({ ...renderProps, className }),
+      )}
+    ></Rac.Slider>
+  );
+}
 
 export const sliderOutputStyles = tv({
   base: "text-sm font-medium tabular-nums",
 });
 
-export const SliderOutput = ({
-  className,
-  ...props
-}: Rac.SliderOutputProps) => (
-  <Rac.SliderOutput
-    {...props}
-    className={Rac.composeRenderProps(className, (className, renderProps) =>
-      sliderOutputStyles({ ...renderProps, className }),
-    )}
-  ></Rac.SliderOutput>
-);
+export function SliderOutput({ className, ...props }: Rac.SliderOutputProps) {
+  return (
+    <Rac.SliderOutput
+      {...props}
+      className={Rac.composeRenderProps(className, (className, renderProps) =>
+        sliderOutputStyles({ ...renderProps, className }),
+      )}
+    ></Rac.SliderOutput>
+  );
+}
 
 export const sliderTrackStyles = tv({
   slots: {
@@ -57,11 +58,11 @@ export interface SliderTrackProps
   children?: React.ReactNode;
 }
 
-export const SliderTrack = ({
+export function SliderTrack({
   className,
   children,
   ...props
-}: SliderTrackProps) => {
+}: SliderTrackProps) {
   const { rootStyles, trackStyles, fillStyles } = sliderTrackStyles();
   return (
     <Rac.SliderTrack
@@ -84,7 +85,7 @@ export const SliderTrack = ({
       )}
     </Rac.SliderTrack>
   );
-};
+}
 
 export const sliderThumbStyles = tv({
   base: [
@@ -99,27 +100,31 @@ export const sliderThumbStyles = tv({
   },
 });
 
-export const SliderThumb = ({ className, ...props }: Rac.SliderThumbProps) => (
-  <Rac.SliderThumb
-    {...props}
-    className={Rac.composeRenderProps(className, (className, renderProps) =>
-      sliderThumbStyles({ ...renderProps, className }),
-    )}
-  ></Rac.SliderThumb>
-);
+export function SliderThumb({ className, ...props }: Rac.SliderThumbProps) {
+  return (
+    <Rac.SliderThumb
+      {...props}
+      className={Rac.composeRenderProps(className, (className, renderProps) =>
+        sliderThumbStyles({ ...renderProps, className }),
+      )}
+    ></Rac.SliderThumb>
+  );
+}
 
 export interface SliderExProps extends Rac.SliderProps {
   label?: string;
 }
 
-export const SliderEx = ({ label, ...props }: SliderExProps) => (
-  <Slider {...props}>
-    <div className="flex items-center justify-between gap-2">
-      <Label>{label}</Label>
-      <SliderOutput />
-    </div>
-    <SliderTrack>
-      <SliderThumb />
-    </SliderTrack>
-  </Slider>
-);
+export function SliderEx({ label, ...props }: SliderExProps) {
+  return (
+    <Slider {...props}>
+      <div className="flex items-center justify-between gap-2">
+        <Label>{label}</Label>
+        <SliderOutput />
+      </div>
+      <SliderTrack>
+        <SliderThumb />
+      </SliderTrack>
+    </Slider>
+  );
+}

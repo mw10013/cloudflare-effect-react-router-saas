@@ -12,25 +12,27 @@ import { Label } from "./oui-label";
 import { Popover } from "./oui-popover";
 import { Text } from "./oui-text";
 
-export const Select = <T extends object>({
+export function Select<T extends object>({
   className,
   ...props
-}: Rac.SelectProps<T>) => (
-  <Rac.Select
-    data-slot="select"
-    className={composeTailwindRenderProps(className, "grid gap-2")}
-    {...props}
-  />
-);
+}: Rac.SelectProps<T>) {
+  return (
+    <Rac.Select
+      data-slot="select"
+      className={composeTailwindRenderProps(className, "grid gap-2")}
+      {...props}
+    />
+  );
+}
 
-export const SelectButton = ({
+export function SelectButton({
   className,
   size = "default",
   children,
   ...props
 }: Rac.ButtonProps & {
   size?: "sm" | "default";
-}) => {
+}) {
   return (
     <Rac.Button
       data-slot="select-trigger"
@@ -50,22 +52,24 @@ export const SelectButton = ({
       ))}
     </Rac.Button>
   );
-};
+}
 
-export const SelectValue = <T extends object>({
+export function SelectValue<T extends object>({
   className,
   ...props
-}: Rac.SelectValueProps<T>) => (
-  <Rac.SelectValue
-    data-slot="select-value"
-    className={Rac.composeRenderProps(
-      className,
-      (className, { isPlaceholder }) =>
-        twMerge(isPlaceholder ? "text-muted-foreground" : "", className),
-    )}
-    {...props}
-  />
-);
+}: Rac.SelectValueProps<T>) {
+  return (
+    <Rac.SelectValue
+      data-slot="select-value"
+      className={Rac.composeRenderProps(
+        className,
+        (className, { isPlaceholder }) =>
+          twMerge(isPlaceholder ? "text-muted-foreground" : "", className),
+      )}
+      {...props}
+    />
+  );
+}
 
 interface SelectExProps<T extends object>
   extends Omit<Rac.SelectProps<T>, "children"> {

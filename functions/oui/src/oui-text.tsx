@@ -22,12 +22,12 @@ function isTextStylesSlotKey(value: unknown): value is TextStylesSlotKey {
   );
 }
 
-export const Text = ({
+export function Text({
   elementType: elementTypeProp,
   slot,
   className,
   ...props
-}: Rac.TextProps) => {
+}: Rac.TextProps) {
   const elementType =
     !elementTypeProp && slot === "description" ? "p" : elementTypeProp;
   return (
@@ -42,4 +42,4 @@ export const Text = ({
       {...props}
     />
   );
-};
+}

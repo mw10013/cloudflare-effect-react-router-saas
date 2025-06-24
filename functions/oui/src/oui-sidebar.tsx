@@ -131,12 +131,12 @@ export interface SidebarListBoxItemProps<T extends object = object>
 /**
  * Derived from shadcn SidebarMenuButton and SidebarMenuItem
  */
-export const SidebarListBoxItem = <T extends object>({
+export function SidebarListBoxItem<T extends object>({
   className,
   variant,
   size,
   ...props
-}: SidebarListBoxItemProps<T>) => {
+}: SidebarListBoxItemProps<T>) {
   return (
     <Rac.ListBoxItem<T>
       {...props}
@@ -150,7 +150,7 @@ export const SidebarListBoxItem = <T extends object>({
       )}
     />
   );
-};
+}
 
 export interface SidebarTreeNodeEx {
   id: string;

@@ -25,29 +25,33 @@ export const linkStyles = tv({
 
 interface LinkProps extends Rac.LinkProps, VariantProps<typeof linkStyles> {}
 
-export const Link = ({ className, underline, ...props }: LinkProps) => (
-  <Rac.Link
-    {...props}
-    className={Rac.composeRenderProps(className, (className, renderProps) =>
-      linkStyles({ ...renderProps, underline, className }),
-    )}
-  />
-);
+export function Link({ className, underline, ...props }: LinkProps) {
+  return (
+    <Rac.Link
+      {...props}
+      className={Rac.composeRenderProps(className, (className, renderProps) =>
+        linkStyles({ ...renderProps, underline, className }),
+      )}
+    />
+  );
+}
 
 export interface LinkButtonProps
   extends Rac.LinkProps,
     VariantProps<typeof buttonStyles> {}
 
-export const LinkButton = ({
+export function LinkButton({
   className,
   variant,
   size,
   ...props
-}: LinkButtonProps) => (
-  <Rac.Link
-    {...props}
-    className={Rac.composeRenderProps(className, (className, renderProps) =>
-      buttonStyles({ ...renderProps, variant, size, className }),
-    )}
-  />
-);
+}: LinkButtonProps) {
+  return (
+    <Rac.Link
+      {...props}
+      className={Rac.composeRenderProps(className, (className, renderProps) =>
+        buttonStyles({ ...renderProps, variant, size, className }),
+      )}
+    />
+  );
+}

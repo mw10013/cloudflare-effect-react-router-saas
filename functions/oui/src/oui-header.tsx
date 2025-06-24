@@ -23,9 +23,11 @@ export interface HeaderProps
   extends React.ComponentProps<typeof Rac.Header>,
     VariantProps<typeof headerStyles> {}
 
-export const Header = ({ variant, inset, className, ...rest }: HeaderProps) => (
-  <Rac.Header
-    className={headerStyles({ variant, inset, className })}
-    {...rest}
-  />
-);
+export function Header({ variant, inset, className, ...rest }: HeaderProps) {
+  return (
+    <Rac.Header
+      className={headerStyles({ variant, inset, className })}
+      {...rest}
+    />
+  );
+}
