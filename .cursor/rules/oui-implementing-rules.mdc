@@ -6,18 +6,18 @@ alwaysApply: false
 # Oui Implementing Rules
 
 - Oui is React Aria Components (RAC) with Shadcn design system (Tailwind v4 version).
-- The primary goal is to provide a set of components from RAC, and apply the visual characteristics of the Shadcn
+- The primary goal is to provide a set of components from RAC, and apply the visual characteristics of Shadcn
 
 ## Styling
 
-- Docs for RAC styling: https://react-spectrum.adobe.com/react-aria/styling.html 
-- All styling must adhere to the principles and tokens defined in the Shadcn design system specifically for Tailwind v4.
+- [RAC Styling Documentation](mdc:https:/react-spectrum.adobe.com/react-aria/styling.html )
+- All styling must adhere to the principles and tokens defined in the Shadcn design system.
 - Leverage RAC's data attributes (e.g., `data-focused`, `data-selected`, `data-disabled`, `data-entering`, `data-exiting`, `data-placement`) for stateful and contextual styling, as per RAC conventions.
 - Be mindful of inline styles applied by React Aria Components themselves (e.g., `Popover` managing `z-index` and positioning). Oui styles should complement these, avoiding redundancy or conflict where RAC handles fundamental CSS properties directly.
 - When translating Shadcn styling that utilizes CSS pseudo-classes (e.g., `hover:`, `focus:`), these must be mapped to the equivalent React Aria Components data attributes (e.g., `data-[hovered]`, `data-[focused]`)
 - Prefer inline styling using 'composeTailwindRenderProps`.
 
-```ts
+```tsx
 import { composeTailwindRenderProps } from "./oui-base";
 
 export function Menu<T extends object>({
