@@ -100,7 +100,8 @@ export const action = ReactRouterEx.routeEffect(
         case "gateway1": {
           const openai = new OpenAI({
             apiKey: env.CF_WORKERS_AI_API_TOKEN,
-            baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat/chat/completions`,
+            // Cloudflare docs are incorrect. OpenAI will add /chat/completions to the baseURL.
+            baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat`,
             defaultHeaders: {
               "cf-aig-authorization": `Bearer ${env.CF_AI_GATEWAY_TOKEN}`,
             },
@@ -110,8 +111,7 @@ export const action = ReactRouterEx.routeEffect(
             try: () =>
               openai.chat.completions.create({
                 messages: [{ role: "user", content: "abacab" }],
-                // model: "workers-ai/@cf/meta/llama-3.1-8b-instruct",
-                model: "@cf/meta/llama-3.1-8b-instruct",
+                model: "workers-ai/@cf/meta/llama-3.1-8b-instruct",
               }),
             catch: (unknown) =>
               new Error(`OpenAI API request failed: ${unknown}`),
