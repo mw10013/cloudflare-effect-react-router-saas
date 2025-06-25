@@ -1,7 +1,6 @@
 import React from "react";
 import { ChevronDown } from "lucide-react";
 import * as Rac from "react-aria-components";
-import { twJoin } from "tailwind-merge";
 import {
   composeTailwindRenderProps,
   disabledStyles,
@@ -38,7 +37,7 @@ export function DisclosureButton({
       className={composeTailwindRenderProps(className, [
         focusVisibleStyles,
         disabledStyles,
-        "flex flex-1 items-start justify-between gap-4 py-4 text-left text-sm font-medium transition-all data-[hovered]:underline",
+        "flex flex-1 items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-all data-[hovered]:underline",
       ])}
       {...props}
     >
@@ -53,7 +52,10 @@ export function DisclosureButton({
 }
 
 /**
- * Derived from shadcn AccordionContent
+ * Derived from shadcn AccordionContent.
+ *
+ * `Rac.DisclosurePanel` adds a `hidden` attribute when collapsed, preventing
+ * exit animations.
  */
 export function DisclosurePanel({
   className,
@@ -64,11 +66,13 @@ export function DisclosurePanel({
     <Rac.DisclosurePanel
       className={composeTailwindRenderProps(
         className,
-        "group-data-[expanded]:animate-accordion-down group-data-[expanded=false]:animate-accordion-up overflow-hidden text-sm",
+        "grid text-sm transition-[grid-template-rows] duration-200 ease-out [grid-template-rows:0fr] group-data-[expanded]:[grid-template-rows:1fr]",
       )}
       {...props}
     >
-      <div className="pb-4 pt-0">{children}</div>
+      <div className="overflow-hidden">
+        <div className="pb-4 pt-0">{children}</div>
+      </div>
     </Rac.DisclosurePanel>
   );
 }
