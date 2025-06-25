@@ -114,7 +114,7 @@ export const makeRuntime = (env: Env) => {
     IdentityMgr.Default,
     Stripe.Default,
     Q.Producer.Default,
-    D1.D1Session.Default,
+    D1.D1.Default,
   ).pipe(Cloudflare.provideLoggerAndConfig(env), ManagedRuntime.make);
 };
 

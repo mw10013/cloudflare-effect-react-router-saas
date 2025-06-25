@@ -57,7 +57,7 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
 
       const d1SessionBookmark = session.get("d1SessionBookmark");
       if (d1SessionBookmark) {
-        yield* D1.D1Session.setBookmark(d1SessionBookmark);
+        yield* D1.D1.setBookmark(d1SessionBookmark);
       }
       // yield* Effect.log({ d1SessionBookmark });
       const response = yield* Effect.tryPromise({
@@ -83,7 +83,7 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
         return response;
       }
 
-      session.set("d1SessionBookmark", yield* D1.D1Session.getBookmark());
+      session.set("d1SessionBookmark", yield* D1.D1.getBookmark());
       response.headers.set(
         "Set-Cookie",
         yield* Effect.tryPromise({
