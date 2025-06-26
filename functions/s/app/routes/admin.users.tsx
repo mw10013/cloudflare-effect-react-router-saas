@@ -1,9 +1,10 @@
 import type { Route } from "./+types/admin.users";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import * as Oui from "@workspace/oui";
 import { SchemaEx } from "@workspace/shared";
 import { Effect, Schema } from "effect";
 import { redirect, useFetcher, useNavigate } from "react-router";
+import { toast } from "sonner";
 import { UserIdFromString } from "~/lib/Domain";
 import { IdentityMgr } from "~/lib/IdentityMgr";
 import * as ReactRouterEx from "~/lib/ReactRouterEx";
@@ -428,6 +429,9 @@ export default function RouteComponent({
           }
         }}
       />
+      <Oui.Button onPress={() => toast("My first toast")}>
+        Render toast
+      </Oui.Button>
     </>
   );
 }
