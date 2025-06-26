@@ -6,6 +6,7 @@ import {
   Links,
   Meta,
   Outlet,
+  redirect,
   Scripts,
   ScrollRestoration,
   useHref,
@@ -51,25 +52,24 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
         catch: (unknown) => new Error(`Failed to get session: ${unknown}`),
       });
 
-      const validationResult = Schema.decodeUnknownEither(SessionData)(
-        session.data,
+      yield* Schema.decodeUnknown(SessionData)(session.data).pipe(
+        Effect.catchAll((error) =>
+          Effect.gen(function* () {
+            yield* Effect.logError(
+              "Session validation failed, destroying session and redirecting",
+              { error, sessionData: session.data },
+            );
+            const cookie = yield* Effect.tryPromise({
+              try: () => destroySession(session),
+              catch: (unknown) =>
+                new Error(`Failed to destroy session: ${unknown}`),
+            });
+            const headers = new Headers();
+            headers.set("Set-Cookie", cookie);
+            return yield* Effect.fail(redirect("/authenticate", { headers }));
+          }),
+        ),
       );
-
-      if (Either.isLeft(validationResult)) {
-        yield* Effect.logError(
-          "Session validation failed, destroying session and redirecting",
-          validationResult.left,
-        );
-        const cookie = yield* Effect.tryPromise({
-          try: () => destroySession(session),
-          catch: (unknown) =>
-            new Error(`Failed to destroy session: ${unknown}`),
-        });
-        const headers = new Headers();
-        headers.set("Set-Cookie", cookie);
-        headers.set("Location", "/authenticate");
-        return new Response(null, { status: 302, headers });
-      }
 
       context.set(ReactRouterEx.appLoadContext, {
         ...appLoadContext,
