@@ -128,10 +128,8 @@ export const unstable_middleware = [sessionMiddleware];
 export const loader = ReactRouterEx.routeEffect(() =>
   Effect.gen(function* () {
     const { session } = yield* ReactRouterEx.AppLoadContext;
-    const toastData = session.get("toast") as
-      | { title: string; description?: string }
-      | undefined;
-    return { toast: toastData };
+    const toast = session.get("toast");
+    return { toast };
   }),
 );
 
@@ -164,9 +162,7 @@ function useHrefEx(href: string) {
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
-  const loaderData = useRouteLoaderData("root") as {
-    toast?: { title: string; description?: string };
-  };
+  const loaderData = useRouteLoaderData<typeof loader>("root");
 
   React.useEffect(() => {
     if (loaderData?.toast) {
