@@ -172,7 +172,7 @@ export default function RouteComponent({
   const [userIdForSoftDelete, setUserIdForSoftDelete] = useState<
     number | undefined
   >();
-  const [editNoteState, setEditNoteState] = useState<{
+  const [editNoteDialog, setEditNoteDialog] = useState<{
     isOpen: boolean;
     userId?: number;
     note: string;
@@ -267,7 +267,7 @@ export default function RouteComponent({
                     key="edit_note"
                     id="edit_note"
                     onAction={() => {
-                      setEditNoteState({
+                      setEditNoteDialog({
                         isOpen: true,
                         userId: user.userId,
                         note: user.note,
@@ -362,9 +362,9 @@ export default function RouteComponent({
       />
 
       <Oui.DialogEx1
-        isOpen={editNoteState.isOpen}
+        isOpen={editNoteDialog.isOpen}
         onOpenChange={(isOpen) =>
-          setEditNoteState((prev) => ({ ...prev, isOpen }))
+          setEditNoteDialog((prev) => ({ ...prev, isOpen }))
         }
       >
         <Oui.DialogHeader>
@@ -372,9 +372,9 @@ export default function RouteComponent({
         </Oui.DialogHeader>
         <div>
           <Oui.Input
-            value={editNoteState.note}
+            value={editNoteDialog.note}
             onChange={(e) =>
-              setEditNoteState((prev) => ({ ...prev, note: e.target.value }))
+              setEditNoteDialog((prev) => ({ ...prev, note: e.target.value }))
             }
             placeholder="Enter note..."
             autoFocus
@@ -382,14 +382,14 @@ export default function RouteComponent({
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
-                if (editNoteState.userId !== undefined) {
+                if (editNoteDialog.userId !== undefined) {
                   onAction(
                     "update_note",
-                    editNoteState.userId,
-                    editNoteState.note,
+                    editNoteDialog.userId,
+                    editNoteDialog.note,
                   );
                 }
-                setEditNoteState((prev) => ({ ...prev, isOpen: false }));
+                setEditNoteDialog((prev) => ({ ...prev, isOpen: false }));
               }
             }}
           />
@@ -399,7 +399,7 @@ export default function RouteComponent({
             variant="outline"
             slot="close"
             onPress={() =>
-              setEditNoteState((prev) => ({ ...prev, isOpen: false }))
+              setEditNoteDialog((prev) => ({ ...prev, isOpen: false }))
             }
           >
             Cancel
@@ -407,14 +407,14 @@ export default function RouteComponent({
           <Oui.Button
             slot="close"
             onPress={() => {
-              if (editNoteState.userId !== undefined) {
+              if (editNoteDialog.userId !== undefined) {
                 onAction(
                   "update_note",
-                  editNoteState.userId,
-                  editNoteState.note,
+                  editNoteDialog.userId,
+                  editNoteDialog.note,
                 );
               }
-              setEditNoteState((prev) => ({ ...prev, isOpen: false }));
+              setEditNoteDialog((prev) => ({ ...prev, isOpen: false }));
             }}
           >
             Save
