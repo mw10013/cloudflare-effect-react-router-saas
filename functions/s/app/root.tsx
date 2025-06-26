@@ -6,7 +6,6 @@ import {
   Links,
   Meta,
   Outlet,
-  redirect,
   Scripts,
   ScrollRestoration,
   useHref,
@@ -17,7 +16,7 @@ import type { FlashData } from "./lib/Domain";
 import { createWorkersKVSessionStorage } from "@react-router/cloudflare";
 import { D1 } from "@workspace/shared";
 import { Toaster } from "@workspace/ui/components/ui/sonner";
-import { Effect, Either, Schema } from "effect";
+import { Effect, Schema } from "effect";
 import * as ReactRouterEx from "~/lib/ReactRouterEx";
 import { SessionData } from "./lib/Domain";
 
@@ -52,12 +51,18 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
         catch: (unknown) => new Error(`Failed to get session: ${unknown}`),
       });
 
-      yield* Schema.decodeUnknown(SessionData)(session.data).pipe(
+      // biome-ignore lint/suspicious/noDoubleEquals: <explanation>
+      const dataToValidate =
+        // eslint-disable-next-line unicorn/no-null
+        Math.random() < 0.2 ? null : session.data;
+
+      yield* Schema.decodeUnknown(SessionData)(dataToValidate).pipe(
         Effect.catchAll((error) =>
           Effect.gen(function* () {
             yield* Effect.logError(
               "Session validation failed, destroying session and redirecting",
-              { error, sessionData: session.data },
+              error,
+              session.data,
             );
             const cookie = yield* Effect.tryPromise({
               try: () => destroySession(session),
@@ -66,7 +71,12 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
             });
             const headers = new Headers();
             headers.set("Set-Cookie", cookie);
-            return yield* Effect.fail(redirect("/authenticate", { headers }));
+            headers.set("Location", "/authenticate");
+            // For unknown reasons, react-router's redirect() helper fails in this
+            // middleware context, whereas a manually created Response works correctly.
+            return yield* Effect.fail(
+              new Response(null, { status: 302, headers }),
+            );
           }),
         ),
       );
