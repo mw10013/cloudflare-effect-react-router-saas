@@ -1,5 +1,6 @@
 import type { NavigateOptions } from "react-router";
 import type { Route } from "./+types/root";
+import * as React from "react";
 import { RouterProvider } from "react-aria-components";
 import {
   isRouteErrorResponse,
@@ -10,6 +11,7 @@ import {
   ScrollRestoration,
   useHref,
   useNavigate,
+  useRouteLoaderData,
 } from "react-router";
 import "@workspace/ui/app.css";
 import type { FlashData } from "./lib/Domain";
@@ -17,6 +19,7 @@ import { createWorkersKVSessionStorage } from "@react-router/cloudflare";
 import { D1 } from "@workspace/shared";
 import { Toaster } from "@workspace/ui/components/ui/sonner";
 import { Effect, Either, Schema } from "effect";
+import { toast } from "sonner";
 import * as ReactRouterEx from "~/lib/ReactRouterEx";
 import { SessionData } from "./lib/Domain";
 
@@ -122,6 +125,16 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
 
 export const unstable_middleware = [sessionMiddleware];
 
+export const loader = ReactRouterEx.routeEffect(() =>
+  Effect.gen(function* () {
+    const { session } = yield* ReactRouterEx.AppLoadContext;
+    const toastData = session.get("toast") as
+      | { title: string; description?: string }
+      | undefined;
+    return { toast: toastData };
+  }),
+);
+
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -151,6 +164,17 @@ function useHrefEx(href: string) {
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
+  const loaderData = useRouteLoaderData("root") as {
+    toast?: { title: string; description?: string };
+  };
+
+  React.useEffect(() => {
+    if (loaderData?.toast) {
+      toast(loaderData.toast.title, {
+        description: loaderData.toast.description,
+      });
+    }
+  }, [loaderData]);
 
   return (
     <html lang="en">

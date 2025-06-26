@@ -103,7 +103,14 @@ export const action = ReactRouterEx.routeEffect(
           }
           break;
         case "unlock":
-          yield* IdentityMgr.unlockUser({ userId: formData.userId });
+          {
+            yield* IdentityMgr.unlockUser({ userId: formData.userId });
+            const { session } = yield* ReactRouterEx.AppLoadContext;
+            session.flash("toast", {
+              title: "User unlocked",
+              description: `User ${formData.userId} has been unlocked.`,
+            });
+          }
           break;
         case "soft_delete":
           yield* IdentityMgr.softDeleteUser({ userId: formData.userId });
