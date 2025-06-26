@@ -116,6 +116,53 @@ export const action = ReactRouterEx.routeEffect(
     }),
 );
 
+function SoftDeleteUserDialog({
+  isOpen,
+  onOpenChange,
+  onConfirm,
+}: {
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <Oui.DialogEx1
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      role="alertdialog"
+    >
+      <Oui.DialogHeader>
+        <Oui.Heading variant="alert" slot="title">
+          Safe delete user?
+        </Oui.Heading>
+        <Oui.DialogDescription>
+          While you can undelete a user, all of its data cannot be restored.
+          Account memberships will be permenently destroyed.
+        </Oui.DialogDescription>
+      </Oui.DialogHeader>
+      <Oui.DialogFooter>
+        <Oui.Button
+          variant="outline"
+          slot="close"
+          autoFocus
+          onPress={() => onOpenChange(false)}
+        >
+          Cancel
+        </Oui.Button>
+        <Oui.Button
+          slot="close"
+          onPress={() => {
+            onConfirm();
+            onOpenChange(false);
+          }}
+        >
+          Continue
+        </Oui.Button>
+      </Oui.DialogFooter>
+    </Oui.DialogEx1>
+  );
+}
+
 export default function RouteComponent({
   loaderData,
   actionData,
@@ -300,46 +347,19 @@ export default function RouteComponent({
         </Oui.ListBoxEx1>
       )}
 
-      <Oui.DialogEx1
+      <SoftDeleteUserDialog
         isOpen={userIdForSoftDelete !== undefined}
         onOpenChange={(isOpen) => {
           if (!isOpen) {
             setUserIdForSoftDelete(undefined);
           }
         }}
-        role="alertdialog"
-      >
-        <Oui.DialogHeader>
-          <Oui.Heading variant="alert" slot="title">
-            Safe delete user?
-          </Oui.Heading>
-          <Oui.DialogDescription>
-            While you can undelete a user, all of its data cannot be restored.
-            Account memberships will be permenently destroyed.
-          </Oui.DialogDescription>
-        </Oui.DialogHeader>
-        <Oui.DialogFooter>
-          <Oui.Button
-            variant="outline"
-            slot="close"
-            autoFocus
-            onPress={() => setUserIdForSoftDelete(undefined)}
-          >
-            Cancel
-          </Oui.Button>
-          <Oui.Button
-            slot="close"
-            onPress={() => {
-              if (userIdForSoftDelete) {
-                onAction("soft_delete", userIdForSoftDelete);
-              }
-              setUserIdForSoftDelete(undefined);
-            }}
-          >
-            Continue
-          </Oui.Button>
-        </Oui.DialogFooter>
-      </Oui.DialogEx1>
+        onConfirm={() => {
+          if (userIdForSoftDelete) {
+            onAction("soft_delete", userIdForSoftDelete);
+          }
+        }}
+      />
 
       <Oui.DialogEx1
         isOpen={editNoteState.isOpen}
