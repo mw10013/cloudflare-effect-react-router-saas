@@ -51,12 +51,7 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
         catch: (unknown) => new Error(`Failed to get session: ${unknown}`),
       });
 
-      // biome-ignore lint/suspicious/noDoubleEquals: <explanation>
-      const dataToValidate =
-        // eslint-disable-next-line unicorn/no-null
-        Math.random() < 0.2 ? null : session.data;
-
-      yield* Schema.decodeUnknown(SessionData)(dataToValidate).pipe(
+      yield* Schema.decodeUnknown(SessionData)(session.data).pipe(
         Effect.catchAll((error) =>
           Effect.gen(function* () {
             yield* Effect.logError(
