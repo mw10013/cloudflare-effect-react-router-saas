@@ -1,5 +1,5 @@
 import type { Route } from "./+types/admin.users";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as Oui from "@workspace/oui";
 import { SchemaEx } from "@workspace/shared";
 import { Effect, Schema } from "effect";
@@ -157,6 +157,60 @@ function SoftDeleteUserDialog({
           }}
         >
           Continue
+        </Oui.Button>
+      </Oui.DialogFooter>
+    </Oui.DialogEx1>
+  );
+}
+
+function EditNoteDialog({
+  isOpen,
+  onOpenChange,
+  onConfirm,
+  note: initialNote,
+}: {
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+  onConfirm: (note: string) => void;
+  note: string;
+}) {
+  const [note, setNote] = useState(initialNote);
+
+  const handleConfirm = () => {
+    onConfirm(note);
+    onOpenChange(false);
+  };
+
+  return (
+    <Oui.DialogEx1 isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Oui.DialogHeader>
+        <Oui.Heading slot="title">Edit Note</Oui.Heading>
+      </Oui.DialogHeader>
+      <div>
+        <Oui.Input
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="Enter note..."
+          autoFocus
+          onFocus={(e) => e.target.select()}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              handleConfirm();
+            }
+          }}
+        />
+      </div>
+      <Oui.DialogFooter>
+        <Oui.Button
+          variant="outline"
+          slot="close"
+          onPress={() => onOpenChange(false)}
+        >
+          Cancel
+        </Oui.Button>
+        <Oui.Button slot="close" onPress={handleConfirm}>
+          Save
         </Oui.Button>
       </Oui.DialogFooter>
     </Oui.DialogEx1>
@@ -361,66 +415,19 @@ export default function RouteComponent({
         }}
       />
 
-      <Oui.DialogEx1
+      <EditNoteDialog
+        key={editNoteDialog.userId}
         isOpen={editNoteDialog.isOpen}
         onOpenChange={(isOpen) =>
           setEditNoteDialog((prev) => ({ ...prev, isOpen }))
         }
-      >
-        <Oui.DialogHeader>
-          <Oui.Heading slot="title">Edit Note</Oui.Heading>
-        </Oui.DialogHeader>
-        <div>
-          <Oui.Input
-            value={editNoteDialog.note}
-            onChange={(e) =>
-              setEditNoteDialog((prev) => ({ ...prev, note: e.target.value }))
-            }
-            placeholder="Enter note..."
-            autoFocus
-            onFocus={(e) => e.target.select()}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                if (editNoteDialog.userId !== undefined) {
-                  onAction(
-                    "update_note",
-                    editNoteDialog.userId,
-                    editNoteDialog.note,
-                  );
-                }
-                setEditNoteDialog((prev) => ({ ...prev, isOpen: false }));
-              }
-            }}
-          />
-        </div>
-        <Oui.DialogFooter>
-          <Oui.Button
-            variant="outline"
-            slot="close"
-            onPress={() =>
-              setEditNoteDialog((prev) => ({ ...prev, isOpen: false }))
-            }
-          >
-            Cancel
-          </Oui.Button>
-          <Oui.Button
-            slot="close"
-            onPress={() => {
-              if (editNoteDialog.userId !== undefined) {
-                onAction(
-                  "update_note",
-                  editNoteDialog.userId,
-                  editNoteDialog.note,
-                );
-              }
-              setEditNoteDialog((prev) => ({ ...prev, isOpen: false }));
-            }}
-          >
-            Save
-          </Oui.Button>
-        </Oui.DialogFooter>
-      </Oui.DialogEx1>
+        note={editNoteDialog.note}
+        onConfirm={(note) => {
+          if (editNoteDialog.userId !== undefined) {
+            onAction("update_note", editNoteDialog.userId, note);
+          }
+        }}
+      />
     </>
   );
 }
