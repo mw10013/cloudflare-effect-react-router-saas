@@ -70,6 +70,16 @@ export const SessionData = Schema.Struct({
 });
 export type SessionData = Schema.Schema.Type<typeof SessionData>;
 
+export const FlashData = Schema.Struct({
+  toast: Schema.optional(
+    Schema.Struct({
+      title: Schema.NonEmptyString,
+      description: Schema.optional(Schema.String),
+    }),
+  ),
+});
+export type FlashData = Schema.Schema.Type<typeof FlashData>;
+
 export class Account extends Schema.Class<Account>("Account")({
   accountId: AccountId,
   userId: UserId,

@@ -1,6 +1,7 @@
 import type { Client } from "@openauthjs/openauth/client";
 import type {
   AccountMemberWithAccount,
+  FlashData,
   SessionData,
 } from "~/lib/Domain";
 import type { Permission } from "~/lib/Policy";
@@ -26,7 +27,7 @@ declare module "react-router" {
       client: Client;
       redirectUri: string;
     };
-    session: Session<SessionData>;
+    session: Session<SessionData, FlashData>;
     sessionAction: "commit" | "destroy";
     accountMember?: AccountMemberWithAccount;
     permissions: ReadonlySet<Permission>;
@@ -61,7 +62,7 @@ export default {
               client: openAuthClient,
               redirectUri: `${origin}/callback`,
             },
-            session: undefined as unknown as Session<SessionData>, // middleware populates
+            session: undefined as unknown as Session<SessionData, FlashData>, // middleware populates
             sessionAction: "commit",
             permissions: new Set<Permission>(),
           } satisfies AppLoadContext,

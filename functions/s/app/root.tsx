@@ -12,12 +12,13 @@ import {
   useNavigate,
 } from "react-router";
 import "@workspace/ui/app.css";
-import type { SessionData } from "./lib/Domain";
+import type { FlashData } from "./lib/Domain";
 import { createWorkersKVSessionStorage } from "@react-router/cloudflare";
 import { D1 } from "@workspace/shared";
-import { Effect } from "effect";
-import { Toaster } from "sonner";
+import { Toaster } from "@workspace/ui/components/ui/sonner";
+import { Effect, Either, Schema } from "effect";
 import * as ReactRouterEx from "~/lib/ReactRouterEx";
+import { SessionData } from "./lib/Domain";
 
 declare module "react-aria-components" {
   interface RouterConfig {
@@ -30,7 +31,7 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
     Effect.gen(function* () {
       const appLoadContext = context.get(ReactRouterEx.appLoadContext);
       const { getSession, commitSession, destroySession } =
-        createWorkersKVSessionStorage<SessionData>({
+        createWorkersKVSessionStorage<SessionData, FlashData>({
           cookie: {
             name:
               appLoadContext.cloudflare.env.ENVIRONMENT === "local"
@@ -49,6 +50,27 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
         try: () => getSession(request.headers.get("Cookie")),
         catch: (unknown) => new Error(`Failed to get session: ${unknown}`),
       });
+
+      const validationResult = Schema.decodeUnknownEither(SessionData)(
+        session.data,
+      );
+
+      if (Either.isLeft(validationResult)) {
+        yield* Effect.logError(
+          "Session validation failed, destroying session and redirecting",
+          validationResult.left,
+        );
+        const cookie = yield* Effect.tryPromise({
+          try: () => destroySession(session),
+          catch: (unknown) =>
+            new Error(`Failed to destroy session: ${unknown}`),
+        });
+        const headers = new Headers();
+        headers.set("Set-Cookie", cookie);
+        headers.set("Location", "/authenticate");
+        return new Response(null, { status: 302, headers });
+      }
+
       context.set(ReactRouterEx.appLoadContext, {
         ...appLoadContext,
         session,
