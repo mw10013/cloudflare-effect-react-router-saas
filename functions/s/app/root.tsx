@@ -16,7 +16,7 @@ import type { FlashData } from "./lib/Domain";
 import { createWorkersKVSessionStorage } from "@react-router/cloudflare";
 import { D1 } from "@workspace/shared";
 import { Toaster } from "@workspace/ui/components/ui/sonner";
-import { Effect, Schema } from "effect";
+import { Effect, Either, Schema } from "effect";
 import * as ReactRouterEx from "~/lib/ReactRouterEx";
 import { SessionData } from "./lib/Domain";
 
@@ -51,30 +51,27 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
         catch: (unknown) => new Error(`Failed to get session: ${unknown}`),
       });
 
-      yield* Schema.decodeUnknown(SessionData)(session.data).pipe(
-        Effect.catchAll((error) =>
-          Effect.gen(function* () {
-            yield* Effect.logError(
-              "Session validation failed, destroying session and redirecting",
-              error,
-              session.data,
-            );
-            const cookie = yield* Effect.tryPromise({
-              try: () => destroySession(session),
-              catch: (unknown) =>
-                new Error(`Failed to destroy session: ${unknown}`),
-            });
-            const headers = new Headers();
-            headers.set("Set-Cookie", cookie);
-            headers.set("Location", "/authenticate");
-            // For unknown reasons, react-router's redirect() helper fails in this
-            // middleware context, whereas a manually created Response works correctly.
-            return yield* Effect.fail(
-              new Response(null, { status: 302, headers }),
-            );
-          }),
-        ),
+      const validationResult = Schema.decodeUnknownEither(SessionData)(
+        session.data,
       );
+      if (Either.isLeft(validationResult)) {
+        yield* Effect.logError(
+          "Session validation failed, destroying session and redirecting",
+          validationResult.left,
+          session.data,
+        );
+        const cookie = yield* Effect.tryPromise({
+          try: () => destroySession(session),
+          catch: (unknown) =>
+            new Error(`Failed to destroy session: ${unknown}`),
+        });
+        const headers = new Headers();
+        headers.set("Set-Cookie", cookie);
+        headers.set("Location", "/authenticate");
+        // For unknown reasons, react-router's redirect() helper fails in this
+        // middleware context, whereas a manually created Response works correctly.
+        return yield* Effect.fail(new Response(null, { status: 302, headers }));
+      }
 
       context.set(ReactRouterEx.appLoadContext, {
         ...appLoadContext,
