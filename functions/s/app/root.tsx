@@ -16,6 +16,7 @@ import type { SessionData } from "./lib/Domain";
 import { createWorkersKVSessionStorage } from "@react-router/cloudflare";
 import { D1 } from "@workspace/shared";
 import { Effect } from "effect";
+import { Toaster } from "sonner";
 import * as ReactRouterEx from "~/lib/ReactRouterEx";
 
 declare module "react-aria-components" {
@@ -137,6 +138,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       {/* shadcn app/layout RootLayout */}
       <body className="background min-h-svh font-sans antialiased">
+        <Toaster />
+        {/* <Oui.ToastRegionEx queue={toastQueue} /> */}
         <RouterProvider navigate={navigate} useHref={useHrefEx}>
           {children}
           <ScrollRestoration />

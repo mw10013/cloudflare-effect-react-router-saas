@@ -122,10 +122,9 @@ export default function RouteComponent({
 }: Route.ComponentProps) {
   const fetcher = useFetcher();
   const navigate = useNavigate();
-  const [dialogState, setDialogState] = useState<{
-    isOpen: boolean;
-    userId?: number;
-  }>({ isOpen: false });
+  const [userIdForSoftDelete, setUserIdForSoftDelete] = useState<
+    number | undefined
+  >();
   const [editNoteState, setEditNoteState] = useState<{
     isOpen: boolean;
     userId?: number;
@@ -260,7 +259,7 @@ export default function RouteComponent({
                       key="soft_delete"
                       id="soft_delete"
                       onAction={() => {
-                        setDialogState({ isOpen: true, userId: user.userId });
+                        setUserIdForSoftDelete(user.userId);
                       }}
                     >
                       Soft Delete
@@ -302,10 +301,12 @@ export default function RouteComponent({
       )}
 
       <Oui.DialogEx1
-        isOpen={dialogState.isOpen}
-        onOpenChange={(isOpen) =>
-          setDialogState((prev) => ({ ...prev, isOpen }))
-        }
+        isOpen={userIdForSoftDelete !== undefined}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setUserIdForSoftDelete(undefined);
+          }
+        }}
         role="alertdialog"
       >
         <Oui.DialogHeader>
@@ -322,17 +323,17 @@ export default function RouteComponent({
             variant="outline"
             slot="close"
             autoFocus
-            onPress={() => setDialogState({ isOpen: false })}
+            onPress={() => setUserIdForSoftDelete(undefined)}
           >
             Cancel
           </Oui.Button>
           <Oui.Button
             slot="close"
             onPress={() => {
-              if (dialogState.userId) {
-                onAction("soft_delete", dialogState.userId);
+              if (userIdForSoftDelete) {
+                onAction("soft_delete", userIdForSoftDelete);
               }
-              setDialogState({ isOpen: false });
+              setUserIdForSoftDelete(undefined);
             }}
           >
             Continue

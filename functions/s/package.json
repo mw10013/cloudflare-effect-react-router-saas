@@ -49,6 +49,7 @@
     "react-aria-components": "catalog:",
     "react-dom": "catalog:",
     "react-router": "catalog:",
+    "sonner": "catalog:",
     "stripe": "catalog:",
     "tailwind-merge": "catalog:",
     "tailwind-variants": "catalog:",
