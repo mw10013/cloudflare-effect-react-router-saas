@@ -1,3 +1,4 @@
+import { X } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { Button } from "./oui-button";
 import { Text } from "./oui-text";
@@ -20,11 +21,15 @@ export function ToastRegionEx<T extends ToastContentEx>(
           toast={toast}
           className="bg-popover text-popover-foreground border-border data-[focus-visible]:outline-ring flex items-center gap-4 rounded-lg border p-3 text-sm outline-none data-[focus-visible]:outline-2 data-[focus-visible]:outline-offset-2"
         >
-          <Rac.UNSTABLE_ToastContent className="flex min-w-0 flex-1 flex-col [&_[slot=title]]:font-medium">
-            <Text slot="title">{toast.content.title}</Text>
+          <Rac.UNSTABLE_ToastContent className="flex min-w-0 flex-1 flex-col gap-2">
+            <span slot="title">{toast.content.title} (raw)</span>
+            <p slot="description">{toast.content.description}</p>
+            <Text slot="title">{toast.content.title} (Text)</Text>
             <Text slot="description">{toast.content.description}</Text>
           </Rac.UNSTABLE_ToastContent>
-          <Button slot="close">x</Button>
+          <Button variant="ghost" size="icon" slot="close">
+            <X className="size-4" />
+          </Button>
         </Rac.UNSTABLE_Toast>
       )}
     </Rac.UNSTABLE_ToastRegion>
