@@ -75,19 +75,16 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
         // middleware context, whereas a manually created Response works correctly.
         return yield* Effect.fail(new Response(null, { status: 302, headers }));
       }
-
       context.set(ReactRouterEx.appLoadContext, {
         ...appLoadContext,
         session,
         sessionAction: "commit",
       });
-      // yield* Effect.log({ message: `sessionMiddleware: Loaded session`, sessionUser: session.get('sessionUser') })
-
       const d1SessionBookmark = session.get("d1SessionBookmark");
       if (d1SessionBookmark) {
         yield* D1.D1.setBookmark(d1SessionBookmark);
       }
-      // yield* Effect.log({ d1SessionBookmark });
+      
       const response = yield* Effect.tryPromise({
         try: () => Promise.resolve(next()),
         catch: (unknown) =>
