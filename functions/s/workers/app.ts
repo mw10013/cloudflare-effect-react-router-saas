@@ -39,7 +39,7 @@ export default {
     const hono = new Hono.Hono();
     const runtime = makeRuntime(env);
     const openAuth = OpenAuth.make({ env, runtime });
-    hono.route("/code", openAuth.issuer);
+    hono.route("/", openAuth.issuer);
     hono.route("/", Api.make({ runtime }));
     hono.all("*", (c) => {
       const { origin } = new URL(c.req.url);
@@ -47,7 +47,7 @@ export default {
         clientID: "client",
         // issuer: c.env.OPENAUTH_ISSUER,
         // fetch: (input, init) => c.env.WORKER.fetch(input, init)
-        issuer: `${origin}/code`,
+        issuer: origin,
         fetch: async (input, init) =>
           openAuth.issuer.fetch(new Request(input, init), env, ctx),
       });

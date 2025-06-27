@@ -69,12 +69,14 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
         );
         const headers = new Headers();
         if (session.id) {
-          const cookie = yield* Effect.tryPromise({
-            try: () => destroySession(session),
-            catch: (unknown) =>
-              new Error(`Failed to destroy session: ${unknown}`),
-          });
-          headers.set("Set-Cookie", cookie);
+          headers.set(
+            "Set-Cookie",
+            yield* Effect.tryPromise({
+              try: () => destroySession(session),
+              catch: (unknown) =>
+                new Error(`Failed to destroy session: ${unknown}`),
+            }),
+          );
         }
         headers.set("Location", "/authenticate");
         // For unknown reasons, react-router's redirect() helper fails in this
