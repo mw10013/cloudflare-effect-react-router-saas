@@ -18,6 +18,7 @@ export const loader = ReactRouterEx.routeEffect(
           "code",
         ),
       );
+      yield* Effect.log({ url });
       return redirect(url);
     }),
 );

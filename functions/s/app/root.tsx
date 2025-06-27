@@ -7,6 +7,7 @@ import {
   Links,
   Meta,
   Outlet,
+  redirect,
   Scripts,
   ScrollRestoration,
   useHref,
@@ -54,14 +55,17 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
         catch: (unknown) => new Error(`Failed to get session: ${unknown}`),
       });
 
+      const sessionDataForValidation =
+        Math.random() < 0.2 ? null : session.data;
       const validationResult = Schema.decodeUnknownEither(SessionData)(
-        session.data,
+        sessionDataForValidation,
       );
       if (Either.isLeft(validationResult)) {
         yield* Effect.logError(
           "Session validation failed, destroying session and redirecting",
           validationResult.left,
           session.data,
+          session.id,
         );
         const cookie = yield* Effect.tryPromise({
           try: () => destroySession(session),
@@ -84,7 +88,7 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
       if (d1SessionBookmark) {
         yield* D1.D1.setBookmark(d1SessionBookmark);
       }
-      
+
       const response = yield* Effect.tryPromise({
         try: () => Promise.resolve(next()),
         catch: (unknown) =>
