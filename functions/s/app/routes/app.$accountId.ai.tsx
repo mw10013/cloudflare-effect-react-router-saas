@@ -31,6 +31,8 @@ export const action = ReactRouterEx.routeEffect(
           "gateway",
           "gateway1",
           "gateway2",
+          "gemini1",
+          "gemini2",
         ),
       });
       const formData = yield* SchemaEx.decodeRequestFormData({
@@ -140,6 +142,48 @@ export const action = ReactRouterEx.routeEffect(
           });
           return { response };
         }
+        case "gemini1": {
+          const openai = new OpenAI({
+            apiKey: env.CF_WORKERS_AI_API_TOKEN,
+            // OpenAI client automatically adds /chat/completions to the end of the baseURL
+            baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat`,
+            defaultHeaders: {
+              "cf-aig-authorization": `Bearer ${env.CF_AI_GATEWAY_TOKEN}`,
+            },
+          });
+
+          const response = yield* Effect.tryPromise({
+            try: () =>
+              openai.chat.completions.create({
+                messages: [{ role: "user", content: "abacab" }],
+                model: "workers-ai/@cf/meta/llama-3.1-8b-instruct",
+              }),
+            catch: (unknown) =>
+              new Error(`OpenAI API request failed: ${unknown}`),
+          });
+          return { response };
+        }
+        case "gemini2": {
+          const openai = createOpenAI({
+            apiKey: env.CF_WORKERS_AI_API_TOKEN,
+            // OpenAI client automatically adds /chat/completions to the end of the baseURL
+            baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat`,
+            headers: {
+              "cf-aig-authorization": `Bearer ${env.CF_AI_GATEWAY_TOKEN}`,
+            },
+            compatibility: "strict", // strict mode, enable when using the OpenAI API
+          });
+          const response = yield* Effect.tryPromise({
+            try: () =>
+              generateText({
+                model: openai("workers-ai/@cf/meta/llama-3.1-8b-instruct"),
+                prompt: "fee fi",
+              }),
+            catch: (unknown) =>
+              new Error(`Gateway2: Vercel AI request failed: ${unknown}`),
+          });
+          return { response };
+        }
 
         default:
           return yield* Effect.fail(
@@ -228,6 +272,24 @@ export default function RouteComponent({
               className="justify-self-end"
             >
               Send Gateway2 Request
+            </Oui.Button>
+            <Oui.Button
+              type="submit"
+              name="intent"
+              value="gemini1"
+              variant="outline"
+              className="justify-self-end"
+            >
+              Send Gemini1 Request
+            </Oui.Button>
+            <Oui.Button
+              type="submit"
+              name="intent"
+              value="gemini2"
+              variant="outline"
+              className="justify-self-end"
+            >
+              Send Gemini2 Request
             </Oui.Button>
           </Rac.Form>
         </CardContent>
