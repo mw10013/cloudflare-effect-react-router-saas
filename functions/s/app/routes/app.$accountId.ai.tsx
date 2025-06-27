@@ -155,9 +155,7 @@ export const action = ReactRouterEx.routeEffect(
           const response = yield* Effect.tryPromise({
             try: () =>
               openai.chat.completions.create({
-                messages: [
-                  { role: "user", content: "abacab" },
-                ],
+                messages: [{ role: "user", content: "abacab" }],
                 model: "google-ai-studio/gemini-2.0-flash",
               }),
             catch: (unknown) =>
@@ -169,7 +167,8 @@ export const action = ReactRouterEx.routeEffect(
           const openai = createOpenAI({
             apiKey: env.GOOGLE_STUDIO_API_KEY,
             // OpenAI client automatically adds /chat/completions to the end of the baseURL
-            baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat`,
+            // baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat`,
+            baseURL: `${yield* Effect.tryPromise(() => env.AI.gateway(env.CF_AI_GATEWAY_ID).getUrl("compat"))}`,
             headers: {
               "cf-aig-authorization": `Bearer ${env.CF_AI_GATEWAY_TOKEN}`,
             },
