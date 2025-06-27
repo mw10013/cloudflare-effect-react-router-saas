@@ -67,13 +67,15 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
           session.data,
           session.id,
         );
-        const cookie = yield* Effect.tryPromise({
-          try: () => destroySession(session),
-          catch: (unknown) =>
-            new Error(`Failed to destroy session: ${unknown}`),
-        });
         const headers = new Headers();
-        headers.set("Set-Cookie", cookie);
+        if (session.id) {
+          const cookie = yield* Effect.tryPromise({
+            try: () => destroySession(session),
+            catch: (unknown) =>
+              new Error(`Failed to destroy session: ${unknown}`),
+          });
+          headers.set("Set-Cookie", cookie);
+        }
         headers.set("Location", "/authenticate");
         // For unknown reasons, react-router's redirect() helper fails in this
         // middleware context, whereas a manually created Response works correctly.
