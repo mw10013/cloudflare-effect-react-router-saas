@@ -144,7 +144,7 @@ export const action = ReactRouterEx.routeEffect(
         }
         case "gemini1": {
           const openai = new OpenAI({
-            apiKey: env.GOOGLE_STUDIO_API_KEY,
+            apiKey: env.GOOGLE_AI_STUDIO_API_KEY,
             // OpenAI client automatically adds /chat/completions to the end of the baseURL
             baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat`,
             defaultHeaders: {
@@ -165,7 +165,7 @@ export const action = ReactRouterEx.routeEffect(
         }
         case "gemini2": {
           const openai = createOpenAI({
-            apiKey: env.GOOGLE_STUDIO_API_KEY,
+            apiKey: env.GOOGLE_AI_STUDIO_API_KEY,
             // OpenAI client automatically adds /chat/completions to the end of the baseURL
             // baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat`,
             baseURL: `${yield* Effect.tryPromise(() => env.AI.gateway(env.CF_AI_GATEWAY_ID).getUrl("compat"))}`,
