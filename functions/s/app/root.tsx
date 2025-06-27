@@ -55,10 +55,10 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
         catch: (unknown) => new Error(`Failed to get session: ${unknown}`),
       });
 
-      const sessionDataForValidation =
-        Math.random() < 0.2 ? null : session.data;
+      // const sessionDataForValidation =
+      //   Math.random() < 0.2 ? null : session.data;
       const validationResult = Schema.decodeUnknownEither(SessionData)(
-        sessionDataForValidation,
+        session.data,
       );
       if (Either.isLeft(validationResult)) {
         yield* Effect.logError(
