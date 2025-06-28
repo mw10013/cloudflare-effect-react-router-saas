@@ -138,6 +138,7 @@ export const appMiddleware: Route.unstable_MiddlewareFunction =
 ## AI
 
 - https://github.com/googleapis/js-genai/issues/324
+- https://discuss.ai.google.dev/t/tool-calling-with-openai-api-not-working/60140/9
 
 ```
 curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=GEMINI_API_KEY" \

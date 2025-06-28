@@ -5,6 +5,7 @@ import { XIcon } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { twJoin, twMerge } from "tailwind-merge";
 import { Button } from "./oui-button";
+import { Heading } from "./oui-heading";
 import { ModalEx, ModalEx1, sheetModalStyles } from "./oui-modal";
 
 export interface DialogProps extends Rac.DialogProps {
@@ -201,5 +202,62 @@ export function DialogEx2({
         <Dialog {...props} />
       </ModalEx1>
     </Rac.DialogTrigger>
+  );
+}
+
+export interface DialogEx3Props
+  extends Rac.DialogProps,
+    Pick<Rac.ModalOverlayProps, "isOpen" | "onOpenChange" | "defaultOpen"> {
+  title: React.ReactNode;
+  children: React.ReactNode;
+  confirmLabel?: string;
+  cancelLabel?: string;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+  modalClassName?: string;
+}
+
+/**
+ * A modal confirmation dialog with a title, message, and customizable action
+ * buttons. It is not dismissable by an outside press.
+ */
+export function DialogEx3({
+  title,
+  children,
+  confirmLabel = "Continue",
+  cancelLabel = "Cancel",
+  onConfirm,
+  onCancel,
+  modalClassName,
+  isOpen,
+  onOpenChange,
+  defaultOpen,
+  ...props
+}: DialogEx3Props) {
+  return (
+    <ModalEx
+      className={modalClassName}
+      isDismissable={false}
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      defaultOpen={defaultOpen}
+    >
+      <Dialog role="alertdialog" {...props}>
+        <DialogHeader>
+          <Heading variant="alert" slot="title">
+            {title}
+          </Heading>
+          <DialogDescription>{children}</DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" slot="close" autoFocus onPress={onCancel}>
+            {cancelLabel}
+          </Button>
+          <Button slot="close" onPress={onConfirm}>
+            {confirmLabel}
+          </Button>
+        </DialogFooter>
+      </Dialog>
+    </ModalEx>
   );
 }

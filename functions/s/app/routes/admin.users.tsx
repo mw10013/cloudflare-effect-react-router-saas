@@ -134,40 +134,15 @@ function SoftDeleteUserDialog({
   onConfirm: () => void;
 }) {
   return (
-    <Oui.DialogEx1
+    <Oui.DialogEx3
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      role="alertdialog"
+      onConfirm={onConfirm}
+      title="Safe delete user?"
     >
-      <Oui.DialogHeader>
-        <Oui.Heading variant="alert" slot="title">
-          Safe delete user?
-        </Oui.Heading>
-        <Oui.DialogDescription>
-          While you can undelete a user, all of its data cannot be restored.
-          Account memberships will be permenently destroyed.
-        </Oui.DialogDescription>
-      </Oui.DialogHeader>
-      <Oui.DialogFooter>
-        <Oui.Button
-          variant="outline"
-          slot="close"
-          autoFocus
-          onPress={() => onOpenChange(false)}
-        >
-          Cancel
-        </Oui.Button>
-        <Oui.Button
-          slot="close"
-          onPress={() => {
-            onConfirm();
-            onOpenChange(false);
-          }}
-        >
-          Continue
-        </Oui.Button>
-      </Oui.DialogFooter>
-    </Oui.DialogEx1>
+      While you can undelete a user, all of its data cannot be restored. Account
+      memberships will be permenently destroyed.
+    </Oui.DialogEx3>
   );
 }
 
