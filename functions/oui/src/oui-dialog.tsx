@@ -105,56 +105,35 @@ export function DialogDescription({
   );
 }
 
-export interface DialogExProps extends DialogProps {
-  triggerElement: string | ReactElement;
+export interface DialogExProps
+  extends DialogProps,
+    Partial<
+      Pick<Rac.ModalOverlayProps, "isOpen" | "defaultOpen" | "onOpenChange">
+    > {
+  triggerElement?: string | ReactElement;
   modalClassName?: string;
 }
 
 /**
- * A modal dialog.
- * If `triggerElement` is a string, it's rendered as a ghost `Button`.
- * The modal is dismissable via an outside press if `role` is not "alertdialog".
+ * A modal dialog that can be opened via a trigger element or programmatically.
+ *
+ * If `triggerElement` is provided, it will be rendered and will open the dialog
+ * when pressed.
+ *
+ * If `triggerElement` is omitted, the dialog must be controlled programmatically.
+ *
+ * In both cases, the open state can be uncontrolled (using `defaultOpen`) or
+ * controlled (using `isOpen` and `onOpenChange`).
  */
 export function DialogEx({
   triggerElement,
-  modalClassName,
-  ...props
-}: DialogExProps) {
-  return (
-    <Rac.DialogTrigger>
-      {typeof triggerElement === "string" ? (
-        <Button variant="ghost">{triggerElement}</Button>
-      ) : (
-        triggerElement
-      )}
-      <ModalEx
-        className={modalClassName}
-        isDismissable={props.role !== "alertdialog"}
-      >
-        <Dialog {...props} />
-      </ModalEx>
-    </Rac.DialogTrigger>
-  );
-}
-
-export interface DialogEx1Props
-  extends DialogProps,
-    Pick<Rac.ModalOverlayProps, "isOpen" | "defaultOpen" | "onOpenChange"> {
-  modalClassName?: string;
-}
-
-/**
- * A programmatic modal dialog without a trigger element.
- * The modal is dismissable via an outside press if `role` is not "alertdialog".
- */
-export function DialogEx1({
   modalClassName,
   isOpen,
   defaultOpen,
   onOpenChange,
   ...props
-}: DialogEx1Props) {
-  return (
+}: DialogExProps) {
+  const modal = (
     <ModalEx
       className={modalClassName}
       isDismissable={props.role !== "alertdialog"}
@@ -165,9 +144,26 @@ export function DialogEx1({
       <Dialog {...props} />
     </ModalEx>
   );
+  if (triggerElement) {
+    return (
+      <Rac.DialogTrigger
+        isOpen={isOpen}
+        defaultOpen={defaultOpen}
+        onOpenChange={onOpenChange}
+      >
+        {typeof triggerElement === "string" ? (
+          <Button variant="ghost">{triggerElement}</Button>
+        ) : (
+          triggerElement
+        )}
+        {modal}
+      </Rac.DialogTrigger>
+    );
+  }
+  return modal;
 }
 
-export interface DialogEx3Props
+export interface DialogEx1ConfirmProps
   extends Rac.DialogProps,
     Pick<Rac.ModalOverlayProps, "isOpen" | "onOpenChange" | "defaultOpen"> {
   title: React.ReactNode;
@@ -183,7 +179,7 @@ export interface DialogEx3Props
  * A modal confirmation dialog with a title, message, and customizable action
  * buttons. It is not dismissable by an outside press.
  */
-export function DialogEx3({
+export function DialogEx1Confirm({
   title,
   children,
   confirmLabel = "Continue",
@@ -195,7 +191,7 @@ export function DialogEx3({
   onOpenChange,
   defaultOpen,
   ...props
-}: DialogEx3Props) {
+}: DialogEx1ConfirmProps) {
   return (
     <ModalEx
       className={modalClassName}
@@ -224,7 +220,7 @@ export function DialogEx3({
   );
 }
 
-export interface DialogEx3SheetProps
+export interface DialogEx2SheetProps
   extends Omit<DialogProps, "role">, // Prevent 'alertdialog' role
     Pick<VariantProps<typeof sheetModalStyles>, "side"> {
   triggerElement: string | ReactElement;
@@ -236,13 +232,13 @@ export interface DialogEx3SheetProps
  * A sheet modal that slides in from a side of the screen.
  * The modal is always dismissable via an outside press.
  */
-export function DialogEx3Sheet({
+export function DialogEx2Sheet({
   triggerElement,
   modalClassName,
   overlayClassName,
   side,
   ...props
-}: DialogEx3SheetProps) {
+}: DialogEx2SheetProps) {
   return (
     <Rac.DialogTrigger>
       {typeof triggerElement === "string" ? (

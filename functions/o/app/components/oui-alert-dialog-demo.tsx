@@ -32,16 +32,16 @@ export function OuiAlertDialogDemo1() {
   return (
     <>
       <Oui.Button variant="outline" onPress={() => setOpen(true)}>
-        Show Dialog
+        Confirm
       </Oui.Button>
-      <Oui.DialogEx3
+      <Oui.DialogEx1Confirm
         isOpen={isOpen}
         onOpenChange={setOpen}
         title="Are you absolutely sure?"
       >
         This action cannot be undone. This will permanently delete your account
         and remove your data from our servers.
-      </Oui.DialogEx3>
+      </Oui.DialogEx1Confirm>
     </>
   );
 }

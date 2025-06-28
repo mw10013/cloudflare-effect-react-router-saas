@@ -134,7 +134,7 @@ function SoftDeleteUserDialog({
   onConfirm: () => void;
 }) {
   return (
-    <Oui.DialogEx3
+    <Oui.DialogEx1Confirm
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       onConfirm={onConfirm}
@@ -142,7 +142,7 @@ function SoftDeleteUserDialog({
     >
       While you can undelete a user, all of its data cannot be restored. Account
       memberships will be permenently destroyed.
-    </Oui.DialogEx3>
+    </Oui.DialogEx1Confirm>
   );
 }
 
@@ -165,7 +165,7 @@ function EditNoteDialog({
   };
 
   return (
-    <Oui.DialogEx1 isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Oui.DialogEx isOpen={isOpen} onOpenChange={onOpenChange}>
       <Oui.DialogHeader>
         <Oui.Heading slot="title">Edit Note</Oui.Heading>
       </Oui.DialogHeader>
@@ -196,7 +196,7 @@ function EditNoteDialog({
           Save
         </Oui.Button>
       </Oui.DialogFooter>
-    </Oui.DialogEx1>
+    </Oui.DialogEx>
   );
 }
 
