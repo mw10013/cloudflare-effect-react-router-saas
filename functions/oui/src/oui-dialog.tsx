@@ -167,44 +167,6 @@ export function DialogEx1({
   );
 }
 
-export interface DialogEx2Props
-  extends Omit<DialogProps, "role">, // Prevent 'alertdialog' role
-    Pick<VariantProps<typeof sheetModalStyles>, "side"> {
-  triggerElement: string | ReactElement;
-  modalClassName?: string;
-  overlayClassName?: string;
-}
-
-/**
- * A sheet modal that slides in from a side of the screen.
- * The modal is always dismissable via an outside press.
- */
-export function DialogEx2({
-  triggerElement,
-  modalClassName,
-  overlayClassName,
-  side,
-  ...props
-}: DialogEx2Props) {
-  return (
-    <Rac.DialogTrigger>
-      {typeof triggerElement === "string" ? (
-        <Button variant="ghost">{triggerElement}</Button>
-      ) : (
-        triggerElement
-      )}
-      <ModalEx1
-        className={modalClassName}
-        overlayClassName={overlayClassName}
-        side={side}
-        isDismissable
-      >
-        <Dialog {...props} />
-      </ModalEx1>
-    </Rac.DialogTrigger>
-  );
-}
-
 export interface DialogEx3Props
   extends Rac.DialogProps,
     Pick<Rac.ModalOverlayProps, "isOpen" | "onOpenChange" | "defaultOpen"> {
@@ -259,5 +221,43 @@ export function DialogEx3({
         </DialogFooter>
       </Dialog>
     </ModalEx>
+  );
+}
+
+export interface DialogEx3SheetProps
+  extends Omit<DialogProps, "role">, // Prevent 'alertdialog' role
+    Pick<VariantProps<typeof sheetModalStyles>, "side"> {
+  triggerElement: string | ReactElement;
+  modalClassName?: string;
+  overlayClassName?: string;
+}
+
+/**
+ * A sheet modal that slides in from a side of the screen.
+ * The modal is always dismissable via an outside press.
+ */
+export function DialogEx3Sheet({
+  triggerElement,
+  modalClassName,
+  overlayClassName,
+  side,
+  ...props
+}: DialogEx3SheetProps) {
+  return (
+    <Rac.DialogTrigger>
+      {typeof triggerElement === "string" ? (
+        <Button variant="ghost">{triggerElement}</Button>
+      ) : (
+        triggerElement
+      )}
+      <ModalEx1
+        className={modalClassName}
+        overlayClassName={overlayClassName}
+        side={side}
+        isDismissable
+      >
+        <Dialog {...props} />
+      </ModalEx1>
+    </Rac.DialogTrigger>
   );
 }
