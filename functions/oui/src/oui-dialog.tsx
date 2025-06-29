@@ -163,7 +163,7 @@ export function DialogEx({
   return modal;
 }
 
-export interface DialogEx1ConfirmProps
+export interface DialogEx1AlertProps
   extends Rac.DialogProps,
     Pick<Rac.ModalOverlayProps, "isOpen" | "onOpenChange" | "defaultOpen"> {
   title: React.ReactNode;
@@ -178,8 +178,10 @@ export interface DialogEx1ConfirmProps
 /**
  * A modal confirmation dialog with a title, message, and customizable action
  * buttons. It is not dismissable by an outside press.
+ * If `onCancel` is not provided, it will render as a single-button
+ * acknowledgement dialog.
  */
-export function DialogEx1Confirm({
+export function DialogEx1Alert({
   title,
   children,
   confirmLabel = "Continue",
@@ -191,7 +193,7 @@ export function DialogEx1Confirm({
   onOpenChange,
   defaultOpen,
   ...props
-}: DialogEx1ConfirmProps) {
+}: DialogEx1AlertProps) {
   return (
     <ModalEx
       className={modalClassName}
@@ -208,10 +210,12 @@ export function DialogEx1Confirm({
           <DialogDescription>{children}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" slot="close" autoFocus onPress={onCancel}>
-            {cancelLabel}
-          </Button>
-          <Button slot="close" onPress={onConfirm}>
+          {onCancel && (
+            <Button variant="outline" slot="close" autoFocus onPress={onCancel}>
+              {cancelLabel}
+            </Button>
+          )}
+          <Button slot="close" onPress={onConfirm} autoFocus={!onCancel}>
             {confirmLabel}
           </Button>
         </DialogFooter>
