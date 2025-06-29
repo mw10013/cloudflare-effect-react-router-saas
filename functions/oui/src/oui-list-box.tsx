@@ -110,11 +110,13 @@ export function ListBoxItem<T extends object>({
  */
 export function ListBoxEx1<T extends object>({
   className,
+  "aria-label": ariaLabel = "Pagination",
   ...props
 }: Rac.ListBoxProps<T>) {
   return (
     <nav aria-label="pagination" className="mx-auto flex w-full justify-center">
       <Rac.ListBox
+        aria-label={ariaLabel}
         orientation="horizontal"
         selectionMode="single"
         className={composeTailwindRenderProps(
@@ -132,10 +134,20 @@ export function ListBoxEx1<T extends object>({
  */
 export function ListBoxItemEx1<T extends object>({
   className,
+  children,
   ...props
 }: Rac.ListBoxItemProps<T>) {
   return (
     <Rac.ListBoxItem
+      {...props}
+      textValue={
+        props.textValue ||
+        (typeof children === "string"
+          ? children
+          : typeof children === "number"
+            ? String(children)
+            : undefined)
+      }
       className={Rac.composeRenderProps(className, (className, renderProps) =>
         buttonStyles({
           ...renderProps,
@@ -143,7 +155,8 @@ export function ListBoxItemEx1<T extends object>({
           className,
         }),
       )}
-      {...props}
-    />
+    >
+      {children}
+    </Rac.ListBoxItem>
   );
 }

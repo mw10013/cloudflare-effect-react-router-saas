@@ -209,6 +209,7 @@ export default function RouteComponent({
     <>
       <div className="mb-4">
         <Oui.SearchFieldEx
+          aria-label="Filter by email"
           placeholder="Filter by email..."
           defaultValue={loaderData?.filter ?? ""}
           name="filter"
