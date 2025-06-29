@@ -166,6 +166,7 @@ export function DialogEx({
 export interface DialogEx1AlertProps
   extends Rac.DialogProps,
     Pick<Rac.ModalOverlayProps, "isOpen" | "onOpenChange" | "defaultOpen"> {
+  type?: "confirm" | "acknowledge";
   title: React.ReactNode;
   children: React.ReactNode;
   confirmLabel?: string;
@@ -176,15 +177,17 @@ export interface DialogEx1AlertProps
 }
 
 /**
- * A modal confirmation dialog with a title, message, and customizable action
- * buttons. It is not dismissable by an outside press.
- * If `onCancel` is not provided, it will render as a single-button
- * acknowledgement dialog.
+ * A modal confirmation or acknowledgement dialog with a title, message, and
+ * customizable action buttons. It is not dismissable by an outside press.
+ *
+ * - `type="confirm"` (default): Renders "Confirm" and "Cancel" buttons.
+ * - `type="acknowledge"`: Renders a single "Acknowledge" button.
  */
 export function DialogEx1Alert({
+  type = "confirm",
   title,
   children,
-  confirmLabel = "Continue",
+  confirmLabel = type === "confirm" ? "Continue" : "OK",
   cancelLabel = "Cancel",
   onConfirm,
   onCancel,
@@ -210,12 +213,16 @@ export function DialogEx1Alert({
           <DialogDescription>{children}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          {onCancel && (
+          {type === "confirm" && (
             <Button variant="outline" slot="close" autoFocus onPress={onCancel}>
               {cancelLabel}
             </Button>
           )}
-          <Button slot="close" onPress={onConfirm} autoFocus={!onCancel}>
+          <Button
+            slot="close"
+            onPress={onConfirm}
+            autoFocus={type === "acknowledge"}
+          >
             {confirmLabel}
           </Button>
         </DialogFooter>
