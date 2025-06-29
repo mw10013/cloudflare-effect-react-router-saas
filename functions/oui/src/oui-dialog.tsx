@@ -298,7 +298,19 @@ export function useDialogEx1Alert() {
   return context;
 }
 
+/**
+ * This provider manages a global alert dialog.
+ */
 export function DialogEx1AlertProvider({ children }: { children: ReactNode }) {
+  /* We use a promise-based approach to allow for async/await usage.
+   * `useRef` stores the promise's `resolve` function across renders without
+   * causing re-renders. When the user confirms or cancels, this `resolve`
+   * function is called to fulfill the promise.
+   *
+   * `useCallback` memoizes the `show` function to prevent consumers of the
+   * context from re-rendering unnecessarily, which is a performance
+   * optimization.
+   */
   const [options, setOptions] = useState<DialogEx1AlertOptions | null>(null);
   const promiseRef = useRef<{ resolve: (value: boolean) => void } | null>(null);
 
