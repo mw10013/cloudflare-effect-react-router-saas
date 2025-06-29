@@ -32,7 +32,7 @@ export function OuiAlertDialogDemo1() {
   return (
     <>
       <Oui.Button variant="outline" onPress={() => setOpen(true)}>
-        Confirm
+        Show Confirm
       </Oui.Button>
       <Oui.DialogEx1Alert
         isOpen={isOpen}
@@ -41,6 +41,26 @@ export function OuiAlertDialogDemo1() {
       >
         This action cannot be undone. This will permanently delete your account
         and remove your data from our servers.
+      </Oui.DialogEx1Alert>
+    </>
+  );
+}
+
+export function OuiAlertDialogDemo2() {
+  const [isOpen, setOpen] = useState(false);
+
+  return (
+    <>
+      <Oui.Button variant="outline" onPress={() => setOpen(true)}>
+        Show Acknowledgement
+      </Oui.Button>
+      <Oui.DialogEx1Alert
+        isOpen={isOpen}
+        onOpenChange={setOpen}
+        type="acknowledge"
+        title="Session Expired"
+      >
+        Your session has expired. Please log in again to continue.
       </Oui.DialogEx1Alert>
     </>
   );

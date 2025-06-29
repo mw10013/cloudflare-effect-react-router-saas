@@ -4,6 +4,7 @@ import { DialogDemo } from "~/components/dialog-demo";
 import {
   OuiAlertDialogDemo,
   OuiAlertDialogDemo1,
+  OuiAlertDialogDemo2,
 } from "~/components/oui-alert-dialog-demo";
 import { OuiDialogDemo } from "~/components/oui-dialog-demo";
 import { OuiSheetDemo } from "~/components/oui-sheet-demo";
@@ -16,8 +17,8 @@ export default function RouteComponent() {
       <OuiDialogDemo />
       <AlertDialogDemo />
       <OuiAlertDialogDemo />
-      <div />
       <OuiAlertDialogDemo1 />
+      <OuiAlertDialogDemo2 />
       <SheetDemo />
       <OuiSheetDemo />
     </DemoContainer>
