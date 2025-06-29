@@ -108,7 +108,7 @@ export function ListBoxItem<T extends object>({
  *    <ListBoxItemEx1 id="next">Next</ListBoxItemEx1>
  *  </ListBoxEx1>
  */
-export function ListBoxEx1<T extends object>({
+export function ListBoxEx1Pagination<T extends object>({
   className,
   "aria-label": ariaLabel = "Pagination",
   ...props
@@ -132,7 +132,7 @@ export function ListBoxEx1<T extends object>({
 /**
  * Pagination item styled as a button. Selected items use outline variant, others use ghost.
  */
-export function ListBoxItemEx1<T extends object>({
+export function ListBoxItemEx1Pagination<T extends object>({
   className,
   children,
   ...props

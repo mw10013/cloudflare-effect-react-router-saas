@@ -341,31 +341,31 @@ export default function RouteComponent({
       </Oui.Table>
 
       {loaderData && loaderData.totalPages > 1 && (
-        <Oui.ListBoxEx1 selectedKeys={[loaderData.page]}>
-          <Oui.ListBoxItemEx1
+        <Oui.ListBoxEx1Pagination selectedKeys={[loaderData.page]}>
+          <Oui.ListBoxItemEx1Pagination
             id="prev"
             href={`/admin/users?page=${loaderData.page > 1 ? loaderData.page - 1 : 1}${loaderData.filter ? `&filter=${encodeURIComponent(loaderData.filter)}` : ""}`}
             isDisabled={loaderData.page <= 1}
           >
             Previous
-          </Oui.ListBoxItemEx1>
+          </Oui.ListBoxItemEx1Pagination>
           {Array.from({ length: loaderData.totalPages }, (_, i) => (
-            <Oui.ListBoxItemEx1
+            <Oui.ListBoxItemEx1Pagination
               key={i + 1}
               id={i + 1}
               href={`/admin/users?page=${i + 1}${loaderData.filter ? `&filter=${encodeURIComponent(loaderData.filter)}` : ""}`}
             >
               {i + 1}
-            </Oui.ListBoxItemEx1>
+            </Oui.ListBoxItemEx1Pagination>
           ))}
-          <Oui.ListBoxItemEx1
+          <Oui.ListBoxItemEx1Pagination
             id="next"
             href={`/admin/users?page=${loaderData.page < loaderData.totalPages ? loaderData.page + 1 : loaderData.totalPages}${loaderData.filter ? `&filter=${encodeURIComponent(loaderData.filter)}` : ""}`}
             isDisabled={loaderData.page >= loaderData.totalPages}
           >
             Next
-          </Oui.ListBoxItemEx1>
-        </Oui.ListBoxEx1>
+          </Oui.ListBoxItemEx1Pagination>
+        </Oui.ListBoxEx1Pagination>
       )}
 
       <EditNoteDialog
