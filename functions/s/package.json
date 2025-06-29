@@ -33,6 +33,7 @@
   "dependencies": {
     "@ai-sdk/openai": "catalog:",
     "@ai-sdk/react": "catalog:",
+    "@ai-sdk/ui-utils": "catalog:",
     "@openauthjs/openauth": "catalog:",
     "@phosphor-icons/react": "catalog:",
     "@react-router/cloudflare": "catalog:",
@@ -57,7 +58,8 @@
     "stripe": "catalog:",
     "tailwind-merge": "catalog:",
     "tailwind-variants": "catalog:",
-    "workers-ai-provider": "catalog:"
+    "workers-ai-provider": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "catalog:",

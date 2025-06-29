@@ -31,13 +31,21 @@
     {
       "new_sqlite_classes": ["StripeDurableObject"],
       "tag": "v1"
+    },
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["Chat"]
     }
   ],
   "durable_objects": {
     "bindings": [
       {
-        "class_name": "StripeDurableObject",
-        "name": "STRIPE_DO"
+        "name": "STRIPE_DO",
+        "class_name": "StripeDurableObject"
+      },
+      {
+        "name": "CHAT",
+        "class_name": "Chat"
       }
     ]
   },
@@ -98,13 +106,21 @@
         {
           "new_sqlite_classes": ["StripeDurableObject"],
           "tag": "v1"
+        },
+        {
+          "tag": "v1",
+          "new_sqlite_classes": ["Chat"]
         }
       ],
       "durable_objects": {
         "bindings": [
           {
-            "class_name": "StripeDurableObject",
-            "name": "STRIPE_DO"
+            "name": "STRIPE_DO",
+            "class_name": "StripeDurableObject"
+          },
+          {
+            "name": "CHAT",
+            "class_name": "Chat"
           }
         ]
       },

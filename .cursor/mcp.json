@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "Cloudflare Docs": {
+      "url": "https://docs.mcp.cloudflare.com/sse"
+    },
+    "AI Gateway": {
+      "url": "https://ai-gateway.mcp.cloudflare.com/sse"
+    },
+    "Browser Renderering": {
+      "url": "https://browser.mcp.cloudflare.com/sse"
+    }
+  }
+}
