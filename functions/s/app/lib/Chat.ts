@@ -302,6 +302,10 @@ If the user asks to schedule a task, use the schedule tool to schedule the task.
       },
     ]);
   }
+
+  async ping() {
+    return "pong";
+  }
 }
 
 /**

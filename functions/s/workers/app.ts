@@ -15,6 +15,7 @@ import * as Api from "./Api";
 import * as OpenAuth from "./OpenAuth";
 
 export { StripeDurableObject } from "~/lib/StripeDurableObject";
+export { Chat } from "~/lib/Chat";
 
 declare module "react-router" {
   export interface AppLoadContext {

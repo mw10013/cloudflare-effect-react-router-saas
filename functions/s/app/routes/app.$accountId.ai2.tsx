@@ -1,7 +1,7 @@
 import type { Route } from "./+types/app.$accountId.ai2";
 import { createOpenAI } from "@ai-sdk/openai";
 import * as Oui from "@workspace/oui";
-import { SchemaEx } from "@workspace/shared";
+import { ConfigEx, SchemaEx } from "@workspace/shared";
 import {
   Card,
   CardContent,
@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import { generateText } from "ai";
-import { Effect, Schema } from "effect";
+import { Config, ConfigError, Effect, Either, Predicate, Schema } from "effect";
 import OpenAI from "openai";
 import * as Rac from "react-aria-components";
 import { createWorkersAI } from "workers-ai-provider";
@@ -42,14 +42,30 @@ export const action = ReactRouterEx.routeEffect(
       const env = (yield* ReactRouterEx.AppLoadContext).cloudflare.env;
       switch (formData.intent) {
         case "ai":
-          const response = yield* Effect.tryPromise({
-            try: () =>
-              env.AI.run("@cf/meta/llama-3.2-1b-instruct", {
-                prompt: "fee fi",
-              }),
-            catch: (unknown) => new Error(`AI request failed: ${unknown}`),
-          });
-          return { response };
+          {
+            const chat = yield* ConfigEx.object("CHAT").pipe(
+              Config.mapOrFail((object) =>
+                Predicate.hasProperty(object, "idFromName") &&
+                typeof object.idFromName === "function"
+                  ? Either.right(object as Env["CHAT"])
+                  : Either.left(
+                      ConfigError.InvalidData(
+                        [],
+                        `Expected a DurableObjectNamespace but received ${object}`,
+                      ),
+                    ),
+              ),
+            );
+            const id = chat.idFromName("chat");
+            const stub = chat.get(id);
+
+            return {
+              response: "ai",
+              id,
+              ping: yield* Effect.tryPromise(() => stub.ping()),
+            };
+          }
+          break;
         case "openai": {
           const openai = new OpenAI({
             apiKey: env.CF_WORKERS_AI_API_TOKEN,
