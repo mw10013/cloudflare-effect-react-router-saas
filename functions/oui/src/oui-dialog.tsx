@@ -1,6 +1,12 @@
-import type { ReactElement } from "react";
+import type { ReactElement, ReactNode } from "react";
 import type { VariantProps } from "tailwind-variants";
-import React from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useRef,
+  useState,
+} from "react";
 import { XIcon } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { twJoin, twMerge } from "tailwind-merge";
@@ -266,5 +272,63 @@ export function DialogEx2Sheet({
         <Dialog {...props} />
       </ModalEx1>
     </Rac.DialogTrigger>
+  );
+}
+
+type DialogEx1AlertOptions = Omit<
+  DialogEx1AlertProps,
+  "isOpen" | "onOpenChange" | "defaultOpen" | "onConfirm" | "onCancel"
+>;
+
+interface DialogEx1AlertContextType {
+  show: (options: DialogEx1AlertOptions) => Promise<boolean>;
+}
+
+const DialogEx1AlertContext = createContext<
+  DialogEx1AlertContextType | undefined
+>(undefined);
+
+export function useDialogEx1Alert() {
+  const context = useContext(DialogEx1AlertContext);
+  if (!context) {
+    throw new Error(
+      "useDialogEx1Alert must be used within a DialogEx1AlertProvider",
+    );
+  }
+  return context;
+}
+
+export function DialogEx1AlertProvider({ children }: { children: ReactNode }) {
+  const [options, setOptions] = useState<DialogEx1AlertOptions | null>(null);
+  const promiseRef = useRef<{ resolve: (value: boolean) => void } | null>(null);
+
+  const show = useCallback((newOptions: DialogEx1AlertOptions) => {
+    setOptions(newOptions);
+    return new Promise<boolean>((resolve) => {
+      promiseRef.current = { resolve };
+    });
+  }, []);
+
+  const handleClose = (confirmed: boolean) => {
+    if (promiseRef.current) {
+      promiseRef.current.resolve(confirmed);
+    }
+    setOptions(null);
+    promiseRef.current = null;
+  };
+
+  return (
+    <DialogEx1AlertContext.Provider value={{ show }}>
+      {children}
+      {options && (
+        <DialogEx1Alert
+          {...options}
+          isOpen
+          onOpenChange={(isOpen) => !isOpen && handleClose(false)}
+          onConfirm={() => handleClose(true)}
+          onCancel={() => handleClose(false)}
+        />
+      )}
+    </DialogEx1AlertContext.Provider>
   );
 }
