@@ -65,3 +65,29 @@ export function OuiAlertDialogDemo2() {
     </>
   );
 }
+
+export function OuiAlertDialogDemo3() {
+  const alertDialog = Oui.useDialogEx1Alert();
+
+  const handleConfirm = async () => {
+    const confirmed = await alertDialog.show({
+      title: "Are you sure?",
+      children: "This action cannot be undone.",
+      confirmLabel: "Delete",
+    });
+
+    if (confirmed) {
+      // eslint-disable-next-line no-console
+      console.log("Confirmed!");
+    } else {
+      // eslint-disable-next-line no-console
+      console.log("Cancelled!");
+    }
+  };
+
+  return (
+    <Oui.Button variant="outline" onPress={handleConfirm}>
+      Show Programmatic Confirm
+    </Oui.Button>
+  );
+}

@@ -64,7 +64,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Toaster />
         {/* <Oui.ToastRegionEx queue={toastQueue} /> */}
         <Rac.RouterProvider navigate={navigate} useHref={useHrefEx}>
-          {children}
+          <Oui.DialogEx1AlertProvider>{children}</Oui.DialogEx1AlertProvider>
           <ScrollRestoration />
           <Scripts />
         </Rac.RouterProvider>
