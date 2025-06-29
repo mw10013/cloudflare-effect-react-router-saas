@@ -324,7 +324,6 @@ export default function RouteComponent({
                           children:
                             "While you can undelete a user, all of its data cannot be restored. Account memberships will be permenently destroyed.",
                         });
-                        console.log("confirmed", confirmed);
                         if (confirmed) {
                           onAction("soft_delete", user.userId);
                         }
