@@ -237,44 +237,6 @@ export function DialogEx1Alert({
   );
 }
 
-export interface DialogEx2SheetProps
-  extends Omit<DialogProps, "role">, // Prevent 'alertdialog' role
-    Pick<VariantProps<typeof sheetModalStyles>, "side"> {
-  triggerElement: string | ReactElement;
-  modalClassName?: string;
-  overlayClassName?: string;
-}
-
-/**
- * A sheet modal that slides in from a side of the screen.
- * The modal is always dismissable via an outside press.
- */
-export function DialogEx2Sheet({
-  triggerElement,
-  modalClassName,
-  overlayClassName,
-  side,
-  ...props
-}: DialogEx2SheetProps) {
-  return (
-    <Rac.DialogTrigger>
-      {typeof triggerElement === "string" ? (
-        <Button variant="ghost">{triggerElement}</Button>
-      ) : (
-        triggerElement
-      )}
-      <ModalEx1
-        className={modalClassName}
-        overlayClassName={overlayClassName}
-        side={side}
-        isDismissable
-      >
-        <Dialog {...props} />
-      </ModalEx1>
-    </Rac.DialogTrigger>
-  );
-}
-
 type DialogEx1AlertOptions = Omit<
   DialogEx1AlertProps,
   "isOpen" | "onOpenChange" | "defaultOpen" | "onConfirm" | "onCancel"
@@ -336,11 +298,48 @@ export function DialogEx1AlertProvider({ children }: { children: ReactNode }) {
         <DialogEx1Alert
           {...options}
           isOpen
-          onOpenChange={(isOpen) => !isOpen && handleClose(false)}
           onConfirm={() => handleClose(true)}
           onCancel={() => handleClose(false)}
         />
       )}
     </DialogEx1AlertContext.Provider>
+  );
+}
+
+export interface DialogEx2SheetProps
+  extends Omit<DialogProps, "role">, // Prevent 'alertdialog' role
+    Pick<VariantProps<typeof sheetModalStyles>, "side"> {
+  triggerElement: string | ReactElement;
+  modalClassName?: string;
+  overlayClassName?: string;
+}
+
+/**
+ * A sheet modal that slides in from a side of the screen.
+ * The modal is always dismissable via an outside press.
+ */
+export function DialogEx2Sheet({
+  triggerElement,
+  modalClassName,
+  overlayClassName,
+  side,
+  ...props
+}: DialogEx2SheetProps) {
+  return (
+    <Rac.DialogTrigger>
+      {typeof triggerElement === "string" ? (
+        <Button variant="ghost">{triggerElement}</Button>
+      ) : (
+        triggerElement
+      )}
+      <ModalEx1
+        className={modalClassName}
+        overlayClassName={overlayClassName}
+        side={side}
+        isDismissable
+      >
+        <Dialog {...props} />
+      </ModalEx1>
+    </Rac.DialogTrigger>
   );
 }

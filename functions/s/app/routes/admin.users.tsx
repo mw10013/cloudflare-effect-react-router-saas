@@ -124,28 +124,6 @@ export const action = ReactRouterEx.routeEffect(
     }),
 );
 
-function SoftDeleteUserDialog({
-  isOpen,
-  onOpenChange,
-  onConfirm,
-}: {
-  isOpen: boolean;
-  onOpenChange: (isOpen: boolean) => void;
-  onConfirm: () => void;
-}) {
-  return (
-    <Oui.DialogEx1Alert
-      isOpen={isOpen}
-      onOpenChange={onOpenChange}
-      onConfirm={onConfirm}
-      title="Safe delete user?"
-    >
-      While you can undelete a user, all of its data cannot be restored. Account
-      memberships will be permenently destroyed.
-    </Oui.DialogEx1Alert>
-  );
-}
-
 function EditNoteDialog({
   isOpen,
   onOpenChange,
@@ -206,9 +184,7 @@ export default function RouteComponent({
 }: Route.ComponentProps) {
   const fetcher = useFetcher();
   const navigate = useNavigate();
-  const [userIdForSoftDelete, setUserIdForSoftDelete] = useState<
-    number | undefined
-  >();
+  const alertDialog = Oui.useDialogEx1Alert();
   const [editNoteDialog, setEditNoteDialog] = useState<{
     isOpen: boolean;
     userId?: number;
@@ -342,8 +318,16 @@ export default function RouteComponent({
                     <Oui.MenuItem
                       key="soft_delete"
                       id="soft_delete"
-                      onAction={() => {
-                        setUserIdForSoftDelete(user.userId);
+                      onAction={async () => {
+                        const confirmed = await alertDialog.show({
+                          title: "Safe delete user?",
+                          children:
+                            "While you can undelete a user, all of its data cannot be restored. Account memberships will be permenently destroyed.",
+                        });
+                        console.log("confirmed", confirmed);
+                        if (confirmed) {
+                          onAction("soft_delete", user.userId);
+                        }
                       }}
                     >
                       Soft Delete
@@ -383,20 +367,6 @@ export default function RouteComponent({
           </Oui.ListBoxItemEx1>
         </Oui.ListBoxEx1>
       )}
-
-      <SoftDeleteUserDialog
-        isOpen={userIdForSoftDelete !== undefined}
-        onOpenChange={(isOpen) => {
-          if (!isOpen) {
-            setUserIdForSoftDelete(undefined);
-          }
-        }}
-        onConfirm={() => {
-          if (userIdForSoftDelete) {
-            onAction("soft_delete", userIdForSoftDelete);
-          }
-        }}
-      />
 
       <EditNoteDialog
         key={editNoteDialog.userId}

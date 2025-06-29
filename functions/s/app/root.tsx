@@ -17,6 +17,7 @@ import {
 import "@workspace/ui/app.css";
 import type { FlashData } from "./lib/Domain";
 import { createWorkersKVSessionStorage } from "@react-router/cloudflare";
+import * as Oui from "@workspace/oui";
 import { D1 } from "@workspace/shared";
 import { Toaster } from "@workspace/ui/components/ui/sonner";
 import { Effect, Either, Schema } from "effect";
@@ -190,7 +191,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Toaster />
         {/* <Oui.ToastRegionEx queue={toastQueue} /> */}
         <RouterProvider navigate={navigate} useHref={useHrefEx}>
-          {children}
+          <Oui.DialogEx1AlertProvider>{children}</Oui.DialogEx1AlertProvider>
           <ScrollRestoration />
           <Scripts />
         </RouterProvider>
