@@ -1,3 +1,4 @@
+import type { Message } from "@ai-sdk/react";
 import type { Route } from "./+types/app.$accountId.ai2";
 import { createOpenAI } from "@ai-sdk/openai";
 import * as Oui from "@workspace/oui";
@@ -9,6 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card";
+import { useAgentChat } from "agents/ai-react";
+import { useAgent } from "agents/react";
 import { generateText } from "ai";
 import { Config, ConfigError, Effect, Either, Predicate, Schema } from "effect";
 import OpenAI from "openai";
@@ -214,104 +217,50 @@ export default function RouteComponent({
   loaderData,
   actionData,
 }: Route.ComponentProps) {
+  const agent = useAgent({
+    agent: "chat",
+  });
+
+  const {
+    // messages: agentMessages,
+    // input: agentInput,
+    // handleInputChange: handleAgentInputChange,
+    // handleSubmit: handleAgentSubmit,
+    messages,
+    input,
+    handleInputChange,
+    handleSubmit,
+    addToolResult,
+    clearHistory,
+    isLoading,
+    stop,
+  } = useAgentChat({
+    agent,
+    maxSteps: 5,
+  });
+
   return (
-    <div className="flex flex-col gap-8">
-      <header>
-        <h1 className="text-3xl font-bold tracking-tight">AI2</h1>
-        <p className="text-muted-foreground text-sm"></p>
-      </header>
-
-      <Card className="w-fit">
-        <CardHeader>
-          <CardTitle>Prompt</CardTitle>
-          <CardDescription></CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Rac.Form
-            method="post"
-            className="grid gap-6"
-            validationErrors={
-              actionData && "validationErrors" in actionData
-                ? actionData.validationErrors
-                : undefined
+    <div className="stretch mx-auto flex w-full max-w-md flex-col py-24">
+      {messages.map((message) => (
+        <div key={message.id} className="whitespace-pre-wrap">
+          {message.role === "user" ? "User: " : "AI: "}
+          {message.parts.map((part, i) => {
+            switch (part.type) {
+              case "text":
+                return <div key={`${message.id}-${i}`}>{part.text}</div>;
             }
-          >
-            <Oui.Button
-              type="submit"
-              name="intent"
-              value="ai"
-              variant="outline"
-              className="justify-self-end"
-            >
-              Send AI Request
-            </Oui.Button>
-            <Oui.Button
-              type="submit"
-              name="intent"
-              value="openai"
-              variant="outline"
-              className="justify-self-end"
-            >
-              Send OpenAI Request
-            </Oui.Button>
-            <Oui.Button
-              type="submit"
-              name="intent"
-              value="vercel"
-              variant="outline"
-              className="justify-self-end"
-            >
-              Send Vercel Request
-            </Oui.Button>
-            <Oui.Button
-              type="submit"
-              name="intent"
-              value="gateway"
-              variant="outline"
-              className="justify-self-end"
-            >
-              Send Gateway Request
-            </Oui.Button>
-            <Oui.Button
-              type="submit"
-              name="intent"
-              value="gateway1"
-              variant="outline"
-              className="justify-self-end"
-            >
-              Send Gateway1 Request
-            </Oui.Button>
-            <Oui.Button
-              type="submit"
-              name="intent"
-              value="gateway2"
-              variant="outline"
-              className="justify-self-end"
-            >
-              Send Gateway2 Request
-            </Oui.Button>
-            <Oui.Button
-              type="submit"
-              name="intent"
-              value="gemini1"
-              variant="outline"
-              className="justify-self-end"
-            >
-              Send Gemini1 Request
-            </Oui.Button>
-            <Oui.Button
-              type="submit"
-              name="intent"
-              value="gemini2"
-              variant="outline"
-              className="justify-self-end"
-            >
-              Send Gemini2 Request
-            </Oui.Button>
-          </Rac.Form>
-        </CardContent>
-      </Card>
+          })}
+        </div>
+      ))}
 
+      <form onSubmit={handleSubmit}>
+        <input
+          className="fixed bottom-0 mb-8 w-full max-w-md rounded border border-zinc-300 p-2 shadow-xl dark:border-zinc-800 dark:bg-zinc-900"
+          value={input}
+          placeholder="Say something..."
+          onChange={handleInputChange}
+        />
+      </form>
       <pre>
         {JSON.stringify(
           {

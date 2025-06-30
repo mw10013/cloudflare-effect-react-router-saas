@@ -103,6 +103,18 @@ export const sessionMiddleware: Route.unstable_MiddlewareFunction =
                 `sessionMiddleware: downstream middleware/handler failed: ${unknown}`,
               ),
       });
+
+      const url = new URL(request.url);
+      //
+      // Agent requests are handled by the Cloudflare Agents SDK, which returns
+      // a response with immutable headers. We bypass the session commit logic
+      // for these requests to avoid errors and because the session is not
+      // required for the agent's direct communication with the client.
+      //
+      if (url.pathname.startsWith("/agents/")) {
+        return response;
+      }
+
       const nextAppLoadContext = context.get(ReactRouterEx.appLoadContext);
 
       if (nextAppLoadContext.sessionAction === "destroy") {
