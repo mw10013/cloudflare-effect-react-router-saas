@@ -237,59 +237,65 @@ export default function RouteComponent({
   });
 
   return (
-    <div className="stretch mx-auto flex w-full max-w-md flex-col py-24">
-      <div className="space-y-4">
-        {messages.map((message) => {
-          const isUser = message.role === "user";
-          return (
-            <div
-              key={message.id}
-              className={`flex ${isUser ? "justify-end" : "justify-start"}`}
-            >
+    <div
+      data-slot="messages"
+      className="grid h-full grid-rows-[1fr_auto] gap-4"
+    >
+      <div className="overflow-y-auto">
+        <div className="grid gap-2">
+          {messages.map((message) => {
+            const isUser = message.role === "user";
+            return (
               <div
-                className={`flex max-w-[85%] gap-2 ${
-                  isUser ? "flex-row-reverse" : "flex-row"
-                }`}
+                key={message.id}
+                className={`flex ${isUser ? "justify-end" : "justify-start"}`}
               >
-                <div>
-                  {message.parts.map((part, i) => {
-                    if (part.type === "text") {
-                      return (
-                        <Card key={`${message.id}-${i}`} className="p-3">
-                          <MemoizedMarkdown
-                            id={`${message.id}-${i}`}
-                            content={part.text}
-                          />
-                        </Card>
-                      );
-                    }
-                    return null;
-                  })}
+                <div
+                  className={`flex max-w-[85%] gap-2 ${
+                    isUser ? "flex-row-reverse" : "flex-row"
+                  }`}
+                >
+                  <div>
+                    {message.parts.map((part, i) => {
+                      if (part.type === "text") {
+                        return (
+                          <Card key={`${message.id}-${i}`} className="p-3">
+                            <MemoizedMarkdown
+                              id={`${message.id}-${i}`}
+                              content={part.text}
+                            />
+                          </Card>
+                        );
+                      }
+                      return null;
+                    })}
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
+        <pre>
+          {JSON.stringify(
+            {
+              loaderData,
+              actionData,
+            },
+            null,
+            2,
+          )}
+        </pre>
       </div>
 
       <form onSubmit={handleSubmit}>
         <input
-          className="fixed bottom-0 mb-8 w-full max-w-md rounded border border-zinc-300 p-2 shadow-xl dark:border-zinc-800 dark:bg-zinc-900"
+          // className="fixed bottom-0 mb-8 w-full max-w-md rounded border border-zinc-300 p-2 shadow-xl dark:border-zinc-800 dark:bg-zinc-900"
+          className="w-full rounded border border-zinc-300 p-2 shadow-xl dark:border-zinc-800 dark:bg-zinc-900"
           value={input}
           placeholder="Say something..."
           onChange={handleInputChange}
         />
       </form>
-      <pre>
-        {JSON.stringify(
-          {
-            loaderData,
-            actionData,
-          },
-          null,
-          2,
-        )}
-      </pre>
     </div>
   );
 }
