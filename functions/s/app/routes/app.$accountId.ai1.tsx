@@ -19,10 +19,7 @@ export const loader = ReactRouterEx.routeEffect(() =>
   Effect.gen(function* () {}),
 );
 
-export default function RouteComponent({
-  loaderData,
-  actionData,
-}: Route.ComponentProps) {
+export default function RouteComponent({}: Route.ComponentProps) {
   const href = useHref("./api");
   const { messages, input, handleInputChange, handleSubmit, error } = useChat({
     api: href,
@@ -36,39 +33,31 @@ export default function RouteComponent({
       console.log("useChat onFinish:", message);
     },
   });
-  return (
-    <div className="stretch mx-auto flex w-full max-w-md flex-col py-24">
-      {messages.map((message) => (
-        <div key={message.id} className="whitespace-pre-wrap">
-          {message.role === "user" ? "User: " : "AI: "}
-          {message.parts.map((part, i) => {
-            switch (part.type) {
-              case "text":
-                return <div key={`${message.id}-${i}`}>{part.text}</div>;
-            }
-          })}
-        </div>
-      ))}
 
+  // min-h-0 allows this flex item to shrink below its content size, preventing a flex-1 child from expanding the parent.
+  return (
+    <div className="flex min-h-0 flex-1 flex-col gap-2 p-6">
+      <div className="flex-1 overflow-y-auto">
+        {messages.map((message) => (
+          <div key={message.id} className="whitespace-pre-wrap">
+            {message.role === "user" ? "User: " : "AI: "}
+            {message.parts.map((part, i) => {
+              switch (part.type) {
+                case "text":
+                  return <div key={`${message.id}-${i}`}>{part.text}</div>;
+              }
+            })}
+          </div>
+        ))}
+      </div>
       <form onSubmit={handleSubmit}>
         <input
-          className="fixed bottom-0 mb-8 w-full max-w-md rounded border border-zinc-300 p-2 shadow-xl dark:border-zinc-800 dark:bg-zinc-900"
+          className="w-full rounded border border-zinc-300 p-2 shadow-xl dark:border-zinc-800 dark:bg-zinc-900"
           value={input}
           placeholder="Say something..."
           onChange={handleInputChange}
         />
       </form>
-      <pre>
-        {JSON.stringify(
-          {
-            error,
-            loaderData,
-            actionData,
-          },
-          null,
-          2,
-        )}
-      </pre>
     </div>
   );
 }

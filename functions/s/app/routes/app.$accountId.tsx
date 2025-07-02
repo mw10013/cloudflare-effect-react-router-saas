@@ -76,21 +76,17 @@ export default function RouteComponent({
   loaderData: { accountMember, accounts, sessionUser },
 }: Route.ComponentProps) {
   return (
-    <div className="">
-      <SidebarProvider>
-        <AppSidebar
-          accountMember={accountMember}
-          accounts={accounts}
-          sessionUser={sessionUser}
-        />
-        <main>
-          <SidebarTrigger />
-          <div className="flex flex-col gap-2 p-6">
-            <Outlet />
-          </div>
-        </main>
-      </SidebarProvider>
-    </div>
+    <SidebarProvider>
+      <AppSidebar
+        accountMember={accountMember}
+        accounts={accounts}
+        sessionUser={sessionUser}
+      />
+      <main className="flex max-h-svh w-full flex-col">
+        <SidebarTrigger />
+        <Outlet />
+      </main>
+    </SidebarProvider>
   );
 }
 
