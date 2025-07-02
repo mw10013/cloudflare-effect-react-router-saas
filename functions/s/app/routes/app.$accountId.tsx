@@ -72,6 +72,11 @@ export const loader = ReactRouterEx.routeEffect(() =>
   }),
 );
 
+/**
+ * The `<main>` element uses `h-svh` for a stable height, essential for this app shell layout.
+ * `h-dvh` is avoided because it causes jarring content reflows on mobile when browser UI resizes,
+ * which is unsuitable for a layout with internal-only scrolling.
+ */
 export default function RouteComponent({
   loaderData: { accountMember, accounts, sessionUser },
 }: Route.ComponentProps) {
@@ -82,7 +87,7 @@ export default function RouteComponent({
         accounts={accounts}
         sessionUser={sessionUser}
       />
-      <main className="flex max-h-svh w-full flex-col">
+      <main className="flex h-svh w-full flex-col">
         <SidebarTrigger />
         <Outlet />
       </main>
