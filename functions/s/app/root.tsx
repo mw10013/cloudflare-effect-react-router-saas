@@ -199,7 +199,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       {/* shadcn app/layout RootLayout */}
-      <body className="background min-h-svh font-sans antialiased">
+      <body className="background font-sans antialiased">
         <Toaster />
         {/* <Oui.ToastRegionEx queue={toastQueue} /> */}
         <RouterProvider navigate={navigate} useHref={useHrefEx}>
