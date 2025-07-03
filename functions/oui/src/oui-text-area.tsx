@@ -1,3 +1,4 @@
+import type { ComponentProps } from "react";
 import * as Rac from "react-aria-components";
 import {
   composeTailwindRenderProps,
@@ -24,9 +25,13 @@ import {
  * </Oui.TextFieldEx>
  * ```
  */
-export function TextArea({ className, ...props }: Rac.TextAreaProps) {
+export function TextArea({
+  className,
+  ...props
+}: ComponentProps<typeof Rac.TextArea>) {
   return (
     <Rac.TextArea
+      {...props}
       className={composeTailwindRenderProps(className, [
         focusVisibleStyles,
         disabledStyles,
@@ -34,7 +39,6 @@ export function TextArea({ className, ...props }: Rac.TextAreaProps) {
         "data-[invalid]:ring-destructive/20 dark:data-[invalid]:ring-destructive/40 data-[invalid]:border-destructive",
         "data-[disabled]:cursor-not-allowed",
       ])}
-      {...props}
     />
   );
 }
