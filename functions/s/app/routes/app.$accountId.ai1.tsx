@@ -38,7 +38,6 @@ export default function RouteComponent({}: Route.ComponentProps) {
   const lastMessageRef = useRef<HTMLDivElement>(null);
   const spacerRef = useRef<HTMLDivElement>(null);
   const prevMessagesLengthRef = useRef(messages.length);
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   // Scrolls the new user prompt to the top of the view. A spacer div at the
   // end of the message list provides the necessary scroll height.
@@ -84,15 +83,6 @@ export default function RouteComponent({}: Route.ComponentProps) {
     }
   }, [messages.length]);
 
-  // Resets and then sets height to fit content, allowing the textarea to grow and shrink.
-  useLayoutEffect(() => {
-    const textArea = textAreaRef.current;
-    if (textArea) {
-      textArea.style.height = "auto";
-      textArea.style.height = `${textArea.scrollHeight}px`;
-    }
-  }, [input]);
-
   // min-h-0 allows this flex item to shrink below its content size, preventing a flex-1 child from expanding the parent.
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-2 p-6">
@@ -125,7 +115,6 @@ export default function RouteComponent({}: Route.ComponentProps) {
       </div>
       <form onSubmit={handleSubmit}>
         <Oui.TextArea
-          ref={textAreaRef}
           name="prompt"
           value={input}
           placeholder="Prompt..."
