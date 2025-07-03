@@ -1,3 +1,4 @@
+import type { KeyboardEvent } from "react";
 import type { Route } from "./+types/app.$accountId.ai1";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { useChat } from "@ai-sdk/react";
@@ -113,14 +114,29 @@ export default function RouteComponent({}: Route.ComponentProps) {
         <div ref={spacerRef} />
       </div>
       <form onSubmit={handleSubmit}>
-        <input
-          className="border-border bg-background text-foreground placeholder:text-muted-foreground w-full rounded border p-2 shadow-xl"
+        <Oui.TextArea
           name="prompt"
           value={input}
           placeholder="Prompt..."
           onChange={handleInputChange}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              e.currentTarget.form?.requestSubmit();
+            }
+          }}
         />
       </form>
     </div>
   );
 }
+
+/* Assistant: Leave this here for reference.
+<input
+  className="border-border bg-background text-foreground placeholder:text-muted-foreground w-full rounded border p-2 shadow-xl"
+  name="prompt"
+  value={input}
+  placeholder="Prompt..."
+  onChange={handleInputChange}
+/> 
+*/
