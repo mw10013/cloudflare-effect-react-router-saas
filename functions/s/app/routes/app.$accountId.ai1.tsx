@@ -118,7 +118,7 @@ export default function RouteComponent({}: Route.ComponentProps) {
           name="prompt"
           value={input}
           placeholder="Prompt..."
-          className="max-h-40"
+          className="max-h-40 min-h-10 resize-none"
           onChange={handleInputChange}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -131,13 +131,3 @@ export default function RouteComponent({}: Route.ComponentProps) {
     </div>
   );
 }
-
-/* Assistant: Leave this here for reference.
-<input
-  className="border-border bg-background text-foreground placeholder:text-muted-foreground w-full rounded border p-2 shadow-xl"
-  name="prompt"
-  value={input}
-  placeholder="Prompt..."
-  onChange={handleInputChange}
-/> 
-*/
