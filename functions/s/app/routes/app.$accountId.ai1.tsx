@@ -84,6 +84,7 @@ export default function RouteComponent({}: Route.ComponentProps) {
     }
   }, [messages.length]);
 
+  // Resets and then sets height to fit content, allowing the textarea to grow and shrink.
   useLayoutEffect(() => {
     const textArea = textAreaRef.current;
     if (textArea) {
