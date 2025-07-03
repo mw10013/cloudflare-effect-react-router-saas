@@ -29,7 +29,7 @@ export default function RouteComponent({}: Route.ComponentProps) {
       {
         id: "0",
         role: "system",
-        content: "You are a helpful assistant who responds concisely.",
+        content: "Laconic",
       },
     ],
   });

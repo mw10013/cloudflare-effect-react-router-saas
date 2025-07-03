@@ -227,6 +227,13 @@ export default function RouteComponent({
     stop,
   } = useAgentChat({
     agent,
+    initialMessages: [
+      {
+        id: "0",
+        role: "system",
+        content: "Laconic",
+      },
+    ],
     maxSteps: 5,
   });
 
