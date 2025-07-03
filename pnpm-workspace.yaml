@@ -23,7 +23,7 @@ catalog:
   "@types/node": 22.13.14
   "@types/react": 19.1.0
   "@types/react-dom": 19.1.2
-  agents: 0.0.99
+  agents: 0.0.101
   ai: 4.3.16
   aws4fetch: 1.0.20
   effect: 3.16.5
