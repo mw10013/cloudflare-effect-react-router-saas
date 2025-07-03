@@ -67,8 +67,8 @@ catalogs:
       specifier: 1.0.20
       version: 1.0.20
     effect:
-      specifier: 3.16.5
-      version: 3.16.5
+      specifier: 3.16.12
+      version: 3.16.12
     hono:
       specifier: 4.7.11
       version: 4.7.11
@@ -196,7 +196,7 @@ importers:
         version: 3.6.0
       effect:
         specifier: 'catalog:'
-        version: 3.16.5
+        version: 3.16.12
       isbot:
         specifier: 'catalog:'
         version: 5.1.28
@@ -348,7 +348,7 @@ importers:
         version: 1.0.20
       effect:
         specifier: 'catalog:'
-        version: 3.16.5
+        version: 3.16.12
       hono:
         specifier: 'catalog:'
         version: 4.7.11
@@ -457,7 +457,7 @@ importers:
     dependencies:
       effect:
         specifier: 'catalog:'
-        version: 3.16.5
+        version: 3.16.12
       react-aria-components:
         specifier: 'catalog:'
         version: 1.7.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -3526,8 +3526,8 @@ packages:
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
-  effect@3.16.5:
-    resolution: {integrity: sha512-7nA+ZPMLoHItabNRV95RpMtwVw2k3BDNhILP4ffo8dG7zGR04XGjarP1JbO+jdBbTRET3eGx1Nz+hWB9kSOajw==}
+  effect@3.16.12:
+    resolution: {integrity: sha512-N39iBk0K71F9nb442TLbTkjl24FLUzuvx2i1I2RsEAQsdAdUTuUoW0vlfUXgkMTUOnYqKnWcFfqw4hK4Pw27hg==}
 
   electron-to-chromium@1.5.135:
     resolution: {integrity: sha512-8gXUdEmvb+WCaYUhA0Svr08uSeRjM2w3x5uHOc1QbaEVzJXB8rgm5eptieXzyKoVEtinLvW6MtTcurA65PeS1Q==}
@@ -8776,7 +8776,7 @@ snapshots:
 
   ee-first@1.1.1: {}
 
-  effect@3.16.5:
+  effect@3.16.12:
     dependencies:
       '@standard-schema/spec': 1.0.0
       fast-check: 3.23.2
