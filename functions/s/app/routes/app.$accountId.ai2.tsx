@@ -1,15 +1,10 @@
 import type { Message } from "@ai-sdk/react";
+import type { KeyboardEvent } from "react";
 import type { Route } from "./+types/app.$accountId.ai2";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { createOpenAI } from "@ai-sdk/openai";
 import * as Oui from "@workspace/oui";
 import { ConfigEx, SchemaEx } from "@workspace/shared";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui/components/ui/card";
 import { useAgentChat } from "agents/ai-react";
 import { useAgent } from "agents/react";
 import { generateText } from "ai";
@@ -17,7 +12,6 @@ import { Config, ConfigError, Effect, Either, Predicate, Schema } from "effect";
 import OpenAI from "openai";
 import * as Rac from "react-aria-components";
 import { createWorkersAI } from "workers-ai-provider";
-import { MemoizedMarkdown } from "~/components/memoized-markdown";
 import * as ReactRouterEx from "~/lib/ReactRouterEx";
 
 export const loader = ReactRouterEx.routeEffect(() =>
@@ -236,64 +230,97 @@ export default function RouteComponent({
     maxSteps: 5,
   });
 
-  return (
-    <div
-      data-slot="messages"
-      className="grid h-full grid-rows-[1fr_auto] gap-4"
-    >
-      <div className="overflow-y-auto">
-        <div className="grid gap-2">
-          {messages.map((message) => {
-            const isUser = message.role === "user";
-            return (
-              <div
-                key={message.id}
-                className={`flex ${isUser ? "justify-end" : "justify-start"}`}
-              >
-                <div
-                  className={`flex max-w-[85%] gap-2 ${
-                    isUser ? "flex-row-reverse" : "flex-row"
-                  }`}
-                >
-                  <div>
-                    {message.parts.map((part, i) => {
-                      if (part.type === "text") {
-                        return (
-                          <Card key={`${message.id}-${i}`} className="p-3">
-                            <MemoizedMarkdown
-                              id={`${message.id}-${i}`}
-                              content={part.text}
-                            />
-                          </Card>
-                        );
-                      }
-                      return null;
-                    })}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <pre>
-          {JSON.stringify(
-            {
-              loaderData,
-              actionData,
-            },
-            null,
-            2,
-          )}
-        </pre>
-      </div>
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const lastMessageRef = useRef<HTMLDivElement>(null);
+  const spacerRef = useRef<HTMLDivElement>(null);
+  const prevMessagesLengthRef = useRef(messages.length);
 
+  // Scrolls the new user prompt to the top of the view. A spacer div at the
+  // end of the message list provides the necessary scroll height.
+  useEffect(() => {
+    const messagesLength = messages.length;
+    const lastMessage = messages[messagesLength - 1];
+
+    if (
+      messagesLength > prevMessagesLengthRef.current &&
+      lastMessage?.role === "user"
+    ) {
+      lastMessageRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+
+    prevMessagesLengthRef.current = messagesLength;
+  }, [messages.length]);
+
+  // Dynamically sizes a spacer div, allowing the last message to scroll to the
+  // top of the view while preventing the user from scrolling past it entirely.
+  // `useLayoutEffect` is used to calculate the spacer's height (container
+  // height minus one line of text) and apply it synchronously before the browser
+  // paints, which avoids a visual flicker.
+  useLayoutEffect(() => {
+    const container = messagesContainerRef.current;
+    const spacerEl = spacerRef.current;
+
+    if (container && spacerEl) {
+      const observer = new ResizeObserver(() => {
+        const containerHeight = container.clientHeight;
+        const newSpacerHeight = Math.max(
+          0,
+          containerHeight - 40, // 40px = 1.5rem (line) + 1rem (margin)
+        );
+        spacerEl.style.height = `${newSpacerHeight}px`;
+      });
+
+      observer.observe(container);
+
+      return () => observer.disconnect();
+    }
+  }, [messages.length]);
+
+  return (
+    <div className="flex min-h-0 flex-1 flex-col gap-2 p-6">
+      <div
+        ref={messagesContainerRef}
+        data-slot="message-container"
+        className="flex-1 overflow-y-auto"
+      >
+        {messages.map((message, index) => (
+          <div
+            ref={index === messages.length - 1 ? lastMessageRef : null}
+            data-slot="message"
+            key={message.id}
+            className="mb-4 whitespace-pre-wrap"
+          >
+            <span className="font-bold">
+              {message.role.charAt(0).toUpperCase() +
+                message.role.slice(1) +
+                ": "}
+            </span>
+            {message.parts.map((part, i) => {
+              switch (part.type) {
+                case "text":
+                  return <div key={`${message.id}-${i}`}>{part.text}</div>;
+              }
+            })}
+          </div>
+        ))}
+        <div ref={spacerRef} />
+      </div>
       <form onSubmit={handleSubmit}>
-        <input
-          // className="fixed bottom-0 mb-8 w-full max-w-md rounded border border-zinc-300 p-2 shadow-xl dark:border-zinc-800 dark:bg-zinc-900"
-          className="w-full rounded border border-zinc-300 p-2 shadow-xl dark:border-zinc-800 dark:bg-zinc-900"
+        <Oui.TextArea
+          name="prompt"
           value={input}
-          placeholder="Say something..."
+          placeholder="Prompt..."
+          className="max-h-40 min-h-10 resize-none"
           onChange={handleInputChange}
+          onKeyDown={(e: KeyboardEvent<HTMLTextAreaElement>) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              e.currentTarget.form?.requestSubmit();
+            }
+          }}
         />
       </form>
     </div>
