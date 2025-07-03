@@ -64,15 +64,6 @@ export default function RouteComponent({}: Route.ComponentProps) {
           "Absolutely! For instance, if you asked me about the basics of quantum computing, I could explain the fundamental principles, discuss real-world applications, and even suggest resources for further reading. Or, if you're working on a project and need advice on best practices, I can provide step-by-step guidance and highlight common pitfalls to avoid. Whatever your curiosity, I'm here to help with detailed, engaging responses!",
       },
     ],
-    onError: (err) => {
-      console.error("useChat onError:", err);
-    },
-    onResponse: (res) => {
-      console.log("useChat onResponse:", res);
-    },
-    onFinish: (message) => {
-      console.log("useChat onFinish:", message);
-    },
   });
 
   // min-h-0 allows this flex item to shrink below its content size, preventing a flex-1 child from expanding the parent.
@@ -101,9 +92,10 @@ export default function RouteComponent({}: Route.ComponentProps) {
       </div>
       <form onSubmit={handleSubmit}>
         <input
-          className="w-full rounded border border-zinc-300 p-2 shadow-xl dark:border-zinc-800 dark:bg-zinc-900"
+          className="border-border bg-background text-foreground placeholder:text-muted-foreground w-full rounded border p-2 shadow-xl"
+          name="prompt"
           value={input}
-          placeholder="Say something..."
+          placeholder="Prompt..."
           onChange={handleInputChange}
         />
       </form>
