@@ -101,24 +101,7 @@ select json_group_array(json_object(
     'stripeProductId', a.stripeProductId, 
     'planName', a.planName, 
     'subscriptionStatus', a.subscriptionStatus,
-    'createdAt', a.createdAt,
-		'accountMembers', (select json_group_array(json_object(
-			'accountMemberId', am.accountMemberId, 
-      'userId', am.userId, 
-      'accountId', am.accountId, 
-      'status', am.status, 
-      'role', am.role,
-			'user', json_object(
-        'userId', u1.userId, 
-        'name', u1.name, 
-        'email', u1.email, 
-        'userType', u1.userType, 
-        'note', u1.note,
-        'createdAt', u1.createdAt, 
-        'lockedAt', u1.lockedAt,
-        'deletedAt', u1.deletedAt
-      )
-		)) from AccountMember am inner join User u1 on u1.userId = am.userId where am.accountId = a.accountId)
+    'createdAt', a.createdAt
   )
 )) as data from User u inner join Account a on a.userId = u.userId where userType = 'customer' order by u.email
 				`,
