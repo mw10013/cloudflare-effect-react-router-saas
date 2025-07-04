@@ -2,9 +2,9 @@ import type { Route } from "./+types/admin.customers";
 import { SchemaEx } from "@workspace/shared";
 import { Effect, Schema } from "effect";
 import { redirect } from "react-router";
+import { UserIdFromString } from "~/lib/Domain";
 import { IdentityMgr } from "~/lib/IdentityMgr";
 import * as ReactRouterEx from "~/lib/ReactRouterEx";
-import { Stripe } from "~/lib/Stripe";
 
 export const loader = ReactRouterEx.routeEffect(
   ({ request }: Route.LoaderArgs) =>
@@ -56,6 +56,25 @@ export const loader = ReactRouterEx.routeEffect(
         totalPages,
         filter,
       };
+    }),
+);
+
+export const action = ReactRouterEx.routeEffect(
+  ({ request }: Route.ActionArgs) =>
+    Effect.gen(function* () {
+      const FormDataSchema = Schema.Struct({
+        intent: Schema.Literal("update_note"),
+        userId: UserIdFromString,
+        note: Schema.String,
+      });
+      const formData = yield* SchemaEx.decodeRequestFormData({
+        request,
+        schema: FormDataSchema,
+      });
+      yield* IdentityMgr.updateUserNote({
+        userId: formData.userId,
+        note: formData.note,
+      });
     }),
 );
 
