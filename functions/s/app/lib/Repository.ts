@@ -7,6 +7,7 @@ import {
   AccountMemberWithUser,
   AccountWithUser,
   Customer,
+  CustomersPaginated,
   User,
   UsersPaginated,
 } from "./Domain";
@@ -112,6 +113,65 @@ select json_group_array(json_object(
             Schema.decodeUnknown(
               SchemaEx.DataFromResult(Schema.Array(Customer)),
             ),
+          ),
+        ),
+
+      getCustomersPaginated: ({
+        limit,
+        offset,
+        filter,
+      }: {
+        limit: number;
+        offset: number;
+        filter?: string;
+      }) =>
+        pipe(
+          d1
+            .prepare(
+              `
+with PaginatedCustomers as (
+  select * from User u
+  where u.userType = 'customer' and (?1 is null or u.email like '%' || ?1 || '%')
+  order by u.email
+  limit ?2 offset ?3
+)
+select json_object(
+  'customers', (
+    select json_group_array(json_object(
+      'userId', u.userId,
+      'name', u.name,
+      'email', u.email,
+      'userType', u.userType,
+      'note', u.note,
+      'createdAt', u.createdAt,
+      'lockedAt', u.lockedAt,
+      'deletedAt', u.deletedAt,
+      'account', json_object(
+        'accountId', a.accountId,
+        'userId', a.userId,
+        'stripeCustomerId', a.stripeCustomerId,
+        'stripeSubscriptionId', a.stripeSubscriptionId,
+        'stripeProductId', a.stripeProductId,
+        'planName', a.planName,
+        'subscriptionStatus', a.subscriptionStatus,
+        'createdAt', a.createdAt
+      )
+    ))
+    from PaginatedCustomers u
+    inner join Account a on u.userId = a.userId
+  ),
+  'count', (
+    select count(*)
+    from User u
+    where u.userType = 'customer' and (?1 is null or u.email like '%' || ?1 || '%')
+  )
+) as data`,
+            )
+            .bind(filter === "" ? null : filter, limit, offset),
+          d1.first,
+          Effect.flatMap(Effect.fromNullable),
+          Effect.flatMap(
+            Schema.decodeUnknown(SchemaEx.DataFromResult(CustomersPaginated)),
           ),
         ),
 

@@ -137,6 +137,13 @@ export class Customer extends User.extend<Customer>("Customer")({
   account: Account,
 }) {}
 
+export class CustomersPaginated extends Schema.Class<CustomersPaginated>(
+  "CustomersPaginated",
+)({
+  customers: Schema.Array(Customer),
+  count: Schema.Number,
+}) {}
+
 export class UsersPaginated extends Schema.Class<UsersPaginated>(
   "UsersPaginated",
 )({

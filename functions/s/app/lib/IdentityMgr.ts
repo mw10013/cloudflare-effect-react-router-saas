@@ -28,8 +28,8 @@ export class IdentityMgr extends Effect.Service<IdentityMgr>()("IdentityMgr", {
     return {
       provisionUser: ({ email }: Pick<User, "email">) =>
         repository.upsertUser({ email }),
-      getUsers: () => repository.getUsers(),
 
+      getUsers: () => repository.getUsers(),
       getUsersPaginated: ({
         page,
         pageSize,
@@ -82,6 +82,21 @@ export class IdentityMgr extends Effect.Service<IdentityMgr>()("IdentityMgr", {
       }) => repository.updateUserNote({ userId, note }),
 
       getCustomers: () => repository.getCustomers(),
+
+      getCustomersPaginated: ({
+        page,
+        pageSize,
+        filter,
+      }: {
+        page: number;
+        pageSize: number;
+        filter?: string;
+      }) =>
+        repository.getCustomersPaginated({
+          limit: pageSize,
+          offset: (page - 1) * pageSize,
+          filter,
+        }),
 
       getAccountForUser: ({ userId }: Pick<User, "userId">) =>
         repository.getAccountForUser({ userId }),
