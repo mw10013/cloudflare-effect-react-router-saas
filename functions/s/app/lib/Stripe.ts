@@ -426,6 +426,21 @@ export class Stripe extends Effect.Service<Stripe>()("Stripe", {
             "motio2@mail.com",
             "u@u.com",
             "u1@u.com",
+            "u2@u.com",
+            "u3@u.com",
+            "u4@u.com",
+            "u5@u.com",
+            "u6@u.com",
+            "u7@u.com",
+            "u8@u.com",
+            "u9@u.com",
+            "u10@u.com",
+            "u11@u.com",
+            "u12@u.com",
+            "u13@u.com",
+            "u14@u.com",
+            "u15@u.com",
+            "u16@u.com",
           ].map((s) =>
             Effect.gen(function* () {
               const email = yield* Schema.decode(Email)(s);
