@@ -1,19 +1,8 @@
-import type { KeyboardEvent } from "react";
 import type { Route } from "./+types/app.$accountId.ai1";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { useChat } from "@ai-sdk/react";
 import * as Oui from "@workspace/oui";
-import { ConfigEx, SchemaEx } from "@workspace/shared";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui/components/ui/card";
-import { generateText, streamText } from "ai";
-import { Config, ConfigError, Effect, Either, Schema } from "effect";
-import * as Rac from "react-aria-components";
+import { Effect } from "effect";
 import { useHref } from "react-router";
 import * as ReactRouterEx from "~/lib/ReactRouterEx";
 

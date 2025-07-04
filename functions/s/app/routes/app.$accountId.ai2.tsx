@@ -1,4 +1,3 @@
-import type { KeyboardEvent } from "react";
 import type { Route } from "./+types/app.$accountId.ai2";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import * as Oui from "@workspace/oui";
@@ -122,7 +121,7 @@ export default function RouteComponent({}: Route.ComponentProps) {
           placeholder="Prompt..."
           className="max-h-40 min-h-10 resize-none"
           onChange={handleInputChange}
-          onKeyDown={(e: KeyboardEvent<HTMLTextAreaElement>) => {
+          onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
               e.currentTarget.form?.requestSubmit();
