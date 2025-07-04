@@ -11,6 +11,7 @@ export const action = ReactRouterEx.routeEffect(
       const { messages } = yield* Effect.tryPromise(
         () => request.json() as Promise<{ messages: any[] }>,
       );
+      yield* Effect.log({ messages });
       const openai = createOpenAI({
         apiKey: env.GOOGLE_AI_STUDIO_API_KEY,
         // OpenAI client automatically adds /chat/completions to the end of the baseURL
