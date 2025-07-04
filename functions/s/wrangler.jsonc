@@ -29,12 +29,8 @@
   },
   "migrations": [
     {
-      "new_sqlite_classes": ["StripeDurableObject"],
-      "tag": "v1"
-    },
-    {
       "tag": "v1",
-      "new_sqlite_classes": ["Chat"]
+      "new_sqlite_classes": ["StripeDurableObject", "Chat"]
     }
   ],
   "durable_objects": {
@@ -105,7 +101,11 @@
       "migrations": [
         {
           "tag": "v1",
-          "new_sqlite_classes": ["StripeDurableObject", "Chat"]
+          "new_sqlite_classes": ["StripeDurableObject"]
+        },
+        {
+          "tag": "v2",
+          "new_sqlite_classes": ["Chat"]
         }
       ],
       "durable_objects": {
