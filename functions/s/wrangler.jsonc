@@ -105,7 +105,7 @@
       "migrations": [
         {
           "tag": "v1",
-          "new_sqlite_classes": ["StripeDurableObject"]
+          "new_sqlite_classes": ["StripeDurableObject", "Chat"]
         }
       ],
       "durable_objects": {
@@ -113,6 +113,10 @@
           {
             "name": "STRIPE_DO",
             "class_name": "StripeDurableObject"
+          },
+          {
+            "name": "CHAT",
+            "class_name": "Chat"
           }
         ]
       },
