@@ -178,10 +178,7 @@ function EditNoteDialog({
   );
 }
 
-export default function RouteComponent({
-  loaderData,
-  actionData,
-}: Route.ComponentProps) {
+export default function RouteComponent({ loaderData }: Route.ComponentProps) {
   const fetcher = useFetcher();
   const navigate = useNavigate();
   const alertDialog = Oui.useDialogEx1Alert();
