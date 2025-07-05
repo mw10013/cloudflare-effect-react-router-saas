@@ -1,11 +1,21 @@
 import type { UIMessage } from "ai";
+import type { Tokens } from "marked";
 import type { Route } from "./+types/app.$accountId.ai1";
-import React, { memo, useEffect, useLayoutEffect, useRef } from "react";
+import React, {
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { useChat } from "@ai-sdk/react";
 import * as Oui from "@workspace/oui";
 import { Effect } from "effect";
 import equal from "fast-deep-equal";
+import { marked } from "marked";
+import ReactMarkdown from "react-markdown";
 import { useHref } from "react-router";
+import remarkGfm from "remark-gfm";
 import * as ReactRouterEx from "~/lib/ReactRouterEx";
 
 export const loader = ReactRouterEx.routeEffect(() =>
@@ -147,7 +157,7 @@ function PureMessage({
       <span className="font-bold">
         {message.role.charAt(0).toUpperCase() + message.role.slice(1) + ": "}
       </span>
-      {message.content}
+      <Markdown content={message.content} id={message.id} />
     </div>
   );
 }
@@ -155,3 +165,31 @@ function PureMessage({
 export const Message = memo(PureMessage, (prevProps, nextProps) =>
   equal(prevProps.message, nextProps.message),
 );
+
+function parseMarkdownIntoBlocks(markdown: string): string[] {
+  const tokens: TokensList = marked.lexer(markdown);
+  return tokens.map((token: Tokens.Generic) => token.raw);
+}
+
+type TokensList = Array<Tokens.Generic & { raw: string }>;
+
+const MarkdownBlock = memo(
+  ({ content }: { content: string }) => (
+    <div className="markdown-body">
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+    </div>
+  ),
+  (prevProps, nextProps) => prevProps.content === nextProps.content,
+);
+MarkdownBlock.displayName = "MarkdownBlock";
+
+export const Markdown = memo(
+  ({ content, id }: { content: string; id: string }) => {
+    const blocks = useMemo(() => parseMarkdownIntoBlocks(content), [content]);
+    return blocks.map((block, index) => (
+      // biome-ignore lint/suspicious/noArrayIndexKey: immutable index
+      <MarkdownBlock content={block} key={`${id}-block_${index}`} />
+    ));
+  },
+);
+Markdown.displayName = "Markdown";
