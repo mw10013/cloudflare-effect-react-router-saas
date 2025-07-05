@@ -44,6 +44,7 @@
     "ai": "catalog:",
     "aws4fetch": "catalog:",
     "effect": "catalog:",
+    "fast-deep-equal": "catalog:",
     "hono": "catalog:",
     "isbot": "catalog:",
     "lucide-react": "catalog:",
