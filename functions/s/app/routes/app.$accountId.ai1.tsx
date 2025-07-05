@@ -1,9 +1,10 @@
 import type { UIMessage } from "ai";
 import type { Route } from "./+types/app.$accountId.ai1";
-import React, { useEffect, useLayoutEffect, useRef } from "react";
+import React, { memo, useEffect, useLayoutEffect, useRef } from "react";
 import { useChat } from "@ai-sdk/react";
 import * as Oui from "@workspace/oui";
 import { Effect } from "effect";
+import equal from "fast-deep-equal";
 import { useHref } from "react-router";
 import * as ReactRouterEx from "~/lib/ReactRouterEx";
 
@@ -103,7 +104,7 @@ export default function RouteComponent({}: Route.ComponentProps) {
   );
 }
 
-export function Messages({
+function PureMessages({
   messages,
   lastMessageRef,
 }: {
@@ -130,3 +131,9 @@ export function Messages({
     </>
   );
 }
+
+export const Messages = memo(PureMessages, (prevProps, nextProps) => {
+  if (prevProps.messages.length !== nextProps.messages.length) return false;
+  if (!equal(prevProps.messages, nextProps.messages)) return false;
+  return true;
+});
