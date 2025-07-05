@@ -114,19 +114,11 @@ function PureMessages({
   return (
     <>
       {messages.map((message, index) => (
-        <div
-          ref={index === messages.length - 1 ? lastMessageRef : null}
-          data-slot="message"
+        <Message
           key={message.id}
-          className="mb-4 whitespace-pre-wrap"
-        >
-          <span className="font-bold">
-            {message.role.charAt(0).toUpperCase() +
-              message.role.slice(1) +
-              ": "}
-          </span>
-          {message.content}
-        </div>
+          message={message}
+          messageRef={index === messages.length - 1 ? lastMessageRef : null}
+        />
       ))}
     </>
   );
@@ -137,3 +129,28 @@ export const Messages = memo(PureMessages, (prevProps, nextProps) => {
   if (!equal(prevProps.messages, nextProps.messages)) return false;
   return true;
 });
+
+function PureMessage({
+  message,
+  messageRef,
+}: {
+  message: UIMessage;
+  messageRef: React.Ref<HTMLDivElement> | null;
+}) {
+  return (
+    <div
+      ref={messageRef}
+      data-slot="message"
+      className="mb-4 whitespace-pre-wrap"
+    >
+      <span className="font-bold">
+        {message.role.charAt(0).toUpperCase() + message.role.slice(1) + ": "}
+      </span>
+      {message.content}
+    </div>
+  );
+}
+
+export const Message = memo(PureMessage, (prevProps, nextProps) =>
+  equal(prevProps.message, nextProps.message),
+);
