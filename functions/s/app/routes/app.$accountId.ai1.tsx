@@ -1,5 +1,6 @@
+import type { Message } from "@ai-sdk/react";
 import type { Route } from "./+types/app.$accountId.ai1";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { useChat } from "@ai-sdk/react";
 import * as Oui from "@workspace/oui";
 import { Effect } from "effect";
@@ -80,26 +81,7 @@ export default function RouteComponent({}: Route.ComponentProps) {
         data-slot="message-container"
         className="flex-1 overflow-y-auto"
       >
-        {messages.map((message, index) => (
-          <div
-            ref={index === messages.length - 1 ? lastMessageRef : null}
-            data-slot="message"
-            key={message.id}
-            className="mb-4 whitespace-pre-wrap"
-          >
-            <span className="font-bold">
-              {message.role.charAt(0).toUpperCase() +
-                message.role.slice(1) +
-                ": "}
-            </span>
-            {message.parts.map((part, i) => {
-              switch (part.type) {
-                case "text":
-                  return <div key={`${message.id}-${i}`}>{part.text}</div>;
-              }
-            })}
-          </div>
-        ))}
+        <Messages messages={messages} lastMessageRef={lastMessageRef} />
         <div ref={spacerRef} />
       </div>
       <form onSubmit={handleSubmit}>
@@ -118,5 +100,33 @@ export default function RouteComponent({}: Route.ComponentProps) {
         />
       </form>
     </div>
+  );
+}
+
+export function Messages({
+  messages,
+  lastMessageRef,
+}: {
+  messages: Message[];
+  lastMessageRef: React.Ref<HTMLDivElement>;
+}) {
+  return (
+    <>
+      {messages.map((message, index) => (
+        <div
+          ref={index === messages.length - 1 ? lastMessageRef : null}
+          data-slot="message"
+          key={message.id}
+          className="mb-4 whitespace-pre-wrap"
+        >
+          <span className="font-bold">
+            {message.role.charAt(0).toUpperCase() +
+              message.role.slice(1) +
+              ": "}
+          </span>
+          {message.content}
+        </div>
+      ))}
+    </>
   );
 }
