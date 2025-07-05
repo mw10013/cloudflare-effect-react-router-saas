@@ -1,4 +1,4 @@
-import type { Message } from "@ai-sdk/react";
+import type { UIMessage } from "ai";
 import type { Route } from "./+types/app.$accountId.ai1";
 import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { useChat } from "@ai-sdk/react";
@@ -107,7 +107,7 @@ export function Messages({
   messages,
   lastMessageRef,
 }: {
-  messages: Message[];
+  messages: UIMessage[];
   lastMessageRef: React.Ref<HTMLDivElement>;
 }) {
   return (
