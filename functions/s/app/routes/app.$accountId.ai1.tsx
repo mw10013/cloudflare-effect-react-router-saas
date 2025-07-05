@@ -87,6 +87,7 @@ export default function RouteComponent({}: Route.ComponentProps) {
       </div>
       <form onSubmit={handleSubmit}>
         <Oui.TextArea
+          autoFocus
           name="prompt"
           value={input}
           placeholder="Prompt..."
