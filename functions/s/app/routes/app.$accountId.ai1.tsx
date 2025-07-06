@@ -1,11 +1,6 @@
 import type { UIMessage } from "ai";
 import type { Route } from "./+types/app.$accountId.ai1";
-import React, {
-  memo,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-} from "react";
+import React, { memo, useEffect, useLayoutEffect, useRef } from "react";
 import { useChat } from "@ai-sdk/react";
 import * as Oui from "@workspace/oui";
 import { Effect } from "effect";
@@ -146,6 +141,7 @@ function PureMessage({
   message: UIMessage;
   messageRef: React.Ref<HTMLDivElement> | null;
 }) {
+  console.log(JSON.stringify(message, null, 2));
   return (
     <div
       ref={messageRef}
