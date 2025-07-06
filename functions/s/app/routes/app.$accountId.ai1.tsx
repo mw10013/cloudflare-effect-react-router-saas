@@ -1,11 +1,9 @@
 import type { UIMessage } from "ai";
-import type { Tokens } from "marked";
 import type { Route } from "./+types/app.$accountId.ai1";
 import React, {
   memo,
   useEffect,
   useLayoutEffect,
-  useMemo,
   useRef,
 } from "react";
 import { useChat } from "@ai-sdk/react";
@@ -157,7 +155,16 @@ function PureMessage({
       <span className="font-bold">
         {message.role.charAt(0).toUpperCase() + message.role.slice(1) + ": "}
       </span>
-      <Markdown content={message.content} id={message.id} />
+      {message.parts && message.parts.length > 0 ? (
+        message.parts.map((part, index) => {
+          if (part.type === "text") {
+            return <Markdown text={part.text} key={index} />;
+          }
+          return null;
+        })
+      ) : (
+        <Markdown text={message.content} />
+      )}
     </div>
   );
 }
@@ -166,30 +173,10 @@ export const Message = memo(PureMessage, (prevProps, nextProps) =>
   equal(prevProps.message, nextProps.message),
 );
 
-function parseMarkdownIntoBlocks(markdown: string): string[] {
-  const tokens: TokensList = marked.lexer(markdown);
-  return tokens.map((token: Tokens.Generic) => token.raw);
-}
-
-type TokensList = Array<Tokens.Generic & { raw: string }>;
-
-const MarkdownBlock = memo(
-  ({ content }: { content: string }) => (
-    <div className="markdown-body">
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
-    </div>
-  ),
-  (prevProps, nextProps) => prevProps.content === nextProps.content,
-);
-MarkdownBlock.displayName = "MarkdownBlock";
-
 export const Markdown = memo(
-  ({ content, id }: { content: string; id: string }) => {
-    const blocks = useMemo(() => parseMarkdownIntoBlocks(content), [content]);
-    return blocks.map((block, index) => (
-      // biome-ignore lint/suspicious/noArrayIndexKey: immutable index
-      <MarkdownBlock content={block} key={`${id}-block_${index}`} />
-    ));
+  ({ text }: { text: string }) => {
+    return <ReactMarkdown remarkPlugins={[remarkGfm]}>{text}</ReactMarkdown>;
   },
+  (prevProps, nextProps) => prevProps.text === nextProps.text,
 );
 Markdown.displayName = "Markdown";
