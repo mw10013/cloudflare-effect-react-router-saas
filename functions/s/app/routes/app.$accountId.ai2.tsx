@@ -118,7 +118,7 @@ export default function RouteComponent({}: Route.ComponentProps) {
         <Oui.TextArea
           name="prompt"
           value={input}
-          placeholder="Prompt..."
+          placeholder="AGENT Prompt..."
           className="max-h-40 min-h-10 resize-none"
           onChange={handleInputChange}
           onKeyDown={(e) => {
