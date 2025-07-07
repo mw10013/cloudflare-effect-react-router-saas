@@ -23,6 +23,7 @@ export const action = ReactRouterEx.routeEffect(
         compatibility: "strict", // strict mode, enable when using the OpenAI API
       });
       const result = streamText({
+        // gemini with openai compat seems to have problems with markdown tables
         // model: openai("google-ai-studio/gemini-2.5-flash-lite-preview-06-17"),
         // model: openai("google-ai-studio/gemini-2.5-flash"),
         model: openai("workers-ai/@cf/meta/llama-3.1-8b-instruct"),

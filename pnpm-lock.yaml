@@ -27,9 +27,6 @@ catalogs:
     '@openauthjs/openauth':
       specifier: 0.4.3
       version: 0.4.3
-    '@phosphor-icons/react':
-      specifier: 2.1.10
-      version: 2.1.10
     '@react-router/cloudflare':
       specifier: 7.6.3
       version: 7.6.3
@@ -45,9 +42,6 @@ catalogs:
     '@tailwindcss/vite':
       specifier: 4.1.9
       version: 4.1.9
-    '@types/marked':
-      specifier: 6.0.0
-      version: 6.0.0
     '@types/node':
       specifier: 22.13.14
       version: 22.13.14
@@ -84,9 +78,6 @@ catalogs:
     lucide-react:
       specifier: 0.514.0
       version: 0.514.0
-    marked:
-      specifier: 16.0.0
-      version: 16.0.0
     openai:
       specifier: 5.8.2
       version: 5.8.2
@@ -325,9 +316,6 @@ importers:
       '@openauthjs/openauth':
         specifier: 'catalog:'
         version: 0.4.3(arctic@2.3.4)(hono@4.7.11)
-      '@phosphor-icons/react':
-        specifier: 'catalog:'
-        version: 2.1.10(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@react-router/cloudflare':
         specifier: 'catalog:'
         version: 7.6.3(@cloudflare/workers-types@4.20250703.0)(react-router@7.6.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(typescript@5.8.2)
@@ -364,9 +352,6 @@ importers:
       lucide-react:
         specifier: 'catalog:'
         version: 0.514.0(react@19.1.0)
-      marked:
-        specifier: 'catalog:'
-        version: 16.0.0
       openai:
         specifier: 'catalog:'
         version: 5.8.2(ws@8.18.0)(zod@3.25.67)
@@ -422,9 +407,6 @@ importers:
       '@tailwindcss/vite':
         specifier: 'catalog:'
         version: 4.1.9(vite@7.0.2(@types/node@22.13.14)(jiti@2.4.2)(lightningcss@1.30.1)(yaml@2.7.1))
-      '@types/marked':
-        specifier: 'catalog:'
-        version: 6.0.0
       '@types/node':
         specifier: 'catalog:'
         version: 22.13.14
@@ -1384,13 +1366,6 @@ packages:
     resolution: {integrity: sha512-4HmkdYgDmejTxXESV1EBXd0zFLsoNJad+VrWZizzpTCmBnWEL5+tueEmEBBb4F55/sFZt8bdD//RbaTM9aOQJA==}
     cpu: [x64]
     os: [win32]
-
-  '@phosphor-icons/react@2.1.10':
-    resolution: {integrity: sha512-vt8Tvq8GLjheAZZYa+YG/pW7HDbov8El/MANW8pOAz4eGxrwhnbfrQZq0Cp4q8zBEu8NIhHdnr+r8thnfRSNYA==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      react: '>= 16.8'
-      react-dom: '>= 16.8'
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -2902,10 +2877,6 @@ packages:
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
 
-  '@types/marked@6.0.0':
-    resolution: {integrity: sha512-jmjpa4BwUsmhxcfsgUit/7A9KbrC48Q0q8KvnY107ogcjGgTFDlIL3RpihNpx2Mu1hM4mdFQjoVc4O6JoGKHsA==}
-    deprecated: This is a stub types definition. marked provides its own type definitions, so you do not need this installed.
-
   '@types/mdast@4.0.4':
     resolution: {integrity: sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA==}
 
@@ -3946,11 +3917,6 @@ packages:
 
   markdown-table@3.0.4:
     resolution: {integrity: sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw==}
-
-  marked@16.0.0:
-    resolution: {integrity: sha512-MUKMXDjsD/eptB7GPzxo4xcnLS6oo7/RHimUMHEDRhUooPwmN9BEpMl7AEOJv3bmso169wHI2wUF9VQgL7zfmA==}
-    engines: {node: '>= 20'}
-    hasBin: true
 
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
@@ -6031,11 +5997,6 @@ snapshots:
   '@oxlint/win32-x64@1.5.0':
     optional: true
 
-  '@phosphor-icons/react@2.1.10(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
@@ -8006,10 +7967,6 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
-  '@types/marked@6.0.0':
-    dependencies:
-      marked: 16.0.0
-
   '@types/mdast@4.0.4':
     dependencies:
       '@types/unist': 3.0.3
@@ -8970,8 +8927,6 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
 
   markdown-table@3.0.4: {}
-
-  marked@16.0.0: {}
 
   math-intrinsics@1.1.0: {}
 
