@@ -11,7 +11,7 @@ export const action = ReactRouterEx.routeEffect(
       const { messages } = yield* Effect.tryPromise(
         () => request.json() as Promise<{ messages: any[] }>,
       );
-      yield* Effect.log({ messages });
+      yield* Effect.log(JSON.stringify({ messages }, null, 2));
       const openai = createOpenAI({
         apiKey: env.GOOGLE_AI_STUDIO_API_KEY,
         // apiKey: env.CF_AI_GATEWAY_TOKEN,

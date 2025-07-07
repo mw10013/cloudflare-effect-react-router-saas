@@ -5,7 +5,6 @@ import { useChat } from "@ai-sdk/react";
 import * as Oui from "@workspace/oui";
 import { Effect } from "effect";
 import equal from "fast-deep-equal";
-import { marked } from "marked";
 import ReactMarkdown from "react-markdown";
 import { useHref } from "react-router";
 import remarkGfm from "remark-gfm";
@@ -175,7 +174,7 @@ function PureMessage({
       <span className="font-bold">
         {message.role.charAt(0).toUpperCase() + message.role.slice(1) + ": "}
       </span>
-      {message.parts && message.parts.length > 0 ? (
+      {/* {message.parts && message.parts.length > 0 ? (
         message.parts.map((part, index) => {
           if (part.type === "text") {
             return <Markdown text={part.text} key={index} />;
@@ -183,8 +182,10 @@ function PureMessage({
           return null;
         })
       ) : (
-        <Markdown text={message.content} />
-      )}
+        <pre>{JSON.stringify(message, null, 2)}</pre>
+        // <Markdown text={message.content} />
+      )} */}
+      <pre>{JSON.stringify(message, null, 2)}</pre>
     </div>
   );
 }
