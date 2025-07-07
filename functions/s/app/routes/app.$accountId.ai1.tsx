@@ -103,30 +103,6 @@ export default function RouteComponent({}: Route.ComponentProps) {
           }}
         />
       </form>
-      {/* <MarkdownTableHeaderTest /> */}
-    </div>
-  );
-}
-
-export function MarkdownTableHeaderTest() {
-  const testChunks = [
-    { label: "test chunk 1", value: "| Feature |" },
-    { label: "test chunk 2", value: "| Feature | Description" },
-    { label: "test chunk 3", value: "| Feature | Description |" },
-  ];
-  return (
-    <div className="mt-4 rounded border bg-gray-50 p-2">
-      {testChunks.map((chunk, i) => (
-        <div key={i} className={i > 0 ? "mt-4" : undefined}>
-          <div>Rendering {chunk.label}:</div>
-          <pre className="text-xs text-gray-500">
-            {JSON.stringify(chunk.value)}
-          </pre>
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {chunk.value}
-          </ReactMarkdown>
-        </div>
-      ))}
     </div>
   );
 }
@@ -164,7 +140,6 @@ function PureMessage({
   message: UIMessage;
   messageRef: React.Ref<HTMLDivElement> | null;
 }) {
-  // console.log(JSON.stringify(message, null, 2));
   return (
     <div
       ref={messageRef}
@@ -174,7 +149,16 @@ function PureMessage({
       <span className="font-bold">
         {message.role.charAt(0).toUpperCase() + message.role.slice(1) + ": "}
       </span>
-      {/* {message.parts && message.parts.length > 0 ? (
+      {
+        message.parts &&
+          message.parts.length > 0 &&
+          message.parts.map((part, index) => {
+            if (part.type === "text") {
+              return <Markdown text={part.text} key={index} />;
+            }
+            return null;
+          })
+        /* {message.parts && message.parts.length > 0 ? (
         message.parts.map((part, index) => {
           if (part.type === "text") {
             return <Markdown text={part.text} key={index} />;
@@ -184,7 +168,8 @@ function PureMessage({
       ) : (
         <pre>{JSON.stringify(message, null, 2)}</pre>
         // <Markdown text={message.content} />
-      )} */}
+      )} */
+      }
       <pre>{JSON.stringify(message, null, 2)}</pre>
     </div>
   );
@@ -196,7 +181,6 @@ export const Message = memo(PureMessage, (prevProps, nextProps) =>
 
 export const Markdown = memo(
   ({ text }: { text: string }) => {
-    // console.log("Rendering markdown chunk:", JSON.stringify(text));
     return <ReactMarkdown remarkPlugins={[remarkGfm]}>{text}</ReactMarkdown>;
   },
   (prevProps, nextProps) => prevProps.text === nextProps.text,
