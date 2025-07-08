@@ -167,28 +167,24 @@ export const action = ReactRouterEx.routeEffect(
           return { response };
         }
         case "gemini2": {
-          // Commented out because it's not working with the new ai-sdk but kept for reference
-          // const openai = createOpenAI({
-          //   apiKey: env.GOOGLE_AI_STUDIO_API_KEY,
-          //   // OpenAI client automatically adds /chat/completions to the end of the baseURL
-          //   // baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat`,
-          //   baseURL: `${yield* Effect.tryPromise(() => env.AI.gateway(env.CF_AI_GATEWAY_ID).getUrl("compat"))}`,
-          //   headers: {
-          //     "cf-aig-authorization": `Bearer ${env.CF_AI_GATEWAY_TOKEN}`,
-          //   },
-          //   compatibility: "strict", // strict mode, enable when using the OpenAI API
-          // });
-          // const response = yield* Effect.tryPromise({
-          //   try: () =>
-          //     generateText({
-          //       model: openai("google-ai-studio/gemini-2.0-flash"),
-          //       prompt: "fee fi",
-          //     }),
-          //   catch: (unknown) =>
-          //     new Error(`Gemini2: Vercel AI request failed: ${unknown}`),
-          // });
-          // return { response };
-          return { response: "not implemented" };
+          const provider = createOpenAICompatible({
+            name: "cf-ai-gateway-gemini",
+            apiKey: env.GOOGLE_AI_STUDIO_API_KEY,
+            baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat`,
+            headers: {
+              "cf-aig-authorization": `Bearer ${env.CF_AI_GATEWAY_TOKEN}`,
+            },
+          });
+          const response = yield* Effect.tryPromise({
+            try: () =>
+              generateText({
+                model: provider("google-ai-studio/gemini-2.0-flash"),
+                prompt: "hidy hidy",
+              }),
+            catch: (unknown) =>
+              new Error(`Gemini2: Vercel AI request failed: ${unknown}`),
+          });
+          return { response };
         }
 
         default:
