@@ -1,8 +1,15 @@
 import type { UIMessage } from "ai";
 import type { Route } from "./+types/app.$accountId.ai1";
-import React, { memo, useEffect, useLayoutEffect, useRef } from "react";
+import React, {
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useChat } from "@ai-sdk/react";
 import * as Oui from "@workspace/oui";
+import { DefaultChatTransport } from "ai";
 import { Effect } from "effect";
 import equal from "fast-deep-equal";
 import ReactMarkdown from "react-markdown";
@@ -15,17 +22,10 @@ export const loader = ReactRouterEx.routeEffect(() =>
 );
 
 export default function RouteComponent({}: Route.ComponentProps) {
+  const [input, setInput] = useState("");
   const href = useHref("./api");
-  const { messages, input, handleInputChange, handleSubmit, error } = useChat({
-    api: href,
-    initialMessages: [
-      {
-        id: "0",
-        role: "system",
-        content: "Laconic",
-      },
-    ],
-  });
+  const transport = new DefaultChatTransport({ api: href });
+  const { messages, sendMessage } = useChat({ transport });
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
@@ -87,14 +87,20 @@ export default function RouteComponent({}: Route.ComponentProps) {
         <Messages messages={messages} lastMessageRef={lastMessageRef} />
         <div ref={spacerRef} />
       </div>
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          sendMessage({ text: input });
+          setInput("");
+        }}
+      >
         <Oui.TextArea
           autoFocus
           name="prompt"
           value={input}
           placeholder="Prompt..."
           className="max-h-40 min-h-10 resize-none"
-          onChange={handleInputChange}
+          onChange={(e) => setInput(e.currentTarget.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
