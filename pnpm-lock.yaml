@@ -10,8 +10,8 @@ catalogs:
       specifier: 2.0.0-beta.5
       version: 2.0.0-beta.5
     '@ai-sdk/provider-utils':
-      specifier: 2.2.8
-      version: 2.2.8
+      specifier: 3.0.0-beta.2
+      version: 3.0.0-beta.2
     '@ai-sdk/react':
       specifier: 2.0.0-beta.9
       version: 2.0.0-beta.9
@@ -306,7 +306,7 @@ importers:
         version: 2.0.0-beta.5(zod@3.25.67)
       '@ai-sdk/provider-utils':
         specifier: 'catalog:'
-        version: 2.2.8(zod@3.25.67)
+        version: 3.0.0-beta.2(zod@3.25.67)
       '@ai-sdk/react':
         specifier: catalog:default
         version: 2.0.0-beta.9(react@19.1.0)(zod@3.25.67)
