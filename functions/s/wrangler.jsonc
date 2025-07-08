@@ -30,7 +30,7 @@
   "migrations": [
     {
       "tag": "v1",
-      "new_sqlite_classes": ["StripeDurableObject", "Chat"]
+      "new_sqlite_classes": ["StripeDurableObject"]
     }
   ],
   "durable_objects": {
@@ -38,10 +38,6 @@
       {
         "name": "STRIPE_DO",
         "class_name": "StripeDurableObject"
-      },
-      {
-        "name": "CHAT",
-        "class_name": "Chat"
       }
     ]
   },
@@ -102,22 +98,22 @@
         {
           "tag": "v1",
           "new_sqlite_classes": ["StripeDurableObject"]
-        },
-        {
-          "tag": "v2",
-          "new_sqlite_classes": ["Chat"]
         }
+        // {
+        //   "tag": "v2",
+        //   "new_sqlite_classes": ["Chat"]
+        // }
       ],
       "durable_objects": {
         "bindings": [
           {
             "name": "STRIPE_DO",
             "class_name": "StripeDurableObject"
-          },
-          {
-            "name": "CHAT",
-            "class_name": "Chat"
           }
+          // {
+          //   "name": "CHAT",
+          //   "class_name": "Chat"
+          // }
         ]
       },
       "d1_databases": [

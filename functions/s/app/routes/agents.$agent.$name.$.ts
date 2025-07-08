@@ -1,5 +1,5 @@
 import type { Route } from "./+types/agents.$agent.$name.$";
-import { routeAgentRequest } from "agents";
+// import { routeAgentRequest } from "agents";
 import { Effect } from "effect";
 import * as ReactRouterEx from "~/lib/ReactRouterEx";
 
@@ -10,9 +10,10 @@ export const loader = ReactRouterEx.routeEffect(
       const {
         cloudflare: { env },
       } = yield* ReactRouterEx.AppLoadContext;
-      const response = yield* Effect.tryPromise(() =>
-        routeAgentRequest(request, env),
-      );
+      // const response = yield* Effect.tryPromise(() =>
+      //   routeAgentRequest(request, env),
+      // );
+      const response = null;
       return response
         ? response
         : Response.json(

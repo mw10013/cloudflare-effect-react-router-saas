@@ -1,5 +1,5 @@
 import type { Route } from "./+types/app.$accountId.ai";
-import { createOpenAI } from "@ai-sdk/openai";
+import { createOpenAI, openai } from "@ai-sdk/openai";
 import * as Oui from "@workspace/oui";
 import { SchemaEx } from "@workspace/shared";
 import {
@@ -68,17 +68,19 @@ export const action = ReactRouterEx.routeEffect(
           return { response };
         }
         case "vercel": {
-          const workersai = createWorkersAI({ binding: env.AI });
-          const response = yield* Effect.tryPromise({
-            try: () =>
-              generateText({
-                model: workersai("@cf/meta/llama-3.1-8b-instruct"),
-                prompt: "fee fi",
-              }),
-            catch: (unknown) =>
-              new Error(`Vercel AI request failed: ${unknown}`),
-          });
-          return { response };
+          // Commented out because it's not working with the new ai-sdk but kept for reference
+          // const workersai = createWorkersAI({ binding: env.AI });
+          // const response = yield* Effect.tryPromise({
+          //   try: () =>
+          //     generateText({
+          //       model: workersai("@cf/meta/llama-3.1-8b-instruct"),
+          //       prompt: "fee fi",
+          //     }),
+          //   catch: (unknown) =>
+          //     new Error(`Vercel AI request failed: ${unknown}`),
+          // });
+          // return { response };
+          return { response: "not implemented" };
         }
         case "gateway": {
           const response = yield* Effect.tryPromise({
@@ -122,23 +124,24 @@ export const action = ReactRouterEx.routeEffect(
           return { response };
         }
         case "gateway2": {
-          const openai = createOpenAI({
+          const customOpenAI = createOpenAI({
             apiKey: env.CF_WORKERS_AI_API_TOKEN,
-            // OpenAI client automatically adds /chat/completions to the end of the baseURL
             baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat`,
             headers: {
               "cf-aig-authorization": `Bearer ${env.CF_AI_GATEWAY_TOKEN}`,
             },
-            compatibility: "strict", // strict mode, enable when using the OpenAI API
           });
+          const model = customOpenAI(
+            "workers-ai/@cf/meta/llama-3.1-8b-instruct",
+          );
           const response = yield* Effect.tryPromise({
             try: () =>
               generateText({
-                model: openai("workers-ai/@cf/meta/llama-3.1-8b-instruct"),
+                model,
                 prompt: "fee fi",
               }),
             catch: (unknown) =>
-              new Error(`Gateway2: Vercel AI request failed: ${unknown}`),
+              new Error(`Gateway2: OpenAI request failed: ${unknown}`),
           });
           return { response };
         }
@@ -146,7 +149,7 @@ export const action = ReactRouterEx.routeEffect(
           const openai = new OpenAI({
             apiKey: env.GOOGLE_AI_STUDIO_API_KEY,
             // OpenAI client automatically adds /chat/completions to the end of the baseURL
-            baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat`,
+            baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat1`,
             defaultHeaders: {
               "cf-aig-authorization": `Bearer ${env.CF_AI_GATEWAY_TOKEN}`,
             },
@@ -164,26 +167,28 @@ export const action = ReactRouterEx.routeEffect(
           return { response };
         }
         case "gemini2": {
-          const openai = createOpenAI({
-            apiKey: env.GOOGLE_AI_STUDIO_API_KEY,
-            // OpenAI client automatically adds /chat/completions to the end of the baseURL
-            // baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat`,
-            baseURL: `${yield* Effect.tryPromise(() => env.AI.gateway(env.CF_AI_GATEWAY_ID).getUrl("compat"))}`,
-            headers: {
-              "cf-aig-authorization": `Bearer ${env.CF_AI_GATEWAY_TOKEN}`,
-            },
-            compatibility: "strict", // strict mode, enable when using the OpenAI API
-          });
-          const response = yield* Effect.tryPromise({
-            try: () =>
-              generateText({
-                model: openai("google-ai-studio/gemini-2.0-flash"),
-                prompt: "fee fi",
-              }),
-            catch: (unknown) =>
-              new Error(`Gemini2: Vercel AI request failed: ${unknown}`),
-          });
-          return { response };
+          // Commented out because it's not working with the new ai-sdk but kept for reference
+          // const openai = createOpenAI({
+          //   apiKey: env.GOOGLE_AI_STUDIO_API_KEY,
+          //   // OpenAI client automatically adds /chat/completions to the end of the baseURL
+          //   // baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat`,
+          //   baseURL: `${yield* Effect.tryPromise(() => env.AI.gateway(env.CF_AI_GATEWAY_ID).getUrl("compat"))}`,
+          //   headers: {
+          //     "cf-aig-authorization": `Bearer ${env.CF_AI_GATEWAY_TOKEN}`,
+          //   },
+          //   compatibility: "strict", // strict mode, enable when using the OpenAI API
+          // });
+          // const response = yield* Effect.tryPromise({
+          //   try: () =>
+          //     generateText({
+          //       model: openai("google-ai-studio/gemini-2.0-flash"),
+          //       prompt: "fee fi",
+          //     }),
+          //   catch: (unknown) =>
+          //     new Error(`Gemini2: Vercel AI request failed: ${unknown}`),
+          // });
+          // return { response };
+          return { response: "not implemented" };
         }
 
         default:
