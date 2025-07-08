@@ -2,9 +2,9 @@ packages:
   - "functions/*"
 
 catalog:
-  "@ai-sdk/openai": 1.3.22
-  "@ai-sdk/react": 1.2.12
-  "@ai-sdk/ui-utils": 1.2.11
+  "@ai-sdk/openai": 2.0.0-beta.5
+  "@ai-sdk/provider-utils": 2.2.8
+  "@ai-sdk/react": 2.0.0-beta.9
   "@aws-sdk/client-sesv2": 3.777.0
   "@cloudflare/vite-plugin": 1.9.0
   "@cloudflare/workers-types": 4.20250703.0
@@ -22,7 +22,7 @@ catalog:
   "@types/react": 19.1.0
   "@types/react-dom": 19.1.2
   agents: 0.0.101
-  ai: 4.3.16
+  ai: 5.0.0-beta.9
   aws4fetch: 1.0.20
   effect: 3.16.12
   fast-deep-equal: 3.1.3
@@ -52,9 +52,3 @@ catalog:
   wrangler: 4.23.0
   zod: 3.25.67
   zx: 8.5.5
-
-catalogs:
-  beta:
-    ai: 5.0.0-beta.9
-    "@ai-sdk/openai": 2.0.0-beta.5
-    "@ai-sdk/react": 2.0.0-beta.9

@@ -149,7 +149,7 @@ export const action = ReactRouterEx.routeEffect(
           const openai = new OpenAI({
             apiKey: env.GOOGLE_AI_STUDIO_API_KEY,
             // OpenAI client automatically adds /chat/completions to the end of the baseURL
-            baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat1`,
+            baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat`,
             defaultHeaders: {
               "cf-aig-authorization": `Bearer ${env.CF_AI_GATEWAY_TOKEN}`,
             },
