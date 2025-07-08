@@ -1,5 +1,6 @@
 import type { Route } from "./+types/app.$accountId.ai";
 import { createOpenAI, openai } from "@ai-sdk/openai";
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import * as Oui from "@workspace/oui";
 import { SchemaEx } from "@workspace/shared";
 import {
@@ -124,21 +125,20 @@ export const action = ReactRouterEx.routeEffect(
           return { response };
         }
         case "gateway2": {
-          const customOpenAI = createOpenAI({
+          // https://v5.ai-sdk.dev/providers/openai-compatible-providers
+          const provider = createOpenAICompatible({
+            name: "cf-ai-gateway",
             apiKey: env.CF_WORKERS_AI_API_TOKEN,
             baseURL: `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/compat`,
             headers: {
               "cf-aig-authorization": `Bearer ${env.CF_AI_GATEWAY_TOKEN}`,
             },
           });
-          const model = customOpenAI(
-            "workers-ai/@cf/meta/llama-3.1-8b-instruct",
-          );
           const response = yield* Effect.tryPromise({
             try: () =>
               generateText({
-                model,
-                prompt: "fee fi",
+                model: provider("workers-ai/@cf/meta/llama-3.1-8b-instruct"),
+                prompt: "ding dong",
               }),
             catch: (unknown) =>
               new Error(`Gateway2: OpenAI request failed: ${unknown}`),

@@ -9,6 +9,9 @@ catalogs:
     '@ai-sdk/openai':
       specifier: 2.0.0-beta.5
       version: 2.0.0-beta.5
+    '@ai-sdk/openai-compatible':
+      specifier: 1.0.0-beta.3
+      version: 1.0.0-beta.3
     '@ai-sdk/provider-utils':
       specifier: 3.0.0-beta.2
       version: 3.0.0-beta.2
@@ -304,6 +307,9 @@ importers:
       '@ai-sdk/openai':
         specifier: catalog:default
         version: 2.0.0-beta.5(zod@3.25.67)
+      '@ai-sdk/openai-compatible':
+        specifier: 'catalog:'
+        version: 1.0.0-beta.3(zod@3.25.67)
       '@ai-sdk/provider-utils':
         specifier: 'catalog:'
         version: 3.0.0-beta.2(zod@3.25.67)
@@ -618,6 +624,12 @@ packages:
 
   '@ai-sdk/gateway@1.0.0-beta.4':
     resolution: {integrity: sha512-P5/dS7pb+cBRWnTP0Aezq3/3PIrF+p64fUTxBAyZIert8qTyHm2gd6atbAJZprZ304Ui3QjA9MFybAa849//2w==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.25.49
+
+  '@ai-sdk/openai-compatible@1.0.0-beta.3':
+    resolution: {integrity: sha512-EdBkUsDr51v+fDcQXZklPZphIJo9RuvBZzKRZg+1oSZjPo0vkxPkwjvJJ49fDmljqlwLqY/U9KASSwftuFyPww==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.49
@@ -5216,6 +5228,12 @@ packages:
 snapshots:
 
   '@ai-sdk/gateway@1.0.0-beta.4(zod@3.25.67)':
+    dependencies:
+      '@ai-sdk/provider': 2.0.0-beta.1
+      '@ai-sdk/provider-utils': 3.0.0-beta.2(zod@3.25.67)
+      zod: 3.25.67
+
+  '@ai-sdk/openai-compatible@1.0.0-beta.3(zod@3.25.67)':
     dependencies:
       '@ai-sdk/provider': 2.0.0-beta.1
       '@ai-sdk/provider-utils': 3.0.0-beta.2(zod@3.25.67)

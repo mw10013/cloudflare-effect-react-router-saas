@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@ai-sdk/openai": "catalog:default",
+    "@ai-sdk/openai-compatible": "catalog:",
     "@ai-sdk/provider-utils": "catalog:",
     "@ai-sdk/react": "catalog:default",
     "@openauthjs/openauth": "catalog:",
