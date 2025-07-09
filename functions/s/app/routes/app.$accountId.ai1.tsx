@@ -85,17 +85,18 @@ export default function RouteComponent({}: Route.ComponentProps) {
         data-slot="message-container"
         className="flex-1 overflow-y-auto"
       >
-        {/* <Messages messages={messages} lastMessageRef={lastMessageRef} /> */}
-        {messages.map((message) => (
+        <Messages messages={messages} lastMessageRef={lastMessageRef} />
+        {/* {messages.map((message) => (
           <div key={message.id} className="flex flex-row gap-2">
             <div className="w-24 text-zinc-500">{`${message.role}: `}</div>
             <div className="w-full">
               {message.parts
                 .map((part) => (part.type === "text" ? part.text : ""))
                 .join("")}
+              <pre>{JSON.stringify(message, null, 2)}</pre>
             </div>
           </div>
-        ))}
+        ))} */}
         <div ref={spacerRef} />
       </div>
       <form
@@ -144,11 +145,14 @@ function PureMessages({
   );
 }
 
-export const Messages = memo(PureMessages, (prevProps, nextProps) => {
-  if (prevProps.messages.length !== nextProps.messages.length) return false;
-  if (!equal(prevProps.messages, nextProps.messages)) return false;
-  return true;
-});
+/**
+ * Re-render only when the messages array reference changes.
+ * useChat() returns a new array for any update, so reference check is sufficient.
+ */
+export const Messages = memo(
+  PureMessages,
+  (prevProps, nextProps) => prevProps.messages === nextProps.messages,
+);
 
 function PureMessage({
   message,
@@ -166,34 +170,24 @@ function PureMessage({
       <span className="font-bold">
         {message.role.charAt(0).toUpperCase() + message.role.slice(1) + ": "}
       </span>
-      {
-        message.parts &&
-          message.parts.length > 0 &&
-          message.parts.map((part, index) => {
-            if (part.type === "text") {
-              return <Markdown text={part.text} key={index} />;
-            }
-            return null;
-          })
-        /* {message.parts && message.parts.length > 0 ? (
-        message.parts.map((part, index) => {
-          if (part.type === "text") {
-            return <Markdown text={part.text} key={index} />;
-          }
-          return null;
-        })
-      ) : (
-        <pre>{JSON.stringify(message, null, 2)}</pre>
-        // <Markdown text={message.content} />
-      )} */
-      }
+      {message.parts.map((part, index) => {
+        if (part.type === "text") {
+          return <Markdown text={part.text} key={index} />;
+        }
+        return null;
+      })}
       <pre>{JSON.stringify(message, null, 2)}</pre>
     </div>
   );
 }
 
-export const Message = memo(PureMessage, (prevProps, nextProps) =>
-  equal(prevProps.message, nextProps.message),
+/**
+ * Re-render only when the message object reference changes.
+ * Message objects are replaced on update, so reference check is sufficient.
+ */
+export const Message = memo(
+  PureMessage,
+  (prevProps, nextProps) => prevProps.message === nextProps.message,
 );
 
 export const Markdown = memo(
