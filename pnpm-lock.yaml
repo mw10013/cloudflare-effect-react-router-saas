@@ -136,8 +136,8 @@ catalogs:
       specifier: 4.23.0
       version: 4.23.0
     zod:
-      specifier: 3.25.67
-      version: 3.25.67
+      specifier: 3.25.76
+      version: 3.25.76
     zx:
       specifier: 8.5.5
       version: 8.5.5
@@ -303,16 +303,16 @@ importers:
     dependencies:
       '@ai-sdk/openai-compatible':
         specifier: 'catalog:'
-        version: 1.0.0-beta.3(zod@3.25.67)
+        version: 1.0.0-beta.3(zod@3.25.76)
       '@ai-sdk/provider':
         specifier: 'catalog:'
         version: 2.0.0-beta.1
       '@ai-sdk/provider-utils':
         specifier: 'catalog:'
-        version: 3.0.0-beta.2(zod@3.25.67)
+        version: 3.0.0-beta.2(zod@3.25.76)
       '@ai-sdk/react':
         specifier: catalog:default
-        version: 2.0.0-beta.9(react@19.1.0)(zod@3.25.67)
+        version: 2.0.0-beta.9(react@19.1.0)(zod@3.25.76)
       '@openauthjs/openauth':
         specifier: 'catalog:'
         version: 0.4.3(arctic@2.3.4)(hono@4.7.11)
@@ -330,7 +330,7 @@ importers:
         version: link:../ui
       ai:
         specifier: catalog:default
-        version: 5.0.0-beta.9(zod@3.25.67)
+        version: 5.0.0-beta.9(zod@3.25.76)
       aws4fetch:
         specifier: 'catalog:'
         version: 1.0.20
@@ -348,7 +348,7 @@ importers:
         version: 0.514.0(react@19.1.0)
       openai:
         specifier: 'catalog:'
-        version: 5.8.2(ws@8.18.0)(zod@3.25.67)
+        version: 5.8.2(ws@8.18.0)(zod@3.25.76)
       react:
         specifier: 'catalog:'
         version: 19.1.0
@@ -381,10 +381,10 @@ importers:
         version: 1.0.0(tailwindcss@4.1.9)
       workers-ai-provider:
         specifier: 'catalog:'
-        version: 0.7.1(zod@3.25.67)
+        version: 0.7.1(zod@3.25.76)
       zod:
         specifier: 'catalog:'
-        version: 3.25.67
+        version: 3.25.76
     devDependencies:
       '@cloudflare/vite-plugin':
         specifier: 'catalog:'
@@ -5205,6 +5205,9 @@ packages:
   zod@3.25.67:
     resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
 
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
@@ -5215,32 +5218,32 @@ packages:
 
 snapshots:
 
-  '@ai-sdk/gateway@1.0.0-beta.4(zod@3.25.67)':
+  '@ai-sdk/gateway@1.0.0-beta.4(zod@3.25.76)':
     dependencies:
       '@ai-sdk/provider': 2.0.0-beta.1
-      '@ai-sdk/provider-utils': 3.0.0-beta.2(zod@3.25.67)
-      zod: 3.25.67
+      '@ai-sdk/provider-utils': 3.0.0-beta.2(zod@3.25.76)
+      zod: 3.25.76
 
-  '@ai-sdk/openai-compatible@1.0.0-beta.3(zod@3.25.67)':
+  '@ai-sdk/openai-compatible@1.0.0-beta.3(zod@3.25.76)':
     dependencies:
       '@ai-sdk/provider': 2.0.0-beta.1
-      '@ai-sdk/provider-utils': 3.0.0-beta.2(zod@3.25.67)
-      zod: 3.25.67
+      '@ai-sdk/provider-utils': 3.0.0-beta.2(zod@3.25.76)
+      zod: 3.25.76
 
-  '@ai-sdk/provider-utils@2.2.8(zod@3.25.67)':
+  '@ai-sdk/provider-utils@2.2.8(zod@3.25.76)':
     dependencies:
       '@ai-sdk/provider': 1.1.3
       nanoid: 3.3.11
       secure-json-parse: 2.7.0
-      zod: 3.25.67
+      zod: 3.25.76
 
-  '@ai-sdk/provider-utils@3.0.0-beta.2(zod@3.25.67)':
+  '@ai-sdk/provider-utils@3.0.0-beta.2(zod@3.25.76)':
     dependencies:
       '@ai-sdk/provider': 2.0.0-beta.1
       '@standard-schema/spec': 1.0.0
       eventsource-parser: 3.0.3
-      zod: 3.25.67
-      zod-to-json-schema: 3.24.5(zod@3.25.67)
+      zod: 3.25.76
+      zod-to-json-schema: 3.24.5(zod@3.25.76)
 
   '@ai-sdk/provider@1.1.3':
     dependencies:
@@ -5250,15 +5253,15 @@ snapshots:
     dependencies:
       json-schema: 0.4.0
 
-  '@ai-sdk/react@2.0.0-beta.9(react@19.1.0)(zod@3.25.67)':
+  '@ai-sdk/react@2.0.0-beta.9(react@19.1.0)(zod@3.25.76)':
     dependencies:
-      '@ai-sdk/provider-utils': 3.0.0-beta.2(zod@3.25.67)
-      ai: 5.0.0-beta.9(zod@3.25.67)
+      '@ai-sdk/provider-utils': 3.0.0-beta.2(zod@3.25.76)
+      ai: 5.0.0-beta.9(zod@3.25.76)
       react: 19.1.0
       swr: 2.3.3(react@19.1.0)
       throttleit: 2.1.0
     optionalDependencies:
-      zod: 3.25.67
+      zod: 3.25.76
 
   '@ampproject/remapping@2.3.0':
     dependencies:
@@ -7962,13 +7965,13 @@ snapshots:
 
   agent-base@7.1.3: {}
 
-  ai@5.0.0-beta.9(zod@3.25.67):
+  ai@5.0.0-beta.9(zod@3.25.76):
     dependencies:
-      '@ai-sdk/gateway': 1.0.0-beta.4(zod@3.25.67)
+      '@ai-sdk/gateway': 1.0.0-beta.4(zod@3.25.76)
       '@ai-sdk/provider': 2.0.0-beta.1
-      '@ai-sdk/provider-utils': 3.0.0-beta.2(zod@3.25.67)
+      '@ai-sdk/provider-utils': 3.0.0-beta.2(zod@3.25.76)
       '@opentelemetry/api': 1.9.0
-      zod: 3.25.67
+      zod: 3.25.76
 
   ajv@6.12.6:
     dependencies:
@@ -9381,10 +9384,10 @@ snapshots:
     dependencies:
       mimic-fn: 4.0.0
 
-  openai@5.8.2(ws@8.18.0)(zod@3.25.67):
+  openai@5.8.2(ws@8.18.0)(zod@3.25.76):
     optionalDependencies:
       ws: 8.18.0
-      zod: 3.25.67
+      zod: 3.25.76
 
   ora@6.3.1:
     dependencies:
@@ -10437,10 +10440,10 @@ snapshots:
       '@cloudflare/workerd-linux-arm64': 1.20250617.0
       '@cloudflare/workerd-windows-64': 1.20250617.0
 
-  workers-ai-provider@0.7.1(zod@3.25.67):
+  workers-ai-provider@0.7.1(zod@3.25.76):
     dependencies:
       '@ai-sdk/provider': 1.1.3
-      '@ai-sdk/provider-utils': 2.2.8(zod@3.25.67)
+      '@ai-sdk/provider-utils': 2.2.8(zod@3.25.76)
     transitivePeerDependencies:
       - zod
 
@@ -10520,11 +10523,17 @@ snapshots:
     dependencies:
       zod: 3.25.67
 
+  zod-to-json-schema@3.24.5(zod@3.25.76):
+    dependencies:
+      zod: 3.25.76
+
   zod@3.22.3: {}
 
   zod@3.24.2: {}
 
   zod@3.25.67: {}
+
+  zod@3.25.76: {}
 
   zwitch@2.0.4: {}
 

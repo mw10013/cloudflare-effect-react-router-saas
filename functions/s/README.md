@@ -137,6 +137,7 @@ export const appMiddleware: Route.unstable_MiddlewareFunction =
 
 ## AI
 
+- https://vercel.com/templates?type=ai
 - https://github.com/googleapis/js-genai/issues/324
 - https://discuss.ai.google.dev/t/tool-calling-with-openai-api-not-working/60140/9
 
