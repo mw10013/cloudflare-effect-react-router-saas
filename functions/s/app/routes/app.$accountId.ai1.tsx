@@ -11,7 +11,6 @@ import { useChat } from "@ai-sdk/react";
 import * as Oui from "@workspace/oui";
 import { DefaultChatTransport } from "ai";
 import { Effect } from "effect";
-import equal from "fast-deep-equal";
 import ReactMarkdown from "react-markdown";
 import { useHref } from "react-router";
 import remarkGfm from "remark-gfm";
