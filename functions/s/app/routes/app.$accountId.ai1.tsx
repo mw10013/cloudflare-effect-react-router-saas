@@ -22,10 +22,11 @@ export const loader = ReactRouterEx.routeEffect(() =>
 );
 
 export default function RouteComponent({}: Route.ComponentProps) {
-  const [input, setInput] = useState("");
   const href = useHref("./api");
-  const transport = new DefaultChatTransport({ api: href });
-  const { messages, sendMessage } = useChat({ transport });
+  const { messages, sendMessage } = useChat({
+    transport: new DefaultChatTransport({ api: href }),
+  });
+  const [input, setInput] = useState("");
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
@@ -84,7 +85,17 @@ export default function RouteComponent({}: Route.ComponentProps) {
         data-slot="message-container"
         className="flex-1 overflow-y-auto"
       >
-        <Messages messages={messages} lastMessageRef={lastMessageRef} />
+        {/* <Messages messages={messages} lastMessageRef={lastMessageRef} /> */}
+        {messages.map((message) => (
+          <div key={message.id} className="flex flex-row gap-2">
+            <div className="w-24 text-zinc-500">{`${message.role}: `}</div>
+            <div className="w-full">
+              {message.parts
+                .map((part) => (part.type === "text" ? part.text : ""))
+                .join("")}
+            </div>
+          </div>
+        ))}
         <div ref={spacerRef} />
       </div>
       <form
