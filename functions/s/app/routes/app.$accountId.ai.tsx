@@ -1,5 +1,4 @@
 import type { Route } from "./+types/app.$accountId.ai";
-import { createOpenAI, openai } from "@ai-sdk/openai";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import * as Oui from "@workspace/oui";
 import { SchemaEx } from "@workspace/shared";
