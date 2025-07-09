@@ -24,7 +24,6 @@ export default function RouteComponent({}: Route.ComponentProps) {
   const href = useHref("./api");
   const { messages, sendMessage } = useChat({
     transport: new DefaultChatTransport({ api: href }),
-    maxSteps: 3,
   });
   const [input, setInput] = useState("");
 

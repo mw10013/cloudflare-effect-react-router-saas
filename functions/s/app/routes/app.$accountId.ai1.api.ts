@@ -1,6 +1,6 @@
 import type { Route } from "./+types/app.$accountId.ai1.api";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
-import { convertToModelMessages, streamText } from "ai";
+import { convertToModelMessages, stepCountIs, streamText, tool } from "ai";
 import { Effect } from "effect";
 import { z } from "zod/v4";
 import * as ReactRouterEx from "~/lib/ReactRouterEx";
@@ -66,18 +66,32 @@ export const action = ReactRouterEx.routeEffect(
         model: provider("google-ai-studio/gemini-2.0-flash"),
         system: "Laconic",
         messages: convertToModelMessages(messages),
+        stopWhen: stepCountIs(3),
         tools: {
-          celsiusToFahrenheit: {
-            description: "Converts celsius to fahrenheit",
+          weather: tool({
+            description: "Get the weather in a location",
             inputSchema: z.object({
-              value: z.string().describe("The value in celsius"),
+              location: z
+                .string()
+                .describe("The location to get the weather for"),
+            }),
+            execute: async ({ location }) => ({
+              location,
+              temperature: 72 + Math.floor(Math.random() * 21) - 10,
+              unit: "fahrenheit",
+            }),
+          }),
+          fahrenheitToCelsius: tool({
+            description: "Converts fahrenheit to celsius",
+            inputSchema: z.object({
+              value: z.string().describe("The value in fahrenheit"),
             }),
             execute: async ({ value }) => {
-              const celsius = parseFloat(value);
-              const fahrenheit = celsius * (9 / 5) + 32;
-              return `${celsius}°C is ${fahrenheit.toFixed(2)}°F`;
+              const fahrenheit = parseFloat(value);
+              const celsius = (fahrenheit - 32) * (5 / 9);
+              return `${fahrenheit}°F is ${celsius.toFixed(2)}°C`;
             },
-          },
+          }),
         },
       });
       return result.toUIMessageStreamResponse();
