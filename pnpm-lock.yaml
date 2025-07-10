@@ -604,6 +604,9 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.1.2(@types/react@19.1.0)
+      shadcn:
+        specifier: 'catalog:'
+        version: 2.8.0(@types/node@22.13.14)(typescript@5.8.2)
       tailwindcss:
         specifier: 'catalog:'
         version: 4.1.9
