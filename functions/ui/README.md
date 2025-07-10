@@ -8,4 +8,5 @@
 
 ```
 pnpm -F ui exec shadcn --help
+pnpm -F ui exec shadcn migrate radix
 ```
