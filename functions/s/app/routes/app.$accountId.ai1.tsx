@@ -80,11 +80,11 @@ export default function RouteComponent({}: Route.ComponentProps) {
 
   // min-h-0 allows this flex item to shrink below its content size, preventing a flex-1 child from expanding the parent.
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-2 p-6">
+    <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-x-hidden p-6">
       <div
         ref={messagesContainerRef}
         data-slot="message-container"
-        className="flex-1 overflow-y-auto overflow-x-hidden"
+        className="flex-1 overflow-y-auto"
       >
         <Messages messages={messages} lastMessageRef={lastMessageRef} />
         {/* {messages.map((message) => (
