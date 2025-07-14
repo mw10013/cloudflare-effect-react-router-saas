@@ -8,5 +8,6 @@
 
 ```
 pnpm -F ui exec shadcn --help
+pnpm -F ui exec shadcn add https://www.kibo-ui.com/registry/ai.json
 pnpm -F ui exec shadcn migrate radix
 ```

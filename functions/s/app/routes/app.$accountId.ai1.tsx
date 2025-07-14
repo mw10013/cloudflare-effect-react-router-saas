@@ -9,8 +9,10 @@ import React, {
 } from "react";
 import { useChat } from "@ai-sdk/react";
 import * as Oui from "@workspace/oui";
+import { AIInputSubmit } from "@workspace/ui/components/ui/kibo-ui/ai/input";
 import { DefaultChatTransport } from "ai";
 import { Effect } from "effect";
+import { SquareIcon } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useHref } from "react-router";
 import remarkGfm from "remark-gfm";
@@ -22,7 +24,7 @@ export const loader = ReactRouterEx.routeEffect(() =>
 
 export default function RouteComponent({}: Route.ComponentProps) {
   const href = useHref("./api");
-  const { messages, sendMessage } = useChat({
+  const { messages, sendMessage, status, stop } = useChat({
     transport: new DefaultChatTransport({ api: href }),
   });
   const [input, setInput] = useState("");
@@ -82,7 +84,7 @@ export default function RouteComponent({}: Route.ComponentProps) {
       <div
         ref={messagesContainerRef}
         data-slot="message-container"
-        className="flex-1 overflow-y-auto"
+        className="flex-1 overflow-y-auto overflow-x-hidden"
       >
         <Messages messages={messages} lastMessageRef={lastMessageRef} />
         {/* {messages.map((message) => (
@@ -99,6 +101,7 @@ export default function RouteComponent({}: Route.ComponentProps) {
         <div ref={spacerRef} />
       </div>
       <form
+        className="flex items-center gap-2"
         onSubmit={(e) => {
           e.preventDefault();
           sendMessage({ text: input });
@@ -111,6 +114,7 @@ export default function RouteComponent({}: Route.ComponentProps) {
           value={input}
           placeholder="Prompt..."
           className="max-h-40 min-h-10 resize-none"
+          disabled={status !== "ready"}
           onChange={(e) => setInput(e.currentTarget.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -119,6 +123,13 @@ export default function RouteComponent({}: Route.ComponentProps) {
             }
           }}
         />
+        {status === "submitted" || status === "streaming" ? (
+          <Oui.Button variant="outline" size="icon" onClick={() => stop()}>
+            <SquareIcon />
+          </Oui.Button>
+        ) : (
+          <AIInputSubmit disabled={!input} />
+        )}
       </form>
     </div>
   );
@@ -196,3 +207,5 @@ export const Markdown = memo(
   (prevProps, nextProps) => prevProps.text === nextProps.text,
 );
 Markdown.displayName = "Markdown";
+
+Oui.Button;
