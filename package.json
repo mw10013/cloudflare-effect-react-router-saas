@@ -1,7 +1,9 @@
 {
-  "name": "cloudflare-openauth-stripe",
+  "name": "cloudflare-effect-react-router-saas",
   "private": true,
   "scripts": {
+    "test": "pnpm -r test",
+    "test:ci": "pnpm -r test:ci",
     "clean": "pnpm clean:node && pnpm clean:wrangler && pnpm clean:etc",
     "clean:node": "rm -rf node_modules && pnpm -r clean:node",
     "clean:wrangler": "pnpm -r clean:wrangler",

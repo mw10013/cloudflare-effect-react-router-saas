@@ -8,7 +8,7 @@
     "test": "vitest --config vitest.workers.config.ts",
     "test:ci": "vitest run --config vitest.workers.config.ts",
     "clean": "pnpm clean:node",
-    "clean:node": "rm -rf node_modules"
+    "clean:node": "rm -rf node_modules ./*/node_modules"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "catalog:default",
