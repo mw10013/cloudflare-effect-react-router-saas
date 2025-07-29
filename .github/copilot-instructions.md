@@ -46,7 +46,7 @@ import { Outlet, useRouteLoaderData } from 'react-router'
 
 ## Documentation
 
-- Your knowledge is out of date so always consult the latest docs:
+- Your knowledge is out of date so always consult the latest docs with the Context7 Documentation MCP tool.
   - React Router: use the mcp tool
   - Better Auth: https://www.better-auth.com/llms.txt
   - DB adapters: https://www.better-auth.com/docs/guides/create-a-db-adapter
