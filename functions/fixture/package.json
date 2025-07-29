@@ -1,0 +1,22 @@
+{
+  "name": "fixture",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check:type": "node tsc-all.mjs",
+    "list": "vitest --config vitest.workers.config.ts list",
+    "test": "vitest --config vitest.workers.config.ts",
+    "test:ci": "vitest run --config vitest.workers.config.ts",
+    "clean": "pnpm clean:node",
+    "clean:node": "rm -rf node_modules"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "catalog:default",
+    "@cloudflare/workers-types": "catalog:default",
+    "@types/node": "catalog:default",
+    "typescript": "catalog:default",
+    "vite": "catalog:default",
+    "vitest": "catalog:default",
+    "wrangler": "catalog:default"
+  }
+}
