@@ -1,10 +1,5 @@
 # cloudflare-effect-react-router
 
-## Node version for build
-
-- See .node-version in root.
-- https://github.com/shadowspawn/node-version-usage
-
 ## Prettier
 
 - pnpm add -D --save-exact prettier --workspace-root
