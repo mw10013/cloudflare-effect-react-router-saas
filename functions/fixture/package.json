@@ -11,6 +11,7 @@
     "clean:node": "rm -rf node_modules ./*/node_modules"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "catalog:",
     "@cloudflare/vitest-pool-workers": "catalog:default",
     "@cloudflare/workers-types": "catalog:default",
     "@types/node": "catalog:default",
