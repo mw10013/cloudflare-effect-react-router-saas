@@ -46,17 +46,9 @@ import { Outlet, useRouteLoaderData } from 'react-router'
 
 ## Documentation
 
-- Your knowledge is out of date so always consult the latest docs with the Context7 Documentation MCP tool.
-  - React Router: use the mcp tool
-  - Better Auth: https://www.better-auth.com/llms.txt
-  - DB adapters: https://www.better-auth.com/docs/guides/create-a-db-adapter
+- Your knowledge is out of date so always consult the latest docs with the context7 tool.
 
 ## Testing
 
 - Use vitest version 3.x
-- Your vitest knowledge is out of date so always consult the vitest documentation.
-- Dcoumentation links for vitest
-  - Api: https://vitest.dev/api/
-  - Configuration: https://vitest.dev/config/
-  - Expect: https://vitest.dev/api/expect.html
-  - Assert: https://vitest.dev/api/assert.html
+- Use `pnpm test:ci` to run tests.
