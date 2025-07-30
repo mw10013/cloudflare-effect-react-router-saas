@@ -51,4 +51,4 @@ import { Outlet, useRouteLoaderData } from 'react-router'
 ## Testing
 
 - Use vitest version 3.x
-- Use `pnpm test:ci` to run tests.
+- Use `pnpm -F fixture test:ci` to run tests.
