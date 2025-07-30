@@ -1,5 +1,6 @@
 packages:
   - "functions/*"
+  - "functions/fixture/react-router-app"
 
 catalog:
   "@ai-sdk/openai-compatible": 1.0.0-beta.3
