@@ -3,6 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev:vite": "vite dev",
+    "dev:wrangler": "wrangler dev",
     "check:type": "node tsc-all.mjs",
     "list": "vitest --config vitest.workers.config.ts list",
     "test": "vitest --config vitest.workers.config.ts",

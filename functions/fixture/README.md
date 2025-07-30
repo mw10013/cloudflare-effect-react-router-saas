@@ -11,12 +11,24 @@
 ```
 pnpm -F fixture test:ci basics-unit-integration-self
 pnpm -F fixture test:ci basics-unit-integration-self-vite-plugin
-pnpm -F fixture exec vite dev ./basics-unit-integration-self
-pnpm -F fixture exec vite dev ./basics-unit-integration-self-vite-plugin
 ```
 
 - The parent `package.json` includes all necessary dev dependencies for Cloudflare Workers, Vite, Vitest, Wrangler, and other tools.
 - This structure allows centralized dependency management and consistent test/build orchestration across all child projects.
+
+```
+pnpm -F fixture dev:vite basics-unit-integration-self-vite-plugin
+
+pnpm -F fixture dev:wrangler basics-unit-integration-self/src/index.ts
+pnpm -F fixture dev:wrangler basics-unit-integration-self-vite-plugin/src/index.ts
+
+pnpm -F fixture exec vite dev basics-unit-integration-self
+pnpm -F fixture exec vite dev basics-unit-integration-self-vite-plugin
+
+pnpm -F fixture exec wrangler dev basics-unit-integration-self/src/index.ts
+pnpm -F fixture exec wrangler dev basics-unit-integration-self-vite-plugin/src/index.ts
+
+```
 
 - https://github.com/cloudflare/workers-sdk/issues/9381
 
