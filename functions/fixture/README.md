@@ -1,6 +1,13 @@
 # Fixture
 
 ```
+pnpm -F fixture test:ci basics-unit-integration-self
+pnpm -F fixture test:ci basics-unit-integration-self-vite-plugin
+```
+
+- https://github.com/cloudflare/workers-sdk/issues/9381
+
+```
   "devDependencies": {
     "@microlabs/otel-cf-workers": "1.0.0-rc.45",
     "discord-api-types": "0.37.98",
