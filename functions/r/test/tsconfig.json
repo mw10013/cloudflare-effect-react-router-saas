@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.json",
+  "include": ["**/*.test.ts"],
+  "compilerOptions": {
+    "types": [
+      "vitest",
+      "@cloudflare/workers-types/experimental",
+      "@cloudflare/vitest-pool-workers" // For `cloudflare:test` types
+    ],
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler"
+  }
+}

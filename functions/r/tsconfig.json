@@ -2,8 +2,7 @@
   "files": [],
   "references": [
     { "path": "./tsconfig.node.json" },
-    { "path": "./tsconfig.cloudflare.json" },
-    { "path": "./tsconfig.cloudflare-test.json" }
+    { "path": "./tsconfig.cloudflare.json" }
   ],
   "compilerOptions": {
     "checkJs": true,
