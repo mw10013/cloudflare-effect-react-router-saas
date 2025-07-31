@@ -2,7 +2,8 @@
   "files": [],
   "references": [
     { "path": "./tsconfig.node.json" },
-    { "path": "./tsconfig.cloudflare.json" }
+    { "path": "./tsconfig.cloudflare.json" },
+    { "path": "./tsconfig.cloudflare-test.json" }
   ],
   "compilerOptions": {
     "checkJs": true,
@@ -10,8 +11,6 @@
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
-    "types": [
-        "./worker-configuration.d.ts"
-    ]
+    "types": ["./worker-configuration.d.ts"]
   }
 }
