@@ -10,6 +10,7 @@
     "postinstall": "npm run cf-typegen",
     "preview": "pnpm run build && vite preview",
     "typecheck": "npm run cf-typegen && react-router typegen && tsc -b",
+    "typecheck:test": "tsc -p test/tsconfig.json",
     "test": "vitest",
     "test:ci": "vitest run",
     "clean": "pnpm clean:node && pnpm clean:wrangler && pnpm clean:etc",

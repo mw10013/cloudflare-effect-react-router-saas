@@ -54,6 +54,6 @@ catalog:
   vite-tsconfig-paths: 5.1.4
   vitest: 3.2.4
   workers-ai-provider: 0.7.1
-  wrangler: 4.26.0
+  wrangler: 4.27.0
   zod: 3.25.76
   zx: 8.5.5
