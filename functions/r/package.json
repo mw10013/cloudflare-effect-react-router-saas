@@ -19,12 +19,14 @@
     "clean:etc": "rm -rf .react-router build dist"
   },
   "dependencies": {
+    "better-auth": "catalog:",
     "isbot": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-router": "catalog:"
   },
   "devDependencies": {
+    "@better-auth/cli": "catalog:",
     "@cloudflare/vite-plugin": "catalog:",
     "@cloudflare/vitest-pool-workers": "catalog:default",
     "@react-router/dev": "catalog:",
