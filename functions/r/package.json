@@ -26,7 +26,6 @@
   "devDependencies": {
     "@cloudflare/vite-plugin": "catalog:",
     "@cloudflare/vitest-pool-workers": "catalog:default",
-    "@cloudflare/workers-types": "catalog:default",
     "@react-router/dev": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "@types/node": "catalog:",
