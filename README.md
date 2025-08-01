@@ -9,4 +9,4 @@
 
 ## Etc
 
-- https://github.com/cloudflare/workers-sdk/issues/4548
+- BUG: D1 local databases are not created with database_id: https://github.com/cloudflare/workers-sdk/issues/4548
