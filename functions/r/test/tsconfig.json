@@ -1,6 +1,6 @@
 {
   // "extends": "../tsconfig.json",
-  "include": ["**/*.test.ts", "env.d.ts", "../worker-configuration.d.ts"],
+  "include": ["**/*.ts"],
   "compilerOptions": {
     "skipLibCheck": true,
     "strict": true,
