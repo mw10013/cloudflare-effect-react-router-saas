@@ -14,6 +14,7 @@ export default defineWorkersConfig({
   test: {
     globals: true,
     poolOptions: {
+      main: "test/test-worker.ts",
       workers: {
         wrangler: { configPath: "./wrangler.jsonc" },
       },
