@@ -6,3 +6,7 @@
 - https://prettier.io/docs/en/ignore
   - Prettier will also follow rules specified in the ".gitignore" file if it exists in the same directory from which it is run.
 - pnpm prettier . --check
+
+## Etc
+
+- https://github.com/cloudflare/workers-sdk/issues/4548
