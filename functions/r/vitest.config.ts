@@ -12,6 +12,7 @@ export default defineWorkersConfig({
     tsconfigPaths(),
   ],
   test: {
+    globals: true,
     poolOptions: {
       workers: {
         wrangler: { configPath: "./wrangler.jsonc" },
