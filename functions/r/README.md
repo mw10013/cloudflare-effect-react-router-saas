@@ -1,3 +1,9 @@
+
+```
+pnpm -F r exec tsc -p test/tsconfig.json
+pnpm -F d exec tsc -p test/tsconfig.json
+```
+
 # Welcome to React Router!
 
 A modern, production-ready template for building full-stack React applications using React Router.
