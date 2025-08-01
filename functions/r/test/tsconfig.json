@@ -1,15 +1,11 @@
 {
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", "../worker-configuration.d.ts"],
   "compilerOptions": {
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
     "checkJs": false,
-    "types": [
-      "vitest",
-      "@cloudflare/vitest-pool-workers",
-      "../worker-configuration.d.ts"
-    ],
+    "types": ["vitest", "@cloudflare/vitest-pool-workers"],
     "lib": ["es2022"],
     "target": "ES2022",
     "module": "ES2022",
