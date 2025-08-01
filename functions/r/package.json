@@ -28,6 +28,7 @@
     "@cloudflare/vite-plugin": "catalog:",
     "@cloudflare/vitest-pool-workers": "catalog:default",
     "@react-router/dev": "catalog:",
+    "@react-router/fs-routes": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",

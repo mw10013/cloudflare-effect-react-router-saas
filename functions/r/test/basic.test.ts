@@ -4,7 +4,7 @@ import {
   waitOnExecutionContext,
 } from "cloudflare:test";
 import { describe, expect, it } from "vitest";
-import { loader } from "~/routes/home";
+import { loader } from "~/routes/_index";
 import worker from "./test-worker";
 
 describe("basic", () => {
