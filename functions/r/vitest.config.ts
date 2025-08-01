@@ -12,7 +12,6 @@ export default defineWorkersConfig({
     tsconfigPaths(),
   ],
   test: {
-    globals: true,
     poolOptions: {
       main: "test/test-worker.ts",
       workers: {

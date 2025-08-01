@@ -4,6 +4,7 @@ import {
   waitOnExecutionContext,
 } from "cloudflare:test";
 import worker from "./test-worker";
+import { describe, expect, it } from "vitest";
 
 describe("basic test", () => {
   it("should pass", () => {

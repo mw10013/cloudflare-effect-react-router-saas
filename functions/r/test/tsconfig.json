@@ -2,7 +2,11 @@
   "extends": "../tsconfig.json",
   "include": ["**/*.test.ts", "env.d.ts", "../worker-configuration.d.ts"],
   "compilerOptions": {
-    "types": ["vitest/globals", "@cloudflare/vitest-pool-workers", "../worker-configuration.d.ts"],
+    "types": [
+      "vitest",
+      "@cloudflare/vitest-pool-workers",
+      "../worker-configuration.d.ts"
+    ],
     "target": "ES2022",
     "module": "ES2022",
     "moduleResolution": "bundler"
