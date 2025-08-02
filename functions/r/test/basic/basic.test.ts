@@ -7,7 +7,7 @@ import { unstable_RouterContextProvider } from "react-router";
 import { describe, expect, it } from "vitest";
 import { appLoadContext } from "~/lib/middleware";
 import { loader } from "~/routes/_index";
-import worker from "./test-worker";
+import worker from "../test-worker";
 
 describe("basic", () => {
   it("should have env", () => {
