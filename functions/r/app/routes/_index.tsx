@@ -1,4 +1,5 @@
 import type { Route } from "./+types/_index";
+import { appLoadContext } from "~/lib/middleware";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -8,11 +9,11 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export function loader({ context }: Route.LoaderArgs) {
-  return { message: context.cloudflare.env.VALUE_FROM_CLOUDFLARE };
+  return {
+    message: context.get(appLoadContext).cloudflare.env.VALUE_FROM_CLOUDFLARE,
+  };
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  return (
-    <main className="p-8">{loaderData.message}</main>
-  );
+  return <main className="p-8">{loaderData.message}</main>;
 }
