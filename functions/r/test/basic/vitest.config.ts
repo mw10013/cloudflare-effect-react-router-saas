@@ -1,9 +1,8 @@
 import { defineWorkersProject } from "@cloudflare/vitest-pool-workers/config";
-import tailwindcss from "@tailwindcss/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineWorkersProject({
-  plugins: [tailwindcss(), tsconfigPaths()],
+  plugins: [tsconfigPaths()],
   test: {
     include: ["*.test.ts"],
     poolOptions: {
