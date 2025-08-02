@@ -401,6 +401,9 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.1.2(@types/react@19.1.0)
+      jsonc-parser:
+        specifier: 'catalog:'
+        version: 3.3.1
       tailwindcss:
         specifier: 'catalog:'
         version: 4.1.9
@@ -419,6 +422,9 @@ importers:
       wrangler:
         specifier: 'catalog:'
         version: 4.27.0(@cloudflare/workers-types@4.20250726.0)
+      zx:
+        specifier: 'catalog:'
+        version: 8.5.5
 
   functions/s:
     dependencies:

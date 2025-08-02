@@ -16,7 +16,16 @@
     "clean": "pnpm clean:node && pnpm clean:wrangler && pnpm clean:etc",
     "clean:node": "rm -rf node_modules",
     "clean:wrangler": "rm -rf .wrangler",
-    "clean:etc": "rm -rf .react-router build dist"
+    "clean:etc": "rm -rf .react-router build dist",
+    "d1:migrate:list": "wrangler d1 migrations list d1-local --local",
+    "d1:migrate:apply": "wrangler d1 migrations apply d1-local --local",
+    "d1:migrate:list:staging": "wrangler d1 migrations list saas-d1-staging --env staging --remote",
+    "d1:migrate:apply:staging": "wrangler d1 migrations apply saas-d1-staging --env staging --remote",
+    "d1:migrate:list:PRODUCTION": "wrangler d1 migrations list saas-d1-production --env production --remote",
+    "d1:migrate:apply:PRODUCTION": "wrangler d1 migrations apply saas-d1-production --env production --remote",
+    "d1:reset": "node scripts/d1-reset.ts",
+    "d1:reset:staging": "node scripts/d1-reset.ts --env staging",
+    "d1:reset:PRODUCTION": "node scripts/d1-reset.ts --env production"
   },
   "dependencies": {
     "better-auth": "catalog:",
@@ -34,11 +43,13 @@
     "@tailwindcss/vite": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "jsonc-parser": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-tsconfig-paths": "catalog:",
     "vitest": "catalog:default",
-    "wrangler": "catalog:"
+    "wrangler": "catalog:",
+    "zx": "catalog:"
   }
 }
