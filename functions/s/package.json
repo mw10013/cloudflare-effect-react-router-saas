@@ -22,13 +22,13 @@
     "d1:migrate:apply:staging": "wrangler d1 migrations apply saas-d1-staging --env staging --remote",
     "d1:migrate:list:PRODUCTION": "wrangler d1 migrations list saas-d1-production --env production --remote",
     "d1:migrate:apply:PRODUCTION": "wrangler d1 migrations apply saas-d1-production --env production --remote",
-    "d1:reset": "node --experimental-strip-types scripts/d1-reset.ts",
-    "d1:reset:staging": "node --experimental-strip-types scripts/d1-reset.ts --env staging",
-    "d1:reset:PRODUCTION": "node --experimental-strip-types scripts/d1-reset.ts --env production",
+    "d1:reset": "node scripts/d1-reset.ts",
+    "d1:reset:staging": "node scripts/d1-reset.ts --env staging",
+    "d1:reset:PRODUCTION": "node scripts/d1-reset.ts --env production",
     "stripe:listen": "stripe listen --load-from-webhooks-api --forward-to localhost:5173",
     "stripe:listen-": "stripe listen --use-configured-webhooks --forward-to localhost:5173",
-    "stripe:seed-": "node --experimental-strip-types --env-file=.dev.vars scripts/stripe-seed.ts",
-    "script": "node --experimental-strip-types --env-file=.dev.vars"
+    "stripe:seed-": "node --env-file=.dev.vars scripts/stripe-seed.ts",
+    "script": "node --env-file=.dev.vars"
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "catalog:",
