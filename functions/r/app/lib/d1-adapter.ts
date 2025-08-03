@@ -1,5 +1,6 @@
-import { createAdapter, type CreateCustomAdapter } from "better-auth/adapters";
+import type { CreateCustomAdapter } from "better-auth/adapters";
 import type { Where } from "better-auth/types";
+import { createAdapter } from "better-auth/adapters";
 
 type CustomAdapter = ReturnType<CreateCustomAdapter>;
 
@@ -90,6 +91,7 @@ export const d1Adapter = (db: D1Database) =>
         }
         return { clause, values };
       };
+
       const create: CustomAdapter["create"] = async ({
         model: rawModel,
         data,
@@ -99,12 +101,16 @@ export const d1Adapter = (db: D1Database) =>
         const values = keys.map((k) => data[k]);
         const placeholders = keys.map(() => "?").join(",");
         const sql = `insert into ${model} (${keys.join(
-          ","
+          ",",
         )}) values (${placeholders}) returning *`;
-        // console.log("create", { model, keys, values, placeholders, sql });
-        const stmt = db.prepare(sql);
-        return stmt.get(...values) as typeof data;
+        const stmt = db.prepare(sql).bind(...values);
+        const result = await stmt.first();
+        if (!result) {
+          throw new Error(`Failed to create record in ${model}`);
+        }
+        return result as typeof data;
       };
+
       const findOne: CustomAdapter["findOne"] = async ({
         model: rawModel,
         where,
@@ -113,23 +119,9 @@ export const d1Adapter = (db: D1Database) =>
         const model = capitalize(rawModel);
         const { clause, values } = whereToSql(where);
         const fields = select && select.length ? select.join(",") : "*";
-        const sql = `select ${fields} from ${model} ${
-          clause ? `where ${clause}` : ""
-        } limit 1`;
-        const stmt = db.prepare(sql);
-        const result = stmt.get(...values);
-        // console.log("findOne", {
-        //   rawModel,
-        //   model,
-        //   where,
-        //   select,
-        //   clause,
-        //   values,
-        //   fields,
-        //   sql,
-        //   result,
-        // });
-        return result as any;
+        const sql = `select ${fields} from ${model} ${clause ? `where ${clause}` : ""} limit 1`;
+        const stmt = db.prepare(sql).bind(...values);
+        return await stmt.first();
       };
 
       const updateMany: CustomAdapter["updateMany"] = async ({
@@ -143,11 +135,10 @@ export const d1Adapter = (db: D1Database) =>
           .join(",");
         const setValues = Object.values(update as object);
         const { clause, values } = whereToSql(where);
-        const stmt = db.prepare(
-          `update ${model} set ${set}${clause ? ` where ${clause}` : ""}`
-        );
-        const info = stmt.run(...setValues, ...values);
-        return info.changes;
+        const sql = `update ${model} set ${set}${clause ? ` where ${clause}` : ""}`;
+        const stmt = db.prepare(sql).bind(...setValues, ...values);
+        const result = await stmt.run();
+        return result.meta.changes;
       };
 
       const del: CustomAdapter["delete"] = async ({
@@ -156,10 +147,9 @@ export const d1Adapter = (db: D1Database) =>
       }) => {
         const model = capitalize(rawModel);
         const { clause, values } = whereToSql(where);
-        const stmt = db.prepare(
-          `delete from ${model}${clause ? ` where ${clause}` : ""}`
-        );
-        stmt.run(...values);
+        const sql = `delete from ${model}${clause ? ` where ${clause}` : ""}`;
+        const stmt = db.prepare(sql).bind(...values);
+        await stmt.run();
       };
 
       const deleteMany: CustomAdapter["deleteMany"] = async ({
@@ -168,11 +158,10 @@ export const d1Adapter = (db: D1Database) =>
       }) => {
         const model = capitalize(rawModel);
         const { clause, values } = whereToSql(where);
-        const stmt = db.prepare(
-          `delete from ${model}${clause ? ` where ${clause}` : ""}`
-        );
-        const info = stmt.run(...values);
-        return info.changes;
+        const sql = `delete from ${model}${clause ? ` where ${clause}` : ""}`;
+        const stmt = db.prepare(sql).bind(...values);
+        const result = await stmt.run();
+        return result.meta.changes;
       };
 
       const count: CustomAdapter["count"] = async ({
@@ -187,12 +176,12 @@ export const d1Adapter = (db: D1Database) =>
           sql += ` where ${clause}`;
           params.push(...values);
         }
-        const stmt = db.prepare(sql);
-        const row = stmt.get(...params) as
-          | { count?: number | string }
-          | undefined;
-        const result = row && row.count !== undefined ? Number(row.count) : 0;
-        return result;
+        const stmt = db.prepare(sql).bind(...params);
+        const result = await stmt.first();
+        if (!result) {
+          throw new Error(`Failed to count records in ${model}`);
+        }
+        return result.count as number;
       };
       const findMany: CustomAdapter["findMany"] = async ({
         model: rawModel,
@@ -212,23 +201,11 @@ export const d1Adapter = (db: D1Database) =>
         if (sortBy) sql += ` order by ${sortBy.field} ${sortBy.direction}`;
         if (limit) sql += ` limit ${limit}`;
         if (offset) sql += ` offset ${offset}`;
-        // console.log("findMany", {
-        //   rawModel,
-        //   model,
-        //   where,
-        //   // clause,
-        //   // values,
-        //   sortBy,
-        //   limit,
-        //   offset,
-        //   sql,
-        //   params,
-        //   // schema: JSON.stringify(schema, null, 2),
-        // });
-        const stmt = db.prepare(sql);
-        const result = stmt.all(...params) as any[];
-        return result;
+        const stmt = db.prepare(sql).bind(...params);
+        const result = await stmt.run();
+        return result.results as any[]; // D1 returns results in a different format
       };
+
       const update: CustomAdapter["update"] = async ({
         model: rawModel,
         where,
@@ -243,21 +220,8 @@ export const d1Adapter = (db: D1Database) =>
         const sql = `update ${model} set ${set}${
           clause ? ` where ${clause}` : ""
         } returning *`;
-        const stmt = db.prepare(sql);
-        const result = (stmt.get(...setValues, ...values) as any) ?? null;
-        // console.log("update", {
-        //   rawModel,
-        //   model,
-        //   where,
-        //   update,
-        //   set,
-        //   setValues,
-        //   clause,
-        //   values,
-        //   sql,
-        //   result,
-        // });
-        return result;
+        const stmt = db.prepare(sql).bind(...setValues, ...values);
+        return await stmt.first();
       };
       return {
         create,
