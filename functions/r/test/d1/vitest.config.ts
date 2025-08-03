@@ -10,6 +10,14 @@ export default defineWorkersProject(async () => {
   const migrations = await readD1Migrations(migrationsPath);
   return {
     plugins: [tsconfigPaths()],
+    resolve: {
+      alias: {
+        jose: '/Users/mw/Documents/src/cloudflare-effect-react-router-saas/node_modules/.pnpm/jose@5.9.6/node_modules/jose/dist/browser/index.js',
+      },
+    },
+    ssr: {
+      noExternal: ['better-auth'],
+    },
     test: {
       include: ["*.test.ts"],
       setupFiles: ["../apply-migrations.ts"],
