@@ -24,7 +24,7 @@ describe("d1", () => {
       "insert into User (name, email, emailVerified) values (?, ?, ?)",
     ).bind("Test User", "test@example.com", 0);
     const result = await stmt.run();
-    console.log("User insert", result);
+    // console.log("User insert", result);
     expect(result.success).toBe(true);
     expect(result.meta.changes).toBe(1);
   });
