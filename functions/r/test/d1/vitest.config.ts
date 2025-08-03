@@ -8,15 +8,24 @@ import tsconfigPaths from "vite-tsconfig-paths";
 export default defineWorkersProject(async () => {
   const migrationsPath = path.join(__dirname, "../../migrations");
   const migrations = await readD1Migrations(migrationsPath);
+  /*
+    jose uses conditional exports in its package.json, so Vite/Vitest may resolve the node build by default instead of the browser build.
+    The alias forces resolution to the browser build for all imports, ensuring compatibility with browser APIs and environments.
+    'noExternal' for 'better-auth' ensures it is bundled by Vite, so the alias is respected during module resolution.
+  */
+  const joseAliasPath = new URL(
+    "../../../../node_modules/.pnpm/jose@5.9.6/node_modules/jose/dist/browser/index.js",
+    import.meta.url,
+  ).pathname;
   return {
     plugins: [tsconfigPaths()],
     resolve: {
       alias: {
-        jose: '/Users/mw/Documents/src/cloudflare-effect-react-router-saas/node_modules/.pnpm/jose@5.9.6/node_modules/jose/dist/browser/index.js',
+        jose: joseAliasPath,
       },
     },
     ssr: {
-      noExternal: ['better-auth'],
+      noExternal: ["better-auth"],
     },
     test: {
       include: ["*.test.ts"],
