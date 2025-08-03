@@ -7,6 +7,7 @@ import { describe } from "vitest";
 import { d1Adapter } from "~/lib/d1-adapter";
 
 async function resetDb(db: D1Database) {
+  console.log("will resetDb");
   await db.batch([
     ...["Verification", "Account", "Session", "User"].map((table) =>
       db.prepare(`delete from ${table}`),
@@ -17,6 +18,7 @@ async function resetDb(db: D1Database) {
 insert into User (name, email, emailVerified, createdAt, updatedAt)
 values ('test-name-with-modified-field', 'test-email-with-modified-field@email.com', 1`),
   ]);
+  console.log("did resetDb");
 }
 
 describe("d1Adapter (Better Auth) - General Adapter Compliance", async () => {
