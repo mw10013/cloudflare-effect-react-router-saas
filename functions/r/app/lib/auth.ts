@@ -1,12 +1,20 @@
-import { betterAuth, type BetterAuthOptions } from "better-auth";
+import type { BetterAuthOptions } from "better-auth";
+import { betterAuth } from "better-auth";
 import { d1Adapter } from "~/lib/d1-adapter";
 
-export function createAuth<T extends Partial<BetterAuthOptions>>(
-  { emailAndPassword, emailVerification, ...options }: T = {} as T
-) {
+interface CreateAuthOptions
+  extends Partial<Omit<BetterAuthOptions, "database">> {
+  d1: D1Database;
+}
+
+export function createAuth({
+  d1,
+  emailAndPassword,
+  emailVerification,
+  ...options
+}: CreateAuthOptions): ReturnType<typeof betterAuth> {
   return betterAuth({
-    // database: database ?? sqliteAdapter(db),
-    // database: database ?? new Database("./sqlite.db"),
+    database: d1Adapter(d1),
     user: {
       modelName: "User",
     },
@@ -59,4 +67,4 @@ export function createAuth<T extends Partial<BetterAuthOptions>>(
   });
 }
 
-export const auth = createAuth();
+// export const auth = createAuth();
