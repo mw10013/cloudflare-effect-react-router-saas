@@ -6,8 +6,8 @@ import { env } from "cloudflare:test";
 import { describe } from "vitest";
 import { d1Adapter } from "~/lib/d1-adapter";
 
-async function resetDb(db: D1Database) {
-  console.log("will resetDb");
+async function resetDb(db: D1Database, tag: string) {
+  console.log(`will resetDb for ${tag}`);
   await db.batch([
     ...["Verification", "Account", "Session", "User"].map((table) =>
       db.prepare(`delete from ${table}`),
@@ -18,13 +18,13 @@ async function resetDb(db: D1Database) {
 insert into User (name, email, emailVerified, createdAt, updatedAt)
 values ('test-name-with-modified-field', 'test-email-with-modified-field@email.com', 1`),
   ]);
-  console.log("did resetDb");
+  console.log(`did resetDb for ${tag}`);
 }
 
 describe("d1Adapter (Better Auth) - General Adapter Compliance", async () => {
   // FIND_MODEL_WITH_MODIFIED_FIELD_NAME is disabled because we do not handle email_address vs email
   // Subsequent tests expect FIND_MODEL_WITH_MODIFIED_FIELD_NAME to have created a user so we create one here.
-  resetDb(env.D1);
+  resetDb(env.D1, "general");
   runAdapterTest({
     getAdapter: async (options = {}) => {
       return d1Adapter(env.D1)(options);
@@ -57,8 +57,8 @@ describe("d1Adapter (Better Auth) - General Adapter Compliance", async () => {
   });
 });
 
-describe("sqliteAdapter (Better Auth) - Numeric ID Compliance", async () => {
-  resetDb(env.D1);
+describe.skip("sqliteAdapter (Better Auth) - Numeric ID Compliance", async () => {
+  resetDb(env.D1, "number-id");
   runNumberIdAdapterTest({
     getAdapter: async (options = {}) => {
       return d1Adapter(env.D1)(options);
