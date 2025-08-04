@@ -6,7 +6,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "r",
   "main": "./workers/app.ts",
-  "compatibility_date": "2025-07-26",
+  "compatibility_date": "2025-07-12",
   "compatibility_flags": ["nodejs_compat"],
   "vars": {
     "VALUE_FROM_CLOUDFLARE": "Hello from Cloudflare"

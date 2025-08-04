@@ -1,4 +1,5 @@
 import type { Route } from "./+types/_index";
+import * as Oui from "@workspace/oui";
 import { appLoadContext } from "~/lib/middleware";
 
 export function meta({}: Route.MetaArgs) {
@@ -15,5 +16,10 @@ export function loader({ context }: Route.LoaderArgs) {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  return <main className="p-8">{loaderData.message}</main>;
+  return (
+    <main className="p-8">
+      {loaderData.message}
+      <Oui.Button>Click me</Oui.Button>
+    </main>
+  );
 }

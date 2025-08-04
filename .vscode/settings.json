@@ -8,6 +8,7 @@
     "./functions/ui/src/styles/app.css": [
       "./functions/o/app/**",
       "./functions/oui/src/**",
+      "./functions/r/app/**",
       "./functions/s/app/**",
       "./functions/ui/src/**"
     ]
