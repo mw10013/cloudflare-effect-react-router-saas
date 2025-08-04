@@ -13,15 +13,18 @@ export default defineWorkersProject(async () => {
     The alias forces resolution to the browser build for all imports, ensuring compatibility with browser APIs and environments.
     'noExternal' for 'better-auth' ensures it is bundled by Vite, so the alias is respected during module resolution.
   */
-  const joseAliasPath = new URL(
-    "../../../../node_modules/.pnpm/jose@5.9.6/node_modules/jose/dist/browser/index.js",
-    import.meta.url,
-  ).pathname;
   return {
     plugins: [tsconfigPaths()],
     resolve: {
       alias: {
-        jose: joseAliasPath,
+        // jose: new URL(
+        //   "../../../../node_modules/.pnpm/jose@5.9.6/node_modules/jose/dist/browser/index.js",
+        //   import.meta.url,
+        // ).pathname,
+        // "jose/errors": new URL(
+        //   "../../../../node_modules/.pnpm/jose@5.9.6/node_modules/jose/dist/browser/util/errors.js",
+        //   import.meta.url,
+        // ).pathname,
       },
     },
     ssr: {
