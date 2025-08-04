@@ -1,3 +1,7 @@
+import type { NavigateOptions } from "react-router";
+import type { Route } from "./+types/root";
+import * as Oui from "@workspace/oui";
+import { RouterProvider } from "react-aria-components";
 import {
   isRouteErrorResponse,
   Links,
@@ -5,10 +9,16 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useHref,
+  useNavigate,
 } from "react-router";
-
-import type { Route } from "./+types/root";
 import "@workspace/ui/app.css";
+
+declare module "react-aria-components" {
+  interface RouterConfig {
+    routerOptions: NavigateOptions;
+  }
+}
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -23,19 +33,38 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
+// https://github.com/adobe/react-spectrum/issues/6397
+// https://github.com/argos-ci/argos/blob/4822931b05c78e1b4a79e15cf4437fb0297369a6/apps/frontend/src/router.tsx#L21-L31
+function useHrefEx(href: string) {
+  const resolvedHref = useHref(href);
+  if (
+    href.startsWith("https://") ||
+    href.startsWith("http://") ||
+    href.startsWith("mailto:")
+  ) {
+    return href;
+  }
+  return resolvedHref;
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
+  const navigate = useNavigate();
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
+      {/* shadcn app/layout RootLayout */}
+      <body className="background font-sans antialiased">
+        {/* <Toaster /> */}
+        <RouterProvider navigate={navigate} useHref={useHrefEx}>
+          <Oui.DialogEx1AlertProvider>{children}</Oui.DialogEx1AlertProvider>
+          <ScrollRestoration />
+          <Scripts />
+        </RouterProvider>
       </body>
     </html>
   );
@@ -62,11 +91,11 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
+    <main className="container mx-auto p-4 pt-16">
       <h1>{message}</h1>
       <p>{details}</p>
       {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
+        <pre className="w-full overflow-x-auto p-4">
           <code>{stack}</code>
         </pre>
       )}
