@@ -20,6 +20,7 @@ export function createAuth({
     },
     session: {
       modelName: "Session",
+      storeSessionInDatabase: true,
     },
     account: {
       modelName: "Account",

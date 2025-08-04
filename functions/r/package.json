@@ -14,7 +14,7 @@
     "test": "vitest",
     "test:ci": "vitest run",
     "clean": "pnpm clean:node && pnpm clean:wrangler && pnpm clean:etc",
-    "clean:node": "rm -rf node_modules",
+    "clean:node": "rm -rf node_modules test/*/node_modules",
     "clean:wrangler": "rm -rf .wrangler",
     "clean:etc": "rm -rf .react-router build dist",
     "d1:migrate:list": "wrangler d1 migrations list d1-local --local",
