@@ -24,11 +24,12 @@ export async function action({ request, context }: Route.ActionArgs) {
     body: {
       email,
       password,
+      callbackURL: "/email-verification", // http://localhost:3000/api/auth/verify-email?token=ey&callbackURL=/email-verification
     },
     asResponse: true,
   });
-  console.log({ status: response.status, statusText: response.statusText });
-  if (!response.ok) throw response;
+  // TODO: signin: handle 403: EMAIL_NOT_VERIFIED
+  if (!response.ok) return response;
   return redirect("/", { headers: response.headers });
 }
 

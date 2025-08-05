@@ -3,14 +3,13 @@ import { unstable_RouterContextProvider } from "react-router";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
+import { action as signInAction } from "~/routes/signin";
 import { action as signUpAction } from "~/routes/signup";
 import { resetDb } from "../test-utils";
 
 describe("auth sign-up flow", () => {
   const email = "email@test.com";
   const password = "password";
-  const name = "";
-  const callbackURL = "/dashboard";
   const headers = new Headers();
   let emailVerificationUrl: string | undefined;
   let mockSendVerificationEmail: ReturnType<typeof vi.fn>;
@@ -77,13 +76,34 @@ describe("auth sign-up flow", () => {
     expect(response.headers.get("location")).toBe("/signin");
   });
 
-  //   it("should not sign in with unverified email", async () => {
-  //   const response = await auth.api.signInEmail({
-  //     asResponse: true,
-  //     body: { email, password, callbackURL },
-  //   });
-  //   expect(response.status).toBe(403);
-  //   expect(((await response.json()) as any)?.code).toBe("EMAIL_NOT_VERIFIED");
-  //   expect(mockSendVerificationEmail).toHaveBeenCalledTimes(2);
-  // });
+  it("should not sign in with unverified email", async () => {
+    const form = new FormData();
+    form.append("email", email);
+    form.append("password", password);
+    const request = new Request("http://localhost/signup", {
+      method: "POST",
+      body: form,
+    });
+
+    const response = await signInAction({ request, context, params: {} });
+
+    console.log(
+      "should not sign in with unverified email",
+      response,
+      await response.text(),
+    );
+    expect(mockSendVerificationEmail).toHaveBeenCalledTimes(1);
+    expect(response.status).toBe(403);
+        expect(mockSendVerificationEmail).toHaveBeenCalledTimes(1);
+    expect(mockSendVerificationEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        user: expect.objectContaining({ email }),
+      }),
+      undefined,
+    );
+    emailVerificationUrl = mockSendVerificationEmail.mock.calls
+      .at(0)
+      ?.at(0)?.url;
+    expect(emailVerificationUrl).toBeDefined();
+  });
 });

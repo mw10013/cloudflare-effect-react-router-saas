@@ -25,7 +25,7 @@ export async function action({ request, context }: Route.ActionArgs) {
       email,
       password,
       name: "",
-      callbackURL: "/", // post email verification redirect.
+      callbackURL: "/email-verification", // http://localhost:3000/api/auth/verify-email?token=ey&callbackURL=/email-verification
     },
     asResponse: true,
   });
