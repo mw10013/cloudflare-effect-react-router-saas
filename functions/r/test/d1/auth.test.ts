@@ -49,6 +49,17 @@ describe("auth sign-up flow", () => {
 
     expect(response.status).toBe(302);
     expect(response.headers.get("location")).toBe("/");
+    expect(mockSendVerificationEmail).toHaveBeenCalledTimes(1);
+    expect(mockSendVerificationEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        user: expect.objectContaining({ email }),
+      }),
+      undefined,
+    );
+    emailVerificationUrl = mockSendVerificationEmail.mock.calls
+      .at(0)
+      ?.at(0)?.url;
+    expect(emailVerificationUrl).toBeDefined();
   });
 
   it("should not sign up when user already exists", async () => {
@@ -66,4 +77,13 @@ describe("auth sign-up flow", () => {
     expect(response.headers.get("location")).toBe("/signin");
   });
 
+  //   it("should not sign in with unverified email", async () => {
+  //   const response = await auth.api.signInEmail({
+  //     asResponse: true,
+  //     body: { email, password, callbackURL },
+  //   });
+  //   expect(response.status).toBe(403);
+  //   expect(((await response.json()) as any)?.code).toBe("EMAIL_NOT_VERIFIED");
+  //   expect(mockSendVerificationEmail).toHaveBeenCalledTimes(2);
+  // });
 });

@@ -1,4 +1,4 @@
-import type { Route } from "./+types/signup";
+import type { Route } from "./+types/signin";
 import * as Oui from "@workspace/oui";
 import {
   Card,
@@ -20,23 +20,16 @@ export async function action({ request, context }: Route.ActionArgs) {
     throw new Error("Invalid form data");
   }
   const { auth } = context.get(appLoadContext);
-  const response = await auth.api.signUpEmail({
+  const response = await auth.api.signInEmail({
     body: {
       email,
       password,
-      name: "",
-      callbackURL: "/", // post email verification redirect.
     },
     asResponse: true,
   });
-
-  if (!response.ok) {
-    // better-auth returns 422 UNPROCESSABLE_ENTITY with { code: 'USER_ALREADY_EXISTS', ... } when an existing user tries to sign up again
-    if (response.status === 422) return redirect("/signin");
-    return response;
-  }
-  // With email verification enabled, there is no session cookie set on sign up so no need to pass headers here.
-  return redirect("/");
+  console.log({ status: response.status, statusText: response.statusText });
+  if (!response.ok) throw response;
+  return redirect("/", { headers: response.headers });
 }
 
 export default function RouteComponent() {
@@ -44,9 +37,9 @@ export default function RouteComponent() {
     <div className="flex min-h-screen flex-col items-center justify-center">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>Sign up for an account</CardTitle>
+          <CardTitle>Sign in to your account</CardTitle>
           <CardDescription>
-            Enter your email and password to create your account
+            Enter your email and password to sign in
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -65,7 +58,7 @@ export default function RouteComponent() {
               isRequired
             />
             <Oui.Button type="submit" className="w-full">
-              Sign up
+              Sign in
             </Oui.Button>
           </Rac.Form>
         </CardContent>
