@@ -1,5 +1,4 @@
 ---
-mode: "edit"
 description: "Using Oui"
 ---
 
