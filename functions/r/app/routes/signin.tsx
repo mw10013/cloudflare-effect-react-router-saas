@@ -29,7 +29,7 @@ export async function action({ request, context }: Route.ActionArgs) {
     asResponse: true,
   });
   // TODO: signin: handle 403: EMAIL_NOT_VERIFIED
-  if (!response.ok) return response;
+  if (!response.ok) throw response;
   return redirect("/", { headers: response.headers });
 }
 
@@ -44,7 +44,7 @@ export default function RouteComponent() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Rac.Form className="flex flex-col gap-6">
+          <Rac.Form method="post" className="flex flex-col gap-6">
             <Oui.TextFieldEx
               name="email"
               type="email"

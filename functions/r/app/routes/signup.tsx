@@ -33,7 +33,7 @@ export async function action({ request, context }: Route.ActionArgs) {
   if (!response.ok) {
     // better-auth returns 422 UNPROCESSABLE_ENTITY with { code: 'USER_ALREADY_EXISTS', ... } when an existing user tries to sign up again
     if (response.status === 422) return redirect("/signin");
-    return response;
+    throw response;
   }
   // With email verification enabled, there is no session cookie set on sign up so no need to pass headers here.
   return redirect("/");
@@ -50,7 +50,7 @@ export default function RouteComponent() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Rac.Form className="flex flex-col gap-6">
+          <Rac.Form method="post" className="flex flex-col gap-6">
             <Oui.TextFieldEx
               name="email"
               type="email"

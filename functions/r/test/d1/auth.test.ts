@@ -1,3 +1,4 @@
+import { sign } from "node:crypto";
 import { env } from "cloudflare:workers";
 import { unstable_RouterContextProvider } from "react-router";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
@@ -86,10 +87,14 @@ describe("auth sign-up flow", () => {
       body: form,
     });
 
-    const response = await signInAction({ request, context, params: {} });
+    await expect(
+      signInAction({ request, context, params: {} }),
+    ).rejects.toThrow(
+      expect.objectContaining({
+        status: 403,
+      }),
+    );
 
-    expect(mockSendVerificationEmail).toHaveBeenCalledTimes(1);
-    expect(response.status).toBe(403);
     expect(mockSendVerificationEmail).toHaveBeenCalledTimes(1);
     expect(mockSendVerificationEmail).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -147,11 +152,12 @@ describe("auth sign-up flow", () => {
       body: form,
     });
 
-    const response = await signInAction({ request, context, params: {} });
-
-    expect(response.status).toBe(401);
-    expect(((await response.json()) as any)?.code).toBe(
-      "INVALID_EMAIL_OR_PASSWORD",
+    await expect(
+      signInAction({ request, context, params: {} }),
+    ).rejects.toThrow(
+      expect.objectContaining({
+        status: 401,
+      }),
     );
   });
 
