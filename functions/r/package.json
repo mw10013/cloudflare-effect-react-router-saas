@@ -31,6 +31,7 @@
     "@workspace/oui": "workspace:*",
     "@workspace/ui": "workspace:*",
     "better-auth": "catalog:",
+    "hono":"catalog:",
     "isbot": "catalog:",
     "lucide-react": "catalog:",
     "react": "catalog:",

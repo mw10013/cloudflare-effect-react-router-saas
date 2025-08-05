@@ -1,4 +1,5 @@
 import type { AppLoadContext } from "react-router";
+import * as Hono from "hono";
 import { createRequestHandler } from "react-router";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
@@ -11,35 +12,39 @@ declare module "react-router" {
     };
     auth: ReturnType<typeof createAuth>;
     // runtime: ReturnType<typeof makeRuntime>;
-    // session: Session<SessionData, FlashData>;
-    // sessionAction: "commit" | "destroy";
-    // accountMember?: AccountMemberWithAccount;
-    // permissions: ReadonlySet<Permission>;
   }
 }
 
 export default {
   async fetch(request, env, ctx) {
-    const initialContext = new Map([
-      [
-        appLoadContext,
-        {
-          cloudflare: { env, ctx },
-          auth: createAuth({
-            d1: env.D1,
-          }),
-          // runtime,
-          // session: undefined as unknown as Session<SessionData, FlashData>, // middleware populates
-          // sessionAction: "commit",
-          // permissions: new Set<Permission>(),
-        } satisfies AppLoadContext,
-      ],
-    ]);
-    const requestHandler = createRequestHandler(
-      () => import("virtual:react-router/server-build"),
-      import.meta.env.MODE,
-    );
-
-    return requestHandler(request, initialContext);
+    const hono = new Hono.Hono();
+    const auth = createAuth({
+      d1: env.D1,
+    });
+    hono.all("/api/auth/*", (c) => {
+      return auth.handler(c.req.raw);
+    });
+    hono.all("*", (c) => {
+      const initialContext = new Map([
+        [
+          appLoadContext,
+          {
+            cloudflare: { env, ctx },
+            auth: createAuth({
+              d1: env.D1,
+            }),
+            // runtime,
+          } satisfies AppLoadContext,
+        ],
+      ]);
+      const requestHandler = createRequestHandler(
+        () => import("virtual:react-router/server-build"),
+        import.meta.env.MODE,
+      );
+      return requestHandler(c.req.raw, initialContext);
+    });
+    const response = await hono.fetch(request, env, ctx);
+    // ctx.waitUntil(runtime.dispose());
+    return response;
   },
 } satisfies ExportedHandler<Env>;
