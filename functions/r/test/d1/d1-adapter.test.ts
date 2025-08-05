@@ -6,24 +6,26 @@ import { env } from "cloudflare:test";
 import { beforeAll, describe } from "vitest";
 import { d1Adapter } from "~/lib/d1-adapter";
 
-async function resetDb(db: D1Database) {
-  await db.batch([
+async function resetDb(resetFn?: (db: D1Database) => Promise<void>) {
+  await env.D1.batch([
     ...["Verification", "Account", "Session", "User"].map((table) =>
-      db.prepare(`delete from ${table}`),
+      env.D1.prepare(`delete from ${table}`),
     ),
-    // FIND_MODEL_WITH_MODIFIED_FIELD_NAME is disabled because we do not handle email_address vs email
-    // Subsequent tests expect FIND_MODEL_WITH_MODIFIED_FIELD_NAME to have created a user so we create one here.
-    db.prepare(`
-insert into User (name, email, emailVerified)
-values ('test-name-with-modified-field', 'test-email-with-modified-field@email.com', 1)
-`),
   ]);
+  if (resetFn) await resetFn(env.D1);
 }
 
 describe("better-auth d1Adapter", async () => {
   beforeAll(async () => {
-    await resetDb(env.D1);
+    await resetDb(async (db) => {
+      // FIND_MODEL_WITH_MODIFIED_FIELD_NAME is disabled because we do not handle email_address vs email
+      // Subsequent tests expect FIND_MODEL_WITH_MODIFIED_FIELD_NAME to have created a user so we create one here.
+      await db.exec(
+        `insert into User (name, email, emailVerified) values ('test-name-with-modified-field', 'test-email-with-modified-field@email.com', 1)`,
+      );
+    });
   });
+
   runAdapterTest({
     getAdapter: async (options = {}) => {
       return d1Adapter(env.D1)(options);
@@ -58,8 +60,15 @@ describe("better-auth d1Adapter", async () => {
 
 describe("better-auth d1Adapter (number id)", async () => {
   beforeAll(async () => {
-    await resetDb(env.D1);
+    await resetDb(async (db) => {
+      // FIND_MODEL_WITH_MODIFIED_FIELD_NAME is disabled because we do not handle email_address vs email
+      // Subsequent tests expect FIND_MODEL_WITH_MODIFIED_FIELD_NAME to have created a user so we create one here.
+      await db.exec(
+        `insert into User (name, email, emailVerified) values ('test-name-with-modified-field', 'test-email-with-modified-field@email.com', 1)`,
+      );
+    });
   });
+
   runNumberIdAdapterTest({
     getAdapter: async (options = {}) => {
       return d1Adapter(env.D1)(options);

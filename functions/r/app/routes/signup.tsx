@@ -1,3 +1,4 @@
+import type { Route } from "./+types/signup";
 import * as Oui from "@workspace/oui";
 import {
   Card,
@@ -8,8 +9,35 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
+import { redirect } from "react-router";
+import { appLoadContext } from "~/lib/middleware";
 
-export default function SignupRoute() {
+export async function action({ request, context }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const email = formData.get("email");
+  const password = formData.get("password");
+  if (typeof email !== "string" || typeof password !== "string") {
+    throw new Error("Invalid form data");
+  }
+  const { auth } = context.get(appLoadContext);
+  const response = await auth.api.signUpEmail({
+    body: {
+      email,
+      password,
+      name: "",
+    },
+    asResponse: true,
+  });
+  if (!response.ok) {
+    // better-auth returns 422 UNPROCESSABLE_ENTITY with { code: 'USER_ALREADY_EXISTS', ... } when an existing user tries to sign up again
+    if (response.status === 422) return redirect("/signin");
+    throw response;
+  }
+  return redirect("/", { headers: response.headers });
+}
+
+
+export default function RouteComponent() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <Card className="w-full max-w-sm">
