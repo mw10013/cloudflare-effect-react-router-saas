@@ -1,17 +1,10 @@
 import { env } from "cloudflare:test";
 import { beforeAll, describe, expect, it } from "vitest";
-
-async function resetDb(db: D1Database) {
-  await db.batch([
-    ...["Verification", "Account", "Session", "User"].map((table) =>
-      db.prepare(`delete from ${table}`),
-    ),
-  ]);
-}
+import { resetDb } from "../test-utils";
 
 describe("d1", () => {
   beforeAll(async () => {
-    await resetDb(env.D1);
+    await resetDb();
   });
 
   it("select * from User returns 0 results", async () => {

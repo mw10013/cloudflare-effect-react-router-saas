@@ -1,6 +1,7 @@
 import { env } from "cloudflare:workers";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { createAuth } from "~/lib/auth";
+import { resetDb } from "../test-utils";
 
 describe("better-auth sign-up flow", async () => {
   const email = "email@test.com";
@@ -12,7 +13,8 @@ describe("better-auth sign-up flow", async () => {
   let mockSendVerificationEmail: ReturnType<typeof vi.fn>;
   let auth: ReturnType<typeof createAuth>;
 
-  beforeAll(() => {
+  beforeAll(async () => {
+    await resetDb();
     mockSendVerificationEmail = vi.fn().mockResolvedValue(undefined);
     auth = createAuth({
       d1: env.D1,

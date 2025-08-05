@@ -5,15 +5,7 @@ import {
 import { env } from "cloudflare:test";
 import { beforeAll, describe } from "vitest";
 import { d1Adapter } from "~/lib/d1-adapter";
-
-async function resetDb(resetFn?: (db: D1Database) => Promise<void>) {
-  await env.D1.batch([
-    ...["Verification", "Account", "Session", "User"].map((table) =>
-      env.D1.prepare(`delete from ${table}`),
-    ),
-  ]);
-  if (resetFn) await resetFn(env.D1);
-}
+import { resetDb } from "../test-utils";
 
 describe("better-auth d1Adapter", async () => {
   beforeAll(async () => {
