@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
-import { redirect } from "react-router";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function action({ request, context }: Route.ActionArgs) {
