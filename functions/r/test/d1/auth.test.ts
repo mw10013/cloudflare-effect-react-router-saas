@@ -1,4 +1,5 @@
 import { sign } from "node:crypto";
+import { BetterAuthOptions } from "better-auth/types";
 import { env } from "cloudflare:workers";
 import { unstable_RouterContextProvider } from "react-router";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
@@ -9,28 +10,54 @@ import { action as signOutAction } from "~/routes/signout";
 import { action as signUpAction } from "~/routes/signup";
 import { resetDb } from "../test-utils";
 
-describe("auth sign-up flow", () => {
+function createTestContext<T extends Partial<BetterAuthOptions>>({
+  d1,
+  betterAuthOptions,
+}: {
+  d1: D1Database;
+  betterAuthOptions?: T;
+}) {
+  const mockSendVerificationEmail = vi.fn().mockResolvedValue(undefined);
+  const auth = createAuth({
+    d1,
+    baseURL: "http://localhost:3000",
+    secret: "better-auth.secret",
+    emailVerification: {
+      sendVerificationEmail: mockSendVerificationEmail,
+      ...betterAuthOptions,
+    },
+  });
+  const context = new unstable_RouterContextProvider();
+  context.set(appLoadContext, { auth });
+  return { auth, context, mockSendVerificationEmail };
+}
+
+describe("auth sign up flow", () => {
   const email = "email@test.com";
   const password = "password";
   const headers = new Headers();
   let emailVerificationUrl: string | undefined;
-  let mockSendVerificationEmail: ReturnType<typeof vi.fn>;
-  let auth: ReturnType<typeof createAuth>;
-  let context: unstable_RouterContextProvider;
+  // let mockSendVerificationEmail: ReturnType<typeof vi.fn>;
+  // let auth: ReturnType<typeof createAuth>;
+  // let context: unstable_RouterContextProvider;
+  let c: ReturnType<typeof createTestContext>;
 
   beforeAll(async () => {
     await resetDb();
-    mockSendVerificationEmail = vi.fn().mockResolvedValue(undefined);
-    auth = createAuth({
+    c = createTestContext({
       d1: env.D1,
-      baseURL: "http://localhost:3000",
-      secret: "better-auth.secret",
-      emailVerification: {
-        sendVerificationEmail: mockSendVerificationEmail,
-      },
     });
-    context = new unstable_RouterContextProvider();
-    context.set(appLoadContext, { auth });
+    // mockSendVerificationEmail = vi.fn().mockResolvedValue(undefined);
+    // auth = createAuth({
+    //   d1: env.D1,
+    //   baseURL: "http://localhost:3000",
+    //   secret: "better-auth.secret",
+    //   emailVerification: {
+    //     sendVerificationEmail: mockSendVerificationEmail,
+    //   },
+    // });
+    // context = new unstable_RouterContextProvider();
+    // context.set(appLoadContext, { auth });
   });
 
   afterEach(() => {
@@ -46,18 +73,18 @@ describe("auth sign-up flow", () => {
       body: form,
     });
 
-    const response = await signUpAction({ request, context, params: {} });
+    const response = await signUpAction({ request, context: c.context, params: {} });
 
     expect(response.status).toBe(302);
     expect(response.headers.get("location")).toBe("/");
-    expect(mockSendVerificationEmail).toHaveBeenCalledTimes(1);
-    expect(mockSendVerificationEmail).toHaveBeenCalledWith(
+    expect(c.mockSendVerificationEmail).toHaveBeenCalledTimes(1);
+    expect(c.mockSendVerificationEmail).toHaveBeenCalledWith(
       expect.objectContaining({
         user: expect.objectContaining({ email }),
       }),
       undefined,
     );
-    emailVerificationUrl = mockSendVerificationEmail.mock.calls
+    emailVerificationUrl = c.mockSendVerificationEmail.mock.calls
       .at(0)
       ?.at(0)?.url;
     expect(emailVerificationUrl).toBeDefined();
@@ -72,7 +99,7 @@ describe("auth sign-up flow", () => {
       body: form,
     });
 
-    const response = await signUpAction({ request, context, params: {} });
+    const response = await signUpAction({ request, context: c.context, params: {} });
 
     expect(response.status).toBe(302);
     expect(response.headers.get("location")).toBe("/signin");
@@ -88,21 +115,21 @@ describe("auth sign-up flow", () => {
     });
 
     await expect(
-      signInAction({ request, context, params: {} }),
+      signInAction({ request, context: c.context, params: {} }),
     ).rejects.toThrow(
       expect.objectContaining({
         status: 403,
       }),
     );
 
-    expect(mockSendVerificationEmail).toHaveBeenCalledTimes(1);
-    expect(mockSendVerificationEmail).toHaveBeenCalledWith(
+    expect(c.mockSendVerificationEmail).toHaveBeenCalledTimes(1);
+    expect(c.mockSendVerificationEmail).toHaveBeenCalledWith(
       expect.objectContaining({
         user: expect.objectContaining({ email }),
       }),
       undefined,
     );
-    emailVerificationUrl = mockSendVerificationEmail.mock.calls
+    emailVerificationUrl = c.mockSendVerificationEmail.mock.calls
       .at(0)
       ?.at(0)?.url;
     expect(emailVerificationUrl).toBeDefined();
@@ -111,7 +138,7 @@ describe("auth sign-up flow", () => {
   it("should verify email", async () => {
     const request = new Request(emailVerificationUrl!);
 
-    const response = await auth.handler(request);
+    const response = await c.auth.handler(request);
 
     expect(response.status).toBe(302);
     expect(response.headers.has("Set-Cookie")).toBe(true);
@@ -124,7 +151,7 @@ describe("auth sign-up flow", () => {
   });
 
   it("should have valid session", async () => {
-    const session = await auth.api.getSession({ headers });
+    const session = await c.auth.api.getSession({ headers });
 
     expect(session).not.toBeNull();
     expect(session!.user?.email).toBe(email);
@@ -136,7 +163,7 @@ describe("auth sign-up flow", () => {
       headers,
     });
 
-    const response = await signOutAction({ request, context, params: {} });
+    const response = await signOutAction({ request, context: c.context, params: {} });
 
     expect(response.status).toBe(302);
     expect(response.headers.get("location")).toBe("/");
@@ -153,7 +180,7 @@ describe("auth sign-up flow", () => {
     });
 
     await expect(
-      signInAction({ request, context, params: {} }),
+      signInAction({ request, context: c.context, params: {} }),
     ).rejects.toThrow(
       expect.objectContaining({
         status: 401,
@@ -170,10 +197,46 @@ describe("auth sign-up flow", () => {
       body: form,
     });
 
-    const response = await signInAction({ request, context, params: {} });
+    const response = await signInAction({ request, context: c.context, params: {} });
 
     expect(response.status).toBe(302);
     expect(response.headers.get("location")).toBe("/");
     expect(response.headers.has("Set-Cookie")).toBe(true);
   });
+
+  // describe("auth forgot password flow", () => {
+  //   const email = "forgot@test.com";
+  //   const password = "password";
+  //   let mockSendResetPassword: ReturnType<typeof vi.fn>;
+  //   let auth: ReturnType<typeof createAuth>;
+  //   let context: unstable_RouterContextProvider;
+
+  //   beforeAll(async () => {
+  //     // TODO: resetDb() if needed
+  //     mockSendResetPassword = vi.fn().mockResolvedValue(undefined);
+  //     auth = createAuth({
+  //       d1: env.D1,
+  //       baseURL: "http://localhost:3000",
+  //       secret: "better-auth.secret",
+  //       emailAndPassword: {
+  //         enabled: true,
+  //         sendResetPassword: mockSendResetPassword,
+  //       },
+  //     });
+  //     context = new unstable_RouterContextProvider();
+  //     context.set(appLoadContext, { auth });
+
+  //     // TODO: Create user with emailVerified: true
+  //     // You must create a user with emailVerified: true for forgot password flow.
+  //     // Should this be done via direct DB/adapter, or is there a preferred API method?
+  //     // If you want direct DB, use ctx.adapter.create({ model: "user", data: { email, emailVerified: true, ... } })
+  //     // and also create an account record for the password.
+  //   });
+
+  //   afterEach(() => {
+  //     vi.restoreAllMocks();
+  //   });
+
+  //   // TODO: Add tests for forgot password flow
+  // });
 });
