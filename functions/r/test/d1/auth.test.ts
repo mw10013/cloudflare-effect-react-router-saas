@@ -1,4 +1,3 @@
-import { sign } from "node:crypto";
 import { BetterAuthOptions } from "better-auth/types";
 import { env } from "cloudflare:workers";
 import { unstable_RouterContextProvider } from "react-router";
@@ -10,16 +9,16 @@ import { action as signOutAction } from "~/routes/signout";
 import { action as signUpAction } from "~/routes/signup";
 import { resetDb } from "../test-utils";
 
-function createTestContext<T extends Partial<BetterAuthOptions>>({
-  d1,
+async function createTestContext<T extends Partial<BetterAuthOptions>>({
   betterAuthOptions,
 }: {
-  d1: D1Database;
   betterAuthOptions?: T;
-}) {
+} = {}) {
+  await resetDb();
+
   const mockSendVerificationEmail = vi.fn().mockResolvedValue(undefined);
   const auth = createAuth({
-    d1,
+    d1: env.D1,
     baseURL: "http://localhost:3000",
     secret: "better-auth.secret",
     emailVerification: {
@@ -38,16 +37,10 @@ describe("auth sign up flow", () => {
   const password = "password";
   const headers = new Headers();
   let emailVerificationUrl: string | undefined;
-  // let mockSendVerificationEmail: ReturnType<typeof vi.fn>;
-  // let auth: ReturnType<typeof createAuth>;
-  // let context: unstable_RouterContextProvider;
-  let c: ReturnType<typeof createTestContext>;
+  let c: Awaited<ReturnType<typeof createTestContext>>;
 
   beforeAll(async () => {
-    await resetDb();
-    c = createTestContext({
-      d1: env.D1,
-    });
+    c = await createTestContext();
   });
 
   afterEach(() => {
