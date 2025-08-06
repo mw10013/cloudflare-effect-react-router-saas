@@ -29,6 +29,7 @@ function createTestContext<T extends Partial<BetterAuthOptions>>({
   });
   const context = new unstable_RouterContextProvider();
   context.set(appLoadContext, { auth });
+
   return { auth, context, mockSendVerificationEmail };
 }
 
@@ -47,17 +48,6 @@ describe("auth sign up flow", () => {
     c = createTestContext({
       d1: env.D1,
     });
-    // mockSendVerificationEmail = vi.fn().mockResolvedValue(undefined);
-    // auth = createAuth({
-    //   d1: env.D1,
-    //   baseURL: "http://localhost:3000",
-    //   secret: "better-auth.secret",
-    //   emailVerification: {
-    //     sendVerificationEmail: mockSendVerificationEmail,
-    //   },
-    // });
-    // context = new unstable_RouterContextProvider();
-    // context.set(appLoadContext, { auth });
   });
 
   afterEach(() => {
@@ -73,7 +63,11 @@ describe("auth sign up flow", () => {
       body: form,
     });
 
-    const response = await signUpAction({ request, context: c.context, params: {} });
+    const response = await signUpAction({
+      request,
+      context: c.context,
+      params: {},
+    });
 
     expect(response.status).toBe(302);
     expect(response.headers.get("location")).toBe("/");
@@ -99,7 +93,11 @@ describe("auth sign up flow", () => {
       body: form,
     });
 
-    const response = await signUpAction({ request, context: c.context, params: {} });
+    const response = await signUpAction({
+      request,
+      context: c.context,
+      params: {},
+    });
 
     expect(response.status).toBe(302);
     expect(response.headers.get("location")).toBe("/signin");
@@ -163,7 +161,11 @@ describe("auth sign up flow", () => {
       headers,
     });
 
-    const response = await signOutAction({ request, context: c.context, params: {} });
+    const response = await signOutAction({
+      request,
+      context: c.context,
+      params: {},
+    });
 
     expect(response.status).toBe(302);
     expect(response.headers.get("location")).toBe("/");
@@ -197,7 +199,11 @@ describe("auth sign up flow", () => {
       body: form,
     });
 
-    const response = await signInAction({ request, context: c.context, params: {} });
+    const response = await signInAction({
+      request,
+      context: c.context,
+      params: {},
+    });
 
     expect(response.status).toBe(302);
     expect(response.headers.get("location")).toBe("/");
