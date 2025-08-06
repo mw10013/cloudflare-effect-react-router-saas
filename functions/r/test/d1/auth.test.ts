@@ -243,6 +243,7 @@ describe.skip("auth sign up flow", () => {
 });
 
 describe("auth forgot password flow", () => {
+  let resetPasswordUrl: string | undefined;
   let c: Awaited<ReturnType<typeof createTestContext>>;
 
   beforeAll(async () => {
@@ -271,6 +272,21 @@ describe("auth forgot password flow", () => {
         }),
       }),
       undefined,
+    );
+    resetPasswordUrl = c.mockSendResetPassword.mock.calls[0][0].url;
+    expect(resetPasswordUrl).toBeDefined();
+    console.log({ resetPasswordUrl });
+  });
+
+  it("should allow reset password", async () => {
+    const request = new Request(resetPasswordUrl!);
+
+    const response = await c.auth.handler(request);
+
+    console.log("should allow reset password", response, await response.text());
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")?.startsWith("/reset-password")).toBe(
+      true,
     );
   });
 });

@@ -158,6 +158,7 @@ export const d1Adapter = (db: D1Database) =>
       }) => {
         const model = capitalize(rawModel);
         const { clause, values } = whereToSql(where);
+        console.log('deleteMany', { model, where, clause, values });
         const sql = `delete from ${model}${clause ? ` where ${clause}` : ""}`;
         const stmt = db.prepare(sql).bind(...values);
         const result = await stmt.run();
