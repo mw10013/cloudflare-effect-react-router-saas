@@ -55,8 +55,19 @@ export default function RouteComponent() {
             <Oui.TextFieldEx
               name="password"
               type="password"
-              label="Password"
               isRequired
+              label={
+                <div className="flex items-center">
+                  <Oui.Label>Password</Oui.Label>
+                  <Oui.Link
+                    href="/forgot-password"
+                    className="ml-auto inline-block text-sm"
+                    underline="hover"
+                  >
+                    Forgot your password?
+                  </Oui.Link>
+                </div>
+              }
             />
             <Oui.Button type="submit" className="w-full">
               Sign in
