@@ -18,10 +18,17 @@ export const d1Adapter = (db: D1Database) =>
       supportsDates: false,
       supportsBooleans: false,
       disableIdGeneration: true,
-      debugLogs: false,
+      // debugLogs: false,
+      debugLogs: {
+        deleteMany: true,
+      },
     },
     adapter: ({ schema }) => {
       const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+      // Workaround: better-auth does not serialize Date objects in where clauses when supportsDates is false
+      const serializeValue = (v: any) =>
+        v instanceof Date ? v.toISOString() : v;
       const whereToSql = (where?: Where[]) => {
         if (!where || where.length === 0) return { clause: "", values: [] };
         const clauses: string[] = [];
@@ -33,47 +40,47 @@ export const d1Adapter = (db: D1Database) =>
           switch (op) {
             case "eq":
               sql = `${w.field} = ?`;
-              values.push(w.value);
+              values.push(serializeValue(w.value));
               break;
             case "ne":
               sql = `${w.field} <> ?`;
-              values.push(w.value);
+              values.push(serializeValue(w.value));
               break;
             case "lt":
               sql = `${w.field} < ?`;
-              values.push(w.value);
+              values.push(serializeValue(w.value));
               break;
             case "lte":
               sql = `${w.field} <= ?`;
-              values.push(w.value);
+              values.push(serializeValue(w.value));
               break;
             case "gt":
               sql = `${w.field} > ?`;
-              values.push(w.value);
+              values.push(serializeValue(w.value));
               break;
             case "gte":
               sql = `${w.field} >= ?`;
-              values.push(w.value);
+              values.push(serializeValue(w.value));
               break;
             case "in":
               if (Array.isArray(w.value) && w.value.length > 0) {
                 sql = `${w.field} in (${w.value.map(() => "?").join(",")})`;
-                values.push(...w.value);
+                values.push(...w.value.map(serializeValue));
               } else {
                 sql = "0"; // always false
               }
               break;
             case "contains":
               sql = `${w.field} like ?`;
-              values.push(`%${w.value}%`);
+              values.push(`%${serializeValue(w.value)}%`);
               break;
             case "starts_with":
               sql = `${w.field} like ?`;
-              values.push(`${w.value}%`);
+              values.push(`${serializeValue(w.value)}%`);
               break;
             case "ends_with":
               sql = `${w.field} like ?`;
-              values.push(`%${w.value}`);
+              values.push(`%${serializeValue(w.value)}`);
               break;
             default:
               throw new Error(`Unsupported where operator: ${op}`);
@@ -158,7 +165,7 @@ export const d1Adapter = (db: D1Database) =>
       }) => {
         const model = capitalize(rawModel);
         const { clause, values } = whereToSql(where);
-        console.log('deleteMany', { model, where, clause, values });
+        console.log("deleteMany", { model, where, clause, values });
         const sql = `delete from ${model}${clause ? ` where ${clause}` : ""}`;
         const stmt = db.prepare(sql).bind(...values);
         const result = await stmt.run();

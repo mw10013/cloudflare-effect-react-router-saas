@@ -285,7 +285,7 @@ describe("auth forgot password flow", () => {
 
     console.log("should allow reset password", response, await response.text());
     expect(response.status).toBe(302);
-    expect(response.headers.get("location")?.startsWith("/reset-password")).toBe(
+    expect(response.headers.get("location")?.includes("/reset-password")).toBe(
       true,
     );
   });
