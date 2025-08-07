@@ -25,6 +25,9 @@ export function createAuth({
     },
     account: {
       modelName: "Account",
+      fields: {
+        accountId: "betterAuthAccountId",
+      },
       accountLinking: {
         enabled: true,
       },

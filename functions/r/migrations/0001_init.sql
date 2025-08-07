@@ -30,7 +30,7 @@ create table Session (
 --> statement-breakpoint
 create table Account (
   id integer primary key,
-  accountId text not null,
+  betterAuthAccountId text not null,
   providerId text not null,
   userId integer not null references User (id),
   accessToken text,
@@ -62,6 +62,6 @@ values
 
 --> statement-breakpoint
 insert into
-  Account (id, accountId, providerId, userId, password)
+  Account (id, betterAuthAccountId, providerId, userId, password)
 values
   (1, '1', 'credential', 1, 'MUST_CHANGE_PASSWORD');
