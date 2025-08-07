@@ -24,7 +24,38 @@ create table Session (
   ipAddress text,
   userAgent text,
   userId integer not null references User (id),
-  impersonatedBy integer references User (id)
+  impersonatedBy integer references User (id),
+  activeOrganizationId integer references Organization (id)
+);
+
+--> statement-breakpoint
+create table Organization (
+  id integer primary key,
+  name text not null,
+  slug text not null unique,
+  logo text,
+  metadata text,
+  createdAt text not null default (datetime('now'))
+);
+
+--> statement-breakpoint
+create table Member (
+  id integer primary key,
+  userId integer not null references User (id),
+  organizationId integer not null references Organization (id),
+  role text not null,
+  createdAt text not null default (datetime('now'))
+);
+
+--> statement-breakpoint
+create table Invitation (
+  id integer primary key,
+  email text not null,
+  inviterId integer not null references User (id),
+  organizationId integer not null references Organization (id),
+  role text not null,
+  status text not null,
+  expiresAt text not null
 );
 
 --> statement-breakpoint
@@ -62,6 +93,12 @@ values
 
 --> statement-breakpoint
 insert into
-  Account (id, betterAuthAccountId, providerId, userId, password)
+  Account (
+    id,
+    betterAuthAccountId,
+    providerId,
+    userId,
+    password
+  )
 values
   (1, '1', 'credential', 1, 'MUST_CHANGE_PASSWORD');

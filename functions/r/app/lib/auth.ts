@@ -1,6 +1,6 @@
 import type { BetterAuthOptions } from "better-auth";
 import { betterAuth } from "better-auth";
-import { admin as adminPlugin } from "better-auth/plugins";
+import { admin, organization } from "better-auth/plugins";
 import { d1Adapter } from "~/lib/d1-adapter";
 
 interface CreateAuthOptions
@@ -63,6 +63,18 @@ export function createAuth({
       enabled: false,
     },
 
+    schema: {
+      organization: {
+        modelName: "Organization",
+      },
+      member: {
+        modelName: "Member",
+      },
+      invitation: {
+        modelName: "Invitation",
+      },
+    },
+
     advanced: {
       // cookies: {},
       // disableCSRFCheck: true,
@@ -72,7 +84,7 @@ export function createAuth({
       },
     },
     ...options,
-    plugins: [adminPlugin()],
+    plugins: [admin(), organization()],
   });
 }
 
