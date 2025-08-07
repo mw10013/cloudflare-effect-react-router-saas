@@ -17,6 +17,7 @@ async function createTestContext<
   betterAuthOptions?: T;
   skipTestUserCreation?: boolean;
   testUser?: Omit<Partial<User>, "image">;
+  changeBootstrapAdminPassword?: boolean;
 }) {
   await resetDb();
 
@@ -61,6 +62,11 @@ async function createTestContext<
       query: { token: emailVerificationToken },
     });
   }
+
+  const bootstrapAdmin = {
+    email: "a@a.com", // MUST align with admin bootstrap.
+    password: "asdf1234",
+  };
   return {
     db: env.D1,
     auth,
@@ -68,6 +74,7 @@ async function createTestContext<
     mockSendVerificationEmail,
     mockSendResetPassword,
     testUser,
+    bootstrapAdmin,
   };
 }
 
@@ -333,8 +340,10 @@ describe("auth forgot password flow", () => {
     expect(response.headers.get("location")).toBe("/");
   });
 
-  describe.only("database records", () => {
+  describe.only("admin bootstrap", () => {
     let c: Awaited<ReturnType<typeof createTestContext>>;
+    let adminResetPasswordUrl: string | undefined;
+    let adminResetToken: string | undefined;
 
     beforeAll(async () => {
       c = await createTestContext();
@@ -344,11 +353,75 @@ describe("auth forgot password flow", () => {
       vi.restoreAllMocks();
     });
 
-    it("should have user and account records", async () => {
-      const users = await c.db.prepare("select * from User").all();
-      const accounts = await c.db.prepare("select * from Account").all();
-      console.log("users", users);
-      console.log("accounts", accounts);
+    it("should not allow admin sign in with MUST_CHANGE_PASSWORD", async () => {
+      const form = new FormData();
+      form.append("email", c.bootstrapAdmin.email);
+      form.append("password", "MUST_CHANGE_PASSWORD");
+      const request = new Request("http://localhost/signin", {
+        method: "POST",
+        body: form,
+      });
+
+      await expect(
+        signInAction({ request, context: c.context, params: {} }),
+      ).rejects.toThrow();
+    });
+
+    it("should send reset password email for bootstrapAdmin", async () => {
+      const form = new FormData();
+      form.append("email", c.bootstrapAdmin.email);
+      const request = new Request("http://localhost/forgot-password", {
+        method: "POST",
+        body: form,
+      });
+
+      await forgotPasswordAction({ request, context: c.context, params: {} });
+
+      expect(c.mockSendResetPassword).toHaveBeenCalledTimes(1);
+      adminResetPasswordUrl = c.mockSendResetPassword.mock.calls[0][0].url;
+      adminResetToken = c.mockSendResetPassword.mock.calls[0][0].token;
+      expect(adminResetPasswordUrl).toBeDefined();
+      expect(adminResetToken).toBeDefined();
+    });
+
+    it("should reset password for bootstrapAdmin", async () => {
+      const form = new FormData();
+      form.append("password", c.bootstrapAdmin.password);
+      expect(adminResetToken).toBeDefined();
+      form.append("token", adminResetToken!);
+      const request = new Request("http://localhost/reset-password", {
+        method: "POST",
+        body: form,
+      });
+
+      const response = await resetPasswordAction({
+        request,
+        context: c.context,
+        params: {},
+      });
+
+      expect(response.status).toBe(302);
+      expect(response.headers.get("location")).toBe("/");
+    });
+
+    it("should sign in with new password for bootstrapAdmin", async () => {
+      const form = new FormData();
+      form.append("email", c.bootstrapAdmin.email);
+      form.append("password", c.bootstrapAdmin.password);
+      const request = new Request("http://localhost/signin", {
+        method: "POST",
+        body: form,
+      });
+
+      const response = await signInAction({
+        request,
+        context: c.context,
+        params: {},
+      });
+
+      expect(response.status).toBe(302);
+      expect(response.headers.get("location")).toBe("/");
+      expect(response.headers.has("Set-Cookie")).toBe(true);
     });
   });
 });
