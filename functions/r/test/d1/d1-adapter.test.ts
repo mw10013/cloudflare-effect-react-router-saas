@@ -10,11 +10,16 @@ import { resetDb } from "../test-utils";
 describe("better-auth d1Adapter", async () => {
   beforeAll(async () => {
     await resetDb(async (db) => {
-      // FIND_MODEL_WITH_MODIFIED_FIELD_NAME is disabled because we do not handle email_address vs email
-      // Subsequent tests expect FIND_MODEL_WITH_MODIFIED_FIELD_NAME to have created a user so we create one here.
-      await db.exec(
-        `insert into User (name, email, emailVerified) values ('test-name-with-modified-field', 'test-email-with-modified-field@email.com', 1)`,
-      );
+      await db.batch([
+        // Delete bootstrap admin.
+        db.prepare(`delete from Account`),
+        db.prepare(`delete from User`),
+        // FIND_MODEL_WITH_MODIFIED_FIELD_NAME is disabled because we do not handle email_address vs email
+        // Subsequent tests expect FIND_MODEL_WITH_MODIFIED_FIELD_NAME to have created a user so we create one here.
+        db.prepare(
+          `insert into User (name, email, emailVerified) values ('test-name-with-modified-field', 'test-email-with-modified-field@email.com', 1)`,
+        ),
+      ]);
     });
   });
 
@@ -53,11 +58,16 @@ describe("better-auth d1Adapter", async () => {
 describe("better-auth d1Adapter (number id)", async () => {
   beforeAll(async () => {
     await resetDb(async (db) => {
-      // FIND_MODEL_WITH_MODIFIED_FIELD_NAME is disabled because we do not handle email_address vs email
-      // Subsequent tests expect FIND_MODEL_WITH_MODIFIED_FIELD_NAME to have created a user so we create one here.
-      await db.exec(
-        `insert into User (name, email, emailVerified) values ('test-name-with-modified-field', 'test-email-with-modified-field@email.com', 1)`,
-      );
+      await db.batch([
+        // Delete bootstrap admin.
+        db.prepare(`delete from Account`),
+        db.prepare(`delete from User`),
+        // FIND_MODEL_WITH_MODIFIED_FIELD_NAME is disabled because we do not handle email_address vs email
+        // Subsequent tests expect FIND_MODEL_WITH_MODIFIED_FIELD_NAME to have created a user so we create one here.
+        db.prepare(
+          `insert into User (name, email, emailVerified) values ('test-name-with-modified-field', 'test-email-with-modified-field@email.com', 1)`,
+        ),
+      ]);
     });
   });
 
