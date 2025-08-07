@@ -24,6 +24,9 @@ export function createAuth({
     },
     account: {
       modelName: "Account",
+      accountLinking: {
+        enabled: true,
+      }
     },
     verification: {
       modelName: "Verification",
