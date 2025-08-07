@@ -6,6 +6,10 @@ create table User (
   email text not null unique,
   emailVerified integer not null,
   image text,
+  role text not null default 'user',
+  banned integer not null default 0,
+  banReason text,
+  banExpires text,
   createdAt text not null default (datetime('now')),
   updatedAt text not null default (datetime('now'))
 );
@@ -19,7 +23,8 @@ create table Session (
   updatedAt text not null default (datetime('now')),
   ipAddress text,
   userAgent text,
-  userId integer not null references User (id)
+  userId integer not null references User (id),
+  impersonatedBy integer references User (id)
 );
 
 --> statement-breakpoint

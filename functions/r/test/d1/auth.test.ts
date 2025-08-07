@@ -55,7 +55,6 @@ async function createTestContext<
     });
     const emailVerificationToken =
       mockSendVerificationEmail.mock.calls[0][0].token;
-    console.log({ emailVerificationToken });
     mockSendVerificationEmail.mockReset();
 
     await auth.api.verifyEmail({
@@ -71,7 +70,7 @@ async function createTestContext<
   };
 }
 
-describe.skip("auth sign up flow", () => {
+describe("auth sign up flow", () => {
   const email = "email@test.com";
   const password = "password";
   const headers = new Headers();
