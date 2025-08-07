@@ -62,6 +62,7 @@ async function createTestContext<
     });
   }
   return {
+    db: env.D1,
     auth,
     context,
     mockSendVerificationEmail,
@@ -330,5 +331,24 @@ describe("auth forgot password flow", () => {
 
     expect(response.status).toBe(302);
     expect(response.headers.get("location")).toBe("/");
+  });
+
+  describe.only("database records", () => {
+    let c: Awaited<ReturnType<typeof createTestContext>>;
+
+    beforeAll(async () => {
+      c = await createTestContext();
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    it("should have user and account records", async () => {
+      const users = await c.db.prepare("select * from User").all();
+      const accounts = await c.db.prepare("select * from Account").all();
+      console.log("users", users);
+      console.log("accounts", accounts);
+    });
   });
 });

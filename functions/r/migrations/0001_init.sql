@@ -53,3 +53,15 @@ create table Verification (
   createdAt text not null default (datetime('now')),
   updatedAt text not null default (datetime('now'))
 );
+
+--> statement-breakpoint
+insert into
+  User (id, name, email, emailVerified, role)
+values
+  (1, 'Admin', 'a@a.com', 1, 'admin');
+
+--> statement-breakpoint
+insert into
+  Account (id, accountId, providerId, userId, password)
+values
+  (1, '1', 'credential', 1, 'MUST_CHANGE_PASSWORD');
