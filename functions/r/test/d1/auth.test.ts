@@ -5,6 +5,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
 import { action as forgotPasswordAction } from "~/routes/forgot-password";
+import { action as resetPasswordAction } from "~/routes/reset-password";
 import { action as signInAction } from "~/routes/signin";
 import { action as signOutAction } from "~/routes/signout";
 import { action as signUpAction } from "~/routes/signup";
@@ -243,7 +244,9 @@ describe.skip("auth sign up flow", () => {
 });
 
 describe("auth forgot password flow", () => {
+  const newPassword = "newpass123456";
   let resetPasswordUrl: string | undefined;
+  let resetToken: string | undefined;
   let c: Awaited<ReturnType<typeof createTestContext>>;
 
   beforeAll(async () => {
@@ -274,19 +277,59 @@ describe("auth forgot password flow", () => {
       undefined,
     );
     resetPasswordUrl = c.mockSendResetPassword.mock.calls[0][0].url;
+    resetToken = c.mockSendResetPassword.mock.calls[0][0].token;
     expect(resetPasswordUrl).toBeDefined();
-    console.log({ resetPasswordUrl });
+    expect(resetToken).toBeDefined();
   });
 
   it("should allow reset password", async () => {
+    expect(resetPasswordUrl).toBeDefined();
     const request = new Request(resetPasswordUrl!);
 
     const response = await c.auth.handler(request);
 
-    console.log("should allow reset password", response, await response.text());
     expect(response.status).toBe(302);
     expect(response.headers.get("location")?.includes("/reset-password")).toBe(
       true,
     );
+  });
+
+  it("should reset password", async () => {
+    const form = new FormData();
+    form.append("password", newPassword);
+    expect(resetToken).toBeDefined();
+    form.append("token", resetToken!);
+    const request = new Request("http://localhost/reset-password", {
+      method: "POST",
+      body: form,
+    });
+
+    const response = await resetPasswordAction({
+      request,
+      context: c.context,
+      params: {},
+    });
+
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe("/");
+  });
+
+  it("should sign in with new password", async () => {
+    const form = new FormData();
+    form.append("email", c.testUser.email);
+    form.append("password", newPassword);
+    const request = new Request("http://localhost/signin", {
+      method: "POST",
+      body: form,
+    });
+
+    const response = await signInAction({
+      request,
+      context: c.context,
+      params: {},
+    });
+
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe("/");
   });
 });

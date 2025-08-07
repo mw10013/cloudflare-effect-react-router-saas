@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
+import { redirect } from "react-router";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -30,17 +31,7 @@ export async function action({ request, context }: Route.ActionArgs) {
     asResponse: true,
   });
   if (!response.ok) throw response;
-  // If autoSignIn is true, set cookie headers and redirect to dashboard
-  const location = "/dashboard";
-  return new Response(null, {
-    status: 302,
-    headers: {
-      Location: location,
-      ...(response.headers.get("set-cookie")
-        ? { "set-cookie": response.headers.get("set-cookie")! }
-        : {}),
-    },
-  });
+  return redirect("/", { headers: response.headers });
 }
 
 export default function RouteComponent({

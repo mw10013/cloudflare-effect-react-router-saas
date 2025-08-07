@@ -18,10 +18,10 @@ export const d1Adapter = (db: D1Database) =>
       supportsDates: false,
       supportsBooleans: false,
       disableIdGeneration: true,
-      // debugLogs: false,
-      debugLogs: {
-        deleteMany: true,
-      },
+      debugLogs: false,
+      // debugLogs: {
+      //   deleteMany: true,
+      // },
     },
     adapter: ({ schema }) => {
       const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -165,7 +165,7 @@ export const d1Adapter = (db: D1Database) =>
       }) => {
         const model = capitalize(rawModel);
         const { clause, values } = whereToSql(where);
-        console.log("deleteMany", { model, where, clause, values });
+        // console.log("deleteMany", { model, where, clause, values });
         const sql = `delete from ${model}${clause ? ` where ${clause}` : ""}`;
         const stmt = db.prepare(sql).bind(...values);
         const result = await stmt.run();
