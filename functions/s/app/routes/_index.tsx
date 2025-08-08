@@ -13,7 +13,7 @@ export function meta({}: Route.MetaArgs) {
 export async function loader({ request, context }: Route.LoaderArgs) {
   const { auth } = context.get(appLoadContext);
   const session = await auth.api.getSession({ headers: request.headers });
-  return { user: session?.user ?? null };
+  return { user: session?.user ?? null, session };
 }
 
 export default function RouteComponent({ loaderData }: Route.ComponentProps) {
