@@ -2,6 +2,8 @@ import type { BetterAuthOptions } from "better-auth";
 import { betterAuth } from "better-auth";
 import { admin, organization } from "better-auth/plugins";
 import { d1Adapter } from "~/lib/d1-adapter";
+import { env } from "cloudflare:workers";
+
 
 interface CreateAuthOptions
   extends Partial<Omit<BetterAuthOptions, "database">> {
@@ -15,6 +17,8 @@ export function createAuth({
   ...options
 }: CreateAuthOptions): ReturnType<typeof betterAuth> {
   return betterAuth({
+    baseURL: env.BETTER_AUTH_URL,
+    secret: env.BETTER_AUTH_SECRET,
     database: d1Adapter(d1),
     user: {
       modelName: "User",

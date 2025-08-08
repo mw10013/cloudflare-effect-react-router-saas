@@ -25,8 +25,8 @@ async function createTestContext<
   const mockSendResetPassword = vi.fn().mockResolvedValue(undefined);
   const auth = createAuth({
     d1: env.D1,
-    baseURL: "http://localhost:3000",
-    secret: "better-auth.secret",
+    // baseURL: "http://localhost:3000",
+    // secret: "better-auth.secret",
     emailAndPassword: {
       enabled: true,
       sendResetPassword: mockSendResetPassword,
