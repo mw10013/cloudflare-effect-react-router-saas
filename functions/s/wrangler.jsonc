@@ -7,7 +7,7 @@
   "name": "saas",
   "main": "./workers/app.ts",
   "compatibility_date": "2025-07-12",
-  // "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": ["nodejs_compat"],
   "vars": {
   },
   "observability": {
