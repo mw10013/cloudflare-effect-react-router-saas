@@ -28,8 +28,11 @@ export async function action({ request, context }: Route.ActionArgs) {
     },
     asResponse: true,
   });
-  // TODO: signin: handle 403: EMAIL_NOT_VERIFIED
-  if (!response.ok) throw response;
+  // TODO: signin: handle 401: UNAUTHORIZED
+  if (!response.ok) {
+    if (response.status === 403) return redirect("/email-verification");
+    throw response;
+  }
   return redirect("/", { headers: response.headers });
 }
 
