@@ -4,7 +4,7 @@
  */
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "saas",
+  "name": "s-",
   "main": "./workers/app.ts",
   "account_id": "1422451be59cc2401532ad67d92ae773",
   "compatibility_date": "2025-06-04",
