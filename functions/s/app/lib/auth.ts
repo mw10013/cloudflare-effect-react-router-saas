@@ -1,9 +1,8 @@
 import type { BetterAuthOptions } from "better-auth";
 import { betterAuth } from "better-auth";
-import { admin, organization } from "better-auth/plugins";
-import { d1Adapter } from "~/lib/d1-adapter";
+import { admin, magicLink, organization } from "better-auth/plugins";
 import { env } from "cloudflare:workers";
-
+import { d1Adapter } from "~/lib/d1-adapter";
 
 interface CreateAuthOptions
   extends Partial<Omit<BetterAuthOptions, "database">> {
@@ -88,8 +87,18 @@ export function createAuth({
       },
     },
     ...options,
-    plugins: [admin(), organization()],
+    plugins: [
+      admin(),
+      organization(),
+      magicLink({
+        storeToken: "hashed",
+        sendMagicLink: async (
+          { email, token, url }: { email: string; token: string; url: string },
+          request: unknown,
+        ) => {
+          console.log("Stub: sendMagicLink", { to: email, url, token });
+        },
+      }),
+    ],
   });
 }
-
-// export const auth = createAuth();
