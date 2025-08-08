@@ -4,7 +4,7 @@
  */
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "r",
+  "name": "saas",
   "main": "./workers/app.ts",
   "compatibility_date": "2025-07-12",
   "compatibility_flags": ["nodejs_compat"],
