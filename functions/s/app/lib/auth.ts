@@ -9,6 +9,11 @@ import { d1Adapter } from "~/lib/d1-adapter";
  * no matter how or where the auth object is created. This is crucial because we instantiate auth dynamically
  * (with different configs) in both production and test environments, but we want consistent, complete type safety
  * for all plugin endpoints everywhere.
+ *
+ * Limitations:
+ * - The plugins array in FullAuthOptions must be kept in sync manually with the plugins array in createAuth.
+ * - If plugin options differ between environments (e.g., production vs. test), this approach cannot guarantee type safety for all possible plugin configurations.
+ * - TypeScript type inference from runtime plugin arrays is limited when plugin options are dynamic, and may result in non-portable or overly broad types.
  */
 type FullAuthOptions = BetterAuthOptions & {
   plugins: [
@@ -119,6 +124,6 @@ export function createAuth({
           console.log("Stub: sendMagicLink", { to: email, url, token });
         },
       }),
-    ],
+    ] satisfies FullAuthOptions["plugins"],
   });
 }
