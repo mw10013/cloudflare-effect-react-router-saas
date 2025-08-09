@@ -20,8 +20,9 @@ export async function action({ request, context }: Route.ActionArgs) {
   // Use better-auth magic link plugin
   const { auth } = context.get(appLoadContext);
   const response = await auth.api.signInMagicLink({
-    body: { email, redirectTo: "/" },
+    body: { email, redirectTo: "/magic-link" },
     asResponse: true,
+    headers: request.headers,
   });
   if (!response.ok) throw response;
   return { magicLinkSent: response.ok };
