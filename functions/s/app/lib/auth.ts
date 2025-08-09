@@ -1,20 +1,40 @@
-import type { BetterAuthOptions } from "better-auth";
+import type { BetterAuthOptions, InferAPI } from "better-auth";
 import { betterAuth } from "better-auth";
 import { admin, magicLink, organization } from "better-auth/plugins";
 import { env } from "cloudflare:workers";
 import { d1Adapter } from "~/lib/d1-adapter";
 
+/**
+ * We define FullAuthOptions and use InferAPI so that TypeScript always knows the full set of endpoints on auth.api,
+ * no matter how or where the auth object is created. This is crucial because we instantiate auth dynamically
+ * (with different configs) in both production and test environments, but we want consistent, complete type safety
+ * for all plugin endpoints everywhere.
+ */
+type FullAuthOptions = BetterAuthOptions & {
+  plugins: [
+    ReturnType<typeof admin>,
+    ReturnType<typeof organization>,
+    ReturnType<typeof magicLink>,
+  ];
+};
+
+export type AuthAPI = InferAPI<FullAuthOptions>;
+
+export type Auth = Omit<
+  ReturnType<typeof betterAuth<FullAuthOptions>>,
+  "api"
+> & { api: AuthAPI };
+
 interface CreateAuthOptions
   extends Partial<Omit<BetterAuthOptions, "database">> {
   d1: D1Database;
 }
-
 export function createAuth({
   d1,
   emailAndPassword,
   emailVerification,
   ...options
-}: CreateAuthOptions): ReturnType<typeof betterAuth> {
+}: CreateAuthOptions): Auth {
   return betterAuth({
     baseURL: env.BETTER_AUTH_URL,
     secret: env.BETTER_AUTH_SECRET,

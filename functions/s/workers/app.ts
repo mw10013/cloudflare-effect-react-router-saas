@@ -1,3 +1,4 @@
+import type { Auth } from "~/lib/auth";
 import type { AppLoadContext } from "react-router";
 import * as Hono from "hono";
 import { createRequestHandler } from "react-router";
@@ -10,7 +11,7 @@ declare module "react-router" {
       env: Env;
       ctx: ExecutionContext;
     };
-    auth: ReturnType<typeof createAuth>;
+    auth: Auth;
     // runtime: ReturnType<typeof makeRuntime>;
   }
 }
