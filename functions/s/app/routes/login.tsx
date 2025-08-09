@@ -17,12 +17,11 @@ export async function action({ request, context }: Route.ActionArgs) {
   if (typeof email !== "string") {
     throw new Error("Invalid form data");
   }
-  // Use better-auth magic link plugin
   const { auth } = context.get(appLoadContext);
   const response = await auth.api.signInMagicLink({
-    body: { email, redirectTo: "/magic-link" },
-    asResponse: true,
+    body: { email, callbackURL: "/magic-link" },
     headers: request.headers,
+    asResponse: true,
   });
   if (!response.ok) throw response;
   return { magicLinkSent: response.ok };

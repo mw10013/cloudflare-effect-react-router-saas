@@ -55,6 +55,7 @@ export async function action({ request, context }: Route.ActionArgs) {
 }
 
 // Name the default export for the route `RouteComponent`
+// Destructure `loaderData` and `actionData` from props
 export default function RouteComponent({ loaderData, actionData}: Route.ComponentProps) {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
