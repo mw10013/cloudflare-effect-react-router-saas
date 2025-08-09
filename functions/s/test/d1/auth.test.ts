@@ -23,6 +23,7 @@ async function createTestContext<
 
   const mockSendVerificationEmail = vi.fn().mockResolvedValue(undefined);
   const mockSendResetPassword = vi.fn().mockResolvedValue(undefined);
+  const mockSendMagicLink = vi.fn().mockResolvedValue(undefined);
   const auth = createAuth({
     d1: env.D1,
     emailAndPassword: {
@@ -71,6 +72,7 @@ async function createTestContext<
     context,
     mockSendVerificationEmail,
     mockSendResetPassword,
+    mockSendMagicLink,
     testUser,
     bootstrapAdmin,
   };
@@ -318,87 +320,87 @@ describe("auth forgot password flow", () => {
 
     expect(response.status).toBe(302);
   });
+});
 
-  describe.only("admin bootstrap", () => {
-    let c: Awaited<ReturnType<typeof createTestContext>>;
-    let adminResetPasswordUrl: string | undefined;
-    let adminResetToken: string | undefined;
+describe.only("admin bootstrap", () => {
+  let c: Awaited<ReturnType<typeof createTestContext>>;
+  let adminResetPasswordUrl: string | undefined;
+  let adminResetToken: string | undefined;
 
-    beforeAll(async () => {
-      c = await createTestContext();
+  beforeAll(async () => {
+    c = await createTestContext();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("should not allow admin sign in with MUST_CHANGE_PASSWORD", async () => {
+    const form = new FormData();
+    form.append("email", c.bootstrapAdmin.email);
+    form.append("password", "MUST_CHANGE_PASSWORD");
+    const request = new Request("http://localhost/signin", {
+      method: "POST",
+      body: form,
     });
 
-    afterEach(() => {
-      vi.restoreAllMocks();
+    await expect(
+      signInAction({ request, context: c.context, params: {} }),
+    ).rejects.toThrow();
+  });
+
+  it("should send reset password email for bootstrapAdmin", async () => {
+    const form = new FormData();
+    form.append("email", c.bootstrapAdmin.email);
+    const request = new Request("http://localhost/forgot-password", {
+      method: "POST",
+      body: form,
     });
 
-    it("should not allow admin sign in with MUST_CHANGE_PASSWORD", async () => {
-      const form = new FormData();
-      form.append("email", c.bootstrapAdmin.email);
-      form.append("password", "MUST_CHANGE_PASSWORD");
-      const request = new Request("http://localhost/signin", {
-        method: "POST",
-        body: form,
-      });
+    await forgotPasswordAction({ request, context: c.context, params: {} });
 
-      await expect(
-        signInAction({ request, context: c.context, params: {} }),
-      ).rejects.toThrow();
+    expect(c.mockSendResetPassword).toHaveBeenCalledTimes(1);
+    adminResetPasswordUrl = c.mockSendResetPassword.mock.calls[0][0].url;
+    expect(adminResetPasswordUrl).toBeDefined();
+    adminResetToken = c.mockSendResetPassword.mock.calls[0][0].token;
+    expect(adminResetToken).toBeDefined();
+  });
+
+  it("should reset password for bootstrapAdmin", async () => {
+    const form = new FormData();
+    form.append("password", c.bootstrapAdmin.password);
+    expect(adminResetToken).toBeDefined();
+    form.append("token", adminResetToken!);
+    const request = new Request("http://localhost/reset-password", {
+      method: "POST",
+      body: form,
     });
 
-    it("should send reset password email for bootstrapAdmin", async () => {
-      const form = new FormData();
-      form.append("email", c.bootstrapAdmin.email);
-      const request = new Request("http://localhost/forgot-password", {
-        method: "POST",
-        body: form,
-      });
-
-      await forgotPasswordAction({ request, context: c.context, params: {} });
-
-      expect(c.mockSendResetPassword).toHaveBeenCalledTimes(1);
-      adminResetPasswordUrl = c.mockSendResetPassword.mock.calls[0][0].url;
-      expect(adminResetPasswordUrl).toBeDefined();
-      adminResetToken = c.mockSendResetPassword.mock.calls[0][0].token;
-      expect(adminResetToken).toBeDefined();
+    const response = await resetPasswordAction({
+      request,
+      context: c.context,
+      params: {},
     });
 
-    it("should reset password for bootstrapAdmin", async () => {
-      const form = new FormData();
-      form.append("password", c.bootstrapAdmin.password);
-      expect(adminResetToken).toBeDefined();
-      form.append("token", adminResetToken!);
-      const request = new Request("http://localhost/reset-password", {
-        method: "POST",
-        body: form,
-      });
+    expect(response.status).toBe(302);
+  });
 
-      const response = await resetPasswordAction({
-        request,
-        context: c.context,
-        params: {},
-      });
-
-      expect(response.status).toBe(302);
+  it("should sign in with new password for bootstrapAdmin", async () => {
+    const form = new FormData();
+    form.append("email", c.bootstrapAdmin.email);
+    form.append("password", c.bootstrapAdmin.password);
+    const request = new Request("http://localhost/signin", {
+      method: "POST",
+      body: form,
     });
 
-    it("should sign in with new password for bootstrapAdmin", async () => {
-      const form = new FormData();
-      form.append("email", c.bootstrapAdmin.email);
-      form.append("password", c.bootstrapAdmin.password);
-      const request = new Request("http://localhost/signin", {
-        method: "POST",
-        body: form,
-      });
-
-      const response = await signInAction({
-        request,
-        context: c.context,
-        params: {},
-      });
-
-      expect(response.status).toBe(302);
-      expect(response.headers.has("Set-Cookie")).toBe(true);
+    const response = await signInAction({
+      request,
+      context: c.context,
+      params: {},
     });
+
+    expect(response.status).toBe(302);
+    expect(response.headers.has("Set-Cookie")).toBe(true);
   });
 });
