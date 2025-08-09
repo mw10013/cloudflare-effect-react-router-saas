@@ -1,5 +1,6 @@
 ---
-description: "React Router instructions
+description: "React Router instructions"
+applyTo: "**/routes/*.tsx"
 ---
 
 ## Example Route Module

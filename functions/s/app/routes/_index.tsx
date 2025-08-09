@@ -28,12 +28,9 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
           </Rac.Form>
         </div>
       ) : (
-        <div className="mb-6 flex justify-center gap-4">
-          <Oui.Link href="/signup" className={Oui.buttonClassName({})}>
-            Sign Up
-          </Oui.Link>
-          <Oui.Link href="/signin" className={Oui.buttonClassName({})}>
-            Sign In
+        <div className="mb-6 flex justify-center">
+          <Oui.Link href="/login" className={Oui.buttonClassName({})}>
+            Sign in / Sign up
           </Oui.Link>
         </div>
       )}
