@@ -5,6 +5,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
 import { action as forgotPasswordAction } from "~/routes/forgot-password";
+import { action as loginAction } from "~/routes/login";
 import { action as resetPasswordAction } from "~/routes/reset-password";
 import { action as signInAction } from "~/routes/signin";
 import { action as signOutAction } from "~/routes/signout";
@@ -327,6 +328,7 @@ describe("auth forgot password flow", () => {
 
 describe("admin bootstrap", () => {
   let c: Awaited<ReturnType<typeof createTestContext>>;
+  let magicLinkUrl: string | undefined;
   let adminResetPasswordUrl: string | undefined;
   let adminResetToken: string | undefined;
 
@@ -352,59 +354,90 @@ describe("admin bootstrap", () => {
     ).rejects.toThrow();
   });
 
-  it("should send reset password email for bootstrapAdmin", async () => {
+  it("should log in with email", async () => {
     const form = new FormData();
     form.append("email", c.bootstrapAdmin.email);
-    const request = new Request("http://localhost/forgot-password", {
+    const request = new Request("http://localhost/login", {
       method: "POST",
       body: form,
     });
 
-    await forgotPasswordAction({ request, context: c.context, params: {} });
-
-    expect(c.mockSendResetPassword).toHaveBeenCalledTimes(1);
-    adminResetPasswordUrl = c.mockSendResetPassword.mock.calls[0][0].url;
-    expect(adminResetPasswordUrl).toBeDefined();
-    adminResetToken = c.mockSendResetPassword.mock.calls[0][0].token;
-    expect(adminResetToken).toBeDefined();
-  });
-
-  it("should reset password for bootstrapAdmin", async () => {
-    const form = new FormData();
-    form.append("password", c.bootstrapAdmin.password);
-    expect(adminResetToken).toBeDefined();
-    form.append("token", adminResetToken!);
-    const request = new Request("http://localhost/reset-password", {
-      method: "POST",
-      body: form,
-    });
-
-    const response = await resetPasswordAction({
+    await loginAction({
       request,
       context: c.context,
       params: {},
     });
-
-    expect(response.status).toBe(302);
+    expect(c.mockSendMagicLink).toHaveBeenCalledTimes(1);
+    magicLinkUrl = c.mockSendMagicLink.mock.calls[0][0].url;
   });
 
-  it("should sign in with new password for bootstrapAdmin", async () => {
-    const form = new FormData();
-    form.append("email", c.bootstrapAdmin.email);
-    form.append("password", c.bootstrapAdmin.password);
-    const request = new Request("http://localhost/signin", {
-      method: "POST",
-      body: form,
-    });
+  it("should allow admin to sign in with magic link", async () => {
+    expect(magicLinkUrl).toBeDefined();
+    const request = new Request(magicLinkUrl!);
 
-    const response = await signInAction({
-      request,
-      context: c.context,
-      params: {},
-    });
+    const response = await c.auth.handler(request);
 
-    console.log("should sign in with new password for bootstrapAdmin", response, await response.text());
     expect(response.status).toBe(302);
     expect(response.headers.has("Set-Cookie")).toBe(true);
   });
+
+  // it("should send reset password email for bootstrapAdmin", async () => {
+  //   const form = new FormData();
+  //   form.append("email", c.bootstrapAdmin.email);
+  //   const request = new Request("http://localhost/forgot-password", {
+  //     method: "POST",
+  //     body: form,
+  //   });
+
+  //   await forgotPasswordAction({ request, context: c.context, params: {} });
+
+  //   expect(c.mockSendResetPassword).toHaveBeenCalledTimes(1);
+  //   adminResetPasswordUrl = c.mockSendResetPassword.mock.calls[0][0].url;
+  //   expect(adminResetPasswordUrl).toBeDefined();
+  //   adminResetToken = c.mockSendResetPassword.mock.calls[0][0].token;
+  //   expect(adminResetToken).toBeDefined();
+  // });
+
+  // it("should reset password for bootstrapAdmin", async () => {
+  //   const form = new FormData();
+  //   form.append("password", c.bootstrapAdmin.password);
+  //   expect(adminResetToken).toBeDefined();
+  //   form.append("token", adminResetToken!);
+  //   const request = new Request("http://localhost/reset-password", {
+  //     method: "POST",
+  //     body: form,
+  //   });
+
+  //   const response = await resetPasswordAction({
+  //     request,
+  //     context: c.context,
+  //     params: {},
+  //   });
+
+  //   expect(response.status).toBe(302);
+  // });
+
+  // it("should sign in with new password for bootstrapAdmin", async () => {
+  //   const form = new FormData();
+  //   form.append("email", c.bootstrapAdmin.email);
+  //   form.append("password", c.bootstrapAdmin.password);
+  //   const request = new Request("http://localhost/signin", {
+  //     method: "POST",
+  //     body: form,
+  //   });
+
+  //   const response = await signInAction({
+  //     request,
+  //     context: c.context,
+  //     params: {},
+  //   });
+
+  //   console.log(
+  //     "should sign in with new password for bootstrapAdmin",
+  //     response,
+  //     await response.text(),
+  //   );
+  //   expect(response.status).toBe(302);
+  //   expect(response.headers.has("Set-Cookie")).toBe(true);
+  // });
 });

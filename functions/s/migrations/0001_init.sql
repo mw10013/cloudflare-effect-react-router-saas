@@ -87,9 +87,9 @@ create table Verification (
 
 --> statement-breakpoint
 insert into
-  User (id, name, email, role, emailVerified)
+  User (id, name, email, role)
 values
-  (1, 'Admin', 'a@a.com', 'admin', 1);
+  (1, 'Admin', 'a@a.com', 'admin');
 
 --> statement-breakpoint
 insert into
