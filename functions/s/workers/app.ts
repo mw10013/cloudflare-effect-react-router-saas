@@ -11,7 +11,7 @@ declare module "react-router" {
       env: Env;
       ctx: ExecutionContext;
     };
-    auth: Auth;
+    auth: ReturnType<typeof createAuth>;
     // runtime: ReturnType<typeof makeRuntime>;
   }
 }
