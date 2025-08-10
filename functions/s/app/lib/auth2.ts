@@ -1,4 +1,4 @@
-import type { BetterAuthOptions, InferAPI } from "better-auth";
+import type { BetterAuthOptions } from "better-auth";
 import { betterAuth } from "better-auth";
 import { admin, magicLink, organization } from "better-auth/plugins";
 import { env } from "cloudflare:workers";
@@ -14,47 +14,40 @@ interface CreateAuthOptions {
   >["sendVerificationEmail"];
   sendMagicLink?: Parameters<typeof magicLink>[0]["sendMagicLink"];
 }
-type InternalAuth = ReturnType<typeof betterAuth>;
-function buildAuth({
+
+type FullAuthOptions = BetterAuthOptions & {
+  plugins: [
+    ReturnType<typeof admin>,
+    ReturnType<typeof organization>,
+    ReturnType<typeof magicLink>,
+  ];
+};
+
+export function createAuthOptions({
   d1,
   sendResetPassword,
   sendVerificationEmail,
   sendMagicLink,
-}: CreateAuthOptions): InternalAuth {
-  return betterAuth({
+}: CreateAuthOptions): FullAuthOptions {
+  const options = {
     baseURL: env.BETTER_AUTH_URL,
     secret: env.BETTER_AUTH_SECRET,
     database: d1Adapter(d1),
-    user: {
-      modelName: "User",
-    },
-    session: {
-      modelName: "Session",
-      storeSessionInDatabase: true,
-    },
+    user: { modelName: "User" },
+    session: { modelName: "Session", storeSessionInDatabase: true },
     account: {
       modelName: "Account",
-      fields: {
-        accountId: "betterAuthAccountId",
-      },
-      accountLinking: {
-        enabled: true,
-      },
+      fields: { accountId: "betterAuthAccountId" },
+      accountLinking: { enabled: true },
     },
-    verification: {
-      modelName: "Verification",
-    },
+    verification: { modelName: "Verification" },
     emailAndPassword: {
       enabled: true,
       requireEmailVerification: true,
       sendResetPassword:
         sendResetPassword ??
         (async ({ user, url, token }) => {
-          console.log("sendResetPassword", {
-            to: user.email,
-            url,
-            token,
-          });
+          console.log("sendResetPassword", { to: user.email, url, token });
         }),
     },
     emailVerification: {
@@ -64,38 +57,19 @@ function buildAuth({
       sendVerificationEmail:
         sendVerificationEmail ??
         (async ({ user, url, token }) => {
-          console.log("sendVerificationEmail", {
-            to: user.email,
-            url,
-            token,
-          });
+          console.log("sendVerificationEmail", { to: user.email, url, token });
         }),
     },
-    rateLimit: {
-      enabled: false,
-    },
-
-    schema: {
-      organization: {
-        modelName: "Organization",
-      },
-      member: {
-        modelName: "Member",
-      },
-      invitation: {
-        modelName: "Invitation",
-      },
-    },
-
-    advanced: {
-      database: {
-        generateId: false,
-        useNumberId: true,
-      },
-    },
+    advanced: { database: { generateId: false, useNumberId: true } },
     plugins: [
       admin(),
-      organization(),
+      organization({
+        schema: {
+          organization: { modelName: "Organization" },
+          member: { modelName: "Member" },
+          invitation: { modelName: "Invitation" },
+        },
+      }),
       magicLink({
         storeToken: "hashed",
         sendMagicLink:
@@ -105,10 +79,6 @@ function buildAuth({
           }),
       }),
     ],
-  });
-}
-
-export type Auth = ReturnType<typeof buildAuth>;
-export function createAuth(options: CreateAuthOptions): Auth {
-  return buildAuth(options);
+  } satisfies FullAuthOptions;
+  return options;
 }

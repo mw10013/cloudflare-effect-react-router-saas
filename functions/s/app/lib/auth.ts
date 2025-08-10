@@ -96,22 +96,6 @@ export function createAuth({
           });
         }),
     },
-    rateLimit: {
-      enabled: false,
-    },
-
-    schema: {
-      organization: {
-        modelName: "Organization",
-      },
-      member: {
-        modelName: "Member",
-      },
-      invitation: {
-        modelName: "Invitation",
-      },
-    },
-
     advanced: {
       database: {
         generateId: false,
@@ -120,7 +104,19 @@ export function createAuth({
     },
     plugins: [
       admin(),
-      organization(),
+      organization({
+        schema: {
+          organization: {
+            modelName: "Organization",
+          },
+          member: {
+            modelName: "Member",
+          },
+          invitation: {
+            modelName: "Invitation",
+          },
+        },
+      }),
       magicLink({
         storeToken: "hashed",
         sendMagicLink:

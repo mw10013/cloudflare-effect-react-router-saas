@@ -2,7 +2,7 @@ import type { Auth } from "~/lib/auth";
 import type { AppLoadContext } from "react-router";
 import * as Hono from "hono";
 import { createRequestHandler } from "react-router";
-import { createAuth } from "~/lib/auth2";
+import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
 
 declare module "react-router" {
