@@ -4,6 +4,14 @@ import { admin, magicLink, organization } from "better-auth/plugins";
 import { env } from "cloudflare:workers";
 import { d1Adapter } from "~/lib/d1-adapter";
 
+type FullAuthOptions = BetterAuthOptions & {
+  plugins: [
+    ReturnType<typeof admin>,
+    ReturnType<typeof organization>,
+    ReturnType<typeof magicLink>,
+  ];
+};
+
 interface CreateAuthOptions {
   d1: D1Database;
   sendResetPassword?: NonNullable<
@@ -14,14 +22,6 @@ interface CreateAuthOptions {
   >["sendVerificationEmail"];
   sendMagicLink?: Parameters<typeof magicLink>[0]["sendMagicLink"];
 }
-
-type FullAuthOptions = BetterAuthOptions & {
-  plugins: [
-    ReturnType<typeof admin>,
-    ReturnType<typeof organization>,
-    ReturnType<typeof magicLink>,
-  ];
-};
 
 export function createAuthOptions({
   d1,
@@ -82,3 +82,27 @@ export function createAuthOptions({
   } satisfies FullAuthOptions;
   return options;
 }
+
+// export const auth = betterAuth(createAuthOptions({ d1: env.D1 }));
+export const auth = betterAuth({
+  database: d1Adapter(env.D1),
+  plugins: [
+    magicLink({
+      sendMagicLink: async ({ email, token, url }) => {
+        console.log("sendMagicLink", { to: email, url, token });
+      },
+    }),
+  ],
+});
+type A = typeof auth;
+type AA = A["api"]["signInEmail"];
+type AAA = A["api"]["signInMagicLink"];
+
+export function createAuth(options: CreateAuthOptions) {
+  const full = createAuthOptions(options);
+  return betterAuth(full);
+}
+
+type T = ReturnType<typeof createAuth>;
+type TT = T["api"]["signInEmail"];
+// type TTT = T["api"]["signInMagicLink"];

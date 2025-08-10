@@ -10,6 +10,7 @@ pnpm -F d exec tsc -p test/tsconfig.json
 
 - https://github.com/Bekacru/better-call/blob/main/src/error.ts
 - Async operations don't work inside databaseHooks on Cloudflare Workers: https://github.com/better-auth/better-auth/issues/2841
+- The inferred type of 'auth' cannot be named without a reference: https://github.com/better-auth/better-auth/issues/2123
 
 # Welcome to React Router!
 

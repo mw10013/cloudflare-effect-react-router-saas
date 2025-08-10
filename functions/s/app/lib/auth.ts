@@ -45,7 +45,7 @@ export function createAuth({
   sendResetPassword,
   sendVerificationEmail,
   sendMagicLink,
-}: CreateAuthOptions): Auth {
+}: CreateAuthOptions) {
   return betterAuth({
     baseURL: env.BETTER_AUTH_URL,
     secret: env.BETTER_AUTH_SECRET,
@@ -126,5 +126,5 @@ export function createAuth({
           }),
       }),
     ],
-  } as const);
+  });
 }
