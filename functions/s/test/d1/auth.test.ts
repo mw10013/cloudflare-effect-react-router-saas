@@ -2,7 +2,7 @@ import { BetterAuthOptions, User } from "better-auth/types";
 import { env } from "cloudflare:workers";
 import { unstable_RouterContextProvider } from "react-router";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { createAuth } from "~/lib/auth";
+import { createAuth } from "~/lib/auth2";
 import { appLoadContext } from "~/lib/middleware";
 import { action as forgotPasswordAction } from "~/routes/forgot-password";
 import { action as loginAction } from "~/routes/login";
