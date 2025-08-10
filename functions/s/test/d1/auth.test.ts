@@ -12,13 +12,9 @@ import { action as signOutAction } from "~/routes/signout";
 import { action as signUpAction } from "~/routes/signup";
 import { resetDb } from "../test-utils";
 
-async function createTestContext<
-  T extends Partial<BetterAuthOptions>,
->(config?: {
-  betterAuthOptions?: T;
+async function createTestContext(config?: {
   skipTestUserCreation?: boolean;
   testUser?: Omit<Partial<User>, "image">;
-  changeBootstrapAdminPassword?: boolean;
 }) {
   await resetDb();
 
@@ -27,18 +23,9 @@ async function createTestContext<
   const mockSendMagicLink = vi.fn().mockResolvedValue(undefined);
   const auth = createAuth({
     d1: env.D1,
-    emailAndPassword: {
-      enabled: true,
-      sendResetPassword: mockSendResetPassword,
-      ...config?.betterAuthOptions?.emailAndPassword,
-    },
-    emailVerification: {
-      sendVerificationEmail: mockSendVerificationEmail,
-      ...config?.betterAuthOptions?.emailVerification,
-    },
-    magicLinkOptions: {
-      sendMagicLink: mockSendMagicLink,
-    },
+    sendResetPassword: mockSendResetPassword,
+    sendVerificationEmail: mockSendVerificationEmail,
+    sendMagicLink: mockSendMagicLink,
   });
   const context = new unstable_RouterContextProvider();
   context.set(appLoadContext, { auth });

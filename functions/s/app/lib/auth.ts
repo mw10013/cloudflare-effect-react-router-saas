@@ -30,17 +30,21 @@ export type Auth = Omit<
   "api"
 > & { api: AuthAPI };
 
-interface CreateAuthOptions
-  extends Partial<Omit<BetterAuthOptions, "database" | "plugins">> {
+interface CreateAuthOptions {
   d1: D1Database;
-  magicLinkOptions?: Partial<Parameters<typeof magicLink>[0]>;
+  sendResetPassword?: NonNullable<
+    BetterAuthOptions["emailAndPassword"]
+  >["sendResetPassword"];
+  sendVerificationEmail?: NonNullable<
+    BetterAuthOptions["emailVerification"]
+  >["sendVerificationEmail"];
+  sendMagicLink?: Parameters<typeof magicLink>[0]["sendMagicLink"];
 }
 export function createAuth({
   d1,
-  emailAndPassword,
-  emailVerification,
-  magicLinkOptions,
-  ...options
+  sendResetPassword,
+  sendVerificationEmail,
+  sendMagicLink,
 }: CreateAuthOptions): Auth {
   return betterAuth({
     baseURL: env.BETTER_AUTH_URL,
@@ -68,26 +72,29 @@ export function createAuth({
     emailAndPassword: {
       enabled: true,
       requireEmailVerification: true,
-      sendResetPassword: async ({ user, url, token }, request) => {
-        console.log("Stub: sendResetPassword", { to: user.email, url, token });
-      },
-      onPasswordReset: async ({ user }, request) => {
-        console.log(`Stub: Password for user ${user.email} has been reset.`);
-      },
-      ...emailAndPassword,
+      sendResetPassword:
+        sendResetPassword ??
+        (async ({ user, url, token }) => {
+          console.log("sendResetPassword", {
+            to: user.email,
+            url,
+            token,
+          });
+        }),
     },
     emailVerification: {
       sendOnSignUp: true,
       sendOnSignIn: true,
       autoSignInAfterVerification: true,
-      sendVerificationEmail: async ({ user, url, token }, request) => {
-        console.log("sendVerificationEmail", {
-          to: user.email,
-          url,
-          token,
-        });
-      },
-      ...emailVerification,
+      sendVerificationEmail:
+        sendVerificationEmail ??
+        (async ({ user, url, token }) => {
+          console.log("sendVerificationEmail", {
+            to: user.email,
+            url,
+            token,
+          });
+        }),
     },
     rateLimit: {
       enabled: false,
@@ -113,19 +120,16 @@ export function createAuth({
         useNumberId: true,
       },
     },
-    ...options,
     plugins: [
       admin(),
       organization(),
       magicLink({
         storeToken: "hashed",
-        sendMagicLink: async (
-          { email, token, url }: { email: string; token: string; url: string },
-          request: unknown,
-        ) => {
-          console.log("Stub: sendMagicLink", { to: email, url, token });
-        },
-        ...magicLinkOptions,
+        sendMagicLink:
+          sendMagicLink ??
+          (async ({ email, token, url }) => {
+            console.log("sendMagicLink", { to: email, url, token });
+          }),
       }),
     ] satisfies FullAuthOptions["plugins"],
   });

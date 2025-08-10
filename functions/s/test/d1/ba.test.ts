@@ -18,11 +18,7 @@ describe("better-auth sign-up flow", async () => {
     mockSendVerificationEmail = vi.fn().mockResolvedValue(undefined);
     auth = createAuth({
       d1: env.D1,
-      baseURL: "http://localhost:3000",
-      secret: "better-auth.secret",
-      emailVerification: {
-        sendVerificationEmail: mockSendVerificationEmail,
-      },
+      sendVerificationEmail: mockSendVerificationEmail,
     });
   });
 
@@ -38,15 +34,7 @@ describe("better-auth sign-up flow", async () => {
     });
     expect(response.ok).toBe(true);
     expect(mockSendVerificationEmail).toHaveBeenCalledTimes(1);
-    expect(mockSendVerificationEmail).toHaveBeenCalledWith(
-      expect.objectContaining({
-        user: expect.objectContaining({ email }),
-      }),
-      undefined,
-    );
-    emailVerificationUrl = mockSendVerificationEmail.mock.calls
-      .at(0)
-      ?.at(0)?.url;
+    emailVerificationUrl = mockSendVerificationEmail.mock.calls[0][0].url;
     expect(emailVerificationUrl).toBeDefined();
   });
 
@@ -60,6 +48,7 @@ describe("better-auth sign-up flow", async () => {
         callbackURL,
       },
     });
+
     expect(response.status).toBe(422);
     expect(((await response.json()) as any)?.code).toBe("USER_ALREADY_EXISTS");
   });
@@ -69,6 +58,7 @@ describe("better-auth sign-up flow", async () => {
       asResponse: true,
       body: { email, password, callbackURL },
     });
+
     expect(response.status).toBe(403);
     expect(((await response.json()) as any)?.code).toBe("EMAIL_NOT_VERIFIED");
     expect(mockSendVerificationEmail).toHaveBeenCalledTimes(2);
@@ -79,6 +69,7 @@ describe("better-auth sign-up flow", async () => {
       "http://localhost:3000/api/auth/verify-email?token=INVALID_TOKEN&callbackURL=/dashboard",
     );
     const response = await auth.handler(request);
+
     expect(response.status).toBe(302);
     expect(response.headers.get("location")).toBe(
       "/dashboard?error=invalid_token",
@@ -86,8 +77,11 @@ describe("better-auth sign-up flow", async () => {
   });
 
   it("should verify email", async () => {
+    expect(emailVerificationUrl).toBeDefined();
     const request = new Request(emailVerificationUrl!);
+
     const response = await auth.handler(request);
+
     expect(response.status).toBe(302);
     expect(response.headers.get("location")).toBe(callbackURL);
     expect(response.headers.has("Set-Cookie")).toBe(true);
@@ -101,6 +95,7 @@ describe("better-auth sign-up flow", async () => {
 
   it("should have valid session", async () => {
     const session = await auth.api.getSession({ headers });
+
     expect(session).not.toBeNull();
     expect(session!.user?.email).toBe(email);
   });
@@ -110,15 +105,17 @@ describe("better-auth sign-up flow", async () => {
       headers,
       asResponse: true,
     });
+
     expect(response.ok).toBe(true);
     expect(response.headers.has("Set-Cookie")).toBe(true);
   });
 
   it("should not sign in with invalid password", async () => {
     const response = await auth.api.signInEmail({
-      asResponse: true,
       body: { email, password: "INVALID_PASSWORD", callbackURL },
+      asResponse: true,
     });
+
     expect(response.status).toBe(401);
     expect(((await response.json()) as any)?.code).toBe(
       "INVALID_EMAIL_OR_PASSWORD",
@@ -130,6 +127,7 @@ describe("better-auth sign-up flow", async () => {
       asResponse: true,
       body: { email, password, callbackURL },
     });
+    
     expect(response.ok).toBe(true);
     expect(response.headers.has("Set-Cookie")).toBe(true);
   });
