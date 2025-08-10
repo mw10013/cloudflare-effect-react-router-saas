@@ -4,7 +4,7 @@ create table User (
   id integer primary key,
   name text not null default '',
   email text not null unique,
-  emailVerified integer not null,
+  emailVerified integer not null default 0,
   image text,
   role text not null default 'user',
   banned integer not null default 0,
@@ -87,9 +87,9 @@ create table Verification (
 
 --> statement-breakpoint
 insert into
-  User (id, name, email, emailVerified, role)
+  User (id, name, email, role, emailVerified)
 values
-  (1, 'Admin', 'a@a.com', 1, 'admin');
+  (1, 'Admin', 'a@a.com', 'admin', 1);
 
 --> statement-breakpoint
 insert into
@@ -101,4 +101,4 @@ insert into
     password
   )
 values
-  (1, '1', 'credential', 1, 'MUST_CHANGE_PASSWORD');
+  (1, '1', 'credential', 1, '');

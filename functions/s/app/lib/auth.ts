@@ -31,13 +31,15 @@ export type Auth = Omit<
 > & { api: AuthAPI };
 
 interface CreateAuthOptions
-  extends Partial<Omit<BetterAuthOptions, "database">> {
+  extends Partial<Omit<BetterAuthOptions, "database" | "plugins">> {
   d1: D1Database;
+  magicLinkOptions?: Partial<Parameters<typeof magicLink>[0]>;
 }
 export function createAuth({
   d1,
   emailAndPassword,
   emailVerification,
+  magicLinkOptions,
   ...options
 }: CreateAuthOptions): Auth {
   return betterAuth({
@@ -123,6 +125,7 @@ export function createAuth({
         ) => {
           console.log("Stub: sendMagicLink", { to: email, url, token });
         },
+        ...magicLinkOptions,
       }),
     ] satisfies FullAuthOptions["plugins"],
   });

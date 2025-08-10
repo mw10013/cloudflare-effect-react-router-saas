@@ -35,6 +35,9 @@ async function createTestContext<
       sendVerificationEmail: mockSendVerificationEmail,
       ...config?.betterAuthOptions?.emailVerification,
     },
+    magicLinkOptions: {
+      sendMagicLink: mockSendMagicLink,
+    },
   });
   const context = new unstable_RouterContextProvider();
   context.set(appLoadContext, { auth });
@@ -151,14 +154,14 @@ describe("auth sign up flow", () => {
       body: form,
     });
 
-    await expect(
-      signInAction({ request, context: c.context, params: {} }),
-    ).rejects.toThrow(
-      expect.objectContaining({
-        status: 403,
-      }),
-    );
+    const response = await signInAction({
+      request,
+      context: c.context,
+      params: {},
+    });
 
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe("/email-verification");
     expect(c.mockSendVerificationEmail).toHaveBeenCalledTimes(1);
     emailVerificationUrl = c.mockSendVerificationEmail.mock.calls[0][0].url;
     expect(emailVerificationUrl).toBeDefined();
@@ -322,7 +325,7 @@ describe("auth forgot password flow", () => {
   });
 });
 
-describe.only("admin bootstrap", () => {
+describe("admin bootstrap", () => {
   let c: Awaited<ReturnType<typeof createTestContext>>;
   let adminResetPasswordUrl: string | undefined;
   let adminResetToken: string | undefined;
@@ -335,10 +338,10 @@ describe.only("admin bootstrap", () => {
     vi.restoreAllMocks();
   });
 
-  it("should not allow admin sign in with MUST_CHANGE_PASSWORD", async () => {
+  it("should not allow admin sign in with empty password", async () => {
     const form = new FormData();
     form.append("email", c.bootstrapAdmin.email);
-    form.append("password", "MUST_CHANGE_PASSWORD");
+    form.append("password", "");
     const request = new Request("http://localhost/signin", {
       method: "POST",
       body: form,
@@ -400,6 +403,7 @@ describe.only("admin bootstrap", () => {
       params: {},
     });
 
+    console.log("should sign in with new password for bootstrapAdmin", response, await response.text());
     expect(response.status).toBe(302);
     expect(response.headers.has("Set-Cookie")).toBe(true);
   });

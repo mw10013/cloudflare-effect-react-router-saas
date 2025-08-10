@@ -10,3 +10,7 @@
 ## Etc
 
 - BUG: D1 local databases are not created with database_id: https://github.com/cloudflare/workers-sdk/issues/4548
+
+## Copilot
+
+- boost prompt: https://gist.github.com/burkeholland/352ecf6be68fab1e0902d80a235b2ace
