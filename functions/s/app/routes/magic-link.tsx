@@ -1,10 +1,17 @@
 import type { Route } from "./+types/magic-link";
 import { redirect } from "react-router";
+import { appLoadContext } from "~/lib/middleware";
 
-export async function loader({ request }: Route.LoaderArgs) {
+export async function loader({ request, context }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const error = url.searchParams.get("error");
   if (error) return { error };
+
+  const { auth } = context.get(appLoadContext);
+  const session = await auth.api.getSession({ headers: request.headers });
+  if (session?.user.role === "admin") return redirect("/admin");
+  else if (session?.user.role === "user") return redirect("/app");
+
   return redirect("/");
 }
 

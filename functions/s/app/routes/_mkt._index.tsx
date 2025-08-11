@@ -5,12 +5,8 @@ import * as Rac from "react-aria-components";
 import { useRouteLoaderData } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "saas" },
-    { name: "description", content: "saas template" },
-  ];
+  return [{ title: "saas" }, { name: "description", content: "saas template" }];
 }
-
 
 export default function RouteComponent() {
   const mktRouteLoaderData =
@@ -22,7 +18,7 @@ export default function RouteComponent() {
       </h1>
       <div className="mt-8">
         {mktRouteLoaderData?.sessionUser ? (
-          <Rac.Link
+          <Oui.Link
             href={
               mktRouteLoaderData.sessionUser.role === "admin"
                 ? "/admin"
@@ -30,9 +26,9 @@ export default function RouteComponent() {
             }
           >
             Enter
-          </Rac.Link>
+          </Oui.Link>
         ) : (
-          <a href="/login">Get Started</a>
+          <Oui.Link href="/login">Get Started</Oui.Link>
         )}
       </div>
     </div>
@@ -61,4 +57,3 @@ export default function RouteComponent() {
 //     </main>
 //   );
 // }
-
