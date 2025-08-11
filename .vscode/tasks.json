@@ -6,8 +6,7 @@
       "label": "Run Vitest tests for s package",
       "command": "pnpm",
       "args": ["-F", "s", "test"],
-      "group": "test",
-      "problemMatcher": ["$vitest"]
+      "group": "test"
     }
   ]
 }
