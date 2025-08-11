@@ -7,7 +7,6 @@
 ## Monorepo
 
 - The monorepo is organized into functions, each with its own `package.json` file.
-- functions/fixture: Fixture for testing and development.
 - functions/o: Demo application for oui.
 - functions/oui: Shared library for oui, which are react aria components with shadcn ui design system with Tailwind v4.
 - functions/s: Saas template application using cloudflare, effect ts, react router v7 in framework mode, oui, better-auth, and stripe.
