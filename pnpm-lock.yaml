@@ -67,8 +67,8 @@ catalogs:
       specifier: 1.0.20
       version: 1.0.20
     better-auth:
-      specifier: 1.3.5-beta.7
-      version: 1.3.5-beta.7
+      specifier: 1.3.4
+      version: 1.3.4
     effect:
       specifier: 3.16.12
       version: 3.16.12
@@ -324,7 +324,7 @@ importers:
         version: link:../ui
       better-auth:
         specifier: 'catalog:'
-        version: 1.3.5-beta.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod@4.0.14)
+        version: 1.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       hono:
         specifier: 'catalog:'
         version: 4.8.9
@@ -3542,18 +3542,6 @@ packages:
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
-
-  better-auth@1.3.5-beta.7:
-    resolution: {integrity: sha512-vhKdX/wgzr3kKWtWK8hGzsQBEmduw7Sm175O/1OYA/M66gVODmK8N7eMQY0u7TujxYYap9Ys+vguUtJogRwt2g==}
-    peerDependencies:
-      react: ^18.0.0 || ^19.0.0
-      react-dom: ^18.0.0 || ^19.0.0
-      zod: ^3.25.0 || ^4.0.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9699,24 +9687,6 @@ snapshots:
   base64-js@1.5.1: {}
 
   better-auth@1.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
-    dependencies:
-      '@better-auth/utils': 0.2.5
-      '@better-fetch/fetch': 1.1.18
-      '@noble/ciphers': 0.6.0
-      '@noble/hashes': 1.8.0
-      '@simplewebauthn/browser': 13.1.2
-      '@simplewebauthn/server': 13.1.2
-      better-call: 1.0.13
-      defu: 6.1.4
-      jose: 5.10.0
-      kysely: 0.28.5
-      nanostores: 0.11.4
-      zod: 4.0.14
-    optionalDependencies:
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-
-  better-auth@1.3.5-beta.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod@4.0.14):
     dependencies:
       '@better-auth/utils': 0.2.5
       '@better-fetch/fetch': 1.1.18
