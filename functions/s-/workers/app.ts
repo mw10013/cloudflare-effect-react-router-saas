@@ -8,7 +8,10 @@ import type { Permission } from "~/lib/Policy";
 import type { AppLoadContext, Session } from "react-router";
 import { createClient } from "@openauthjs/openauth/client";
 import * as Hono from "hono";
-import { createRequestHandler } from "react-router";
+import {
+  createRequestHandler,
+  unstable_RouterContextProvider,
+} from "react-router";
 import * as Q from "~/lib/Queue";
 import { appLoadContext, makeRuntime } from "../app/lib/ReactRouterEx";
 import * as Api from "./Api";
@@ -52,28 +55,24 @@ export default {
         fetch: async (input, init) =>
           openAuth.issuer.fetch(new Request(input, init), env, ctx),
       });
-      const initialContext = new Map([
-        [
-          appLoadContext,
-          {
-            cloudflare: { env, ctx },
-            runtime,
-            openAuth: {
-              ...openAuth,
-              client: openAuthClient,
-              redirectUri: `${origin}/callback`,
-            },
-            session: undefined as unknown as Session<SessionData, FlashData>, // middleware populates
-            sessionAction: "commit",
-            permissions: new Set<Permission>(),
-          } satisfies AppLoadContext,
-        ],
-      ]);
+      const context = new unstable_RouterContextProvider();
+      context.set(appLoadContext, {
+        cloudflare: { env, ctx },
+        runtime,
+        openAuth: {
+          ...openAuth,
+          client: openAuthClient,
+          redirectUri: `${origin}/callback`,
+        },
+        session: undefined as unknown as Session<SessionData, FlashData>,
+        sessionAction: "commit",
+        permissions: new Set<Permission>(),
+      });
       const requestHandler = createRequestHandler(
         () => import("virtual:react-router/server-build"),
         import.meta.env.MODE,
       );
-      return requestHandler(c.req.raw, initialContext);
+      return requestHandler(c.req.raw, context);
     });
     const response = await hono.fetch(request, env, ctx);
     ctx.waitUntil(runtime.dispose());
