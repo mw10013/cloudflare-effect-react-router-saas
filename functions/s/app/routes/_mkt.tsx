@@ -9,7 +9,7 @@ export async function loader({ request, context }: Route.LoaderArgs) {
   const session = await auth.api.getSession({ headers: request.headers });
   return {
     isSignedIn: Boolean(session?.user),
-    session,
+    sessionUser: session?.user,
   };
 }
 
@@ -63,7 +63,7 @@ function SiteHeader() {
               <CommandMenu />
             </div> */}
             <nav className="flex items-center gap-0.5">
-              {routeLoaderData?.session?.user ? (
+              {routeLoaderData?.sessionUser ? (
                 <Rac.Form
                   action="/signout"
                   method="post"
@@ -74,15 +74,12 @@ function SiteHeader() {
                   </Oui.Button>
                 </Rac.Form>
               ) : (
-                <Rac.Link
+                <Oui.Link
+                  href="/login"
                   className={Oui.buttonClassName({ variant: "outline" })}
-                  onPress={() => {
-                    // Bypass client-side routing (Rac.RouterProvider) to hit the Hono OpenAuth endpoint directly.
-                    window.location.href = "/authenticate";
-                  }}
                 >
-                  Sign In
-                </Rac.Link>
+                  Sign in / Sign up
+                </Oui.Link>
               )}
             </nav>
           </div>

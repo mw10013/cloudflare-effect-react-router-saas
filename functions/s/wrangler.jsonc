@@ -5,10 +5,15 @@
   "compatibility_date": "2025-07-12",
   "compatibility_flags": ["nodejs_compat"],
   "vars": {
+    "ENVIRONMENT": "local",
     "BETTER_AUTH_URL": "http://localhost:5173"
   },
   "observability": {
-    "enabled": true
+    "enabled": true,
+    "logs": {
+      "invocation_logs": true,
+      "head_sampling_rate": 1
+    }
   },
   "d1_databases": [
     {
@@ -27,7 +32,15 @@
   "env": {
     "production": {
       "vars": {
+        "ENVIRONMENT": "production",
         "BETTER_AUTH_URL": "https://cloudflare.com"
+      },
+      "observability": {
+        "enabled": true,
+        "logs": {
+          "invocation_logs": true,
+          "head_sampling_rate": 1
+        }
       },
       "d1_databases": [
         {
