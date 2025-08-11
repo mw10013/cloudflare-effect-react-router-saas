@@ -1,4 +1,4 @@
-import { BetterAuthOptions, User } from "better-auth/types";
+import { User } from "better-auth/types";
 import { env } from "cloudflare:workers";
 import { unstable_RouterContextProvider } from "react-router";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
