@@ -3,9 +3,9 @@
   "tasks": [
     {
       "type": "shell",
-      "label": "Run Vitest tests for r package",
+      "label": "Run Vitest tests for s package",
       "command": "pnpm",
-      "args": ["-F", "r", "test:ci"],
+      "args": ["-F", "s", "test"],
       "group": "test",
       "problemMatcher": ["$vitest"]
     }
