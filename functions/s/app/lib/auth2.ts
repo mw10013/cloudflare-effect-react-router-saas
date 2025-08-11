@@ -23,12 +23,13 @@ interface CreateAuthOptions {
   sendMagicLink?: Parameters<typeof magicLink>[0]["sendMagicLink"];
 }
 
+
 export function createAuthOptions({
   d1,
   sendResetPassword,
   sendVerificationEmail,
   sendMagicLink,
-}: CreateAuthOptions): FullAuthOptions {
+}: CreateAuthOptions) {
   const options = {
     baseURL: env.BETTER_AUTH_URL,
     secret: env.BETTER_AUTH_SECRET,

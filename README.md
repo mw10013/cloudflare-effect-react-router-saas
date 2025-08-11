@@ -11,6 +11,7 @@
 
 - BUG: D1 local databases are not created with database_id: https://github.com/cloudflare/workers-sdk/issues/4548
 
-## Copilot
+## LLM
 
 - boost prompt: https://gist.github.com/burkeholland/352ecf6be68fab1e0902d80a235b2ace
+- https://wuu73.org/blog/aiguide1.html
