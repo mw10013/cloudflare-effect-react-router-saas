@@ -6,6 +6,12 @@ pnpm -F r exec tsc -p test/tsconfig.json
 pnpm -F d exec tsc -p test/tsconfig.json
 ```
 
+## Vitest
+
+- BUG: Discrepancy in Node Module Compatibility Between wrangler deploy and vitest-pool-workers Testing : https://github.com/cloudflare/workers-sdk/issues/7324
+- Critical Bug: Node.js node:os Module Import Failure in Vitest Pool Workers: https://github.com/cloudflare/workers-sdk/issues/9719
+- https://developers.cloudflare.com/workers/runtime-apis/nodejs/#supported-nodejs-apis
+
 ## Better-Auth
 
 - https://github.com/Bekacru/better-call/blob/main/src/error.ts
