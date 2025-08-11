@@ -1,6 +1,9 @@
 import type { AppLoadContext } from "react-router";
 import * as Hono from "hono";
-import { createRequestHandler } from "react-router";
+import {
+  createRequestHandler,
+  unstable_RouterContextProvider,
+} from "react-router";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
 
@@ -25,23 +28,19 @@ export default {
       return auth.handler(c.req.raw);
     });
     hono.all("*", (c) => {
-      const initialContext = new Map([
-        [
-          appLoadContext,
-          {
-            cloudflare: { env, ctx },
-            auth: createAuth({
-              d1: env.D1,
-            }),
-            // runtime,
-          } satisfies AppLoadContext,
-        ],
-      ]);
+      const context = new unstable_RouterContextProvider();
+      context.set(appLoadContext, {
+        cloudflare: { env, ctx },
+        auth: createAuth({
+          d1: env.D1,
+        }),
+        // runtime,
+      });
       const requestHandler = createRequestHandler(
         () => import("virtual:react-router/server-build"),
         import.meta.env.MODE,
       );
-      return requestHandler(c.req.raw, initialContext);
+      return requestHandler(c.req.raw, context as any);
     });
     const response = await hono.fetch(request, env, ctx);
     // ctx.waitUntil(runtime.dispose());
