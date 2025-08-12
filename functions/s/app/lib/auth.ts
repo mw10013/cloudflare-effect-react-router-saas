@@ -55,6 +55,15 @@ function createBetterAuthOptions({
         }),
     },
     advanced: { database: { generateId: false, useNumberId: true } },
+    databaseHooks: {
+      user: {
+        create: {
+          after: async (user, ctx) => {
+            console.log("databaseHooks.user.create.after", user);
+          },
+        },
+      },
+    },
     plugins: [
       admin(),
       organization({
