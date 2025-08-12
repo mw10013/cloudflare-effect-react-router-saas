@@ -14,7 +14,15 @@ interface CreateAuthOptions {
   sendVerificationEmail?: NonNullable<
     BetterAuthOptions["emailVerification"]
   >["sendVerificationEmail"];
+  afterEmailVerification?: NonNullable<
+    BetterAuthOptions["emailVerification"]
+  >["afterEmailVerification"];
   sendMagicLink?: Parameters<typeof magicLink>[0]["sendMagicLink"];
+  databaseHookUserCreateAfter?: NonNullable<
+    NonNullable<
+      NonNullable<BetterAuthOptions["databaseHooks"]>["user"]
+    >["create"]
+  >["after"];
 }
 
 function createBetterAuthOptions({
@@ -22,6 +30,8 @@ function createBetterAuthOptions({
   sendResetPassword,
   sendVerificationEmail,
   sendMagicLink,
+  afterEmailVerification,
+  databaseHookUserCreateAfter,
 }: CreateAuthOptions) {
   return {
     baseURL: env.BETTER_AUTH_URL,
@@ -53,17 +63,17 @@ function createBetterAuthOptions({
         (async ({ user, url, token }) => {
           console.log("sendVerificationEmail", { to: user.email, url, token });
         }),
-      afterEmailVerification: async (user, request) => {
+      afterEmailVerification: afterEmailVerification ?? (async (user, request) => {
         console.log("afterEmailVerification", { user, request });
-      },
+      }),
     },
     advanced: { database: { generateId: false, useNumberId: true } },
     databaseHooks: {
       user: {
         create: {
-          after: async (user, ctx) => {
+          after: databaseHookUserCreateAfter ?? (async (user) => {
             console.log("databaseHooks.user.create.after", user);
-          },
+          }),
         },
       },
     },
@@ -91,5 +101,6 @@ function createBetterAuthOptions({
 export function createAuth(
   options: CreateAuthOptions,
 ): ReturnType<typeof betterAuth<ReturnType<typeof createBetterAuthOptions>>> {
-  return betterAuth(createBetterAuthOptions(options));
+  const auth = betterAuth(createBetterAuthOptions(options));
+  return auth;
 }
