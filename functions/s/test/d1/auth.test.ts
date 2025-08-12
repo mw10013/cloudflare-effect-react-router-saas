@@ -18,13 +18,15 @@ async function createTestContext(config?: {
 }) {
   await resetDb();
 
-  const mockSendVerificationEmail = vi.fn().mockResolvedValue(undefined);
   const mockSendResetPassword = vi.fn().mockResolvedValue(undefined);
+  const mockSendVerificationEmail = vi.fn().mockResolvedValue(undefined);
+  const mockAfterEmailVerification = vi.fn().mockResolvedValue(undefined);
   const mockSendMagicLink = vi.fn().mockResolvedValue(undefined);
   const auth = createAuth({
     d1: env.D1,
     sendResetPassword: mockSendResetPassword,
     sendVerificationEmail: mockSendVerificationEmail,
+    afterEmailVerification: mockAfterEmailVerification,
     sendMagicLink: mockSendMagicLink,
   });
   const context = new unstable_RouterContextProvider();
@@ -69,6 +71,50 @@ async function createTestContext(config?: {
   };
 }
 
+describe("auth login flow", () => {
+  const email = "email@test.com";
+  const headers = new Headers();
+  let magicLinkUrl: string | undefined;
+  let c: Awaited<ReturnType<typeof createTestContext>>;
+
+  beforeAll(async () => {
+    c = await createTestContext({ skipTestUserCreation: true });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("logs in", async () => {
+    const form = new FormData();
+    form.append("email", email);
+    const request = new Request("http://localhost/login", {
+      method: "POST",
+      body: form,
+    });
+
+    const result = await loginAction({
+      request,
+      context: c.context,
+      params: {},
+    });
+
+    expect(result).toBeDefined();
+    expect(c.mockSendMagicLink).toHaveBeenCalledTimes(1);
+    magicLinkUrl = c.mockSendMagicLink.mock.calls[0][0].url;
+  });
+
+  it("signs in with magic link", async () => {
+    expect(magicLinkUrl).toBeDefined();
+    const request = new Request(magicLinkUrl!);
+
+    const response = await c.auth.handler(request);
+
+    expect(response.status).toBe(302);
+    expect(response.headers.has("Set-Cookie")).toBe(true);
+  });
+});
+
 describe("auth sign up flow", () => {
   const email = "email@test.com";
   const password = "password";
@@ -84,7 +130,7 @@ describe("auth sign up flow", () => {
     vi.restoreAllMocks();
   });
 
-  it("should sign up", async () => {
+  it("signs up", async () => {
     const form = new FormData();
     form.append("email", email);
     form.append("password", password);
@@ -114,7 +160,7 @@ describe("auth sign up flow", () => {
     expect(emailVerificationUrl).toBeDefined();
   });
 
-  it("should not sign up when user already exists", async () => {
+  it("does not sign up when user already exists", async () => {
     const form = new FormData();
     form.append("email", email);
     form.append("password", password);
@@ -133,7 +179,7 @@ describe("auth sign up flow", () => {
     expect(response.headers.get("location")).toBe("/signin");
   });
 
-  it("should not sign in with unverified email", async () => {
+  it("does not sign in with unverified email", async () => {
     const form = new FormData();
     form.append("email", email);
     form.append("password", password);
@@ -155,7 +201,7 @@ describe("auth sign up flow", () => {
     expect(emailVerificationUrl).toBeDefined();
   });
 
-  it("should verify email", async () => {
+  it("verifies email", async () => {
     expect(emailVerificationUrl).toBeDefined();
     const request = new Request(emailVerificationUrl!);
 
@@ -171,14 +217,14 @@ describe("auth sign up flow", () => {
     headers.set("Cookie", sessionCookie);
   });
 
-  it("should have valid session", async () => {
+  it("has valid session", async () => {
     const session = await c.auth.api.getSession({ headers });
 
     expect(session).not.toBeNull();
     expect(session!.user?.email).toBe(email);
   });
 
-  it("should sign out", async () => {
+  it("signs out", async () => {
     const request = new Request("http://localhost/signout", {
       method: "POST",
       headers,
@@ -194,7 +240,7 @@ describe("auth sign up flow", () => {
     expect(response.headers.has("Set-Cookie")).toBe(true);
   });
 
-  it("should not sign in with invalid password", async () => {
+  it("does not sign in with invalid password", async () => {
     const form = new FormData();
     form.append("email", email);
     form.append("password", "INVALID_PASSWORD");
@@ -212,7 +258,7 @@ describe("auth sign up flow", () => {
     );
   });
 
-  it("should sign in with valid password", async () => {
+  it("signs in with valid password", async () => {
     const form = new FormData();
     form.append("email", email);
     form.append("password", password);
@@ -246,7 +292,7 @@ describe("auth forgot password flow", () => {
     vi.restoreAllMocks();
   });
 
-  it("should send reset password email", async () => {
+  it("sends reset password email", async () => {
     const form = new FormData();
     form.append("email", c.testUser.email);
     const request = new Request("http://localhost/forgot-password", {
@@ -263,7 +309,7 @@ describe("auth forgot password flow", () => {
     expect(resetToken).toBeDefined();
   });
 
-  it("should allow reset password", async () => {
+  it("allows reset password", async () => {
     expect(resetPasswordUrl).toBeDefined();
     const request = new Request(resetPasswordUrl!);
 
@@ -275,7 +321,7 @@ describe("auth forgot password flow", () => {
     );
   });
 
-  it("should reset password", async () => {
+  it("resets password", async () => {
     const form = new FormData();
     form.append("password", newPassword);
     expect(resetToken).toBeDefined();
@@ -294,7 +340,7 @@ describe("auth forgot password flow", () => {
     expect(response.status).toBe(302);
   });
 
-  it("should sign in with new password", async () => {
+  it("signs in with new password", async () => {
     const form = new FormData();
     form.append("email", c.testUser.email);
     form.append("password", newPassword);
@@ -316,8 +362,6 @@ describe("auth forgot password flow", () => {
 describe("admin bootstrap", () => {
   let c: Awaited<ReturnType<typeof createTestContext>>;
   let magicLinkUrl: string | undefined;
-  let adminResetPasswordUrl: string | undefined;
-  let adminResetToken: string | undefined;
 
   beforeAll(async () => {
     c = await createTestContext();
@@ -327,7 +371,7 @@ describe("admin bootstrap", () => {
     vi.restoreAllMocks();
   });
 
-  it("should not allow admin sign in with empty password", async () => {
+  it("does not log with empty password", async () => {
     const form = new FormData();
     form.append("email", c.bootstrapAdmin.email);
     form.append("password", "");
@@ -341,7 +385,7 @@ describe("admin bootstrap", () => {
     ).rejects.toThrow();
   });
 
-  it("should log in with email", async () => {
+  it("logs in with email", async () => {
     const form = new FormData();
     form.append("email", c.bootstrapAdmin.email);
     const request = new Request("http://localhost/login", {
@@ -358,7 +402,7 @@ describe("admin bootstrap", () => {
     magicLinkUrl = c.mockSendMagicLink.mock.calls[0][0].url;
   });
 
-  it("should allow admin to sign in with magic link", async () => {
+  it("signs in with magic link", async () => {
     expect(magicLinkUrl).toBeDefined();
     const request = new Request(magicLinkUrl!);
 
@@ -367,64 +411,4 @@ describe("admin bootstrap", () => {
     expect(response.status).toBe(302);
     expect(response.headers.has("Set-Cookie")).toBe(true);
   });
-
-  // it("should send reset password email for bootstrapAdmin", async () => {
-  //   const form = new FormData();
-  //   form.append("email", c.bootstrapAdmin.email);
-  //   const request = new Request("http://localhost/forgot-password", {
-  //     method: "POST",
-  //     body: form,
-  //   });
-
-  //   await forgotPasswordAction({ request, context: c.context, params: {} });
-
-  //   expect(c.mockSendResetPassword).toHaveBeenCalledTimes(1);
-  //   adminResetPasswordUrl = c.mockSendResetPassword.mock.calls[0][0].url;
-  //   expect(adminResetPasswordUrl).toBeDefined();
-  //   adminResetToken = c.mockSendResetPassword.mock.calls[0][0].token;
-  //   expect(adminResetToken).toBeDefined();
-  // });
-
-  // it("should reset password for bootstrapAdmin", async () => {
-  //   const form = new FormData();
-  //   form.append("password", c.bootstrapAdmin.password);
-  //   expect(adminResetToken).toBeDefined();
-  //   form.append("token", adminResetToken!);
-  //   const request = new Request("http://localhost/reset-password", {
-  //     method: "POST",
-  //     body: form,
-  //   });
-
-  //   const response = await resetPasswordAction({
-  //     request,
-  //     context: c.context,
-  //     params: {},
-  //   });
-
-  //   expect(response.status).toBe(302);
-  // });
-
-  // it("should sign in with new password for bootstrapAdmin", async () => {
-  //   const form = new FormData();
-  //   form.append("email", c.bootstrapAdmin.email);
-  //   form.append("password", c.bootstrapAdmin.password);
-  //   const request = new Request("http://localhost/signin", {
-  //     method: "POST",
-  //     body: form,
-  //   });
-
-  //   const response = await signInAction({
-  //     request,
-  //     context: c.context,
-  //     params: {},
-  //   });
-
-  //   console.log(
-  //     "should sign in with new password for bootstrapAdmin",
-  //     response,
-  //     await response.text(),
-  //   );
-  //   expect(response.status).toBe(302);
-  //   expect(response.headers.has("Set-Cookie")).toBe(true);
-  // });
 });

@@ -63,8 +63,8 @@ function createBetterAuthOptions({
         (async ({ user, url, token }) => {
           console.log("sendVerificationEmail", { to: user.email, url, token });
         }),
-      afterEmailVerification: afterEmailVerification ?? (async (user, request) => {
-        console.log("afterEmailVerification", { user, request });
+      afterEmailVerification: afterEmailVerification ?? (async (user) => {
+        console.log("afterEmailVerification", { user });
       }),
     },
     advanced: { database: { generateId: false, useNumberId: true } },
