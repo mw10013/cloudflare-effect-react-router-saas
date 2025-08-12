@@ -63,17 +63,21 @@ function createBetterAuthOptions({
         (async ({ user, url, token }) => {
           console.log("sendVerificationEmail", { to: user.email, url, token });
         }),
-      afterEmailVerification: afterEmailVerification ?? (async (user) => {
-        console.log("afterEmailVerification", { user });
-      }),
+      afterEmailVerification:
+        afterEmailVerification ??
+        (async (user) => {
+          console.log("afterEmailVerification", { user });
+        }),
     },
     advanced: { database: { generateId: false, useNumberId: true } },
     databaseHooks: {
       user: {
         create: {
-          after: databaseHookUserCreateAfter ?? (async (user) => {
-            console.log("databaseHooks.user.create.after", user);
-          }),
+          after:
+            databaseHookUserCreateAfter ??
+            (async (user) => {
+              console.log("databaseHooks.user.create.after", user);
+            }),
         },
       },
     },
@@ -101,6 +105,20 @@ function createBetterAuthOptions({
 export function createAuth(
   options: CreateAuthOptions,
 ): ReturnType<typeof betterAuth<ReturnType<typeof createBetterAuthOptions>>> {
-  const auth = betterAuth(createBetterAuthOptions(options));
+  const auth = betterAuth(
+    createBetterAuthOptions({
+      databaseHookUserCreateAfter: async (user) => {
+        const organization = await auth.api.createOrganization({
+          body: {
+            name: `${user.email.charAt(0).toUpperCase() + user.email.slice(1)}'s Organization`,
+            slug: user.email.replace(/[^a-z0-9]/g, "-").toLowerCase(),
+            userId: user.id,
+          },
+        });
+        console.log("databaseHooks.user.create.after", { user, organization });
+      },
+      ...options,
+    }),
+  );
   return auth;
 }
