@@ -6,7 +6,7 @@ import {
 import { unstable_RouterContextProvider } from "react-router";
 import { describe, expect, it } from "vitest";
 import { appLoadContext } from "~/lib/middleware";
-import { loader } from "~/routes/_index";
+import { loader } from "~/routes/_mkt";
 import worker from "../test-worker";
 
 describe("basic", () => {
@@ -25,12 +25,14 @@ describe("basic", () => {
     expect(response.status).toBe(200);
   });
 
-  it("home loader returns expected message", () => {
+  it("loader returns result", () => {
     const context = new unstable_RouterContextProvider();
     context.set(appLoadContext, {
       cloudflare: { env },
     });
+
     const result = loader({ context });
+
     expect(result).toBeDefined
   });
 });
