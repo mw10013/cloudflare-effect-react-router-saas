@@ -112,7 +112,21 @@ describe("auth login flow", () => {
 
     expect(response.status).toBe(302);
     expect(response.headers.has("Set-Cookie")).toBe(true);
+
+    const setCookieHeader = response.headers.get("Set-Cookie")!;
+    const match = setCookieHeader.match(/better-auth\.session_token=([^;]+)/);
+    const sessionCookie = match ? `better-auth.session_token=${match[1]}` : "";
+    expect(sessionCookie).not.toBe("");
+    headers.set("Cookie", sessionCookie);
   });
+
+    it("has valid session", async () => {
+    const session = await c.auth.api.getSession({ headers });
+
+    expect(session).not.toBeNull();
+    expect(session!.user?.email).toBe(email);
+  });
+
 });
 
 describe("auth sign up flow", () => {
