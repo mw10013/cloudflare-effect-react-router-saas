@@ -23,6 +23,11 @@ interface CreateAuthOptions {
       NonNullable<BetterAuthOptions["databaseHooks"]>["user"]
     >["create"]
   >["after"];
+  databaseHookSessionCreateBefore?: NonNullable<
+    NonNullable<
+      NonNullable<BetterAuthOptions["databaseHooks"]>["session"]
+    >["create"]
+  >["before"];
 }
 
 function createBetterAuthOptions({
@@ -32,6 +37,7 @@ function createBetterAuthOptions({
   sendMagicLink,
   afterEmailVerification,
   databaseHookUserCreateAfter,
+  databaseHookSessionCreateBefore,
 }: CreateAuthOptions) {
   return {
     baseURL: env.BETTER_AUTH_URL,
@@ -80,6 +86,15 @@ function createBetterAuthOptions({
             }),
         },
       },
+      session: {
+        create: {
+          before:
+            databaseHookSessionCreateBefore ??
+            (async (session) => {
+              console.log("databaseHooks.session.create.before", session);
+            }),
+        },
+      },
     },
     plugins: [
       admin(),
@@ -105,7 +120,9 @@ function createBetterAuthOptions({
 export function createAuth(
   options: CreateAuthOptions,
 ): ReturnType<typeof betterAuth<ReturnType<typeof createBetterAuthOptions>>> {
-  const auth = betterAuth(
+  const auth: ReturnType<
+    typeof betterAuth<ReturnType<typeof createBetterAuthOptions>>
+  > = betterAuth(
     createBetterAuthOptions({
       databaseHookUserCreateAfter: async (user) => {
         const organization = await auth.api.createOrganization({
@@ -116,6 +133,24 @@ export function createAuth(
           },
         });
         console.log("databaseHooks.user.create.after", { user, organization });
+      },
+      databaseHookSessionCreateBefore: async (session) => {
+        console.log("databaseHooks.session.create.before", session);
+        const organizations = await auth.api.listOrganizations({
+          query: { userId: session.userId, role: "owner" },
+        });
+        console.log("databaseHooks.session.create.before", { organizations });
+        const activeOrganizationId = organizations?.[0]?.id ?? undefined;
+        console.log("databaseHooks.session.create.before", {
+          session,
+          activeOrganizationId,
+        });
+        return {
+          data: {
+            ...session,
+            activeOrganizationId,
+          },
+        };
       },
       ...options,
     }),
