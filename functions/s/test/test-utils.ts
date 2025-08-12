@@ -2,7 +2,8 @@ import { env } from "cloudflare:test";
 
 export async function resetDb(resetFn?: (db: D1Database) => Promise<void>) {
   await env.D1.batch([
-    ...["Invitation", "Member", "Organization", "Verification", "Session"].map((table) =>
+    // Delete from referencing tables first to avoid FK constraint errors
+    ...["Session", "Member", "Invitation", "Verification", "Organization"].map((table) =>
       env.D1.prepare(`delete from ${table}`),
     ),
     // Keep the admin in account and user.
