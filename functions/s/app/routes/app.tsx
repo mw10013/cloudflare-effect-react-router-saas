@@ -4,10 +4,8 @@ import { appLoadContext } from "~/lib/middleware";
 
 const appMiddleware: Route.unstable_MiddlewareFunction = async ({
   context,
-  request,
 }) => {
-  const { auth } = context.get(appLoadContext);
-  const session = await auth.api.getSession({ headers: request.headers });
+  const { session } = context.get(appLoadContext);
   if (!session?.user) throw redirect("/login");
   if (session.user.role !== "user")
     throw new Response("Forbidden", { status: 403 });

@@ -4,9 +4,8 @@ import * as Rac from "react-aria-components";
 import { Outlet, useRouteLoaderData } from "react-router";
 import { appLoadContext } from "~/lib/middleware";
 
-export async function loader({ request, context }: Route.LoaderArgs) {
-  const { auth } = context.get(appLoadContext);
-  const session = await auth.api.getSession({ headers: request.headers });
+export async function loader({ context }: Route.LoaderArgs) {
+  const { session } = context.get(appLoadContext);
   return {
     isSignedIn: Boolean(session?.user),
     sessionUser: session?.user,

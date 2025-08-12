@@ -14,6 +14,7 @@ declare module "react-router" {
       ctx: ExecutionContext;
     };
     auth: ReturnType<typeof createAuth>;
+    session?: ReturnType<typeof createAuth>["$Infer"]["Session"];
     // runtime: ReturnType<typeof makeRuntime>;
   }
 }
@@ -27,14 +28,17 @@ export default {
     hono.all("/api/auth/*", (c) => {
       return auth.handler(c.req.raw);
     });
-    hono.all("*", (c) => {
+    hono.all("*", async (c) => {
+      const auth = createAuth({
+        d1: env.D1,
+      });
       const context = new unstable_RouterContextProvider();
       context.set(appLoadContext, {
         cloudflare: { env, ctx },
-        auth: createAuth({
-          d1: env.D1,
-        }),
-        // runtime,
+        auth,
+        session:
+          (await auth.api.getSession({ headers: c.req.raw.headers })) ??
+          undefined,
       });
       const requestHandler = createRequestHandler(
         () => import("virtual:react-router/server-build"),
