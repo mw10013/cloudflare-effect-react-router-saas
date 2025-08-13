@@ -58,6 +58,26 @@
       "console": "integratedTerminal",
       "sourceMaps": true,
       "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Vitest Auth Tests (Single Thread)",
+      "autoAttachChildProcesses": true,
+      "program": "${workspaceFolder}/functions/s/node_modules/vitest/vitest.mjs",
+      "args": [
+        "run",
+        "--inspect",
+        "--no-file-parallelism",
+        "--test-timeout=0",
+        "--project",
+        "d1",
+        "auth"
+      ],
+      "cwd": "${workspaceFolder}/functions/s",
+      "console": "integratedTerminal",
+      "smartStep": true,
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }

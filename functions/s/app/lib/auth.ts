@@ -135,7 +135,10 @@ export function createAuth(
         console.log("databaseHooks.user.create.after", { user, organization });
       },
       databaseHookSessionCreateBefore: async (session) => {
-        console.log("databaseHooks.session.create.before", session);
+        options.d1.prepare()
+
+        console.log("databaseHooks.session.create.before [THIS IS BEFORE DEBUGGER BREAKPOINT]", session);
+        // debugger; // This is a breakpoint for debugging purposes
         const organizations = await auth.api.listOrganizations({
           query: { userId: session.userId, role: "owner" },
         });
