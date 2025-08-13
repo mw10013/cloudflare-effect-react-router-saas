@@ -125,29 +125,22 @@ export function createAuth(
   > = betterAuth(
     createBetterAuthOptions({
       databaseHookUserCreateAfter: async (user) => {
-        const organization = await auth.api.createOrganization({
+        await auth.api.createOrganization({
           body: {
             name: `${user.email.charAt(0).toUpperCase() + user.email.slice(1)}'s Organization`,
             slug: user.email.replace(/[^a-z0-9]/g, "-").toLowerCase(),
             userId: user.id,
           },
         });
-        console.log("databaseHooks.user.create.after", { user, organization });
       },
       databaseHookSessionCreateBefore: async (session) => {
-        options.d1.prepare()
-
-        console.log("databaseHooks.session.create.before [THIS IS BEFORE DEBUGGER BREAKPOINT]", session);
-        // debugger; // This is a breakpoint for debugging purposes
-        const organizations = await auth.api.listOrganizations({
-          query: { userId: session.userId, role: "owner" },
-        });
-        console.log("databaseHooks.session.create.before", { organizations });
-        const activeOrganizationId = organizations?.[0]?.id ?? undefined;
-        console.log("databaseHooks.session.create.before", {
-          session,
-          activeOrganizationId,
-        });
+        const activeOrganizationId =
+          (await options.d1
+            .prepare(
+              "select organizationId from Member where userId = ? and role = 'owner'",
+            )
+            .bind(session.userId)
+            .first<number>("organizationId")) ?? undefined;
         return {
           data: {
             ...session,

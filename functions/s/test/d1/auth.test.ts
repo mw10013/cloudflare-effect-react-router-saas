@@ -71,7 +71,7 @@ async function createTestContext(config?: {
   };
 }
 
-describe.only("auth login flow", () => {
+describe("auth login flow", () => {
   const email = "email@test.com";
   const headers = new Headers();
   let magicLinkUrl: string | undefined;
@@ -120,14 +120,13 @@ describe.only("auth login flow", () => {
     headers.set("Cookie", sessionCookie);
   });
 
-    it("has valid session", async () => {
+  it("has valid session", async () => {
     const session = await c.auth.api.getSession({ headers });
 
-    console.log("session", session);
     expect(session).not.toBeNull();
-    expect(session!.user?.email).toBe(email);
+    expect(session?.user?.email).toBe(email);
+    expect(session?.session.activeOrganizationId).toBeDefined();
   });
-
 });
 
 describe("auth sign up flow", () => {
