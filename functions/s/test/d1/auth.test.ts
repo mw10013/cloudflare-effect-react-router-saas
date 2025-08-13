@@ -266,6 +266,7 @@ describe.only("auth login flow", () => {
     const request = new Request("http://localhost/accept-invitation", {
       method: "POST",
       body: form,
+      headers,
     });
 
     const response = await acceptInvitationAction({
@@ -275,7 +276,9 @@ describe.only("auth login flow", () => {
     });
 
     expect(response).toBeInstanceOf(Response);
-    expect((response as Response).status).toBe(302);
+    if (response instanceof Response) {
+      expect(response.status).toBe(302);
+    }
   });
 });
 
