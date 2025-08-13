@@ -4,6 +4,10 @@ import { unstable_RouterContextProvider } from "react-router";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
+import {
+  action as acceptInvitationAction,
+  loader as acceptInvitationLoader,
+} from "~/routes/accept-invitation.$invitationId";
 import { action as forgotPasswordAction } from "~/routes/forgot-password";
 import { action as loginAction } from "~/routes/login";
 import { action as resetPasswordAction } from "~/routes/reset-password";
@@ -31,8 +35,14 @@ async function createTestContext(config?: {
     sendMagicLink: mockSendMagicLink,
     sendInvitationEmail: mockSendInvitationEmail,
   });
-  const context = new unstable_RouterContextProvider();
-  context.set(appLoadContext, { auth });
+  const context = async ({ headers }: { headers?: Headers } = {}) => {
+    const session = headers
+      ? ((await auth.api.getSession({ headers })) ?? undefined)
+      : undefined;
+    const context = new unstable_RouterContextProvider();
+    context.set(appLoadContext, { auth, session });
+    return context;
+  };
 
   const testUser = {
     email: "test@test.com",
@@ -74,11 +84,12 @@ async function createTestContext(config?: {
   };
 }
 
-describe.only("auth login flow", () => {
+describe("auth login flow", () => {
   const email = "email@test.com";
   const headers = new Headers();
   const inviteeEmail = "invitee@test.com";
   let magicLinkUrl: string | undefined;
+  let invitationId: string | undefined;
   let c: Awaited<ReturnType<typeof createTestContext>>;
 
   beforeAll(async () => {
@@ -99,7 +110,7 @@ describe.only("auth login flow", () => {
 
     const result = await loginAction({
       request,
-      context: c.context,
+      context: await c.context(),
       params: {},
     });
 
@@ -132,7 +143,52 @@ describe.only("auth login flow", () => {
     expect(session?.session.activeOrganizationId).toBeDefined();
   });
 
-  it("sends invitation email", async () => {
+  /*
+ mockSendInvitationEmail: {
+  id: '1',
+  role: 'member',
+  email: 'invitee@test.com',
+  organization: {
+    name: "Email@test.com's Organization",
+    slug: 'email-test-com',
+    logo: null,
+    createdAt: 2025-08-13T17:59:20.917Z,
+    metadata: null,
+    id: '1'
+  },
+  inviter: {
+    organizationId: '1',
+    userId: '2',
+    role: 'owner',
+    createdAt: 2025-08-13T17:59:20.917Z,
+    id: '1',
+    user: {
+      name: '',
+      email: 'email@test.com',
+      emailVerified: true,
+      image: null,
+      createdAt: 2025-08-13T17:59:20.914Z,
+      updatedAt: 2025-08-13T17:59:20.914Z,
+      role: 'user',
+      banned: false,
+      banReason: null,
+      banExpires: null,
+      id: '2'
+    }
+  },
+  invitation: {
+    organizationId: '1',
+    email: 'invitee@test.com',
+    role: 'member',
+    status: 'pending',
+    expiresAt: 2025-08-15T17:59:20.925Z,
+    inviterId: '2',
+    id: '1'
+  }
+}
+*/
+
+  it("creates invitation", async () => {
     const session = await c.auth.api.getSession({ headers });
     expect(session).not.toBeNull();
     expect(session?.session.activeOrganizationId).toBeDefined();
@@ -148,8 +204,20 @@ describe.only("auth login flow", () => {
       headers,
     });
 
+    // console.log("mockSendInvitationEmail:", c.mockSendInvitationEmail.mock.calls[0][0]);
     expect(c.mockSendInvitationEmail).toHaveBeenCalledTimes(1);
+    invitationId = c.mockSendInvitationEmail.mock.calls[0][0].invitation.id;
+    expect(invitationId).toBeDefined();
     expect(response.status).toBe(200);
+  });
+
+  it("detects unauthenticated user trying to accept invitation", async () => {
+    const result = await acceptInvitationLoader({
+      context: await c.context(),
+      params: { invitationId },
+    });
+
+    expect(result.needsAuth).toBe(true);
   });
 });
 
@@ -179,7 +247,7 @@ describe("auth sign up flow", () => {
 
     const response = await signUpAction({
       request,
-      context: c.context,
+      context: await c.context(),
       params: {},
     });
 
@@ -209,7 +277,7 @@ describe("auth sign up flow", () => {
 
     const response = await signUpAction({
       request,
-      context: c.context,
+      context: await c.context(),
       params: {},
     });
 
@@ -228,7 +296,7 @@ describe("auth sign up flow", () => {
 
     const response = await signInAction({
       request,
-      context: c.context,
+      context: await c.context(),
       params: {},
     });
 
@@ -270,7 +338,7 @@ describe("auth sign up flow", () => {
 
     const response = await signOutAction({
       request,
-      context: c.context,
+      context: await c.context(),
       params: {},
     });
 
@@ -288,7 +356,7 @@ describe("auth sign up flow", () => {
     });
 
     await expect(
-      signInAction({ request, context: c.context, params: {} }),
+      signInAction({ request, context: await c.context(), params: {} }),
     ).rejects.toThrow(
       expect.objectContaining({
         status: 401,
@@ -307,7 +375,7 @@ describe("auth sign up flow", () => {
 
     const response = await signInAction({
       request,
-      context: c.context,
+      context: await c.context(),
       params: {},
     });
 
@@ -338,7 +406,11 @@ describe("auth forgot password flow", () => {
       body: form,
     });
 
-    await forgotPasswordAction({ request, context: c.context, params: {} });
+    await forgotPasswordAction({
+      request,
+      context: await c.context(),
+      params: {},
+    });
 
     expect(c.mockSendResetPassword).toHaveBeenCalledTimes(1);
     resetPasswordUrl = c.mockSendResetPassword.mock.calls[0][0].url;
@@ -371,7 +443,7 @@ describe("auth forgot password flow", () => {
 
     const response = await resetPasswordAction({
       request,
-      context: c.context,
+      context: await c.context(),
       params: {},
     });
 
@@ -389,7 +461,7 @@ describe("auth forgot password flow", () => {
 
     const response = await signInAction({
       request,
-      context: c.context,
+      context: await c.context(),
       params: {},
     });
 
@@ -419,7 +491,7 @@ describe("admin bootstrap", () => {
     });
 
     await expect(
-      signInAction({ request, context: c.context, params: {} }),
+      signInAction({ request, context: await c.context(), params: {} }),
     ).rejects.toThrow();
   });
 
@@ -433,7 +505,7 @@ describe("admin bootstrap", () => {
 
     await loginAction({
       request,
-      context: c.context,
+      context: await c.context(),
       params: {},
     });
     expect(c.mockSendMagicLink).toHaveBeenCalledTimes(1);
