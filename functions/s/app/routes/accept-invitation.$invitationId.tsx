@@ -27,6 +27,7 @@ export async function action({
   if (intent === "accept") {
     const response = await auth.api.acceptInvitation({
       body: { invitationId },
+      headers: request.headers,
       asResponse: true,
     });
     console.log("accept-invitation: accept", response, await response.text());
@@ -34,6 +35,7 @@ export async function action({
   } else if (intent === "reject") {
     const response = await auth.api.rejectInvitation({
       body: { invitationId },
+      headers: request.headers,
       asResponse: true,
     });
     console.log("accept-invitation: reject", response, await response.text());

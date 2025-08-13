@@ -84,7 +84,7 @@ async function createTestContext(config?: {
   };
 }
 
-describe("auth login flow", () => {
+describe.only("auth login flow", () => {
   const email = "email@test.com";
   const headers = new Headers();
   const inviteeEmail = "invitee@test.com";
@@ -218,6 +218,64 @@ describe("auth login flow", () => {
     });
 
     expect(result.needsAuth).toBe(true);
+  });
+
+  it("logs in with invitee email", async () => {
+    const form = new FormData();
+    form.append("email", inviteeEmail);
+    const request = new Request("http://localhost/login", {
+      method: "POST",
+      body: form,
+    });
+
+    const result = await loginAction({ request, context: await c.context() });
+
+    expect(result).toBeDefined();
+    expect(c.mockSendMagicLink).toHaveBeenCalledTimes(1);
+    magicLinkUrl = c.mockSendMagicLink.mock.calls[0][0].url;
+  });
+
+  it("signs invitee in with magic link", async () => {
+    expect(magicLinkUrl).toBeDefined();
+    const request = new Request(magicLinkUrl!);
+
+    const response = await c.auth.handler(request);
+
+    expect(response.status).toBe(302);
+    expect(response.headers.has("Set-Cookie")).toBe(true);
+
+    const setCookieHeader = response.headers.get("Set-Cookie")!;
+    const match = setCookieHeader.match(/better-auth\.session_token=([^;]+)/);
+    const sessionCookie = match ? `better-auth.session_token=${match[1]}` : "";
+    expect(sessionCookie).not.toBe("");
+    headers.set("Cookie", sessionCookie);
+  });
+
+  it("detects authenticated user trying to accept invitation", async () => {
+    const result = await acceptInvitationLoader({
+      context: await c.context({ headers }),
+      params: { invitationId },
+    });
+
+    expect(result.needsAuth).toBe(false);
+  });
+
+  it("accepts invitation", async () => {
+    const form = new FormData();
+    form.append("intent", "accept");
+    const request = new Request("http://localhost/accept-invitation", {
+      method: "POST",
+      body: form,
+    });
+
+    const response = await acceptInvitationAction({
+      request,
+      context: await c.context({ headers }),
+      params: { invitationId },
+    });
+
+    expect(response).toBeInstanceOf(Response);
+    expect((response as Response).status).toBe(302);
   });
 });
 
