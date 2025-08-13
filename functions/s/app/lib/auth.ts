@@ -99,6 +99,8 @@ function createBetterAuthOptions({
     plugins: [
       admin(),
       organization({
+        organizationLimit: 1,
+        requireEmailVerificationOnInvitation: true,
         schema: {
           organization: { modelName: "Organization" },
           member: { modelName: "Member" },
@@ -125,13 +127,15 @@ export function createAuth(
   > = betterAuth(
     createBetterAuthOptions({
       databaseHookUserCreateAfter: async (user) => {
-        await auth.api.createOrganization({
-          body: {
-            name: `${user.email.charAt(0).toUpperCase() + user.email.slice(1)}'s Organization`,
-            slug: user.email.replace(/[^a-z0-9]/g, "-").toLowerCase(),
-            userId: user.id,
-          },
-        });
+        if (user.role === 'user') {
+          await auth.api.createOrganization({
+            body: {
+              name: `${user.email.charAt(0).toUpperCase() + user.email.slice(1)}'s Organization`,
+              slug: user.email.replace(/[^a-z0-9]/g, "-").toLowerCase(),
+              userId: user.id,
+            },
+          });
+        }
       },
       databaseHookSessionCreateBefore: async (session) => {
         const activeOrganizationId =
