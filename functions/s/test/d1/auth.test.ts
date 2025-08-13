@@ -22,12 +22,14 @@ async function createTestContext(config?: {
   const mockSendVerificationEmail = vi.fn().mockResolvedValue(undefined);
   const mockAfterEmailVerification = vi.fn().mockResolvedValue(undefined);
   const mockSendMagicLink = vi.fn().mockResolvedValue(undefined);
+  const mockSendInvitationEmail = vi.fn().mockResolvedValue(undefined);
   const auth = createAuth({
     d1: env.D1,
     sendResetPassword: mockSendResetPassword,
     sendVerificationEmail: mockSendVerificationEmail,
     afterEmailVerification: mockAfterEmailVerification,
     sendMagicLink: mockSendMagicLink,
+    sendInvitationEmail: mockSendInvitationEmail,
   });
   const context = new unstable_RouterContextProvider();
   context.set(appLoadContext, { auth });
@@ -66,14 +68,16 @@ async function createTestContext(config?: {
     mockSendVerificationEmail,
     mockSendResetPassword,
     mockSendMagicLink,
+    mockSendInvitationEmail,
     testUser,
     bootstrapAdmin,
   };
 }
 
-describe("auth login flow", () => {
+describe.only("auth login flow", () => {
   const email = "email@test.com";
   const headers = new Headers();
+  const inviteeEmail = "invitee@test.com";
   let magicLinkUrl: string | undefined;
   let c: Awaited<ReturnType<typeof createTestContext>>;
 
@@ -126,6 +130,27 @@ describe("auth login flow", () => {
     expect(session).not.toBeNull();
     expect(session?.user?.email).toBe(email);
     expect(session?.session.activeOrganizationId).toBeDefined();
+  });
+
+  it("sends invitation email", async () => {
+    const session = await c.auth.api.getSession({ headers });
+    expect(session).not.toBeNull();
+    expect(session?.session.activeOrganizationId).toBeDefined();
+
+    const response = await c.auth.api.createInvitation({
+      body: {
+        email: inviteeEmail,
+        role: "member",
+        organizationId: String(session!.session.activeOrganizationId!),
+        resend: true,
+      },
+      asResponse: true,
+      headers,
+    });
+
+    console.log("sends invitation email", response, await response.text());
+    expect(c.mockSendInvitationEmail).toHaveBeenCalledTimes(1);
+    expect(response.status).toBe(200);
   });
 });
 

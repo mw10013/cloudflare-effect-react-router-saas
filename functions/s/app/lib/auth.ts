@@ -18,6 +18,9 @@ interface CreateAuthOptions {
     BetterAuthOptions["emailVerification"]
   >["afterEmailVerification"];
   sendMagicLink?: Parameters<typeof magicLink>[0]["sendMagicLink"];
+  sendInvitationEmail?: NonNullable<
+    Parameters<typeof organization>[0]
+  >["sendInvitationEmail"];
   databaseHookUserCreateAfter?: NonNullable<
     NonNullable<
       NonNullable<BetterAuthOptions["databaseHooks"]>["user"]
@@ -34,8 +37,9 @@ function createBetterAuthOptions({
   d1,
   sendResetPassword,
   sendVerificationEmail,
-  sendMagicLink,
   afterEmailVerification,
+  sendMagicLink,
+  sendInvitationEmail,
   databaseHookUserCreateAfter,
   databaseHookSessionCreateBefore,
 }: CreateAuthOptions) {
@@ -97,6 +101,14 @@ function createBetterAuthOptions({
       },
     },
     plugins: [
+      magicLink({
+        storeToken: "hashed",
+        sendMagicLink:
+          sendMagicLink ??
+          (async (data) => {
+            console.log("sendMagicLink", data);
+          }),
+      }),
       admin(),
       organization({
         organizationLimit: 1,
@@ -106,13 +118,10 @@ function createBetterAuthOptions({
           member: { modelName: "Member" },
           invitation: { modelName: "Invitation" },
         },
-      }),
-      magicLink({
-        storeToken: "hashed",
-        sendMagicLink:
-          sendMagicLink ??
-          (async ({ email, token, url }) => {
-            console.log("sendMagicLink", { to: email, url, token });
+        sendInvitationEmail:
+          sendInvitationEmail ??
+          (async (data) => {
+            console.log("sendInvitationEmail", data);
           }),
       }),
     ],
@@ -127,7 +136,7 @@ export function createAuth(
   > = betterAuth(
     createBetterAuthOptions({
       databaseHookUserCreateAfter: async (user) => {
-        if (user.role === 'user') {
+        if (user.role === "user") {
           await auth.api.createOrganization({
             body: {
               name: `${user.email.charAt(0).toUpperCase() + user.email.slice(1)}'s Organization`,
