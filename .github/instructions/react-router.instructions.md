@@ -36,7 +36,7 @@ export async function action({ request, context }: Route.ActionArgs) {
   if (typeof email !== "string" || typeof password !== "string") {
     throw new Error("Invalid form data");
   }
-  const { auth } = context.get(appLoadContext);
+  const { auth, session } = context.get(appLoadContext); // appLoadContext has better-auth auth and session objects
   const response = await auth.api.signUpEmail({ // server-side better-auth api call.
     body: {
       email,

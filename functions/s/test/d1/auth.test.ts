@@ -148,7 +148,6 @@ describe.only("auth login flow", () => {
       headers,
     });
 
-    console.log("sends invitation email", response, await response.text());
     expect(c.mockSendInvitationEmail).toHaveBeenCalledTimes(1);
     expect(response.status).toBe(200);
   });
