@@ -1,7 +1,7 @@
 import { User } from "better-auth/types";
 import { env } from "cloudflare:workers";
 import { unstable_RouterContextProvider } from "react-router";
-import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, describe, expect, it, Test, vi } from "vitest";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
 import {
@@ -16,10 +16,10 @@ import { action as signOutAction } from "~/routes/signout";
 import { action as signUpAction } from "~/routes/signup";
 import { resetDb } from "../test-utils";
 
-async function createTestContext(config?: {
-  skipTestUserCreation?: boolean;
-  testUser?: Omit<Partial<User>, "image">;
-}) {
+type TestContext = Awaited<ReturnType<typeof createTestContext>>;
+type TestUser = Awaited<ReturnType<TestContext["createTestUser"]>>;
+
+async function createTestContext() {
   await resetDb();
 
   const mockSendResetPassword = vi.fn().mockResolvedValue(undefined);
@@ -44,16 +44,15 @@ async function createTestContext(config?: {
     return context;
   };
 
-  const createUser = async (email: User["email"]) => {
+  const createTestUser = async (email: User["email"]) => {
     const user = {
       email,
       headers: new Headers(),
-      session: async () =>
-        await auth.api.getSession({ headers: testUser.headers }),
+      session: async () => await auth.api.getSession({ headers: user.headers }),
     };
     const signInMagicLinkResponse = await auth.api.signInMagicLink({
       asResponse: true,
-      headers: new Headers(),
+      headers: {},
       body: { email: user.email },
     });
     if (signInMagicLinkResponse.status !== 200)
@@ -67,10 +66,10 @@ async function createTestContext(config?: {
       headers: {},
       query: {
         token: magicLinkToken,
-        callbackURL: "/magic-link-callback",
+        // No callbackURL's so response is not redirect and we can check for status 200
       },
     });
-    if (magicLinkVerifyResponse.status !== 302)
+    if (magicLinkVerifyResponse.status !== 200)
       throw new Error("createUser: failed to verify magic link", {
         cause: magicLinkVerifyResponse,
       });
@@ -80,39 +79,6 @@ async function createTestContext(config?: {
     user.headers.set("Cookie", sessionCookie);
     return user;
   };
-
-  const testUser = {
-    email: "test@test.com",
-    headers: new Headers(),
-    session: async () =>
-      await auth.api.getSession({ headers: testUser.headers }),
-  };
-
-  if (!config?.skipTestUserCreation) {
-    const signInMagicLinkResponse = await auth.api.signInMagicLink({
-      asResponse: true,
-      headers: new Headers(),
-      body: { email: testUser.email },
-    });
-    if (signInMagicLinkResponse.status !== 200)
-      throw new Error("Test user creation: failed to signInMagicLink");
-    const magicLinkToken = mockSendMagicLink.mock.calls[0][0].token;
-    mockSendMagicLink.mockReset();
-    const magicLinkVerifyResponse = await auth.api.magicLinkVerify({
-      asResponse: true,
-      headers: {},
-      query: {
-        token: magicLinkToken,
-        callbackURL: "/magic-link-callback",
-      },
-    });
-    if (magicLinkVerifyResponse.status !== 302)
-      throw new Error("Test user creation: failed to verify magic link");
-    const setCookieHeader = magicLinkVerifyResponse.headers.get("Set-Cookie")!;
-    const match = setCookieHeader.match(/better-auth\.session_token=([^;]+)/);
-    const sessionCookie = match ? `better-auth.session_token=${match[1]}` : "";
-    testUser.headers.set("Cookie", sessionCookie);
-  }
 
   const bootstrapAdmin = {
     email: "a@a.com", // MUST align with admin bootstrap.
@@ -126,7 +92,7 @@ async function createTestContext(config?: {
     mockSendMagicLink,
     mockSendInvitationEmail,
     bootstrapAdmin,
-    createUser,
+    createTestUser,
   };
 }
 
@@ -135,12 +101,12 @@ describe("auth login flow", () => {
   const inviteeEmail = "invitee@test.com";
   let magicLinkUrl: string | undefined;
   let invitationId: string | undefined;
-  let c: Awaited<ReturnType<typeof createTestContext>>;
-  let testUser: Awaited<ReturnType<(typeof c)["createUser"]>>;
+  let c: TestContext;
+  let testUser: TestUser;
 
   beforeAll(async () => {
     c = await createTestContext();
-    testUser = await c.createUser("test@test.com");
+    testUser = await c.createTestUser("test@test.com");
   });
 
   afterEach(() => {
@@ -245,10 +211,10 @@ describe("auth sign up flow", () => {
   const password = "password";
   const headers = new Headers();
   let emailVerificationUrl: string | undefined;
-  let c: Awaited<ReturnType<typeof createTestContext>>;
+  let c: TestContext;
 
   beforeAll(async () => {
-    c = await createTestContext({ skipTestUserCreation: true });
+    c = await createTestContext();
   });
 
   afterEach(() => {
@@ -407,12 +373,12 @@ describe("auth forgot password flow", () => {
   const newPassword = "newpass123456";
   let resetPasswordUrl: string | undefined;
   let resetToken: string | undefined;
-  let c: Awaited<ReturnType<typeof createTestContext>>;
-  let testUser: Awaited<ReturnType<(typeof c)["createUser"]>>;
+  let c: TestContext;
+  let testUser: TestUser;
 
   beforeAll(async () => {
     c = await createTestContext();
-    testUser = await c.createUser("test@test.com");
+    testUser = await c.createTestUser("test@test.com");
   });
 
   afterEach(() => {
@@ -491,7 +457,7 @@ describe("auth forgot password flow", () => {
 });
 
 describe("admin bootstrap", () => {
-  let c: Awaited<ReturnType<typeof createTestContext>>;
+  let c: TestContext;
   let magicLinkUrl: string | undefined;
 
   beforeAll(async () => {
