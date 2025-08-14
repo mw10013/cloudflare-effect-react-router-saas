@@ -44,41 +44,78 @@ async function createTestContext(config?: {
     return context;
   };
 
+  const createUser = async (email: User["email"]) => {
+    const user = {
+      email,
+      headers: new Headers(),
+      session: async () =>
+        await auth.api.getSession({ headers: testUser.headers }),
+    };
+    const signInMagicLinkResponse = await auth.api.signInMagicLink({
+      asResponse: true,
+      headers: new Headers(),
+      body: { email: user.email },
+    });
+    if (signInMagicLinkResponse.status !== 200)
+      throw new Error("createUser: failed to signInMagicLink", {
+        cause: signInMagicLinkResponse,
+      });
+    const magicLinkToken = mockSendMagicLink.mock.calls[0][0].token;
+    mockSendMagicLink.mockReset();
+    const magicLinkVerifyResponse = await auth.api.magicLinkVerify({
+      asResponse: true,
+      headers: {},
+      query: {
+        token: magicLinkToken,
+        callbackURL: "/magic-link-callback",
+      },
+    });
+    if (magicLinkVerifyResponse.status !== 302)
+      throw new Error("createUser: failed to verify magic link", {
+        cause: magicLinkVerifyResponse,
+      });
+    const setCookieHeader = magicLinkVerifyResponse.headers.get("Set-Cookie")!;
+    const match = setCookieHeader.match(/better-auth\.session_token=([^;]+)/);
+    const sessionCookie = match ? `better-auth.session_token=${match[1]}` : "";
+    user.headers.set("Cookie", sessionCookie);
+    return user;
+  };
+
   const testUser = {
     email: "test@test.com",
-    password: "test123456",
-    name: "test user",
-    ...config?.testUser,
     headers: new Headers(),
     session: async () =>
       await auth.api.getSession({ headers: testUser.headers }),
   };
 
   if (!config?.skipTestUserCreation) {
-    await auth.api.signInMagicLink({
-      body: { email: testUser.email, callbackURL: "/magic-link" },
+    const signInMagicLinkResponse = await auth.api.signInMagicLink({
+      asResponse: true,
       headers: new Headers(),
+      body: { email: testUser.email },
     });
+    if (signInMagicLinkResponse.status !== 200)
+      throw new Error("Test user creation: failed to signInMagicLink");
     const magicLinkToken = mockSendMagicLink.mock.calls[0][0].token;
     mockSendMagicLink.mockReset();
-    const response = await auth.api.magicLinkVerify({
+    const magicLinkVerifyResponse = await auth.api.magicLinkVerify({
       asResponse: true,
+      headers: {},
       query: {
         token: magicLinkToken,
         callbackURL: "/magic-link-callback",
       },
-      headers: {},
     });
-    const setCookieHeader = response.headers.get("Set-Cookie")!;
+    if (magicLinkVerifyResponse.status !== 302)
+      throw new Error("Test user creation: failed to verify magic link");
+    const setCookieHeader = magicLinkVerifyResponse.headers.get("Set-Cookie")!;
     const match = setCookieHeader.match(/better-auth\.session_token=([^;]+)/);
     const sessionCookie = match ? `better-auth.session_token=${match[1]}` : "";
-    console.log("testUser", { sessionCookie });
     testUser.headers.set("Cookie", sessionCookie);
   }
 
   const bootstrapAdmin = {
     email: "a@a.com", // MUST align with admin bootstrap.
-    password: "asdf1234",
   };
   return {
     db: env.D1,
@@ -88,78 +125,36 @@ async function createTestContext(config?: {
     mockSendResetPassword,
     mockSendMagicLink,
     mockSendInvitationEmail,
-    testUser,
     bootstrapAdmin,
+    createUser,
   };
 }
 
-describe.only("auth login flow", () => {
-  const email = "email@test.com";
+describe("auth login flow", () => {
   const headers = new Headers();
   const inviteeEmail = "invitee@test.com";
   let magicLinkUrl: string | undefined;
   let invitationId: string | undefined;
   let c: Awaited<ReturnType<typeof createTestContext>>;
+  let testUser: Awaited<ReturnType<(typeof c)["createUser"]>>;
 
   beforeAll(async () => {
     c = await createTestContext();
+    testUser = await c.createUser("test@test.com");
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  // it("logs in", async () => {
-  //   const form = new FormData();
-  //   form.append("email", email);
-  //   const request = new Request("http://localhost/login", {
-  //     method: "POST",
-  //     body: form,
-  //   });
-
-  //   const result = await loginAction({
-  //     request,
-  //     context: await c.context(),
-  //     params: {},
-  //   });
-
-  //   expect(result).toBeDefined();
-  //   expect(c.mockSendMagicLink).toHaveBeenCalledTimes(1);
-  //   magicLinkUrl = c.mockSendMagicLink.mock.calls[0][0].url;
-  // });
-
-  // it("signs in with magic link", async () => {
-  //   expect(magicLinkUrl).toBeDefined();
-  //   const request = new Request(magicLinkUrl!);
-
-  //   const response = await c.auth.handler(request);
-
-  //   expect(response.status).toBe(302);
-  //   expect(response.headers.has("Set-Cookie")).toBe(true);
-
-  //   const setCookieHeader = response.headers.get("Set-Cookie")!;
-  //   const match = setCookieHeader.match(/better-auth\.session_token=([^;]+)/);
-  //   const sessionCookie = match ? `better-auth.session_token=${match[1]}` : "";
-  //   expect(sessionCookie).not.toBe("");
-  //   headers.set("Cookie", sessionCookie);
-  // });
-
-  // it("has valid session", async () => {
-  //   const session = await c.auth.api.getSession({ headers });
-
-  //   expect(session).not.toBeNull();
-  //   expect(session?.user?.email).toBe(email);
-  //   expect(session?.session.activeOrganizationId).toBeDefined();
-  // });
-
   it("creates invitation", async () => {
-    const session = await c.testUser.session();
+    const session = await testUser.session();
     expect(session).not.toBeNull();
     expect(session?.session.activeOrganizationId).toBeDefined();
 
     const response = await c.auth.api.createInvitation({
       asResponse: true,
-      headers: c.testUser.headers,
+      headers: testUser.headers,
       body: {
         email: inviteeEmail,
         role: "member",
@@ -413,9 +408,11 @@ describe("auth forgot password flow", () => {
   let resetPasswordUrl: string | undefined;
   let resetToken: string | undefined;
   let c: Awaited<ReturnType<typeof createTestContext>>;
+  let testUser: Awaited<ReturnType<(typeof c)["createUser"]>>;
 
   beforeAll(async () => {
     c = await createTestContext();
+    testUser = await c.createUser("test@test.com");
   });
 
   afterEach(() => {
@@ -424,7 +421,7 @@ describe("auth forgot password flow", () => {
 
   it("sends reset password email", async () => {
     const form = new FormData();
-    form.append("email", c.testUser.email);
+    form.append("email", testUser.email);
     const request = new Request("http://localhost/forgot-password", {
       method: "POST",
       body: form,
@@ -476,7 +473,7 @@ describe("auth forgot password flow", () => {
 
   it("signs in with new password", async () => {
     const form = new FormData();
-    form.append("email", c.testUser.email);
+    form.append("email", testUser.email);
     form.append("password", newPassword);
     const request = new Request("http://localhost/signin", {
       method: "POST",
