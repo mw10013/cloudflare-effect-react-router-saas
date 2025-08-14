@@ -44,6 +44,13 @@ async function createTestContext() {
     return context;
   };
 
+  const sessionCookie = (response: Response) => {
+    const setCookieHeader = response.headers.get("Set-Cookie")!;
+    const match = setCookieHeader.match(/better-auth\.session_token=([^;]+)/);
+    if (!match) throw new Error(`Missing session cookie: ${setCookieHeader}`);
+    return `better-auth.session_token=${match[1]}`;
+  };
+
   const createTestUser = async (email: User["email"]) => {
     const user = {
       email,
@@ -74,10 +81,7 @@ async function createTestContext() {
       throw new Error("createUser: failed to verify magic link", {
         cause: magicLinkVerifyResponse,
       });
-    const setCookieHeader = magicLinkVerifyResponse.headers.get("Set-Cookie")!;
-    const match = setCookieHeader.match(/better-auth\.session_token=([^;]+)/);
-    const sessionCookie = match ? `better-auth.session_token=${match[1]}` : "";
-    user.headers.set("Cookie", sessionCookie);
+    user.headers.set("Cookie", sessionCookie(magicLinkVerifyResponse));
     return user;
   };
 
@@ -91,6 +95,7 @@ async function createTestContext() {
     mockSendInvitationEmail,
     adminEmail: "a@a.com", // MUST align with admin in test database.
     createTestUser,
+    sessionCookie,
   };
 }
 
@@ -328,12 +333,7 @@ describe("auth sign up flow", () => {
 
     expect(response.status).toBe(302);
     expect(response.headers.has("Set-Cookie")).toBe(true);
-
-    const setCookieHeader = response.headers.get("Set-Cookie")!;
-    const match = setCookieHeader.match(/better-auth\.session_token=([^;]+)/);
-    const sessionCookie = match ? `better-auth.session_token=${match[1]}` : "";
-    expect(sessionCookie).not.toBe("");
-    headers.set("Cookie", sessionCookie);
+    headers.set("Cookie", c.sessionCookie(response));
   });
 
   it("has valid session", async () => {

@@ -1,4 +1,3 @@
-import type { AppLoadContext } from "react-router";
 import * as Hono from "hono";
 import {
   createRequestHandler,
