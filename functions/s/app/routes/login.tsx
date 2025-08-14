@@ -19,9 +19,9 @@ export async function action({ request, context }: Route.ActionArgs) {
   }
   const { auth } = context.get(appLoadContext);
   const response = await auth.api.signInMagicLink({
-    body: { email, callbackURL: "/magic-link" },
-    headers: request.headers,
     asResponse: true,
+    headers: request.headers,
+    body: { email, callbackURL: "/magic-link" },
   });
   if (!response.ok) throw response;
   return { magicLinkSent: response.ok };

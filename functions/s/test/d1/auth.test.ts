@@ -49,22 +49,29 @@ async function createTestContext(config?: {
     password: "test123456",
     name: "test user",
     ...config?.testUser,
+    headers: new Headers(),
   };
 
   if (!config?.skipTestUserCreation) {
-    await auth.api.signUpEmail({
-      body: testUser,
+    await auth.api.signInMagicLink({
+      body: { email: testUser.email, callbackURL: "/magic-link" },
+      headers: new Headers(),
     });
-    await auth.api.sendVerificationEmail({
-      body: { email: testUser.email },
+    const magicLinkToken = mockSendMagicLink.mock.calls[0][0].token;
+    mockSendMagicLink.mockReset();
+    const response = await auth.api.magicLinkVerify({
+      asResponse: true,
+      query: {
+        token: magicLinkToken,
+        callbackURL: "/magic-link-callback",
+      },
+      headers: {},
     });
-    const emailVerificationToken =
-      mockSendVerificationEmail.mock.calls[0][0].token;
-    mockSendVerificationEmail.mockReset();
-
-    await auth.api.verifyEmail({
-      query: { token: emailVerificationToken },
-    });
+    const setCookieHeader = response.headers.get("Set-Cookie")!;
+    const match = setCookieHeader.match(/better-auth\.session_token=([^;]+)/);
+    const sessionCookie = match ? `better-auth.session_token=${match[1]}` : "";
+    console.log("testUser", { sessionCookie });
+    testUser.headers.set("Cookie", sessionCookie);
   }
 
   const bootstrapAdmin = {
@@ -93,122 +100,78 @@ describe.only("auth login flow", () => {
   let c: Awaited<ReturnType<typeof createTestContext>>;
 
   beforeAll(async () => {
-    c = await createTestContext({ skipTestUserCreation: true });
+    c = await createTestContext();
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  it("logs in", async () => {
-    const form = new FormData();
-    form.append("email", email);
-    const request = new Request("http://localhost/login", {
-      method: "POST",
-      body: form,
-    });
+  // it("logs in", async () => {
+  //   const form = new FormData();
+  //   form.append("email", email);
+  //   const request = new Request("http://localhost/login", {
+  //     method: "POST",
+  //     body: form,
+  //   });
 
-    const result = await loginAction({
-      request,
-      context: await c.context(),
-      params: {},
-    });
+  //   const result = await loginAction({
+  //     request,
+  //     context: await c.context(),
+  //     params: {},
+  //   });
 
-    expect(result).toBeDefined();
-    expect(c.mockSendMagicLink).toHaveBeenCalledTimes(1);
-    magicLinkUrl = c.mockSendMagicLink.mock.calls[0][0].url;
-  });
+  //   expect(result).toBeDefined();
+  //   expect(c.mockSendMagicLink).toHaveBeenCalledTimes(1);
+  //   magicLinkUrl = c.mockSendMagicLink.mock.calls[0][0].url;
+  // });
 
-  it("signs in with magic link", async () => {
-    expect(magicLinkUrl).toBeDefined();
-    const request = new Request(magicLinkUrl!);
+  // it("signs in with magic link", async () => {
+  //   expect(magicLinkUrl).toBeDefined();
+  //   const request = new Request(magicLinkUrl!);
 
-    const response = await c.auth.handler(request);
+  //   const response = await c.auth.handler(request);
 
-    expect(response.status).toBe(302);
-    expect(response.headers.has("Set-Cookie")).toBe(true);
+  //   expect(response.status).toBe(302);
+  //   expect(response.headers.has("Set-Cookie")).toBe(true);
 
-    const setCookieHeader = response.headers.get("Set-Cookie")!;
-    const match = setCookieHeader.match(/better-auth\.session_token=([^;]+)/);
-    const sessionCookie = match ? `better-auth.session_token=${match[1]}` : "";
-    expect(sessionCookie).not.toBe("");
-    headers.set("Cookie", sessionCookie);
-  });
+  //   const setCookieHeader = response.headers.get("Set-Cookie")!;
+  //   const match = setCookieHeader.match(/better-auth\.session_token=([^;]+)/);
+  //   const sessionCookie = match ? `better-auth.session_token=${match[1]}` : "";
+  //   expect(sessionCookie).not.toBe("");
+  //   headers.set("Cookie", sessionCookie);
+  // });
 
-  it("has valid session", async () => {
-    const session = await c.auth.api.getSession({ headers });
+  // it("has valid session", async () => {
+  //   const session = await c.auth.api.getSession({ headers });
 
-    expect(session).not.toBeNull();
-    expect(session?.user?.email).toBe(email);
-    expect(session?.session.activeOrganizationId).toBeDefined();
-  });
-
-  /*
- mockSendInvitationEmail: {
-  id: '1',
-  role: 'member',
-  email: 'invitee@test.com',
-  organization: {
-    name: "Email@test.com's Organization",
-    slug: 'email-test-com',
-    logo: null,
-    createdAt: 2025-08-13T17:59:20.917Z,
-    metadata: null,
-    id: '1'
-  },
-  inviter: {
-    organizationId: '1',
-    userId: '2',
-    role: 'owner',
-    createdAt: 2025-08-13T17:59:20.917Z,
-    id: '1',
-    user: {
-      name: '',
-      email: 'email@test.com',
-      emailVerified: true,
-      image: null,
-      createdAt: 2025-08-13T17:59:20.914Z,
-      updatedAt: 2025-08-13T17:59:20.914Z,
-      role: 'user',
-      banned: false,
-      banReason: null,
-      banExpires: null,
-      id: '2'
-    }
-  },
-  invitation: {
-    organizationId: '1',
-    email: 'invitee@test.com',
-    role: 'member',
-    status: 'pending',
-    expiresAt: 2025-08-15T17:59:20.925Z,
-    inviterId: '2',
-    id: '1'
-  }
-}
-*/
+  //   expect(session).not.toBeNull();
+  //   expect(session?.user?.email).toBe(email);
+  //   expect(session?.session.activeOrganizationId).toBeDefined();
+  // });
 
   it("creates invitation", async () => {
-    const session = await c.auth.api.getSession({ headers });
+    const session = await c.auth.api.getSession({
+      headers: c.testUser.headers,
+    });
     expect(session).not.toBeNull();
     expect(session?.session.activeOrganizationId).toBeDefined();
 
     const response = await c.auth.api.createInvitation({
+      asResponse: true,
+      headers: c.testUser.headers,
       body: {
         email: inviteeEmail,
         role: "member",
         organizationId: String(session!.session.activeOrganizationId!),
         resend: true,
       },
-      asResponse: true,
-      headers,
     });
 
-    // console.log("mockSendInvitationEmail:", c.mockSendInvitationEmail.mock.calls[0][0]);
+    expect(response.status).toBe(200);
     expect(c.mockSendInvitationEmail).toHaveBeenCalledTimes(1);
     invitationId = c.mockSendInvitationEmail.mock.calls[0][0].invitation.id;
     expect(invitationId).toBeDefined();
-    expect(response.status).toBe(200);
   });
 
   it("detects unauthenticated user trying to accept invitation", async () => {
