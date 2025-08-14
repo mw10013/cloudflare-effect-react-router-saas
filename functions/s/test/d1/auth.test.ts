@@ -50,6 +50,8 @@ async function createTestContext(config?: {
     name: "test user",
     ...config?.testUser,
     headers: new Headers(),
+    session: async () =>
+      await auth.api.getSession({ headers: testUser.headers }),
   };
 
   if (!config?.skipTestUserCreation) {
@@ -151,9 +153,7 @@ describe.only("auth login flow", () => {
   // });
 
   it("creates invitation", async () => {
-    const session = await c.auth.api.getSession({
-      headers: c.testUser.headers,
-    });
+    const session = await c.testUser.session();
     expect(session).not.toBeNull();
     expect(session?.session.activeOrganizationId).toBeDefined();
 
