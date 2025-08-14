@@ -1,9 +1,6 @@
 
 ```
-pnpm -F r test:ci --project d1 better-auth.test.ts
-
-pnpm -F r exec tsc -p test/tsconfig.json
-pnpm -F d exec tsc -p test/tsconfig.json
+pnpm -F s test --project d1 auth
 ```
 
 ## Vitest
