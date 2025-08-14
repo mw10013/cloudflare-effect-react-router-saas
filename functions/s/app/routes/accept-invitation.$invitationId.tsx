@@ -30,7 +30,6 @@ export async function action({
       headers: request.headers,
       asResponse: true,
     });
-    console.log("accept-invitation: accept", response, await response.text());
     if (!response.ok) throw response;
   } else if (intent === "reject") {
     const response = await auth.api.rejectInvitation({
@@ -38,7 +37,6 @@ export async function action({
       headers: request.headers,
       asResponse: true,
     });
-    console.log("accept-invitation: reject", response, await response.text());
     if (!response.ok) throw response;
   }
   return redirect("/app");

@@ -48,6 +48,7 @@ async function createTestContext() {
     const user = {
       email,
       headers: new Headers(),
+      context: async () => context({ headers: user.headers }),
       session: async () => await auth.api.getSession({ headers: user.headers }),
     };
     const signInMagicLinkResponse = await auth.api.signInMagicLink({
@@ -80,9 +81,6 @@ async function createTestContext() {
     return user;
   };
 
-  const bootstrapAdmin = {
-    email: "a@a.com", // MUST align with admin bootstrap.
-  };
   return {
     db: env.D1,
     auth,
@@ -91,22 +89,22 @@ async function createTestContext() {
     mockSendResetPassword,
     mockSendMagicLink,
     mockSendInvitationEmail,
-    bootstrapAdmin,
+    adminEmail: "a@a.com", // MUST align with admin in test database.
     createTestUser,
   };
 }
 
-describe("auth login flow", () => {
-  const headers = new Headers();
+describe("accept invitation flow", () => {
   const inviteeEmail = "invitee@test.com";
-  let magicLinkUrl: string | undefined;
   let invitationId: string | undefined;
   let c: TestContext;
   let testUser: TestUser;
+  let inviteeUser: TestUser;
 
   beforeAll(async () => {
     c = await createTestContext();
     testUser = await c.createTestUser("test@test.com");
+    inviteeUser = await c.createTestUser(inviteeEmail);
   });
 
   afterEach(() => {
@@ -144,40 +142,9 @@ describe("auth login flow", () => {
     expect(result.needsAuth).toBe(true);
   });
 
-  it("logs in with invitee email", async () => {
-    const form = new FormData();
-    form.append("email", inviteeEmail);
-    const request = new Request("http://localhost/login", {
-      method: "POST",
-      body: form,
-    });
-
-    const result = await loginAction({ request, context: await c.context() });
-
-    expect(result).toBeDefined();
-    expect(c.mockSendMagicLink).toHaveBeenCalledTimes(1);
-    magicLinkUrl = c.mockSendMagicLink.mock.calls[0][0].url;
-  });
-
-  it("signs invitee in with magic link", async () => {
-    expect(magicLinkUrl).toBeDefined();
-    const request = new Request(magicLinkUrl!);
-
-    const response = await c.auth.handler(request);
-
-    expect(response.status).toBe(302);
-    expect(response.headers.has("Set-Cookie")).toBe(true);
-
-    const setCookieHeader = response.headers.get("Set-Cookie")!;
-    const match = setCookieHeader.match(/better-auth\.session_token=([^;]+)/);
-    const sessionCookie = match ? `better-auth.session_token=${match[1]}` : "";
-    expect(sessionCookie).not.toBe("");
-    headers.set("Cookie", sessionCookie);
-  });
-
   it("detects authenticated user trying to accept invitation", async () => {
     const result = await acceptInvitationLoader({
-      context: await c.context({ headers }),
+      context: await inviteeUser.context(),
       params: { invitationId },
     });
 
@@ -190,12 +157,73 @@ describe("auth login flow", () => {
     const request = new Request("http://localhost/accept-invitation", {
       method: "POST",
       body: form,
-      headers,
+      headers: inviteeUser.headers,
     });
 
     const response = await acceptInvitationAction({
       request,
-      context: await c.context({ headers }),
+      context: await inviteeUser.context(),
+      params: { invitationId },
+    });
+
+    expect(response).toBeInstanceOf(Response);
+    if (response instanceof Response) {
+      expect(response.status).toBe(302);
+    }
+  });
+});
+
+describe("reject invitation flow", () => {
+  const inviteeEmail = "invitee@test.com";
+  let invitationId: string | undefined;
+  let c: TestContext;
+  let testUser: TestUser;
+  let inviteeUser: TestUser;
+
+  beforeAll(async () => {
+    c = await createTestContext();
+    testUser = await c.createTestUser("test@test.com");
+    inviteeUser = await c.createTestUser(inviteeEmail);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("creates invitation", async () => {
+    const session = await testUser.session();
+    expect(session).not.toBeNull();
+    expect(session?.session.activeOrganizationId).toBeDefined();
+
+    const response = await c.auth.api.createInvitation({
+      asResponse: true,
+      headers: testUser.headers,
+      body: {
+        email: inviteeEmail,
+        role: "member",
+        organizationId: String(session!.session.activeOrganizationId!),
+        resend: true,
+      },
+    });
+
+    expect(response.status).toBe(200);
+    expect(c.mockSendInvitationEmail).toHaveBeenCalledTimes(1);
+    invitationId = c.mockSendInvitationEmail.mock.calls[0][0].invitation.id;
+    expect(invitationId).toBeDefined();
+  });
+
+  it("reject invitation", async () => {
+    const form = new FormData();
+    form.append("intent", "reject");
+    const request = new Request("http://localhost/accept-invitation", {
+      method: "POST",
+      body: form,
+      headers: inviteeUser.headers,
+    });
+
+    const response = await acceptInvitationAction({
+      request,
+      context: await inviteeUser.context(),
       params: { invitationId },
     });
 
@@ -470,7 +498,7 @@ describe("admin bootstrap", () => {
 
   it("does not log with empty password", async () => {
     const form = new FormData();
-    form.append("email", c.bootstrapAdmin.email);
+    form.append("email", c.adminEmail);
     form.append("password", "");
     const request = new Request("http://localhost/signin", {
       method: "POST",
@@ -484,7 +512,7 @@ describe("admin bootstrap", () => {
 
   it("logs in with email", async () => {
     const form = new FormData();
-    form.append("email", c.bootstrapAdmin.email);
+    form.append("email", c.adminEmail);
     const request = new Request("http://localhost/login", {
       method: "POST",
       body: form,
