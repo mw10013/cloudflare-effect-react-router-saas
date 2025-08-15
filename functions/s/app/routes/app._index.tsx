@@ -4,6 +4,7 @@ import { appLoadContext } from "~/lib/middleware";
 export async function loader({ request, context }: Route.LoaderArgs) {
   const { auth, session } = context.get(appLoadContext);
   return {
+    fullOrganization: await auth.api.getFullOrganization({ headers: request.headers }),
     invitations: await auth.api.listUserInvitations({
       headers: request.headers,
       query: { email: session?.user.email },
