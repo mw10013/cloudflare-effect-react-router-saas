@@ -1,25 +1,26 @@
 import type { User } from "better-auth/types";
-import type { Route } from "./+types/s";
+import type { AppLoadContext } from "react-router";
+import type { Route } from "./+types/seed";
 import { redirect, unstable_RouterContextProvider } from "react-router";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
 
-export async function loader({ context }: Route.ActionArgs) {
-  const alc = context.get(appLoadContext);
+async function createSeedContext(cloudflare: AppLoadContext["cloudflare"]) {
   let magicLinkToken: string;
   const auth = await createAuth({
-    d1: alc.cloudflare.env.D1,
+    d1: cloudflare.env.D1,
     sendMagicLink: async ({ token }) => {
       magicLinkToken = token;
     },
+    sendInvitationEmail: async () => {},
   });
 
-  const ctx = async ({ headers }: { headers?: Headers } = {}) => {
+  const context = async ({ headers }: { headers?: Headers } = {}) => {
     const session = headers
       ? ((await auth.api.getSession({ headers })) ?? undefined)
       : undefined;
     const context = new unstable_RouterContextProvider();
-    context.set(appLoadContext, { ...alc, auth, session });
+    context.set(appLoadContext, { cloudflare, auth, session });
     return context;
   };
 
@@ -34,7 +35,7 @@ export async function loader({ context }: Route.ActionArgs) {
     const user = {
       email,
       headers: new Headers(),
-      context: async () => ctx({ headers: user.headers }),
+      context: async () => context({ headers: user.headers }),
       session: async () => await auth.api.getSession({ headers: user.headers }),
     };
     const signInMagicLinkResponse = await auth.api.signInMagicLink({
@@ -62,8 +63,50 @@ export async function loader({ context }: Route.ActionArgs) {
     return user;
   };
 
-  const u = await createUser("u@u.com");
-  const u1 = await createUser("u1@u.com");
-  const u2 = await createUser("u2@u.com");
-  return redirect("/");
+  return {
+    auth,
+    createUser,
+    magicLinkToken: () => magicLinkToken,
+  };
+}
+
+export async function loader({ context }: Route.ActionArgs) {
+  const { cloudflare } = context.get(appLoadContext);
+  const db = cloudflare.env.D1;
+  const c = await createSeedContext(cloudflare);
+
+  const u = await c.createUser("u@u.com");
+  const u1 = await c.createUser("u1@u.com");
+  const u2 = await c.createUser("u2@u.com");
+
+  const response = await c.auth.api.createInvitation({
+    asResponse: true,
+    headers: u1.headers,
+    body: {
+      email: u.email,
+      role: "member",
+      organizationId: String(
+        (await u1.session())?.session.activeOrganizationId!,
+      ),
+      resend: true,
+    },
+  });
+
+  return {
+    response: await response.text(),
+    d1Result: await db.batch([
+      db.prepare(`select * from Invitation`),
+      db.prepare(`select * from Organization`),
+      db.prepare(`select * from User`),
+    ]),
+  };
+}
+
+export default function RouteComponent({ loaderData }: Route.ComponentProps) {
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Loader Data</h1>
+      <pre>{JSON.stringify(loaderData, null, 2)}</pre>
+    </div>
+  );
 }

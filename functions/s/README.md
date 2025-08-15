@@ -12,6 +12,7 @@ pnpm -F s test --project d1 auth
 ## Better-Auth
 
 - https://github.com/Bekacru/better-call/blob/main/src/error.ts
+- resend: true is creating a duplicate invite instead of reusing the existing one: https://github.com/better-auth/better-auth/issues/3507
 - Create organization on user sign-up: https://github.com/better-auth/better-auth/issues/2010
   - feat: allow create an org on signup and set active org on sign in: https://github.com/better-auth/better-auth/pull/3076
 - Async operations don't work inside databaseHooks on Cloudflare Workers: https://github.com/better-auth/better-auth/issues/2841

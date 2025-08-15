@@ -113,6 +113,7 @@ function createBetterAuthOptions({
       organization({
         organizationLimit: 1,
         requireEmailVerificationOnInvitation: true,
+        cancelPendingInvitationsOnReInvite: true,
         schema: {
           organization: { modelName: "Organization" },
           member: { modelName: "Member" },
@@ -131,9 +132,7 @@ function createBetterAuthOptions({
 export function createAuth(
   options: CreateAuthOptions,
 ): ReturnType<typeof betterAuth<ReturnType<typeof createBetterAuthOptions>>> {
-  const auth: ReturnType<
-    typeof betterAuth<ReturnType<typeof createBetterAuthOptions>>
-  > = betterAuth(
+  const auth = betterAuth(
     createBetterAuthOptions({
       databaseHookUserCreateAfter: async (user) => {
         if (user.role === "user") {
