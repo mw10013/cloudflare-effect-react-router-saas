@@ -24,8 +24,8 @@ async function createSeedContext(cloudflare: AppLoadContext["cloudflare"]) {
     return context;
   };
 
-  const sessionCookie = (response: Response) => {
-    const setCookieHeader = response.headers.get("Set-Cookie")!;
+  const sessionCookie = (headers: Headers) => {
+    const setCookieHeader = headers.get("Set-Cookie")!;
     const match = setCookieHeader.match(/better-auth\.session_token=([^;]+)/);
     if (!match) throw new Error(`Missing session cookie: ${setCookieHeader}`);
     return `better-auth.session_token=${match[1]}`;
@@ -59,7 +59,7 @@ async function createSeedContext(cloudflare: AppLoadContext["cloudflare"]) {
       throw new Error("createUser: failed to verify magic link", {
         cause: magicLinkVerifyResponse,
       });
-    user.headers.set("Cookie", sessionCookie(magicLinkVerifyResponse));
+    user.headers.set("Cookie", sessionCookie(magicLinkVerifyResponse.headers));
     return user;
   };
 
@@ -79,26 +79,68 @@ export async function loader({ context }: Route.ActionArgs) {
   const u1 = await c.createUser("u1@u.com");
   const u2 = await c.createUser("u2@u.com");
 
-  const response = await c.auth.api.createInvitation({
-    asResponse: true,
-    headers: u1.headers,
-    body: {
-      email: u.email,
-      role: "member",
-      organizationId: String(
-        (await u1.session())?.session.activeOrganizationId!,
-      ),
-      resend: true,
+  /*
+
+      "results": [
+        {
+          "id": 1,
+          "email": "u@u.com",
+          "inviterId": 3,
+          "organizationId": 2,
+          "role": "member",
+          "status": "canceled",
+          "expiresAt": "2025-08-17T14:11:59.399Z"
+        },
+       */
+
+  const [
+    { results: invitations },
+    { results: organizations },
+    { results: users },
+  ] = (await db.batch([
+    db.prepare(`select * from Invitation`),
+    db.prepare(`select * from Organization`),
+    db.prepare(`select * from User`),
+  ])) as [
+    {
+      results: { inviterId: number; organizationId: number; status: string }[];
     },
-  });
+    any,
+    any,
+  ];
+
+  // resend: true is creating a duplicate invite instead of reusing the existing one: https://github.com/better-auth/better-auth/issues/3507
+  for (const [inviter, invitee] of [[u1, u]]) {
+    const inviterSession = await inviter.session();
+    if (!inviterSession) throw new Error("inviterSession is falsy");
+    const inviterId = Number(inviterSession.session.userId);
+    const organizationId = Number(inviterSession.session.activeOrganizationId);
+    const validStatuses = ["pending", "accepted", "rejected"] as const;
+    const invitation = invitations.find(
+      (inv) =>
+        Number(inv.inviterId) === inviterId &&
+        Number(inv.organizationId) === organizationId &&
+        validStatuses.includes(inv.status as (typeof validStatuses)[number]),
+    );
+    // Do something with invitation if needed
+  }
+  // await c.auth.api.createInvitation({
+  //   headers: u1.headers,
+  //   body: {
+  //     email: u.email,
+  //     role: "member",
+  //     organizationId: String(
+  //       (await u1.session())?.session.activeOrganizationId!,
+  //     ),
+  //     resend: true,
+  //   },
+  // });
 
   return {
-    response: await response.text(),
-    d1Result: await db.batch([
-      db.prepare(`select * from Invitation`),
-      db.prepare(`select * from Organization`),
-      db.prepare(`select * from User`),
-    ]),
+    invitationCount: invitations.length,
+    invitations,
+    organizations,
+    users,
   };
 }
 
