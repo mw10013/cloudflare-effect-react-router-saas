@@ -110,7 +110,13 @@ export async function loader({ context }: Route.ActionArgs) {
   ];
 
   // resend: true is creating a duplicate invite instead of reusing the existing one: https://github.com/better-auth/better-auth/issues/3507
-  for (const [inviter, invitee] of [[u1, u]]) {
+  for (const [inviter, invitee] of [
+    [u, u1],
+    [u, u2],
+    [u1, u],
+    [u1, u2],
+    [u2, u],
+  ]) {
     const session = await inviter.session();
     if (session === null) throw new Error("Missing session for inviter");
     const organizationId = session.session.activeOrganizationId;
