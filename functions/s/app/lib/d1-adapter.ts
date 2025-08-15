@@ -22,6 +22,12 @@ export const d1Adapter = (db: D1Database) =>
       // debugLogs: {
       //   deleteMany: true,
       // },
+      customTransformOutput: ({ field, data }) => {
+        if (field === "activeOrganizationId" && typeof data === "number") {
+          return String(data);
+        }
+        return data;
+      },
     },
     adapter: ({ schema }) => {
       const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);

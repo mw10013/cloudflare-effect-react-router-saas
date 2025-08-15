@@ -111,30 +111,30 @@ export async function loader({ context }: Route.ActionArgs) {
 
   // resend: true is creating a duplicate invite instead of reusing the existing one: https://github.com/better-auth/better-auth/issues/3507
   for (const [inviter, invitee] of [[u1, u]]) {
-    const inviterSession = await inviter.session();
-    if (!inviterSession) throw new Error("inviterSession is falsy");
-    const inviterId = Number(inviterSession.session.userId);
-    const organizationId = Number(inviterSession.session.activeOrganizationId);
-    const validStatuses = ["pending", "accepted", "rejected"] as const;
-    const invitation = invitations.find(
-      (inv) =>
-        Number(inv.inviterId) === inviterId &&
-        Number(inv.organizationId) === organizationId &&
-        validStatuses.includes(inv.status as (typeof validStatuses)[number]),
-    );
-    // Do something with invitation if needed
+    const session = await inviter.session();
+    if (session === null) throw new Error("Missing session for inviter");
+    const organizationId = session.session.activeOrganizationId;
+    if (typeof organizationId !== "string")
+      throw new Error("Invalid organizationId");
+    const invitationExists =
+      (await db
+        .prepare(
+          "select 1 from Invitation where email = ? and organizationId = ? limit 1",
+        )
+        .bind(invitee.email, Number(organizationId))
+        .first()) !== null;
+    if (invitationExists) continue;
+
+    await c.auth.api.createInvitation({
+      headers: inviter.headers,
+      body: {
+        email: invitee.email,
+        role: "member",
+        organizationId,
+        resend: true,
+      },
+    });
   }
-  // await c.auth.api.createInvitation({
-  //   headers: u1.headers,
-  //   body: {
-  //     email: u.email,
-  //     role: "member",
-  //     organizationId: String(
-  //       (await u1.session())?.session.activeOrganizationId!,
-  //     ),
-  //     resend: true,
-  //   },
-  // });
 
   return {
     invitationCount: invitations.length,
