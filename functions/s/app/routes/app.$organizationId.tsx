@@ -75,9 +75,7 @@ export async function loader({
   const organizations = await auth.api.listOrganizations({
     headers: request.headers,
   });
-  const organization = organizations.find(
-    (org) => org.id === organizationId,
-  );
+  const organization = organizations.find((org) => org.id === organizationId);
   if (!organization) throw new Error("Missing organization");
   return {
     organization,
@@ -108,7 +106,6 @@ export default function RouteComponent({
     </SidebarProvider>
   );
 }
-
 
 export function AppSidebar({
   organization,
@@ -165,7 +162,6 @@ export function AppSidebar({
   );
 }
 
-
 export function OrganizationSwitcher({
   organizations,
   currentOrganizationId,
@@ -174,7 +170,9 @@ export function OrganizationSwitcher({
   currentOrganizationId: string;
 }) {
   const navigate = useNavigate();
-  const activeOrg = organizations.find((org) => org.id === currentOrganizationId);
+  const activeOrg = organizations.find(
+    (org) => org.id === currentOrganizationId,
+  );
 
   if (!activeOrg) {
     return null;
@@ -194,9 +192,7 @@ export function OrganizationSwitcher({
           className="h-auto flex-1 items-center justify-between p-0 text-left font-medium data-[hovered]:bg-transparent"
         >
           <div className="grid leading-tight">
-            <span className="truncate font-medium">
-              {activeOrg.name}
-            </span>
+            <span className="truncate font-medium">{activeOrg.name}</span>
           </div>
           <ChevronsUpDown className="text-muted-foreground ml-2 size-4" />
         </Oui.Button>
