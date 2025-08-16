@@ -26,7 +26,7 @@ type AdaptOptions = {
   where?: Where[];
 };
 
-function adapt({ model: rawModel, select }: AdaptOptions) {
+function adapt({ model: rawModel, select, where }: AdaptOptions) {
   const model =
     rawModel[0] === rawModel[0].toLowerCase()
       ? rawModel[0].toUpperCase() + rawModel.slice(1)
@@ -42,10 +42,14 @@ function adapt({ model: rawModel, select }: AdaptOptions) {
       select && select.length
         ? select.map((s) => (s === "id" ? modelId : s)).join(", ")
         : "*",
+    ...adaptWhere({ where, modelId }),
   };
 }
 
-function adaptWhere({ where, modelId }: { where?: Where[]; modelId: string }) {
+function adaptWhere({ where, modelId }: { where?: Where[]; modelId: string }): {
+  whereClause?: string;
+  whereValues: any[];
+} {
   if (!where || where.length === 0)
     return { whereClause: undefined, whereValues: [] };
   const clauses: string[] = [];
