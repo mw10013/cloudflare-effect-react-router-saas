@@ -144,80 +144,7 @@ export const d1Adapter = (db: D1Database) =>
         return data;
       },
     },
-    adapter: ({ schema }) => {
-      // Workaround: better-auth does not serialize Date objects in where clauses when supportsDates is false
-      const serializeValue = (v: any) =>
-        v instanceof Date ? v.toISOString() : v;
-      const whereToSql = (where?: Where[]) => {
-        if (!where || where.length === 0) return { clause: "", values: [] };
-        const clauses: string[] = [];
-        const values: any[] = [];
-        for (let i = 0; i < where.length; i++) {
-          const w = where[i];
-          const op = w.operator || "eq";
-          let sql = "";
-          switch (op) {
-            case "eq":
-              sql = `${w.field} = ?`;
-              values.push(serializeValue(w.value));
-              break;
-            case "ne":
-              sql = `${w.field} <> ?`;
-              values.push(serializeValue(w.value));
-              break;
-            case "lt":
-              sql = `${w.field} < ?`;
-              values.push(serializeValue(w.value));
-              break;
-            case "lte":
-              sql = `${w.field} <= ?`;
-              values.push(serializeValue(w.value));
-              break;
-            case "gt":
-              sql = `${w.field} > ?`;
-              values.push(serializeValue(w.value));
-              break;
-            case "gte":
-              sql = `${w.field} >= ?`;
-              values.push(serializeValue(w.value));
-              break;
-            case "in":
-              if (Array.isArray(w.value) && w.value.length > 0) {
-                sql = `${w.field} in (${w.value.map(() => "?").join(",")})`;
-                values.push(...w.value.map(serializeValue));
-              } else {
-                sql = "0"; // always false
-              }
-              break;
-            case "contains":
-              sql = `${w.field} like ?`;
-              values.push(`%${serializeValue(w.value)}%`);
-              break;
-            case "starts_with":
-              sql = `${w.field} like ?`;
-              values.push(`${serializeValue(w.value)}%`);
-              break;
-            case "ends_with":
-              sql = `${w.field} like ?`;
-              values.push(`%${serializeValue(w.value)}`);
-              break;
-            default:
-              throw new Error(`Unsupported where operator: ${op}`);
-          }
-          clauses.push(sql);
-        }
-        // connectors: default to 'and', but support 'or' if specified
-        let clause = "";
-        if (clauses.length > 0) {
-          clause = clauses[0];
-          for (let i = 1; i < clauses.length; i++) {
-            const connector = (where[i].connector || "AND").toLowerCase();
-            clause = `${clause} ${connector} ${clauses[i]}`;
-          }
-        }
-        return { clause, values };
-      };
-
+    adapter: () => {
       const create: CustomAdapter["create"] = async ({
         model,
         data,
@@ -256,18 +183,13 @@ export const d1Adapter = (db: D1Database) =>
         sortBy,
         offset,
       }) => {
-        const adapted = adapt({ model });
+        const adapted = adapt({ model, where });
         let sql = `select * from ${adapted.model}`;
-        const params: any[] = [];
-        if (where && where.length) {
-          const { clause, values } = whereToSql(where);
-          sql += ` where ${clause}`;
-          params.push(...values);
-        }
+        if (adapted.whereClause) sql += ` where ${adapted.whereClause}`;
         if (sortBy) sql += ` order by ${sortBy.field} ${sortBy.direction}`;
-        if (limit) sql += ` limit ${limit}`;
+        sql += ` limit ${limit}`;
         if (offset) sql += ` offset ${offset}`;
-        const stmt = db.prepare(sql).bind(...params);
+        const stmt = db.prepare(sql).bind(...adapted.whereValues);
         const result = await stmt.run();
         return result.results as any[]; // D1 returns results in a different format
       };
@@ -277,16 +199,15 @@ export const d1Adapter = (db: D1Database) =>
         where,
         update,
       }) => {
-        const adapted = adapt({ model });
+        const adapted = adapt({ model, where });
         const set = Object.keys(update as object)
           .map((k) => `${k} = ?`)
           .join(",");
         const setValues = Object.values(update as object);
-        const { clause, values } = whereToSql(where);
-        const sql = `update ${adapted.model} set ${set}${
-          clause ? ` where ${clause}` : ""
+        const sql = `update ${adapted.model} set ${set} ${
+          adapted.whereClause ? `where ${adapted.whereClause}` : ""
         } returning *`;
-        const stmt = db.prepare(sql).bind(...setValues, ...values);
+        const stmt = db.prepare(sql).bind(...setValues, ...adapted.whereValues);
         return await stmt.first();
       };
 
@@ -295,23 +216,21 @@ export const d1Adapter = (db: D1Database) =>
         where,
         update,
       }) => {
-        const adapted = adapt({ model });
+        const adapted = adapt({ model, where });
         const set = Object.keys(update as object)
           .map((k) => `${k} = ?`)
           .join(",");
         const setValues = Object.values(update as object);
-        const { clause, values } = whereToSql(where);
-        const sql = `update ${adapted.model} set ${set}${clause ? ` where ${clause}` : ""}`;
-        const stmt = db.prepare(sql).bind(...setValues, ...values);
+        const sql = `update ${adapted.model} set ${set} ${adapted.whereClause ? `where ${adapted.whereClause}` : ""}`;
+        const stmt = db.prepare(sql).bind(...setValues, ...adapted.whereValues);
         const result = await stmt.run();
         return result.meta.changes;
       };
 
       const del: CustomAdapter["delete"] = async ({ model, where }) => {
-        const adapted = adapt({ model });
-        const { clause, values } = whereToSql(where);
-        const sql = `delete from ${adapted.model}${clause ? ` where ${clause}` : ""}`;
-        const stmt = db.prepare(sql).bind(...values);
+        const adapted = adapt({ model, where });
+        const sql = `delete from ${adapted.model} ${adapted.whereClause ? `where ${adapted.whereClause}` : ""}`;
+        const stmt = db.prepare(sql).bind(...adapted.whereValues);
         await stmt.run();
       };
 
@@ -319,25 +238,17 @@ export const d1Adapter = (db: D1Database) =>
         model,
         where,
       }) => {
-        const adapted = adapt({ model });
-        const { clause, values } = whereToSql(where);
-        // console.log("deleteMany", { model, where, clause, values });
-        const sql = `delete from ${adapted.model} ${clause ? `where ${clause}` : ""}`;
-        const stmt = db.prepare(sql).bind(...values);
+        const adapted = adapt({ model, where });
+        const sql = `delete from ${adapted.model} ${adapted.whereClause ? `where ${adapted.whereClause}` : ""}`;
+        const stmt = db.prepare(sql).bind(...adapted.whereValues);
         const result = await stmt.run();
         return result.meta.changes;
       };
 
       const count: CustomAdapter["count"] = async ({ model, where }) => {
-        const adapted = adapt({ model });
-        let sql = `select count(*) as count from ${adapted.model}`;
-        const params = [];
-        if (where && where.length) {
-          const { clause, values } = whereToSql(where);
-          sql += ` where ${clause}`;
-          params.push(...values);
-        }
-        const stmt = db.prepare(sql).bind(...params);
+        const adapted = adapt({ model, where });
+        let sql = `select count(*) as count from ${adapted.model} ${adapted.whereClause ? `where ${adapted.whereClause}` : ""}`;
+        const stmt = db.prepare(sql).bind(...adapted.whereValues);
         const result = await stmt.first();
         if (!result) {
           throw new Error(`Failed to count records in ${model}`);
