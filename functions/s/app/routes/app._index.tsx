@@ -2,7 +2,7 @@ import type { Route } from "./+types/app._index";
 import { redirect } from "react-router";
 import { appLoadContext } from "~/lib/middleware";
 
-export async function loader({ request, context }: Route.LoaderArgs) {
+export async function loader({ context }: Route.LoaderArgs) {
   const { auth, session } = context.get(appLoadContext);
   if (!session || !session.session.activeOrganizationId)
     throw new Error("Missing session or active organization");
