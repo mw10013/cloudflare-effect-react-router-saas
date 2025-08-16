@@ -243,10 +243,9 @@ export const d1Adapter = (db: D1Database) =>
         where,
         select,
       }) => {
-        const adapted = adapt({ model, select });
-        const { clause, values } = whereToSql(where);
-        const sql = `select ${adapted.selectClause} from ${adapted.model} ${clause ? `where ${clause}` : ""} limit 1`;
-        const stmt = db.prepare(sql).bind(...values);
+        const adapted = adapt({ model, select, where });
+        const sql = `select ${adapted.selectClause} from ${adapted.model} ${adapted.whereClause ? `where ${adapted.whereClause}` : ""} limit 1`;
+        const stmt = db.prepare(sql).bind(...adapted.whereValues);
         return await stmt.first();
       };
 
