@@ -26,7 +26,7 @@ type AdaptOptions = {
   where?: Where[];
 };
 
-function adapt<T extends Record<string, unknown> = Record<string, unknown>>({
+function adapt<T extends Record<string, any> = Record<string, any>>({
   model: rawModel,
   select,
   where,
@@ -199,14 +199,23 @@ export const d1Adapter = (db: D1Database) =>
         );
       };
 
-      const findMany: CustomAdapter["findMany"] = async ({
+      const findMany: CustomAdapter["findMany"] = async <T>({
         model,
         where,
         limit,
         sortBy,
         offset,
-      }) => {
-        const adapted = adapt({ model, where });
+      }: {
+        model: string;
+        where?: CleanedWhere[];
+        limit: number;
+        sortBy?: {
+            field: string;
+            direction: "asc" | "desc";
+        };
+        offset?: number;
+    }): Promise<T[]> => {
+        const adapted = adapt<T>({ model, where });
         let sql = `select * from ${adapted.model}`;
         if (adapted.whereClause) sql += ` where ${adapted.whereClause}`;
         if (sortBy) sql += ` order by ${sortBy.field} ${sortBy.direction}`;
