@@ -1,4 +1,4 @@
-import type { CreateCustomAdapter } from "better-auth/adapters";
+import type { CleanedWhere, CreateCustomAdapter } from "better-auth/adapters";
 import type { Where } from "better-auth/types";
 import { createAdapter } from "better-auth/adapters";
 
@@ -23,6 +23,7 @@ const modelSpecificIdFeature = false;
 type AdaptOptions = {
   model: string;
   select?: string[];
+  where?: Where[];
 };
 
 function adapt({ model: rawModel, select }: AdaptOptions) {
@@ -42,6 +43,81 @@ function adapt({ model: rawModel, select }: AdaptOptions) {
         ? select.map((s) => (s === "id" ? modelId : s)).join(", ")
         : "*",
   };
+}
+
+function adaptWhere({ where, modelId }: { where?: Where[]; modelId: string }) {
+  if (!where || where.length === 0)
+    return { whereClause: undefined, whereValues: [] };
+  const clauses: string[] = [];
+  const whereValues: any[] = [];
+  for (const w of where) {
+    const op = w.operator || "eq";
+    const field = modelSpecificIdFeature
+      ? w.field === "id"
+        ? modelId
+        : w.field
+      : w.field;
+    let sql = "";
+    switch (op) {
+      case "eq":
+        sql = `${field} = ?`;
+        whereValues.push(serializeWhereValue(w.value));
+        break;
+      case "ne":
+        sql = `${field} <> ?`;
+        whereValues.push(serializeWhereValue(w.value));
+        break;
+      case "lt":
+        sql = `${field} < ?`;
+        whereValues.push(serializeWhereValue(w.value));
+        break;
+      case "lte":
+        sql = `${field} <= ?`;
+        whereValues.push(serializeWhereValue(w.value));
+        break;
+      case "gt":
+        sql = `${field} > ?`;
+        whereValues.push(serializeWhereValue(w.value));
+        break;
+      case "gte":
+        sql = `${field} >= ?`;
+        whereValues.push(serializeWhereValue(w.value));
+        break;
+      case "in":
+        if (Array.isArray(w.value) && w.value.length > 0) {
+          sql = `${field} in (${w.value.map(() => "?").join(",")})`;
+          whereValues.push(...w.value.map(serializeWhereValue));
+        } else {
+          sql = "0"; // always false
+        }
+        break;
+      case "contains":
+        sql = `${field} like ?`;
+        whereValues.push(`%${serializeWhereValue(w.value)}%`);
+        break;
+      case "starts_with":
+        sql = `${field} like ?`;
+        whereValues.push(`${serializeWhereValue(w.value)}%`);
+        break;
+      case "ends_with":
+        sql = `${field} like ?`;
+        whereValues.push(`%${serializeWhereValue(w.value)}`);
+        break;
+      default:
+        throw new Error(`Unsupported where operator: ${op}`);
+    }
+    clauses.push(sql);
+  }
+  let whereClause = clauses[0];
+  for (let i = 1; i < clauses.length; i++) {
+    whereClause = `${whereClause} ${where[i].connector || "and"} ${clauses[i]}`;
+  }
+  return { whereClause, whereValues };
+}
+
+function serializeWhereValue(v: any) {
+  if (v instanceof Date) return v.toISOString();
+  return v;
 }
 
 export const d1Adapter = (db: D1Database) =>
