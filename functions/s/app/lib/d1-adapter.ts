@@ -18,16 +18,29 @@ type CustomAdapter = ReturnType<CreateCustomAdapter>;
  * We handle this by transforming `activeOrganizationId` in the `customTransformOutput` function.
  */
 
+const modelSpecificIdFeature = false;
+
 type AdaptOptions = {
   model: string;
   select?: string[];
 };
 
-function adapt({ model, select }: AdaptOptions) {
-  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+function adapt({ model: rawModel, select }: AdaptOptions) {
+  const model =
+    rawModel[0] === rawModel[0].toLowerCase()
+      ? rawModel[0].toUpperCase() + rawModel.slice(1)
+      : rawModel;
+  const modelId = modelSpecificIdFeature
+    ? model[0].toLowerCase() + model.slice(1) + "Id"
+    : "id";
+
   return {
-    model: capitalize(model),
-    selectClause: select && select.length ? select.join(", ") : "*",
+    model,
+    modelId,
+    selectClause:
+      select && select.length
+        ? select.map((s) => (s === "id" ? modelId : s)).join(", ")
+        : "*",
   };
 }
 
