@@ -26,7 +26,7 @@ type AdaptOptions = {
   where?: Where[];
 };
 
-function adapt<T extends Record<string, any> = Record<string, any>>({
+function adapt({
   model: rawModel,
   select,
   where,
@@ -47,7 +47,7 @@ function adapt<T extends Record<string, any> = Record<string, any>>({
         ? select.map((s) => (s === "id" ? modelId : s)).join(", ")
         : "*",
     ...adaptWhere({ where, modelId }),
-    mapResult: (result?: Record<string, unknown> | null): T | null => {
+    mapResult: <T extends Record<string, any>>(result?: Record<string, unknown> | null): T | null => {
       if (!result) return null;
       const { [modelId]: id, ...rest } = result;
       return id !== undefined
@@ -161,14 +161,12 @@ export const d1Adapter = (db: D1Database) =>
         data,
         select,
       }) => {
-        const adapted = adapt<typeof data>({ model, select });
+        const adapted = adapt({ model, select });
         const keys = Object.keys(data);
         const values = keys.map((k) => data[k]);
         const placeholders = keys.map(() => "?").join(",");
-        const sql = `insert into ${adapted.model} (${keys.join(
-          ",",
-        )}) values (${placeholders}) returning ${adapted.selectClause}`;
-        const result = adapted.mapResult(
+        const sql = `insert into ${adapted.model} (${keys.join(",")}) values (${placeholders}) returning ${adapted.selectClause}`;
+        const result = adapted.mapResult<typeof data>(
           await db
             .prepare(sql)
             .bind(...values)
@@ -180,7 +178,7 @@ export const d1Adapter = (db: D1Database) =>
         return result;
       };
 
-      const findOne: CustomAdapter["findOne"] = async <T>({
+      const findOne: CustomAdapter["findOne"] = async ({
         model,
         where,
         select,
@@ -188,10 +186,10 @@ export const d1Adapter = (db: D1Database) =>
         model: string;
         where: CleanedWhere[];
         select?: string[];
-      }): Promise<T | null> => {
-        const adapted = adapt<T>({ model, select, where });
+      }) => {
+        const adapted = adapt({ model, select, where });
         const sql = `select ${adapted.selectClause} from ${adapted.model} ${adapted.whereClause ? `where ${adapted.whereClause}` : ""} limit 1`;
-        return adapted.mapResult(
+        return adapted.mapResult<Record<string, any>>(
           await db
             .prepare(sql)
             .bind(...adapted.whereValues)
@@ -199,7 +197,7 @@ export const d1Adapter = (db: D1Database) =>
         );
       };
 
-      const findMany: CustomAdapter["findMany"] = async <T>({
+      const findMany: CustomAdapter["findMany"] = async({
         model,
         where,
         limit,
@@ -215,7 +213,7 @@ export const d1Adapter = (db: D1Database) =>
         };
         offset?: number;
     }): Promise<T[]> => {
-        const adapted = adapt<T>({ model, where });
+        const adapted = adapt({ model, where });
         let sql = `select * from ${adapted.model}`;
         if (adapted.whereClause) sql += ` where ${adapted.whereClause}`;
         if (sortBy) sql += ` order by ${sortBy.field} ${sortBy.direction}`;
