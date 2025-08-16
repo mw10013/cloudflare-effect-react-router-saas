@@ -18,10 +18,16 @@ type CustomAdapter = ReturnType<CreateCustomAdapter>;
  * We handle this by transforming `activeOrganizationId` in the `customTransformOutput` function.
  */
 
-function adapt({ model }: { model: string }) {
+type AdaptOptions = {
+  model: string;
+  select?: string[];
+};
+
+function adapt({ model, select }: AdaptOptions) {
   const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   return {
     model: capitalize(model),
+    selectClause: select && select.length ? select.join(", ") : "*",
   };
 }
 
@@ -46,8 +52,6 @@ export const d1Adapter = (db: D1Database) =>
       },
     },
     adapter: ({ schema }) => {
-      const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-
       // Workaround: better-auth does not serialize Date objects in where clauses when supportsDates is false
       const serializeValue = (v: any) =>
         v instanceof Date ? v.toISOString() : v;
@@ -121,14 +125,18 @@ export const d1Adapter = (db: D1Database) =>
         return { clause, values };
       };
 
-      const create: CustomAdapter["create"] = async ({ model, data }) => {
-        const adapted = adapt({ model });
+      const create: CustomAdapter["create"] = async ({
+        model,
+        data,
+        select,
+      }) => {
+        const adapted = adapt({ model, select });
         const keys = Object.keys(data);
         const values = keys.map((k) => data[k]);
         const placeholders = keys.map(() => "?").join(",");
         const sql = `insert into ${adapted.model} (${keys.join(
           ",",
-        )}) values (${placeholders}) returning *`;
+        )}) values (${placeholders}) returning ${adapted.selectClause}`;
         const stmt = db.prepare(sql).bind(...values);
         const result = await stmt.first();
         if (!result) {
@@ -142,10 +150,9 @@ export const d1Adapter = (db: D1Database) =>
         where,
         select,
       }) => {
-        const adapted = adapt({ model });
+        const adapted = adapt({ model, select });
         const { clause, values } = whereToSql(where);
-        const fields = select && select.length ? select.join(",") : "*";
-        const sql = `select ${fields} from ${adapted.model} ${clause ? `where ${clause}` : ""} limit 1`;
+        const sql = `select ${adapted.selectClause} from ${adapted.model} ${clause ? `where ${clause}` : ""} limit 1`;
         const stmt = db.prepare(sql).bind(...values);
         return await stmt.first();
       };
