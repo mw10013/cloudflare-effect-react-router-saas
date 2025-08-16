@@ -5,10 +5,26 @@ import { createAdapter } from "better-auth/adapters";
 type CustomAdapter = ReturnType<CreateCustomAdapter>;
 
 /**
- * Better Auth test harness passes model names in lower-case (e.g., 'user'),
- * but the SQLite schema uses capitalized table names (e.g., 'User').
- * Model is normalized to match the schema for all SQL statements.
+ * Better Auth options allow you to specify model names and we do so to align with our
+ * SQLite schema, which uses capitalized table names (e.g., 'User').
+ * Better Auth adapter test harness hard-codes model names in lower-case (e.g., 'user').
+ * Fortunately, the hard-coded model names are singular but we still need to handle the capitalization.
+ *
+ * Better Auth does not seem to serialize Date objects as text in where clauses when `supportsDates` is false.
+ * We handle this by serializing Date objects to ISO strings in `where` processing.
+ *
+ * Better Auth with the Organization plugin does not seem to handle `activeOrganizationId` data transformation.
+ * The Organization plugin works with `activeOrganizationId` as a string, but the SQLite schema has it typed as a number.
+ * We handle this by transforming `activeOrganizationId` in the `customTransformOutput` function.
  */
+
+function adapt({ model }: { model: string }) {
+  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+  return {
+    model: capitalize(model),
+  };
+}
+
 export const d1Adapter = (db: D1Database) =>
   createAdapter({
     config: {
@@ -105,15 +121,12 @@ export const d1Adapter = (db: D1Database) =>
         return { clause, values };
       };
 
-      const create: CustomAdapter["create"] = async ({
-        model: rawModel,
-        data,
-      }) => {
-        const model = capitalize(rawModel);
+      const create: CustomAdapter["create"] = async ({ model, data }) => {
+        const adapted = adapt({ model });
         const keys = Object.keys(data);
         const values = keys.map((k) => data[k]);
         const placeholders = keys.map(() => "?").join(",");
-        const sql = `insert into ${model} (${keys.join(
+        const sql = `insert into ${adapted.model} (${keys.join(
           ",",
         )}) values (${placeholders}) returning *`;
         const stmt = db.prepare(sql).bind(...values);
@@ -125,87 +138,27 @@ export const d1Adapter = (db: D1Database) =>
       };
 
       const findOne: CustomAdapter["findOne"] = async ({
-        model: rawModel,
+        model,
         where,
         select,
       }) => {
-        const model = capitalize(rawModel);
+        const adapted = adapt({ model });
         const { clause, values } = whereToSql(where);
         const fields = select && select.length ? select.join(",") : "*";
-        const sql = `select ${fields} from ${model} ${clause ? `where ${clause}` : ""} limit 1`;
+        const sql = `select ${fields} from ${adapted.model} ${clause ? `where ${clause}` : ""} limit 1`;
         const stmt = db.prepare(sql).bind(...values);
         return await stmt.first();
       };
 
-      const updateMany: CustomAdapter["updateMany"] = async ({
-        model: rawModel,
-        where,
-        update,
-      }) => {
-        const model = capitalize(rawModel);
-        const set = Object.keys(update as object)
-          .map((k) => `${k} = ?`)
-          .join(",");
-        const setValues = Object.values(update as object);
-        const { clause, values } = whereToSql(where);
-        const sql = `update ${model} set ${set}${clause ? ` where ${clause}` : ""}`;
-        const stmt = db.prepare(sql).bind(...setValues, ...values);
-        const result = await stmt.run();
-        return result.meta.changes;
-      };
-
-      const del: CustomAdapter["delete"] = async ({
-        model: rawModel,
-        where,
-      }) => {
-        const model = capitalize(rawModel);
-        const { clause, values } = whereToSql(where);
-        const sql = `delete from ${model}${clause ? ` where ${clause}` : ""}`;
-        const stmt = db.prepare(sql).bind(...values);
-        await stmt.run();
-      };
-
-      const deleteMany: CustomAdapter["deleteMany"] = async ({
-        model: rawModel,
-        where,
-      }) => {
-        const model = capitalize(rawModel);
-        const { clause, values } = whereToSql(where);
-        // console.log("deleteMany", { model, where, clause, values });
-        const sql = `delete from ${model}${clause ? ` where ${clause}` : ""}`;
-        const stmt = db.prepare(sql).bind(...values);
-        const result = await stmt.run();
-        return result.meta.changes;
-      };
-
-      const count: CustomAdapter["count"] = async ({
-        model: rawModel,
-        where,
-      }) => {
-        const model = capitalize(rawModel);
-        let sql = `select count(*) as count from ${model}`;
-        const params = [];
-        if (where && where.length) {
-          const { clause, values } = whereToSql(where);
-          sql += ` where ${clause}`;
-          params.push(...values);
-        }
-        const stmt = db.prepare(sql).bind(...params);
-        const result = await stmt.first();
-        if (!result) {
-          throw new Error(`Failed to count records in ${model}`);
-        }
-        return result.count as number;
-      };
       const findMany: CustomAdapter["findMany"] = async ({
-        model: rawModel,
+        model,
         where,
         limit,
         sortBy,
         offset,
       }) => {
-        const model = capitalize(rawModel);
-        let sql = `select * from ${model}`;
+        const adapted = adapt({ model });
+        let sql = `select * from ${adapted.model}`;
         const params: any[] = [];
         if (where && where.length) {
           const { clause, values } = whereToSql(where);
@@ -221,22 +174,78 @@ export const d1Adapter = (db: D1Database) =>
       };
 
       const update: CustomAdapter["update"] = async ({
-        model: rawModel,
+        model,
         where,
         update,
       }) => {
-        const model = capitalize(rawModel);
+        const adapted = adapt({ model });
         const set = Object.keys(update as object)
           .map((k) => `${k} = ?`)
           .join(",");
         const setValues = Object.values(update as object);
         const { clause, values } = whereToSql(where);
-        const sql = `update ${model} set ${set}${
+        const sql = `update ${adapted.model} set ${set}${
           clause ? ` where ${clause}` : ""
         } returning *`;
         const stmt = db.prepare(sql).bind(...setValues, ...values);
         return await stmt.first();
       };
+
+      const updateMany: CustomAdapter["updateMany"] = async ({
+        model,
+        where,
+        update,
+      }) => {
+        const adapted = adapt({ model });
+        const set = Object.keys(update as object)
+          .map((k) => `${k} = ?`)
+          .join(",");
+        const setValues = Object.values(update as object);
+        const { clause, values } = whereToSql(where);
+        const sql = `update ${adapted.model} set ${set}${clause ? ` where ${clause}` : ""}`;
+        const stmt = db.prepare(sql).bind(...setValues, ...values);
+        const result = await stmt.run();
+        return result.meta.changes;
+      };
+
+      const del: CustomAdapter["delete"] = async ({ model, where }) => {
+        const adapted = adapt({ model });
+        const { clause, values } = whereToSql(where);
+        const sql = `delete from ${adapted.model}${clause ? ` where ${clause}` : ""}`;
+        const stmt = db.prepare(sql).bind(...values);
+        await stmt.run();
+      };
+
+      const deleteMany: CustomAdapter["deleteMany"] = async ({
+        model,
+        where,
+      }) => {
+        const adapted = adapt({ model });
+        const { clause, values } = whereToSql(where);
+        // console.log("deleteMany", { model, where, clause, values });
+        const sql = `delete from ${adapted.model} ${clause ? `where ${clause}` : ""}`;
+        const stmt = db.prepare(sql).bind(...values);
+        const result = await stmt.run();
+        return result.meta.changes;
+      };
+
+      const count: CustomAdapter["count"] = async ({ model, where }) => {
+        const adapted = adapt({ model });
+        let sql = `select count(*) as count from ${adapted.model}`;
+        const params = [];
+        if (where && where.length) {
+          const { clause, values } = whereToSql(where);
+          sql += ` where ${clause}`;
+          params.push(...values);
+        }
+        const stmt = db.prepare(sql).bind(...params);
+        const result = await stmt.first();
+        if (!result) {
+          throw new Error(`Failed to count records in ${model}`);
+        }
+        return result.count as number;
+      };
+
       return {
         create,
         findOne,
