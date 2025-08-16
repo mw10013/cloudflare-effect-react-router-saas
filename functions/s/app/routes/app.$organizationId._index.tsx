@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
-import { useSubmit } from "react-router";
+import { redirect, useSubmit } from "react-router";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function loader({ request, context }: Route.LoaderArgs) {
@@ -23,47 +23,42 @@ export async function loader({ request, context }: Route.LoaderArgs) {
   };
 }
 
-// export const action = ReactRouterEx.routeEffect(
-//   ({ request }: Route.ActionArgs) =>
-//     Effect.gen(function* () {
-//       const userId = yield* ReactRouterEx.AppLoadContext.pipe(
-//         Effect.flatMap((appLoadContext) =>
-//           Effect.fromNullable(
-//             appLoadContext.session.get("sessionUser")?.userId,
-//           ),
-//         ),
-//       );
-//       const FormDataSchema = Schema.Struct({
-//         intent: Schema.Literal("accept", "decline"),
-//         accountMemberId: AccountMemberIdFromString,
-//       });
-//       const formData = yield* SchemaEx.decodeRequestFormData({
-//         request,
-//         schema: FormDataSchema,
-//       });
-//       switch (formData.intent) {
-//         case "accept":
-//           yield* IdentityMgr.acceptInvitation({
-//             accountMemberId: formData.accountMemberId,
-//             userId,
-//           });
-//           break;
-//         case "decline":
-//           yield* IdentityMgr.declineInvitation({
-//             accountMemberId: formData.accountMemberId,
-//             userId,
-//           });
-//           break;
-//         default:
-//           return yield* Effect.fail(
-//             new Error(`Invalid intent: ${formData.intent}`),
-//           );
-//       }
-//     }),
-// );
+export async function action({ request, context }: Route.ActionArgs) {
+  const { auth } = context.get(appLoadContext);
+  const formData = await request.formData();
+  const invitationId = formData.get("invitationId");
+  const intent = formData.get("intent");
+  if (typeof invitationId !== "string" || !invitationId) {
+    return { error: "Invalid invitation." };
+  }
+  try {
+    if (intent === "accept") {
+      const response = await auth.api.acceptInvitation({
+        body: { invitationId },
+        headers: request.headers,
+        asResponse: true,
+      });
+      if (!response.ok) throw response;
+      return { success: "Invitation accepted." };
+    } else if (intent === "reject") {
+      const response = await auth.api.rejectInvitation({
+        body: { invitationId },
+        headers: request.headers,
+        asResponse: true,
+      });
+      if (!response.ok) throw response;
+      return { success: "Invitation rejected." };
+    } else {
+      return { error: "Invalid action." };
+    }
+  } catch (error: any) {
+    return { error: error?.message ?? "An error occurred." };
+  }
+}
 
 export default function RouteComponent({
   loaderData: { invitations },
+  actionData,
 }: Route.ComponentProps) {
   const submit = useSubmit();
 
@@ -91,6 +86,12 @@ export default function RouteComponent({
 
   return (
     <div className="flex flex-col gap-6 p-6">
+      {actionData?.success && (
+        <Oui.Text className="text-success">{actionData.success}</Oui.Text>
+      )}
+      {actionData?.error && (
+        <Oui.Text className="text-destructive">{actionData.error}</Oui.Text>
+      )}
       {invitations.length > 0 && (
         <Card>
           <CardHeader>
@@ -154,7 +155,7 @@ export default function RouteComponent({
           </CardContent>
         </Card>
       )}
-      <pre>{JSON.stringify({ invitations }, null, 2)}</pre>
+      <pre>{JSON.stringify({ invitations, actionData }, null, 2)}</pre>
     </div>
   );
 }
