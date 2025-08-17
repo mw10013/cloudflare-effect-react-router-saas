@@ -23,8 +23,6 @@ type CustomAdapter = ReturnType<CreateCustomAdapter>;
  * We handle this by transforming `activeOrganizationId` in the `customTransformOutput` function.
  */
 
-const modelSpecificIdFeature = true;
-
 type AdaptOptions = {
   model: string;
   select?: string[];
@@ -36,9 +34,7 @@ function adapt({ model: rawModel, select, where }: AdaptOptions) {
     rawModel[0] === rawModel[0].toLowerCase()
       ? rawModel[0].toUpperCase() + rawModel.slice(1)
       : rawModel;
-  const modelId = modelSpecificIdFeature
-    ? model[0].toLowerCase() + model.slice(1) + "Id"
-    : "id";
+  const modelId = model[0].toLowerCase() + model.slice(1) + "Id";
 
   return {
     model,
@@ -70,11 +66,7 @@ function adaptWhere({ where, modelId }: { where?: Where[]; modelId: string }): {
   const whereValues: any[] = [];
   for (const w of where) {
     const op = w.operator || "eq";
-    const field = modelSpecificIdFeature
-      ? w.field === "id"
-        ? modelId
-        : w.field
-      : w.field;
+    const field = w.field === "id" ? modelId : w.field;
     let sql = "";
     switch (op) {
       case "eq":
