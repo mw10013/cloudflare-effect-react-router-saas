@@ -97,8 +97,8 @@ catalogs:
       specifier: 19.1.0
       version: 19.1.0
     react-aria-components:
-      specifier: 1.7.1
-      version: 1.7.1
+      specifier: 1.11.0
+      version: 1.11.0
     react-dom:
       specifier: 19.1.0
       version: 19.1.0
@@ -214,7 +214,7 @@ importers:
         version: 19.1.0
       react-aria-components:
         specifier: 'catalog:'
-        version: 1.7.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 1.11.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react-dom:
         specifier: 'catalog:'
         version: 19.1.0(react@19.1.0)
@@ -293,7 +293,7 @@ importers:
         version: 19.1.0
       react-aria-components:
         specifier: 'catalog:'
-        version: 1.7.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 1.11.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react-dom:
         specifier: 'catalog:'
         version: 19.1.0(react@19.1.0)
@@ -339,7 +339,7 @@ importers:
         version: 19.1.0
       react-aria-components:
         specifier: 'catalog:'
-        version: 1.7.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 1.11.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react-dom:
         specifier: 'catalog:'
         version: 19.1.0(react@19.1.0)
@@ -466,7 +466,7 @@ importers:
         version: 19.1.0
       react-aria-components:
         specifier: 'catalog:'
-        version: 1.7.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 1.11.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react-dom:
         specifier: 'catalog:'
         version: 19.1.0(react@19.1.0)
@@ -554,7 +554,7 @@ importers:
         version: 3.16.12
       react-aria-components:
         specifier: 'catalog:'
-        version: 1.7.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 1.11.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
     devDependencies:
       '@cloudflare/workers-types':
         specifier: 'catalog:'
@@ -627,7 +627,7 @@ importers:
         version: 19.1.0
       react-aria-components:
         specifier: 'catalog:'
-        version: 1.7.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 1.11.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react-day-picker:
         specifier: 9.8.0
         version: 9.8.0(react@19.1.0)
@@ -2444,8 +2444,8 @@ packages:
   '@radix-ui/rect@1.1.1':
     resolution: {integrity: sha512-HPwpGIzkl28mWyZqG52jiqDJ12waP11Pa1lGoiyUkIEuMLBP0oeK/C89esbXrxsky5we7dfd8U58nm0SgAWpVw==}
 
-  '@react-aria/autocomplete@3.0.0-beta.1':
-    resolution: {integrity: sha512-ZeVR1tKJOZK5/RTuN8eprlP1lyeihdDfDYPBkdg2iT5h775LSZyOingPux9aLtdqt/uj6JIS5amK9ErI7+axug==}
+  '@react-aria/autocomplete@3.0.0-beta.6':
+    resolution: {integrity: sha512-/i0Y1nJNSDk5k49tlApYfFCylZO597KQSMy4AbG60W6VNUw51QrmY9bzO3zdGAEVdPSuMys/72KwvV6LOpllyQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
@@ -2474,8 +2474,8 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
-  '@react-aria/collections@3.0.0-beta.1':
-    resolution: {integrity: sha512-udrHajGknkDioGbuqOdWjQ2P7J6fYGlkVGuIJwLxML+WgrroC+i76A4BBOD4ifJKxVAZ8TMyGSztt4RUdn+jDA==}
+  '@react-aria/collections@3.0.0-rc.4':
+    resolution: {integrity: sha512-efcQW/Kly5ebS2kWrVRBD7yEl3b0FdQE/dDL/87skVMW0Vh6AtUgCShZfcOcGAIqvG7m6QItdUHwAilDA61riQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
@@ -2699,12 +2699,6 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
-  '@react-aria/toolbar@3.0.0-beta.14':
-    resolution: {integrity: sha512-F9wFYhcbVUveo6+JfAjKyz19BnBaXBYG7YyZdGurhn5E1bD+Zrwz/ZCTrrx40xJsbofciCiiwnKiXmzB20Kl5Q==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-      react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-
   '@react-aria/toolbar@3.0.0-beta.19':
     resolution: {integrity: sha512-G4sgtOUTUUJHznXlpKcY64SxD2gKOqIQXZXjWTVcY/Q5hAjl8gbTt5XIED22GmeIgd/tVl6+lddGj6ESze4vSg==}
     peerDependencies:
@@ -2790,8 +2784,8 @@ packages:
       typescript:
         optional: true
 
-  '@react-stately/autocomplete@3.0.0-beta.0':
-    resolution: {integrity: sha512-nWRbDzqHzdZySIqwoEBMIdineoQxR1Wzmb86r+NICBX9cNv0tZBLNnHywHsul/MN61/TthdOpay1QwZUoQSrXw==}
+  '@react-stately/autocomplete@3.0.0-beta.3':
+    resolution: {integrity: sha512-YfP/TrvkOCp6j7oqpZxJSvmSeXn+XtbKSOiBOuo+m2zCIhW2ncThmDB9uAUOkpmikDv/LkGKni40RQE8USdGdA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
@@ -2945,8 +2939,8 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
-  '@react-types/autocomplete@3.0.0-alpha.29':
-    resolution: {integrity: sha512-brP6fb7RAdfu/liaE4gFZIZQJLXksgtOzdu/I5cmcHfpqScAFmgedZHkJoeutK9wTWtNnfuKAFQ2w9KKlIBj9w==}
+  '@react-types/autocomplete@3.0.0-alpha.33':
+    resolution: {integrity: sha512-443avwJleeBmTR96WduQpq+D4murkmZLueen/2aazRST9nylN7u8w0DSW+84c9ENroSpfHI6Nf7epmg1LxLaOA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
@@ -5377,8 +5371,8 @@ packages:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
 
-  react-aria-components@1.7.1:
-    resolution: {integrity: sha512-kTAlrxcW7n+rQDwlZSz5+o+HknjPGv/pn0OQ1FF92WsjoTaqQMJtWbEAHXrhrQaiW/3T4CANTpdR1soai4uK6g==}
+  react-aria-components@1.11.0:
+    resolution: {integrity: sha512-+NxjfCiswbssoCNPJ1H5NEPnM2G7whM5bZSjkSUPXS3ZbbqQ1KSmSWHT34V4mrU+kpFfEZeZ/6E6GBYfugndig==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
@@ -8165,7 +8159,7 @@ snapshots:
 
   '@radix-ui/rect@1.1.1': {}
 
-  '@react-aria/autocomplete@3.0.0-beta.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@react-aria/autocomplete@3.0.0-beta.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@react-aria/combobox': 3.13.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@react-aria/focus': 3.21.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -8175,9 +8169,9 @@ snapshots:
       '@react-aria/searchfield': 3.8.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@react-aria/textfield': 3.18.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@react-aria/utils': 3.30.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@react-stately/autocomplete': 3.0.0-beta.0(react@19.1.0)
+      '@react-stately/autocomplete': 3.0.0-beta.3(react@19.1.0)
       '@react-stately/combobox': 3.11.0(react@19.1.0)
-      '@react-types/autocomplete': 3.0.0-alpha.29(react@19.1.0)
+      '@react-types/autocomplete': 3.0.0-alpha.33(react@19.1.0)
       '@react-types/button': 3.13.0(react@19.1.0)
       '@react-types/shared': 3.31.0(react@19.1.0)
       '@swc/helpers': 0.5.17
@@ -8238,7 +8232,7 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
-  '@react-aria/collections@3.0.0-beta.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@react-aria/collections@3.0.0-rc.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@react-aria/interactions': 3.25.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@react-aria/ssr': 3.9.10(react@19.1.0)
@@ -8732,16 +8726,6 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
-  '@react-aria/toolbar@3.0.0-beta.14(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@react-aria/focus': 3.21.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@react-aria/i18n': 3.12.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@react-aria/utils': 3.30.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@react-types/shared': 3.31.0(react@19.1.0)
-      '@swc/helpers': 0.5.17
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-
   '@react-aria/toolbar@3.0.0-beta.19(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@react-aria/focus': 3.21.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -8943,7 +8927,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.8.2
 
-  '@react-stately/autocomplete@3.0.0-beta.0(react@19.1.0)':
+  '@react-stately/autocomplete@3.0.0-beta.3(react@19.1.0)':
     dependencies:
       '@react-stately/utils': 3.10.8(react@19.1.0)
       '@swc/helpers': 0.5.17
@@ -9201,7 +9185,7 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
-  '@react-types/autocomplete@3.0.0-alpha.29(react@19.1.0)':
+  '@react-types/autocomplete@3.0.0-alpha.33(react@19.1.0)':
     dependencies:
       '@react-types/combobox': 3.13.7(react@19.1.0)
       '@react-types/searchfield': 3.6.4(react@19.1.0)
@@ -11826,20 +11810,22 @@ snapshots:
       minimist: 1.2.8
       strip-json-comments: 2.0.1
 
-  react-aria-components@1.7.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  react-aria-components@1.11.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
       '@internationalized/date': 3.8.2
       '@internationalized/string': 3.2.7
-      '@react-aria/autocomplete': 3.0.0-beta.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@react-aria/collections': 3.0.0-beta.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@react-aria/autocomplete': 3.0.0-beta.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@react-aria/collections': 3.0.0-rc.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@react-aria/dnd': 3.11.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@react-aria/focus': 3.21.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@react-aria/interactions': 3.25.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@react-aria/live-announcer': 3.4.4
-      '@react-aria/toolbar': 3.0.0-beta.14(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@react-aria/overlays': 3.28.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@react-aria/ssr': 3.9.10(react@19.1.0)
+      '@react-aria/toolbar': 3.0.0-beta.19(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@react-aria/utils': 3.30.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@react-aria/virtualizer': 4.1.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@react-stately/autocomplete': 3.0.0-beta.0(react@19.1.0)
+      '@react-stately/autocomplete': 3.0.0-beta.3(react@19.1.0)
       '@react-stately/layout': 4.4.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@react-stately/selection': 3.20.4(react@19.1.0)
       '@react-stately/table': 3.14.4(react@19.1.0)
