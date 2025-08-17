@@ -11,6 +11,15 @@ import { createAdapter } from "better-auth/adapters";
  * Better-Auth uses `id` as the primary key for all its domain objects. Our SQLLite schema uses `userId` and `sessionId` ie.
  * the name of the table with first letter lowercased and `Id` appended. We map select and where clauses along with D1 results
  * to adapt to this convention.
+ * 
+ * If a Better-Auth field name conflicts with an id name, the field name needs to be renamed. A Better-Auth `account` has a field
+ * named `accountId`. We rename it to `betterAuthAccountId` and convey that to Better-Auth in its options.
+
+ * @example
+ * account: {
+ *   modelName: "Account",
+ *   fields: { accountId: "betterAuthAccountId" },
+ * }
  *
  * We need to map database results to change model id to Better-Auth id. Eg. `userId` -> `id`, `sessionId` -> `id.
  * The Better-Auth CustomAdapter interface uses an unconstrained type parameter of `T` and that is too loose for our mapping
@@ -50,12 +59,10 @@ function adapt({
         ? select.map((s) => (s === "id" ? modelId : s)).join(", ")
         : "*",
     ...adaptWhere({ where, modelId }),
-    mapResult: <T extends Record<string, unknown>>(
-      result?: T | null,
-    ): T | null => {
+    mapResult: <T extends Record<string, unknown>>(result?: T | null) => {
       if (!result) return null;
-      const { [modelId]: id, ...rest } = result;
-      return id !== undefined ? ({ id, ...rest } as unknown as T) : result;
+      const id = result[modelId];
+      return id === undefined ? result : { ...result, id }; // For simplicity, we append `id` rather than replace.
     },
   };
 }
