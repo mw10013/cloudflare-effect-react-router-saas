@@ -43,7 +43,7 @@ export default {
         () => import("virtual:react-router/server-build"),
         import.meta.env.MODE,
       );
-      return requestHandler(c.req.raw, context as any);
+      return requestHandler(c.req.raw, context);
     });
     const response = await hono.fetch(request, env, ctx);
     // ctx.waitUntil(runtime.dispose());
