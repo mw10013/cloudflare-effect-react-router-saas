@@ -1,7 +1,7 @@
 -- Migration number: 0001 	 2025-01-31T00:42:00.000Z
 --> statement-breakpoint
 create table User (
-  id integer primary key,
+  userId integer primary key,
   name text not null default '',
   email text not null unique,
   emailVerified integer not null default 0,
@@ -16,21 +16,21 @@ create table User (
 
 --> statement-breakpoint
 create table Session (
-  id integer primary key,
+  sessionId integer primary key,
   expiresAt text not null,
   token text not null unique,
   createdAt text not null default (datetime('now')),
   updatedAt text not null default (datetime('now')),
   ipAddress text,
   userAgent text,
-  userId integer not null references User (id),
-  impersonatedBy integer references User (id),
-  activeOrganizationId integer references Organization (id)
+  userId integer not null references User (userId),
+  impersonatedBy integer references User (userId),
+  activeOrganizationId integer references Organization (organizationId)
 );
 
 --> statement-breakpoint
 create table Organization (
-  id integer primary key,
+  organizationId integer primary key,
   name text not null,
   slug text not null unique,
   logo text,
@@ -40,19 +40,19 @@ create table Organization (
 
 --> statement-breakpoint
 create table Member (
-  id integer primary key,
-  userId integer not null references User (id),
-  organizationId integer not null references Organization (id),
+  memberId integer primary key,
+  userId integer not null references User (userid),
+  organizationId integer not null references Organization (organizationId),
   role text not null,
   createdAt text not null default (datetime('now'))
 );
 
 --> statement-breakpoint
 create table Invitation (
-  id integer primary key,
+  invitationId integer primary key,
   email text not null,
-  inviterId integer not null references User (id),
-  organizationId integer not null references Organization (id),
+  inviterId integer not null references User (userId),
+  organizationId integer not null references Organization (organizationId),
   role text not null,
   status text not null,
   expiresAt text not null
@@ -60,10 +60,10 @@ create table Invitation (
 
 --> statement-breakpoint
 create table Account (
-  id integer primary key,
+  accountId integer primary key,
   betterAuthAccountId text not null,
   providerId text not null,
-  userId integer not null references User (id),
+  userId integer not null references User (userId),
   accessToken text,
   refreshToken text,
   idToken text,
@@ -77,7 +77,7 @@ create table Account (
 
 --> statement-breakpoint
 create table Verification (
-  id integer primary key,
+  verificationId integer primary key,
   identifier text not null,
   value text not null,
   expiresAt text not null,
@@ -87,14 +87,14 @@ create table Verification (
 
 --> statement-breakpoint
 insert into
-  User (id, name, email, role)
+  User (userId, name, email, role)
 values
   (1, 'Admin', 'a@a.com', 'admin');
 
 --> statement-breakpoint
 insert into
   Account (
-    id,
+    accountId,
     betterAuthAccountId,
     providerId,
     userId,

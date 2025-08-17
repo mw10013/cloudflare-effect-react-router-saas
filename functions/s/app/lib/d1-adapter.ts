@@ -23,7 +23,7 @@ type CustomAdapter = ReturnType<CreateCustomAdapter>;
  * We handle this by transforming `activeOrganizationId` in the `customTransformOutput` function.
  */
 
-const modelSpecificIdFeature = false;
+const modelSpecificIdFeature = true;
 
 type AdaptOptions = {
   model: string;

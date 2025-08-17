@@ -7,8 +7,8 @@ export async function resetDb(resetFn?: (db: D1Database) => Promise<void>) {
       env.D1.prepare(`delete from ${table}`),
     ),
     // Keep the admin in account and user.
-    env.D1.prepare(`delete from Account where id <> 1`),
-    env.D1.prepare(`delete from User where id <> 1`),
+    env.D1.prepare(`delete from Account where accountId <> 1`),
+    env.D1.prepare(`delete from User where userId <> 1`),
   ]);
   if (resetFn) await resetFn(env.D1);
 }
