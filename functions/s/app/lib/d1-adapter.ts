@@ -5,15 +5,20 @@ import { createAdapter } from "better-auth/adapters";
 type CustomAdapter = ReturnType<CreateCustomAdapter>;
 
 /**
- * Better Auth options allow you to specify model names and we do so to align with our
+ * Better-Auth options allow you to specify model names and we do so to align with our
  * SQLite schema, which uses capitalized table names (e.g., 'User').
- * Better Auth adapter test harness hard-codes model names in lower-case (e.g., 'user').
+ * Better-Auth adapter test harness hard-codes model names in lower-case (e.g., 'user').
  * Fortunately, the hard-coded model names are singular but we still need to handle the capitalization.
  *
- * Better Auth does not seem to serialize Date objects as text in where clauses when `supportsDates` is false.
+ * We need to map database results to change model id name to Better-Auth id name. Eg. `userId` -> `id`, `sessionId` -> `id.
+ * The Better-Auth CustomAdapter interface uses an unconstrained type parameter of T and that is too loose for our mapping
+ * since we need to work with a Record<string, unknown> shape. Currently using as any to get around this and hope we can
+ * find a type-safe solution in the future.
+ *
+ * Better-Auth does not seem to serialize Date objects as text in where clauses when `supportsDates` is false.
  * We handle this by serializing Date objects to ISO strings in `where` processing.
  *
- * Better Auth with the Organization plugin does not seem to handle `activeOrganizationId` data transformation.
+ * Better-Auth with the Organization plugin does not seem to handle `activeOrganizationId` data transformation.
  * The Organization plugin works with `activeOrganizationId` as a string, but the SQLite schema has it typed as a number.
  * We handle this by transforming `activeOrganizationId` in the `customTransformOutput` function.
  */
@@ -26,11 +31,7 @@ type AdaptOptions = {
   where?: Where[];
 };
 
-function adapt({
-  model: rawModel,
-  select,
-  where,
-}: AdaptOptions) {
+function adapt({ model: rawModel, select, where }: AdaptOptions) {
   const model =
     rawModel[0] === rawModel[0].toLowerCase()
       ? rawModel[0].toUpperCase() + rawModel.slice(1)
@@ -47,7 +48,9 @@ function adapt({
         ? select.map((s) => (s === "id" ? modelId : s)).join(", ")
         : "*",
     ...adaptWhere({ where, modelId }),
-    mapResult: <T extends Record<string, any>>(result?: Record<string, unknown> | null): T | null => {
+    mapResult: <T extends Record<string, unknown>>(
+      result?: T | null,
+    ): T | null => {
       if (!result) return null;
       const { [modelId]: id, ...rest } = result;
       return id !== undefined
@@ -182,22 +185,18 @@ export const d1Adapter = (db: D1Database) =>
         model,
         where,
         select,
-      }: {
-        model: string;
-        where: CleanedWhere[];
-        select?: string[];
       }) => {
         const adapted = adapt({ model, select, where });
         const sql = `select ${adapted.selectClause} from ${adapted.model} ${adapted.whereClause ? `where ${adapted.whereClause}` : ""} limit 1`;
-        return adapted.mapResult<Record<string, any>>(
+        return adapted.mapResult<Record<string, unknown>>(
           await db
             .prepare(sql)
             .bind(...adapted.whereValues)
             .first(),
-        );
+        ) as any; // Better-Auth has unconstrained type parameter but we are working with a Record shape.
       };
 
-      const findMany: CustomAdapter["findMany"] = async({
+      const findMany: CustomAdapter["findMany"] = async ({
         model,
         where,
         limit,
@@ -208,11 +207,11 @@ export const d1Adapter = (db: D1Database) =>
         where?: CleanedWhere[];
         limit: number;
         sortBy?: {
-            field: string;
-            direction: "asc" | "desc";
+          field: string;
+          direction: "asc" | "desc";
         };
         offset?: number;
-    }): Promise<T[]> => {
+      }) => {
         const adapted = adapt({ model, where });
         let sql = `select * from ${adapted.model}`;
         if (adapted.whereClause) sql += ` where ${adapted.whereClause}`;
@@ -223,9 +222,7 @@ export const d1Adapter = (db: D1Database) =>
           .prepare(sql)
           .bind(...adapted.whereValues)
           .run();
-        // const stmt = db.prepare(sql).bind(...adapted.whereValues);
-        // const result = await stmt.run();
-        return result.results as any[]; // D1 returns results in a different format
+        return result.results.map(adapted.mapResult) as any[]; // Better-Auth has unconstrained type parameter but we are working with a Record shape.
       };
 
       const update: CustomAdapter["update"] = async ({
@@ -241,8 +238,12 @@ export const d1Adapter = (db: D1Database) =>
         const sql = `update ${adapted.model} set ${set} ${
           adapted.whereClause ? `where ${adapted.whereClause}` : ""
         } returning *`;
-        const stmt = db.prepare(sql).bind(...setValues, ...adapted.whereValues);
-        return await stmt.first();
+        return adapted.mapResult(
+          await db
+            .prepare(sql)
+            .bind(...setValues, ...adapted.whereValues)
+            .first(),
+        ) as any; // Better-Auth has unconstrained type parameter but we are working with a Record shape.
       };
 
       const updateMany: CustomAdapter["updateMany"] = async ({
@@ -256,16 +257,20 @@ export const d1Adapter = (db: D1Database) =>
           .join(",");
         const setValues = Object.values(update as object);
         const sql = `update ${adapted.model} set ${set} ${adapted.whereClause ? `where ${adapted.whereClause}` : ""}`;
-        const stmt = db.prepare(sql).bind(...setValues, ...adapted.whereValues);
-        const result = await stmt.run();
+        const result = await db
+          .prepare(sql)
+          .bind(...setValues, ...adapted.whereValues)
+          .run();
         return result.meta.changes;
       };
 
       const del: CustomAdapter["delete"] = async ({ model, where }) => {
         const adapted = adapt({ model, where });
         const sql = `delete from ${adapted.model} ${adapted.whereClause ? `where ${adapted.whereClause}` : ""}`;
-        const stmt = db.prepare(sql).bind(...adapted.whereValues);
-        await stmt.run();
+        await db
+          .prepare(sql)
+          .bind(...adapted.whereValues)
+          .run();
       };
 
       const deleteMany: CustomAdapter["deleteMany"] = async ({
@@ -274,20 +279,24 @@ export const d1Adapter = (db: D1Database) =>
       }) => {
         const adapted = adapt({ model, where });
         const sql = `delete from ${adapted.model} ${adapted.whereClause ? `where ${adapted.whereClause}` : ""}`;
-        const stmt = db.prepare(sql).bind(...adapted.whereValues);
-        const result = await stmt.run();
+        const result = await db
+          .prepare(sql)
+          .bind(...adapted.whereValues)
+          .run();
         return result.meta.changes;
       };
 
       const count: CustomAdapter["count"] = async ({ model, where }) => {
         const adapted = adapt({ model, where });
         let sql = `select count(*) as count from ${adapted.model} ${adapted.whereClause ? `where ${adapted.whereClause}` : ""}`;
-        const stmt = db.prepare(sql).bind(...adapted.whereValues);
-        const result = await stmt.first();
+        const result = await db
+          .prepare(sql)
+          .bind(...adapted.whereValues)
+          .first<number>("count");
         if (!result) {
           throw new Error(`Failed to count records in ${model}`);
         }
-        return result.count as number;
+        return result;
       };
 
       return {
