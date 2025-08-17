@@ -10,6 +10,7 @@
 ## Etc
 
 - BUG: D1 local databases are not created with database_id: https://github.com/cloudflare/workers-sdk/issues/4548
+- https://qouteall.fun/qouteall-blog/2025/Traps%20to%20Developers
 
 ## LLM
 

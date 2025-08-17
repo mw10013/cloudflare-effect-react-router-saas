@@ -8,6 +8,10 @@ import { createAdapter } from "better-auth/adapters";
  * Better-Auth adapter test harness hard-codes model names in lower-case (e.g., 'user').
  * Fortunately, the hard-coded model names are singular but we still need to handle the capitalization.
  *
+ * Better-Auth uses `id` as the primary key for all its domain objects. Our SQLLite schema uses `userId` and `sessionId` ie.
+ * the name of the table with first letter lowercased and `Id` appended. We map select and where clauses along with D1 results
+ * to adapt to this convention.
+ *
  * We need to map database results to change model id to Better-Auth id. Eg. `userId` -> `id`, `sessionId` -> `id.
  * The Better-Auth CustomAdapter interface uses an unconstrained type parameter of `T` and that is too loose for our mapping
  * since we need to work with a `Record<string, unknown>` shape. Currently using `as any` to get around this and hope we can
@@ -51,9 +55,7 @@ function adapt({
     ): T | null => {
       if (!result) return null;
       const { [modelId]: id, ...rest } = result;
-      return id !== undefined
-        ? ({ id, ...rest } as unknown as T)
-        : (rest as unknown as T);
+      return id !== undefined ? ({ id, ...rest } as unknown as T) : result;
     },
   };
 }
