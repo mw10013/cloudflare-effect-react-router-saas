@@ -73,6 +73,10 @@ function adaptWhere({ where, modelId }: { where?: Where[]; modelId: string }): {
 } {
   if (!where || where.length === 0)
     return { whereClause: undefined, whereValues: [] };
+
+  const serializeWhereValue = (v: unknown) =>
+    v instanceof Date ? v.toISOString() : v;
+
   const clauses: string[] = [];
   const whereValues: any[] = [];
   for (const w of where) {
@@ -134,11 +138,6 @@ function adaptWhere({ where, modelId }: { where?: Where[]; modelId: string }): {
     whereClause = `${whereClause} ${where[i].connector || "and"} ${clauses[i]}`;
   }
   return { whereClause, whereValues };
-}
-
-function serializeWhereValue(v: any) {
-  if (v instanceof Date) return v.toISOString();
-  return v;
 }
 
 export const d1Adapter = (db: D1Database) =>
