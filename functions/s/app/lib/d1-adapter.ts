@@ -2,17 +2,15 @@ import type { CleanedWhere, CreateCustomAdapter } from "better-auth/adapters";
 import type { Where } from "better-auth/types";
 import { createAdapter } from "better-auth/adapters";
 
-type CustomAdapter = ReturnType<CreateCustomAdapter>;
-
 /**
  * Better-Auth options allow you to specify model names and we do so to align with our
  * SQLite schema, which uses capitalized table names (e.g., 'User').
  * Better-Auth adapter test harness hard-codes model names in lower-case (e.g., 'user').
  * Fortunately, the hard-coded model names are singular but we still need to handle the capitalization.
  *
- * We need to map database results to change model id name to Better-Auth id name. Eg. `userId` -> `id`, `sessionId` -> `id.
- * The Better-Auth CustomAdapter interface uses an unconstrained type parameter of T and that is too loose for our mapping
- * since we need to work with a Record<string, unknown> shape. Currently using as any to get around this and hope we can
+ * We need to map database results to change model id to Better-Auth id. Eg. `userId` -> `id`, `sessionId` -> `id.
+ * The Better-Auth CustomAdapter interface uses an unconstrained type parameter of `T` and that is too loose for our mapping
+ * since we need to work with a `Record<string, unknown>` shape. Currently using `as any` to get around this and hope we can
  * find a type-safe solution in the future.
  *
  * Better-Auth does not seem to serialize Date objects as text in where clauses when `supportsDates` is false.
@@ -23,13 +21,17 @@ type CustomAdapter = ReturnType<CreateCustomAdapter>;
  * We handle this by transforming `activeOrganizationId` in the `customTransformOutput` function.
  */
 
-type AdaptOptions = {
+type CustomAdapter = ReturnType<CreateCustomAdapter>;
+
+function adapt({
+  model: rawModel,
+  select,
+  where,
+}: {
   model: string;
   select?: string[];
   where?: Where[];
-};
-
-function adapt({ model: rawModel, select, where }: AdaptOptions) {
+}) {
   const model =
     rawModel[0] === rawModel[0].toLowerCase()
       ? rawModel[0].toUpperCase() + rawModel.slice(1)
@@ -244,10 +246,10 @@ export const d1Adapter = (db: D1Database) =>
         update,
       }) => {
         const adapted = adapt({ model, where });
-        const set = Object.keys(update as object)
+        const set = Object.keys(update)
           .map((k) => `${k} = ?`)
           .join(",");
-        const setValues = Object.values(update as object);
+        const setValues = Object.values(update);
         const sql = `update ${adapted.model} set ${set} ${adapted.whereClause ? `where ${adapted.whereClause}` : ""}`;
         const result = await db
           .prepare(sql)
