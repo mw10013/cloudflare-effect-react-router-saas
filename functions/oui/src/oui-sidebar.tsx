@@ -159,8 +159,6 @@ export interface SidebarTreeNodeEx {
   children?: SidebarTreeNodeEx[];
 }
 
-export const sidebarTreeItemContextExStyles = tv({});
-
 export interface SidebarTreeItemContentExProps
   extends Rac.TreeItemContentProps {
   href?: string;
