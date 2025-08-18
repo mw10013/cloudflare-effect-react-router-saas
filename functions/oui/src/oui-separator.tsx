@@ -1,9 +1,8 @@
-import type { VariantProps } from "tailwind-variants";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import * as Rac from "react-aria-components";
-import { tv } from "tailwind-variants";
 
-export const separator = tv({
-  base: "bg-border shrink-0",
+export const separatorVariants = cva("bg-border shrink-0", {
   variants: {
     variant: {
       default: "w-full",
@@ -25,9 +24,15 @@ export const separator = tv({
   },
 });
 
+/**
+ * Props for the Separator component.
+ *
+ * The Omit removes 'orientation' from the variant props to avoid a type conflict,
+ * since 'orientation' is already defined in the react-aria Separator props.
+ */
 export interface SeparatorProps
-  extends Rac.SeparatorProps,
-    VariantProps<typeof separator> {}
+  extends React.ComponentProps<typeof Rac.Separator>,
+    Omit<VariantProps<typeof separatorVariants>, "orientation"> {}
 
 /**
  * Derived from shadcn Separator and DropdownMenuSeparator
@@ -41,7 +46,7 @@ export function Separator({
   return (
     <Rac.Separator
       orientation={orientation}
-      className={separator({
+      className={separatorVariants({
         orientation,
         variant,
         className,
