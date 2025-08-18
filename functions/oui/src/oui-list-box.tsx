@@ -1,11 +1,12 @@
 import { Check } from "lucide-react";
 import * as Rac from "react-aria-components";
+import { twMerge } from "tailwind-merge";
 import {
   composeTailwindRenderProps,
   disabledStyles,
   focusVisibleStyles,
 } from "./oui-base";
-import { buttonStyles } from "./oui-button";
+import { buttonVariants } from "./oui-button";
 
 /** Styles derived from shadcn SelectItem.
  * https://github.com/adobe/react-spectrum/issues/7601
@@ -55,59 +56,6 @@ export function ListBoxItem<T extends object>({
   );
 }
 
-/** Styles derived from shadcn CommandItem, adapted for a multi-line layout. */
-// export const listBoxItemExStyles = tv({
-//   extend: baseStyles,
-//   base: "outline-hidden [&_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full cursor-default select-none flex-col items-start gap-2 rounded-sm px-4 py-2 text-sm [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-//   variants: {
-//     isSelected: {
-//       true: "bg-accent text-accent-foreground",
-//     },
-//     isFocused: {
-//       true: "bg-accent text-accent-foreground",
-//     },
-//     isHovered: {
-//       true: "bg-accent text-accent-foreground",
-//     },
-//   },
-// });
-
-// export interface ListBoxItemExProps
-//   extends Omit<Rac.ListBoxItemProps, "children"> {
-//   label: string;
-//   description: string;
-// }
-
-// export const ListBoxItemEx = <T extends object>({
-//   textValue,
-//   className,
-//   label,
-//   description,
-//   ...props
-// }: ListBoxItemExProps) => (
-//   <Rac.ListBoxItem
-//     {...props}
-//     textValue={textValue || label}
-//     className={Rac.composeRenderProps(className, (className, renderProps) =>
-//       listBoxItemExStyles({ ...renderProps, className }),
-//     )}
-//   >
-//     <Text slot="label">{label}</Text>
-//     <Text slot="description">{description}</Text>
-//   </Rac.ListBoxItem>
-// );
-
-/**
- * Horizontal ListBox styled for pagination controls (e.g., page numbers, next/prev).
- * Example:
- *  <ListBoxEx1 defaultSelectedKeys={["2"]}>
- *    <ListBoxItemEx1 id="prev">Previous</ListBoxItemEx1>
- *    <ListBoxItemEx1 id="1">1</ListBoxItemEx1>
- *    <ListBoxItemEx1 id="2">2</ListBoxItemEx1>
- *    <ListBoxItemEx1 id="3">3</ListBoxItemEx1>
- *    <ListBoxItemEx1 id="next">Next</ListBoxItemEx1>
- *  </ListBoxEx1>
- */
 export function ListBoxEx1Pagination<T extends object>({
   className,
   "aria-label": ariaLabel = "Pagination",
@@ -149,11 +97,13 @@ export function ListBoxItemEx1Pagination<T extends object>({
             : undefined)
       }
       className={Rac.composeRenderProps(className, (className, renderProps) =>
-        buttonStyles({
-          ...renderProps,
-          variant: renderProps.isSelected ? "outline" : "ghost",
-          className,
-        }),
+        twMerge("cursor-pointer",
+          buttonVariants({
+            ...renderProps,
+            variant: renderProps.isSelected ? "outline" : "ghost",
+            className,
+          }),
+        ),
       )}
     >
       {children}
