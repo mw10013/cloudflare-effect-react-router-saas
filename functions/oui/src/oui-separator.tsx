@@ -1,6 +1,7 @@
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import * as Rac from "react-aria-components";
+import { twMerge } from "tailwind-merge";
 
 export const separatorVariants = cva("bg-border shrink-0", {
   variants: {
@@ -46,11 +47,13 @@ export function Separator({
   return (
     <Rac.Separator
       orientation={orientation}
-      className={separatorVariants({
-        orientation,
-        variant,
-        className,
-      })}
+      className={twMerge(
+        separatorVariants({
+          orientation,
+          variant,
+          className,
+        }),
+      )}
       {...rest}
     />
   );
