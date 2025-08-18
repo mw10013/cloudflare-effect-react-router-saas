@@ -50,5 +50,4 @@ import { Outlet, useRouteLoaderData } from 'react-router'
 
 ## Testing
 
-- Use vitest version 3.x
 - Use `pnpm -F s test` to run tests for the s package.
