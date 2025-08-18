@@ -1,6 +1,7 @@
-import type { VariantProps } from "tailwind-variants";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import * as Rac from "react-aria-components";
-import { tv } from "tailwind-variants";
+import { twMerge } from "tailwind-merge";
 import { composeTailwindRenderProps } from "./oui-base";
 
 /**
@@ -62,30 +63,32 @@ export function ModalEx({
  * Derived from shadcn SheetContent.
  * Merges with modalStyles so resets zoom and positioning.
  */
-export const sheetModalStyles = tv({
-  base: [
+export const sheetModalVariants = cva(
+  [
     "bg-background fixed left-auto top-auto z-50 flex max-w-none translate-x-0 translate-y-0 flex-col gap-4 rounded-none shadow-lg transition ease-in-out sm:max-w-none",
     "data-[entering]:animate-in data-[entering]:zoom-in-100 data-[entering]:duration-500",
     "data-[exiting]:animate-out data-[exiting]:fill-mode-forwards data-[exiting]:zoom-out-100 data-[exiting]:duration-300",
   ],
-  variants: {
-    side: {
-      right:
-        "data-[entering]:slide-in-from-right data-[exiting]:slide-out-to-right inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm",
-      left: "data-[entering]:slide-in-from-left data-[exiting]:slide-out-to-left inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm",
-      top: "data-[entering]:slide-in-from-top data-[exiting]:slide-out-to-top inset-x-0 top-0 h-auto border-b",
-      bottom:
-        "data-[entering]:slide-in-from-bottom data-[exiting]:slide-out-to-bottom inset-x-0 bottom-0 h-auto border-t",
+  {
+    variants: {
+      side: {
+        right:
+          "data-[entering]:slide-in-from-right data-[exiting]:slide-out-to-right inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm",
+        left: "data-[entering]:slide-in-from-left data-[exiting]:slide-out-to-left inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm",
+        top: "data-[entering]:slide-in-from-top data-[exiting]:slide-out-to-top inset-x-0 top-0 h-auto border-b",
+        bottom:
+          "data-[entering]:slide-in-from-bottom data-[exiting]:slide-out-to-bottom inset-x-0 bottom-0 h-auto border-t",
+      },
+    },
+    defaultVariants: {
+      side: "right",
     },
   },
-  defaultVariants: {
-    side: "right",
-  },
-});
+);
 
 export interface ModalEx1Props
   extends Rac.ModalOverlayProps,
-    Pick<VariantProps<typeof sheetModalStyles>, "side"> {
+    Pick<VariantProps<typeof sheetModalVariants>, "side"> {
   overlayClassName?: Rac.ModalOverlayProps["className"];
 }
 
@@ -105,7 +108,7 @@ export function ModalEx1({
     <ModalOverlay className={overlayClassName} {...props}>
       <Modal
         className={Rac.composeRenderProps(className, (className, renderProps) =>
-          sheetModalStyles({ ...renderProps, side, className }),
+          twMerge(sheetModalVariants({ ...renderProps, side, className })),
         )}
       >
         {children}
