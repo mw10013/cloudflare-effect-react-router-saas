@@ -7,16 +7,11 @@ import { DemoContainer } from "~/components/demo-container";
 
 export const action = async ({ request }: { request: Request }) => {
   const schema = z.object({
-    age: z
-      .string()
-      .nonempty("Required.")
-      .transform((val) => Number(val))
-      .refine((val) => !isNaN(val) && val > 0, { error: "Must be positive." }),
-    quantity: z
-      .string()
-      .nonempty("Required.")
-      .transform((val) => Number(val))
-      .refine((val) => !isNaN(val) && val > 0, { error: "Must be positive." }),
+    age: z.coerce.number().positive("Must be > 0.").int("Must be integer."),
+    quantity: z.coerce
+      .number()
+      .positive("Must be > 0.")
+      .int("Must be integer."),
   });
   const result = schema.safeParse(Object.fromEntries(await request.formData()));
   if (!result.success) {
