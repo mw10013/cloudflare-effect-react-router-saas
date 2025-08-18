@@ -45,7 +45,6 @@
     "react-router": "catalog:",
     "sonner": "catalog:",
     "tailwind-merge": "catalog:",
-    "tailwind-variants": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

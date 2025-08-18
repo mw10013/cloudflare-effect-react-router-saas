@@ -30,7 +30,6 @@
     "react-dom": "catalog:",
     "react-router": "catalog:",
     "tailwind-merge": "catalog:",
-    "tailwind-variants": "catalog:",
     "@hookform/resolvers": "^3.6.0",
     "zod": "catalog:",
     "react-hook-form": "^7.51.5",

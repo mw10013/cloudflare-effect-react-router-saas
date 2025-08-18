@@ -19,5 +19,5 @@ description: "Ensure the Oui component styles match the Shadcn design system for
 - Don't get creative and add styles or make styles up.
 - Don't add any comments to the code.
 - The only transformation allowed on styles
-  - shadcn uses pseudo selectors like `hover:`, `focus:` and you need to use the equivalent React Aria Components data attributes like `data-[hovered]`, `data-[focused]` for applying styles via `tailwind-variants`.
+  - shadcn uses pseudo selectors like `hover:`, `focus:` and you need to use the equivalent React Aria Components data attributes like `data-[hovered]`, `data-[focused]`.
   - shadcn may use data attributes that don't exist in React Aria Components, so you need consult the react aria components documentation to convert to approapriate data attributes.

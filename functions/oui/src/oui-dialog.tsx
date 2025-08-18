@@ -1,5 +1,5 @@
+import type { VariantProps } from "class-variance-authority";
 import type { ReactElement, ReactNode } from "react";
-import type { VariantProps } from "tailwind-variants";
 import React, {
   createContext,
   useCallback,
@@ -12,7 +12,7 @@ import * as Rac from "react-aria-components";
 import { twJoin, twMerge } from "tailwind-merge";
 import { Button } from "./oui-button";
 import { Heading } from "./oui-heading";
-import { ModalEx, ModalEx1, sheetModalStyles } from "./oui-modal";
+import { ModalEx, ModalEx1, sheetModalVariants } from "./oui-modal";
 
 export interface DialogProps extends Rac.DialogProps {
   /**
@@ -308,7 +308,7 @@ export function DialogEx1AlertProvider({ children }: { children: ReactNode }) {
 
 export interface DialogEx2SheetProps
   extends Omit<DialogProps, "role">, // Prevent 'alertdialog' role
-    Pick<VariantProps<typeof sheetModalStyles>, "side"> {
+    Pick<VariantProps<typeof sheetModalVariants>, "side"> {
   triggerElement: string | ReactElement;
   modalClassName?: string;
   overlayClassName?: string;

@@ -1,6 +1,5 @@
 import * as Rac from "react-aria-components";
 import { twJoin, twMerge } from "tailwind-merge";
-import { tv } from "tailwind-variants";
 import { tw } from "./oui-base";
 
 /**
