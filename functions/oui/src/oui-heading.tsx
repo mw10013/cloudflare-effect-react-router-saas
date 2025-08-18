@@ -1,12 +1,12 @@
-import type { VariantProps } from "tailwind-variants";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import * as Rac from "react-aria-components";
-import { tv } from "tailwind-variants";
+import { twMerge } from "tailwind-merge";
 
 /**
  * Derived from shadcn DialogTitle, AlertDialogTitle, PopoverDemo, AccordionHeader
  */
-export const headingStyles = tv({
-  base: "",
+export const headingVariants = cva(undefined, {
   variants: {
     variant: {
       default: "text-lg font-semibold leading-none",
@@ -22,10 +22,10 @@ export const headingStyles = tv({
 
 export interface HeadingProps
   extends Rac.HeadingProps,
-    VariantProps<typeof headingStyles> {}
+    VariantProps<typeof headingVariants> {}
 
 export function Heading({ className, variant, ...rest }: HeadingProps) {
   return (
-    <Rac.Heading className={headingStyles({ className, variant })} {...rest} />
+    <Rac.Heading className={twMerge(headingVariants({ className, variant }))} {...rest} />
   );
 }

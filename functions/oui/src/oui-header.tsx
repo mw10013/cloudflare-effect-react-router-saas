@@ -1,9 +1,9 @@
-import type { VariantProps } from "tailwind-variants";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import * as Rac from "react-aria-components";
-import { tv } from "tailwind-variants";
+import { twMerge } from "tailwind-merge";
 
-export const headerStyles = tv({
-  base: "px-2 py-1.5",
+export const headerVariants = cva("px-2 py-1.5", {
   variants: {
     variant: {
       menu: "text-sm font-medium", // Derived from shadcn DropdownMenuLabel
@@ -21,12 +21,12 @@ export const headerStyles = tv({
 
 export interface HeaderProps
   extends React.ComponentProps<typeof Rac.Header>,
-    VariantProps<typeof headerStyles> {}
+    VariantProps<typeof headerVariants> {}
 
 export function Header({ variant, inset, className, ...rest }: HeaderProps) {
   return (
     <Rac.Header
-      className={headerStyles({ variant, inset, className })}
+      className={twMerge(headerVariants({ variant, inset, className }))}
       {...rest}
     />
   );
