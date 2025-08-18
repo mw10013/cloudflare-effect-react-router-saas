@@ -1,7 +1,9 @@
+import type { VariantProps } from "class-variance-authority";
 import React from "react";
+import { cva } from "class-variance-authority";
 import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react";
 import * as Rac from "react-aria-components";
-import { tv } from "tailwind-variants";
+import { twMerge } from "tailwind-merge";
 import { composeTailwindRenderProps } from "./oui-base";
 import { Button } from "./oui-button";
 import { Popover } from "./oui-popover";
@@ -27,32 +29,34 @@ export function Menu<T extends object>({
 /**
  * Derived from shadcn DropdownMenuItem
  */
-export const menuItemStyles = tv({
-  base: [
+export const menuItemVariants = cva(
+  [
     "relative flex cursor-default select-none items-center gap-x-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors",
     '[&_svg:not([class*="text-"])]:text-muted-foreground [&_svg:not([class*="size-"])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0',
     "data-[focused]:bg-accent data-[focused]:text-accent-foreground",
     "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
   ],
-  variants: {
-    variant: {
-      default: "",
-      destructive: [
-        "text-destructive [&_svg]:text-destructive",
-        "data-[focused]:bg-destructive/10 data-[focused]:text-destructive dark:data-[focused]:bg-destructive/20",
-      ],
+  {
+    variants: {
+      variant: {
+        default: "",
+        destructive: [
+          "text-destructive [&_svg]:text-destructive",
+          "data-[focused]:bg-destructive/10 data-[focused]:text-destructive dark:data-[focused]:bg-destructive/20",
+        ],
+      },
+      selectionMode: {
+        none: "",
+        single: "pl-8",
+        multiple: "pl-8",
+      },
     },
-    selectionMode: {
-      none: "",
-      single: "pl-8",
-      multiple: "pl-8",
+    defaultVariants: {
+      variant: "default",
+      selectionMode: "none",
     },
   },
-  defaultVariants: {
-    variant: "default",
-    selectionMode: "none",
-  },
-});
+);
 
 export interface MenuItemProps<T extends object> extends Rac.MenuItemProps<T> {
   variant?: "default" | "destructive";
@@ -71,11 +75,13 @@ export function MenuItem<T extends object>({
     <Rac.MenuItem
       {...props}
       className={Rac.composeRenderProps(className, (className, renderProps) =>
-        menuItemStyles({
-          ...renderProps,
-          variant,
-          className,
-        }),
+        twMerge(
+          menuItemVariants({
+            variant,
+            ...renderProps,
+            className,
+          }),
+        ),
       )}
     >
       {({ isSelected, selectionMode, hasSubmenu, ...renderProps }) => {
