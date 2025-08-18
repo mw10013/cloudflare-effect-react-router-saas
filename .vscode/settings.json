@@ -12,5 +12,10 @@
       "./functions/s-/app/**",
       "./functions/ui/src/**"
     ]
-  }
+  },
+  "tailwindCSS.classFunctions": ["tw", "cva", "cn"],
+  "tailwindCSS.experimental.classRegex": [
+    // https://www.tailwind-variants.org/docs/getting-started#intellisense-setup-optional
+    ["([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ]
 }
