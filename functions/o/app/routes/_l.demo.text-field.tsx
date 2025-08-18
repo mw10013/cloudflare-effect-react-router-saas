@@ -7,23 +7,26 @@ import { DemoContainer } from "~/components/demo-container";
 
 export const action = async ({ request }: { request: Request }) => {
   const schema = z.object({
-    username: z.string().min(1, "Required"),
+    username: z.string().nonempty("Required."),
   });
   const result = schema.safeParse(Object.fromEntries(await request.formData()));
-  if (result.success) {
-    return { formData: result.data };
+  if (!result.success) {
+    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
+      result.error,
+    );
+    return {
+      formErrors,
+      validationErrors,
+    };
   }
-  const flattened = z.flattenError(result.error);
-  return {
-    formErrors: flattened.formErrors,
-    validationErrors: flattened.fieldErrors,
-  };
+  return { formData: result.data };
 };
 
 export default function RouteComponent({ actionData }: Route.ComponentProps) {
   const submit = useSubmit();
   return (
     <DemoContainer>
+      {/* validationBehavior of 'aria': does not block submit, shows errors via ARIA attributes instead of browser UI */}
       <Rac.Form
         method="post"
         validationBehavior="aria"

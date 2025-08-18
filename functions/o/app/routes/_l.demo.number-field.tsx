@@ -1,66 +1,49 @@
-import type { UnknownException } from "effect/Cause";
 import type { Route } from "./+types/_l.demo.number-field";
-import React from "react";
 import * as Oui from "@workspace/oui";
-import { SchemaEx } from "@workspace/shared";
-import { Effect, Schema } from "effect";
 import * as Rac from "react-aria-components";
 import { useSubmit } from "react-router";
+import { z } from "zod";
 import { DemoContainer } from "~/components/demo-container";
-import { routeEffect } from "~/lib/ReactRouterEx";
 
-const FormDataSchema = Schema.Struct({
-  age: Schema.NonEmptyString.annotations({ message: () => "Required" }).pipe(
-    Schema.compose(Schema.NumberFromString),
-    Schema.positive({ message: () => "Must be positive" }),
-  ),
-  quantity: Schema.NonEmptyString.annotations({
-    message: () => "Required",
-  }).pipe(
-    Schema.compose(Schema.NumberFromString),
-    Schema.positive({ message: () => "Must be positive" }),
-  ),
-});
-
-export const action = routeEffect(
-  ({
-    request,
-  }: Route.ActionArgs): Effect.Effect<
-    // Explicitly define A to prevent ts(2742) from inferred non-portable types.
-    {
-      formData?: Schema.Schema.Type<typeof FormDataSchema>;
-      validationErrors?: SchemaEx.ValidationErrors;
-    },
-    UnknownException
-  > =>
-    Effect.gen(function* () {
-      const formData = yield* SchemaEx.decodeRequestFormData({
-        request,
-        schema: FormDataSchema,
-      });
-      return {
-        formData,
-      };
-    }).pipe(SchemaEx.catchValidationError),
-);
+export const action = async ({ request }: { request: Request }) => {
+  const schema = z.object({
+    age: z
+      .string()
+      .nonempty("Required.")
+      .transform((val) => Number(val))
+      .refine((val) => !isNaN(val) && val > 0, { error: "Must be positive." }),
+    quantity: z
+      .string()
+      .nonempty("Required.")
+      .transform((val) => Number(val))
+      .refine((val) => !isNaN(val) && val > 0, { error: "Must be positive." }),
+  });
+  const result = schema.safeParse(Object.fromEntries(await request.formData()));
+  if (!result.success) {
+    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
+      result.error,
+    );
+    return {
+      formErrors,
+      validationErrors,
+    };
+  }
+  return { formData: result.data };
+};
 
 export default function RouteComponent({ actionData }: Route.ComponentProps) {
-  const [formData, setFormData] = React.useState<any>(null);
   const submit = useSubmit();
-
   return (
     <DemoContainer>
       <Rac.Form
         method="post"
+        validationBehavior="aria"
         validationErrors={actionData?.validationErrors}
-        className="grid w-full max-w-sm gap-6"
         onSubmit={(e) => {
           e.preventDefault();
-          const data = Object.fromEntries(new FormData(e.currentTarget));
-          console.log({ data });
-          setFormData(data);
           submit(e.currentTarget);
         }}
+        className="grid w-full max-w-sm gap-6"
       >
         <Oui.NumberFieldEx
           name="age"
@@ -76,7 +59,6 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
         <Oui.Button type="submit">Submit</Oui.Button>
       </Rac.Form>
       <pre>{JSON.stringify({ actionData }, null, 2)}</pre>
-      <pre>{JSON.stringify({ formData }, null, 2)}</pre>
     </DemoContainer>
   );
 }
