@@ -4,11 +4,10 @@ import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
 import {
   composeTailwindRenderProps,
-  disabledStyles,
-  focusVisibleStyles,
+  groupFocusVisibleStyles,
 } from "./oui-base";
 import { FieldError } from "./oui-field-error";
-import { baseLabelStyles, Label } from "./oui-label";
+import { Label, labelComponentStyles } from "./oui-label";
 import { Text } from "./oui-text";
 
 /**
@@ -41,7 +40,7 @@ export function Radio({
   return (
     <Rac.Radio
       className={composeTailwindRenderProps(className, [
-        baseLabelStyles,
+        labelComponentStyles,
         "group items-start gap-3",
       ])}
       {...props}
@@ -52,9 +51,8 @@ export function Radio({
             data-slot="radio-group-item"
             className={twMerge(
               [
-                focusVisibleStyles,
-                disabledStyles,
-                "border-input text-primary dark:bg-input/30 shadow-xs relative aspect-square size-4 shrink-0 rounded-full border outline-none transition-[color,box-shadow]",
+                groupFocusVisibleStyles,
+                "border-input text-primary dark:bg-input/30 shadow-xs relative aspect-square size-4 shrink-0 rounded-full border transition-[color,box-shadow]",
                 "group-data-[invalid]:ring-destructive/20 group-data-[invalid]:dark:ring-destructive/40 group-data-[invalid]:border-destructive",
               ],
               radioGroupItemClassName,
