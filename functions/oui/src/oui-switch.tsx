@@ -28,8 +28,6 @@ export function SwitchIndicator({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    // data-[state=checked]:bg-primary data-[state=unchecked]:bg-input dark:data-[state=unchecked]:bg-input/80",
-    // bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground pointer-events-none block size-4 rounded-full ring-0 transition-transform data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0
     <div
       className={twMerge(
         groupFocusVisibleStyles,
@@ -67,10 +65,10 @@ export function SwitchEx({
     <div className={twMerge("flex flex-col gap-0.5", containerClassName)}>
       <Switch
         {...props}
-        className={composeTailwindRenderProps(
-          className,
-          indicatorPosition === "end" ? "justify-between" : "",
-        )}
+        className={composeTailwindRenderProps(className, [
+          "peer",
+          indicatorPosition === "end" && "justify-between",
+        ])}
         aria-describedby={descriptionId}
       >
         {(renderProps) => (
@@ -85,13 +83,12 @@ export function SwitchEx({
           </>
         )}
       </Switch>
-      {/* TODO: SwitchEx description spacer when indicatorPosition = end */}
       {description && (
         <Text
           id={descriptionId}
           slot="description"
           className={twMerge(
-            props.isDisabled ? "opacity-60" : undefined,
+            "peer-data-[disabled]:opacity-60",
             descriptionClassName,
           )}
         >
