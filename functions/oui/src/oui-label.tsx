@@ -1,9 +1,11 @@
 import * as Rac from "react-aria-components";
 import { twJoin, twMerge } from "tailwind-merge";
-import { disabledStyles, tw } from "./oui-base";
+import { tw } from "./oui-base";
 
 /**
  * Derived from shadcn Label and FormLabel
+ * 
+ * For RAC components that structure with a 'label' prefer 'labelComponentStyles' instead.
  */
 export const baseLabelStyles = tw`flex select-none items-center gap-2 text-sm font-medium leading-none`;
 

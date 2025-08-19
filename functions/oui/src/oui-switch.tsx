@@ -5,7 +5,7 @@ import {
   composeTailwindRenderProps,
   groupFocusVisibleStyles,
 } from "./oui-base";
-import { baseLabelStyles } from "./oui-label";
+import { labelComponentStyles } from "./oui-label";
 import { Text } from "./oui-text";
 
 export function Switch({ className, ...props }: Rac.SwitchProps) {
@@ -13,7 +13,7 @@ export function Switch({ className, ...props }: Rac.SwitchProps) {
     <Rac.Switch
       {...props}
       className={composeTailwindRenderProps(className, [
-        baseLabelStyles,
+        labelComponentStyles,
         "group",
       ])}
     />
@@ -31,7 +31,7 @@ export function SwitchIndicator({
     <div
       className={twMerge(
         groupFocusVisibleStyles,
-        "group-data-[selected]:bg-primary bg-input dark:bg-input/80 shadow-xs inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full border border-transparent transition-all group-data-[disabled]:cursor-not-allowed",
+        "group-data-[selected]:bg-primary bg-input dark:bg-input/80 shadow-xs inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full border border-transparent transition-all",
         className,
       )}
       {...props}
