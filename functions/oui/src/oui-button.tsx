@@ -2,23 +2,18 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
+import { disabledStyles, focusVisibleStyles } from "./oui-base";
 
 /**
  * Derived from shadcn Button
- * Variant utility classes changed to data-attributes per RAC (eg. hover:* -> data-[hovered]:*)
  * Rac.Button does not support aria-invalid or have data-invalid.
- * May want to use focusVisibleStyles and disabledStyles from oui-base in the future.
- * May need workaround for TypeScript's excess property check with weak types when spreading renderProps.
- *
- * Example:
- * ```js
- * isPressed: {
- *   true: "",
- * }
- * ```
  */
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none data-[focus-visible]:border-ring data-[focus-visible]:ring-ring/50 data-[focus-visible]:ring-[3px]",
+  [
+    focusVisibleStyles,
+    disabledStyles,
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none",
+  ],
   {
     variants: {
       variant: {
