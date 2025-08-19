@@ -131,7 +131,7 @@ export function AppSidebar({
     },
   ];
 
-  const YourAppLogoIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  const AppLogoIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg viewBox="0 0 100 100" {...props}>
       <circle cx="50" cy="50" r="40" fill="currentColor" />
     </svg>
@@ -142,21 +142,19 @@ export function AppSidebar({
       <SidebarHeader>
         <div className="flex w-full items-center gap-2 p-2">
           <Rac.Link href="/" aria-label="Home">
-            <YourAppLogoIcon className="text-primary size-7" />
+            <AppLogoIcon className="text-primary size-7" />
           </Rac.Link>
-          {organizations.length > 0 && (
-            <OrganizationSwitcher
-              organizations={organizations}
-              currentOrganizationId={organization.id}
-            />
-          )}
+          <OrganizationSwitcher
+            organizations={organizations}
+            organization={organization}
+          />
         </div>
       </SidebarHeader>
       <SidebarContent>
         <Oui.SidebarTreeEx aria-label="Organization Navigation" items={items} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={{ email: user.email }} />
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   );
@@ -164,35 +162,25 @@ export function AppSidebar({
 
 export function OrganizationSwitcher({
   organizations,
-  currentOrganizationId,
+  organization,
 }: {
   organizations: Organization[];
-  currentOrganizationId: string;
+  organization: Organization;
 }) {
   const navigate = useNavigate();
-  const activeOrg = organizations.find(
-    (org) => org.id === currentOrganizationId,
-  );
-
-  if (!activeOrg) {
-    return null;
-  }
-
-  const handleOrgSelection = (key: React.Key) => {
-    navigate(`/app/${key}`);
-  };
-
   return (
     <Oui.MenuEx
       className="min-w-56 rounded-lg"
-      onAction={handleOrgSelection}
+      onAction={(key: React.Key) => {
+        navigate(`/app/${key}`);
+      }}
       triggerElement={
         <Oui.Button
           variant="ghost"
           className="h-auto flex-1 items-center justify-between p-0 text-left font-medium data-[hovered]:bg-transparent"
         >
           <div className="grid leading-tight">
-            <span className="truncate font-medium">{activeOrg.name}</span>
+            <span className="truncate font-medium">{organization.name}</span>
           </div>
           <ChevronsUpDown className="text-muted-foreground ml-2 size-4" />
         </Oui.Button>
