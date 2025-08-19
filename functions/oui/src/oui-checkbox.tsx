@@ -4,10 +4,9 @@ import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
 import {
   composeTailwindRenderProps,
-  disabledStyles,
-  focusVisibleStyles,
+  groupFocusVisibleStyles,
 } from "./oui-base";
-import { baseLabelStyles } from "./oui-label";
+import { labelComponentStyles } from "./oui-label";
 import { Text } from "./oui-text";
 
 export interface CheckboxProps extends Rac.CheckboxProps {
@@ -28,7 +27,7 @@ export function Checkbox({
     <Rac.Checkbox
       {...props}
       className={composeTailwindRenderProps(className, [
-        baseLabelStyles,
+        labelComponentStyles,
         "group items-start gap-3",
       ])}
     >
@@ -38,13 +37,11 @@ export function Checkbox({
             data-slot="checkbox-indicator"
             className={twMerge(
               [
-                focusVisibleStyles,
-                disabledStyles,
-                "data-[disabled]:cursor-not-allowed",
-                "border-input dark:bg-input/30 shadow-xs size-4 shrink-0 rounded-[4px] border outline-none transition-shadow",
-                "data-[selected]:bg-primary data-[selected]:text-primary-foreground dark:data-[selected]:bg-primary data-[selected]:border-primary",
-                "data-[interminate]:bg-primary data-[interminate]:text-primary-foreground dark:data-[interminate]:bg-primary data-[interminate]:border-primary",
-                "data-[invalid]:ring-destructive/20 data-[invalid]:dark:ring-destructive/40 data-[invalid]:border-destructive",
+                groupFocusVisibleStyles,
+                "border-input dark:bg-input/30 shadow-xs size-4 shrink-0 rounded-[4px] border transition-shadow",
+                "group-data-[selected]:bg-primary group-data-[selected]:text-primary-foreground dark:group-data-[selected]:bg-primary group-data-[selected]:border-primary",
+                "group-data-[interminate]:bg-primary group-data-[interminate]:text-primary-foreground dark:group-data-[interminate]:bg-primary group-data-[interminate]:border-primary",
+                "group-data-[invalid]:ring-destructive/20 group-data-[invalid]:dark:ring-destructive/40 group-data-[invalid]:border-destructive",
               ],
               indicatorClassName,
             )}

@@ -1,6 +1,6 @@
 import * as Rac from "react-aria-components";
 import { twJoin, twMerge } from "tailwind-merge";
-import { tw } from "./oui-base";
+import { disabledStyles, tw } from "./oui-base";
 
 /**
  * Derived from shadcn Label and FormLabel
@@ -8,12 +8,14 @@ import { tw } from "./oui-base";
 export const baseLabelStyles = tw`flex select-none items-center gap-2 text-sm font-medium leading-none`;
 
 /**
- * Label styles for RAC components that structure with a <label> and have render props. Eg. radio, checkbox and switch.
+ * Label styles for RAC components that structure with a 'label' and have render props (eg. radio, checkbox and switch).
+ * It styles disabled. It does not style focus-visible.
  * Derived from shadcn Label and FormLabel
  */
-export const labelStyles = twJoin(
+export const labelComponentStyles = twJoin(
   baseLabelStyles,
-  "data-[disabled]:opacity-50",
+  // Cannot use 'disabledStyles' from oui-base since it includes pointer-events-none preventing cursor style.
+  "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
 );
 
 export function Label({ className, ...props }: Rac.LabelProps) {
