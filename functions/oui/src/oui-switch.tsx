@@ -28,10 +28,12 @@ export function SwitchIndicator({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
+    // data-[state=checked]:bg-primary data-[state=unchecked]:bg-input dark:data-[state=unchecked]:bg-input/80",
+    // bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground pointer-events-none block size-4 rounded-full ring-0 transition-transform data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0
     <div
       className={twMerge(
         groupFocusVisibleStyles,
-        "group-data-[selected]:bg-primary bg-input dark:bg-input/80 shadow-xs inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full border border-transparent transition-all",
+        "bg-input group-data-[selected]:bg-primary dark:bg-input/80 dark:group-data-[selected]:bg-primary shadow-xs inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full border border-transparent transition-all",
         className,
       )}
       {...props}

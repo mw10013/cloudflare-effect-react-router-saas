@@ -13,7 +13,14 @@
       "./functions/ui/src/**"
     ]
   },
-  "tailwindCSS.classFunctions": ["tw", "cva", "cn", "tv"],
+  "tailwindCSS.classFunctions": [
+    "tw",
+    "twMerge",
+    "twJoin",
+    "composeTailwindRenderProps",
+    "cva",
+    "cn"
+  ],
   "tailwindCSS.experimental.classRegex": [
     // https://www.tailwind-variants.org/docs/getting-started#intellisense-setup-optional
     ["([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*).*?[\"'`]"]

@@ -22,8 +22,9 @@ const config = {
     "tw",
     "twMerge",
     "twJoin",
-    "tv",
     "composeTailwindRenderProps",
+    "cva",
+    "cn",
   ],
 
   plugins: [
