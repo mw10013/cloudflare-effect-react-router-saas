@@ -12,7 +12,8 @@ build.log
 # Cloudflare
 .wrangler/
 .dev.vars
-.env
+.env*
+!.env.example
 
 # React Router
 .react-router/
@@ -27,3 +28,4 @@ playwright-report/
 .DS_Store
 .tmp/
 .nc
+*.tsbuildinfo
