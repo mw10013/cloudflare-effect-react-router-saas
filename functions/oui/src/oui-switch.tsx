@@ -36,7 +36,7 @@ export function SwitchIndicator({
       )}
       {...props}
     >
-      <span className="bg-background dark:bg-foreground dark:group-data-[selected]:bg-primary-foreground pointer-events-none block size-4 rounded-full ring-0 transition-transform group-data-[selected=false]:translate-x-0 group-data-[selected]:translate-x-[calc(100%-2px)]" />
+      <span className="bg-background dark:bg-foreground dark:group-data-[selected]:bg-primary-foreground pointer-events-none block size-4 rounded-full ring-0 transition-transform translate-x-0 group-data-[selected]:translate-x-[calc(100%-2px)]" />
     </div>
   );
 }
