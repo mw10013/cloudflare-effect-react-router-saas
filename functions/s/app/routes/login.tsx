@@ -16,7 +16,9 @@ export async function action({ request, context }: Route.ActionArgs) {
   const schema = z.object({
     email: z.email(),
   });
-  const parseResult = schema.safeParse(Object.fromEntries(await request.formData()));
+  const parseResult = schema.safeParse(
+    Object.fromEntries(await request.formData()),
+  );
   if (!parseResult.success) {
     const { formErrors, fieldErrors: validationErrors } = z.flattenError(
       parseResult.error,
@@ -27,13 +29,11 @@ export async function action({ request, context }: Route.ActionArgs) {
     };
   }
   const { auth } = context.get(appLoadContext);
-  const response = await auth.api.signInMagicLink({
-    asResponse: true,
+  await auth.api.signInMagicLink({
     headers: request.headers,
     body: { email: parseResult.data.email, callbackURL: "/magic-link" },
   });
-  if (!response.ok) throw response;
-  return { magicLinkSent: response.ok };
+  return { magicLinkSent: true };
 }
 
 export default function RouteComponent({ actionData }: Route.ComponentProps) {
@@ -62,7 +62,12 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Rac.Form method="post" className="flex flex-col gap-6">
+          <Rac.Form
+            method="post"
+            validationBehavior="aria"
+            validationErrors={actionData?.validationErrors}
+            className="flex flex-col gap-6"
+          >
             <Oui.TextFieldEx
               name="email"
               type="email"
