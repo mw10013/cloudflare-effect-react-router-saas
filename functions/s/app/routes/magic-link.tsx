@@ -7,16 +7,14 @@ export async function loader({ request, context }: Route.LoaderArgs) {
   const error = url.searchParams.get("error");
   if (error) return { error };
 
-  const { auth } = context.get(appLoadContext);
-  const session = await auth.api.getSession({ headers: request.headers });
+  const { session } = context.get(appLoadContext);
   if (session?.user.role === "admin") return redirect("/admin");
   else if (session?.user.role === "user") return redirect("/app");
 
-  return redirect("/");
+  return { error: `Invalid role: ${session?.user.role}` };
 }
 
 export default function RouteComponent({ loaderData }: Route.ComponentProps) {
-  if (!loaderData?.error) return null;
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <h1 className="text-2xl font-bold">Magic Link Error</h1>
