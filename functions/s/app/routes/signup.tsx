@@ -62,13 +62,13 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <FormErrorAlert formErrors={actionData?.formErrors} />
           <Rac.Form
             method="post"
             validationBehavior="aria"
             validationErrors={actionData?.validationErrors}
             className="flex flex-col gap-6"
           >
+            <FormErrorAlert formErrors={actionData?.formErrors} />
             <Oui.TextFieldEx
               name="email"
               type="email"

@@ -10,10 +10,9 @@ import {
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
-import { appLoadContext } from "~/lib/middleware";
 import * as z from "zod";
 import { FormErrorAlert } from "~/components/FormAlert";
-
+import { appLoadContext } from "~/lib/middleware";
 
 export async function action({ request, context }: Route.ActionArgs) {
   const schema = z.object({
@@ -60,13 +59,13 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <FormErrorAlert formErrors={actionData?.formErrors} />
           <Rac.Form
             method="post"
             validationBehavior="aria"
             validationErrors={actionData?.validationErrors}
             className="flex flex-col gap-6"
           >
+            <FormErrorAlert formErrors={actionData?.formErrors} />
             <Oui.TextFieldEx
               name="email"
               type="email"
@@ -101,4 +100,3 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
     </div>
   );
 }
-
