@@ -1,6 +1,11 @@
 import type { Route } from "./+types/signup";
 import * as Oui from "@workspace/oui";
 import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@workspace/ui/components/ui/alert";
+import {
   Card,
   CardContent,
   CardDescription,
@@ -10,20 +15,31 @@ import {
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
+import * as z from "zod";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function action({ request, context }: Route.ActionArgs) {
-  const formData = await request.formData();
-  const email = formData.get("email");
-  const password = formData.get("password");
-  if (typeof email !== "string" || typeof password !== "string") {
-    throw new Error("Invalid form data");
+  const schema = z.object({
+    email: z.email(),
+    password: z.string().min(6),
+  });
+  const parseResult = schema.safeParse(
+    Object.fromEntries(await request.formData()),
+  );
+  if (!parseResult.success) {
+    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
+      parseResult.error,
+    );
+    return {
+      formErrors,
+      validationErrors,
+    };
   }
   const { auth } = context.get(appLoadContext);
   const response = await auth.api.signUpEmail({
     body: {
-      email,
-      password,
+      email: parseResult.data.email,
+      password: parseResult.data.password,
       name: "",
       callbackURL: "/email-verification", // http://localhost:3000/api/auth/verify-email?token=ey&callbackURL=/email-verification
     },
@@ -39,7 +55,7 @@ export async function action({ request, context }: Route.ActionArgs) {
   return redirect("/");
 }
 
-export default function RouteComponent() {
+export default function RouteComponent({ actionData }: Route.ComponentProps) {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <Card className="w-full max-w-sm">
@@ -50,7 +66,24 @@ export default function RouteComponent() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Rac.Form method="post" className="flex flex-col gap-6">
+          {(actionData?.formErrors?.length ?? 0) > 0 && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>
+                {(actionData?.formErrors ?? []).map(
+                  (err: string, i: number) => (
+                    <div key={i}>{err}</div>
+                  ),
+                )}
+              </AlertDescription>
+            </Alert>
+          )}
+          <Rac.Form
+            method="post"
+            validationBehavior="aria"
+            validationErrors={actionData?.validationErrors}
+            className="flex flex-col gap-6"
+          >
             <Oui.TextFieldEx
               name="email"
               type="email"
