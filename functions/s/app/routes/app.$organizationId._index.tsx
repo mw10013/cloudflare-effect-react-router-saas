@@ -8,7 +8,9 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
-import { redirect, useSubmit } from "react-router";
+import { useSubmit } from "react-router";
+import * as z from "zod";
+import { FormErrorAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function loader({ request, context }: Route.LoaderArgs) {
@@ -18,41 +20,43 @@ export async function loader({ request, context }: Route.LoaderArgs) {
   return {
     invitations: await auth.api.listUserInvitations({
       headers: request.headers,
-      query: { email: session?.user.email },
+      query: { email: session.user.email },
     }),
   };
 }
 
 export async function action({ request, context }: Route.ActionArgs) {
-  const { auth } = context.get(appLoadContext);
+  const schema = z.object({
+    invitationId: z.string().min(1, "Invitation is required"),
+    intent: z.enum(["accept", "reject"]),
+  });
   const formData = await request.formData();
-  const invitationId = formData.get("invitationId");
-  const intent = formData.get("intent");
-  if (typeof invitationId !== "string" || !invitationId) {
-    return { error: "Invalid invitation." };
+  const parseResult = schema.safeParse(Object.fromEntries(formData));
+  if (!parseResult.success) {
+    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
+      parseResult.error,
+    );
+    return {
+      formErrors,
+      validationErrors,
+    };
   }
-  try {
-    if (intent === "accept") {
-      const response = await auth.api.acceptInvitation({
-        body: { invitationId },
-        headers: request.headers,
-        asResponse: true,
-      });
-      if (!response.ok) throw response;
-      return { success: "Invitation accepted." };
-    } else if (intent === "reject") {
-      const response = await auth.api.rejectInvitation({
-        body: { invitationId },
-        headers: request.headers,
-        asResponse: true,
-      });
-      if (!response.ok) throw response;
-      return { success: "Invitation rejected." };
-    } else {
-      return { error: "Invalid action." };
-    }
-  } catch (error: any) {
-    return { error: error?.message ?? "An error occurred." };
+  const { auth } = context.get(appLoadContext);
+  const { invitationId, intent } = parseResult.data;
+  if (intent === "accept") {
+    await auth.api.acceptInvitation({
+      body: { invitationId },
+      headers: request.headers,
+    });
+    return { success: "Invitation accepted." };
+  } else if (intent === "reject") {
+    await auth.api.rejectInvitation({
+      body: { invitationId },
+      headers: request.headers,
+    });
+    return { success: "Invitation rejected." };
+  } else {
+    return { error: `Invalid intent: ${intent}` };
   }
 }
 
@@ -64,23 +68,14 @@ export default function RouteComponent({
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const nativeEvent = event.nativeEvent;
     // https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent
-    if (nativeEvent instanceof SubmitEvent) {
-      const submitter = nativeEvent.submitter;
-      if (
-        submitter &&
-        (submitter instanceof HTMLButtonElement ||
-          submitter instanceof HTMLInputElement)
-      ) {
-        submit(submitter);
-      } else {
-        console.error(
-          "Form submission did not originate from a recognized button element (submitter was not a button).",
-        );
-      }
-    } else {
-      console.error("Form submission event was not a SubmitEvent.");
+    if (
+      event.nativeEvent instanceof SubmitEvent &&
+      event.nativeEvent.submitter &&
+      (event.nativeEvent.submitter instanceof HTMLButtonElement ||
+        event.nativeEvent.submitter instanceof HTMLInputElement)
+    ) {
+      submit(event.nativeEvent.submitter);
     }
   };
 
@@ -124,7 +119,14 @@ export default function RouteComponent({
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Rac.Form onSubmit={handleFormSubmit} method="post">
+                    <Rac.Form
+                      onSubmit={handleFormSubmit}
+                      method="post"
+                      validationBehavior="aria"
+                      validationErrors={actionData?.validationErrors}
+                      className="flex flex-col gap-2"
+                    >
+                      <FormErrorAlert formErrors={actionData?.formErrors} />
                       <input type="hidden" name="invitationId" value={inv.id} />
                       <Oui.Button
                         type="submit"
@@ -136,7 +138,14 @@ export default function RouteComponent({
                         Accept
                       </Oui.Button>
                     </Rac.Form>
-                    <Rac.Form onSubmit={handleFormSubmit} method="post">
+                    <Rac.Form
+                      onSubmit={handleFormSubmit}
+                      method="post"
+                      validationBehavior="aria"
+                      validationErrors={actionData?.validationErrors}
+                      className="flex flex-col gap-2"
+                    >
+                      <FormErrorAlert formErrors={actionData?.formErrors} />
                       <input type="hidden" name="invitationId" value={inv.id} />
                       <Oui.Button
                         type="submit"
