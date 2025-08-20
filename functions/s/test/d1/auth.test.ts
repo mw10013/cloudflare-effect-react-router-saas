@@ -454,13 +454,14 @@ describe("auth forgot password flow", () => {
       body: form,
     });
 
-    const response = await resetPasswordAction({
+    const result = await resetPasswordAction({
       request,
       context: await c.context(),
       params: {},
     });
 
-    expect(response.status).toBe(302);
+    expectInstanceOf(result, Response);
+    expect(result.status).toBe(302);
   });
 
   it("signs in with new password", async () => {

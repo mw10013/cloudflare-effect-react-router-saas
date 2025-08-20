@@ -2,6 +2,8 @@ import type { Route } from "./+types/accept-invitation.$invitationId";
 import * as Oui from "@workspace/oui";
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
+import * as z from "zod";
+import { FormErrorAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function loader({
@@ -9,8 +11,7 @@ export async function loader({
   params: { invitationId },
 }: Route.LoaderArgs) {
   const { session } = context.get(appLoadContext);
-  if (!session) return { needsAuth: true };
-  return { needsAuth: false, invitationId };
+  return { needsAuth: !session, invitationId };
 }
 
 export async function action({
@@ -18,26 +19,32 @@ export async function action({
   context,
   params: { invitationId },
 }: Route.ActionArgs) {
-  const { auth } = context.get(appLoadContext);
+  const schema = z.object({
+    intent: z.enum(["accept", "reject"]),
+  });
   const formData = await request.formData();
-  const intent = formData.get("intent");
-  if (typeof invitationId !== "string" || !invitationId) {
-    return { error: "Invalid invitation link." };
+  const parseResult = schema.safeParse(Object.fromEntries(formData));
+  if (!parseResult.success) {
+    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
+      parseResult.error,
+    );
+    return {
+      formErrors,
+      validationErrors,
+    };
   }
+  const { auth } = context.get(appLoadContext);
+  const { intent } = parseResult.data;
   if (intent === "accept") {
-    const response = await auth.api.acceptInvitation({
+    await auth.api.acceptInvitation({
       body: { invitationId },
       headers: request.headers,
-      asResponse: true,
     });
-    if (!response.ok) throw response;
   } else if (intent === "reject") {
-    const response = await auth.api.rejectInvitation({
+    await auth.api.rejectInvitation({
       body: { invitationId },
       headers: request.headers,
-      asResponse: true,
     });
-    if (!response.ok) throw response;
   }
   return redirect("/app");
 }
@@ -46,7 +53,7 @@ export default function RouteComponent({
   loaderData,
   actionData,
 }: Route.ComponentProps) {
-  if (loaderData?.needsAuth) {
+  if (loaderData.needsAuth) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center">
         <Oui.Text>
@@ -60,11 +67,14 @@ export default function RouteComponent({
   }
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
-      <Rac.Form method="post" className="flex w-full max-w-sm flex-col gap-6">
+      <Rac.Form
+        method="post"
+        validationBehavior="aria"
+        validationErrors={actionData?.validationErrors}
+        className="flex w-full max-w-sm flex-col gap-6"
+      >
         <Oui.Text>Would you like to accept or reject this invitation?</Oui.Text>
-        {actionData?.error && (
-          <Oui.Text className="text-destructive">{actionData.error}</Oui.Text>
-        )}
+        <FormErrorAlert formErrors={actionData?.formErrors} />
         <div className="mt-4 flex gap-4">
           <Oui.Button
             type="submit"
