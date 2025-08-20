@@ -9,19 +9,28 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
+import * as z from "zod";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function action({ request, context }: Route.ActionArgs) {
-  const formData = await request.formData();
-  const email = formData.get("email");
-  if (typeof email !== "string") {
-    throw new Error("Invalid form data");
+  const schema = z.object({
+    email: z.email(),
+  });
+  const parseResult = schema.safeParse(Object.fromEntries(await request.formData()));
+  if (!parseResult.success) {
+    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
+      parseResult.error,
+    );
+    return {
+      formErrors,
+      validationErrors,
+    };
   }
   const { auth } = context.get(appLoadContext);
   const response = await auth.api.signInMagicLink({
     asResponse: true,
     headers: request.headers,
-    body: { email, callbackURL: "/magic-link" },
+    body: { email: parseResult.data.email, callbackURL: "/magic-link" },
   });
   if (!response.ok) throw response;
   return { magicLinkSent: response.ok };

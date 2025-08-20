@@ -13,17 +13,17 @@ export const action = async ({ request }: { request: Request }) => {
       .positive("Must be > 0.")
       .int("Must be integer."),
   });
-  const result = schema.safeParse(Object.fromEntries(await request.formData()));
-  if (!result.success) {
+  const parseResult = schema.safeParse(Object.fromEntries(await request.formData()));
+  if (!parseResult.success) {
     const { formErrors, fieldErrors: validationErrors } = z.flattenError(
-      result.error,
+      parseResult.error,
     );
     return {
       formErrors,
       validationErrors,
     };
   }
-  return { formData: result.data };
+  return { formData: parseResult.data };
 };
 
 export default function RouteComponent({ actionData }: Route.ComponentProps) {

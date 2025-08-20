@@ -9,17 +9,17 @@ export const action = async ({ request }: { request: Request }) => {
   const schema = z.object({
     username: z.string().nonempty("Required."),
   });
-  const result = schema.safeParse(Object.fromEntries(await request.formData()));
-  if (!result.success) {
+  const parseResult = schema.safeParse(Object.fromEntries(await request.formData()));
+  if (!parseResult.success) {
     const { formErrors, fieldErrors: validationErrors } = z.flattenError(
-      result.error,
+      parseResult.error,
     );
     return {
       formErrors,
       validationErrors,
     };
   }
-  return { formData: result.data };
+  return { formData: parseResult.data };
 };
 
 export default function RouteComponent({ actionData }: Route.ComponentProps) {
