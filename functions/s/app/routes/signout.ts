@@ -4,10 +4,9 @@ import { appLoadContext } from "~/lib/middleware";
 
 export async function action({ request, context }: Route.ActionArgs) {
   const { auth } = context.get(appLoadContext);
-  const response = await auth.api.signOut({
+  const { headers } = await auth.api.signOut({
     headers: request.headers,
-    asResponse: true,
+    returnHeaders: true,
   });
-  if (!response.ok) throw response;
-  return redirect("/", { headers: response.headers });
+  return redirect("/", { headers });
 }
