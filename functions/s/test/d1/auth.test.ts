@@ -24,14 +24,12 @@ async function createTestContext() {
 
   const mockSendResetPassword = vi.fn().mockResolvedValue(undefined);
   const mockSendVerificationEmail = vi.fn().mockResolvedValue(undefined);
-  const mockAfterEmailVerification = vi.fn().mockResolvedValue(undefined);
   const mockSendMagicLink = vi.fn().mockResolvedValue(undefined);
   const mockSendInvitationEmail = vi.fn().mockResolvedValue(undefined);
   const auth = createAuth({
     d1: env.D1,
     sendResetPassword: mockSendResetPassword,
     sendVerificationEmail: mockSendVerificationEmail,
-    afterEmailVerification: mockAfterEmailVerification,
     sendMagicLink: mockSendMagicLink,
     sendInvitationEmail: mockSendInvitationEmail,
   });
