@@ -9,21 +9,28 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
+import * as z from "zod";
+import { FormErrorAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function action({ request, context }: Route.ActionArgs) {
-  const formData = await request.formData();
-  const email = formData.get("email");
-  if (typeof email !== "string") {
-    throw new Error("Invalid form data");
+  const schema = z.object({
+    email: z.email(),
+  });
+  const parseResult = schema.safeParse(
+    Object.fromEntries(await request.formData()),
+  );
+  if (!parseResult.success) {
+    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
+      parseResult.error,
+    );
+    return { formErrors, validationErrors };
   }
   const { auth } = context.get(appLoadContext);
-  const response = await auth.api.forgetPassword({
-    body: { email, redirectTo: "/reset-password" },
-    asResponse: true,
+  const result = await auth.api.forgetPassword({
+    body: { email: parseResult.data.email, redirectTo: "/reset-password" },
   });
-  if (!response.ok) throw response;
-  return { emailSent: response.ok };
+  return { emailSent: result.status };
 }
 
 export default function RouteComponent({ actionData }: Route.ComponentProps) {
@@ -52,7 +59,13 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Rac.Form method="post" className="flex flex-col gap-6">
+          <Rac.Form
+            method="post"
+            validationBehavior="aria"
+            validationErrors={actionData?.validationErrors}
+            className="flex flex-col gap-6"
+          >
+            <FormErrorAlert formErrors={actionData?.formErrors} />
             <Oui.TextFieldEx
               name="email"
               type="email"
