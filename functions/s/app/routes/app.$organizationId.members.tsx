@@ -22,10 +22,10 @@ export async function loader({
   params: { organizationId },
 }: Route.LoaderArgs) {
   const { auth, session } = context.get(appLoadContext);
-  if (!session || !session.session.activeOrganizationId)
+  if (!session)
     throw new Error("Missing session or active organization");
   return {
-    organization: await auth.api.getFullOrganization({
+    fullOrganization: await auth.api.getFullOrganization({
       headers: request.headers,
       query: {
         organizationId,
@@ -34,22 +34,6 @@ export async function loader({
   };
 }
 
-// export const loader = ReactRouterEx.routeEffect(() =>
-//   Effect.gen(function* () {
-//     const appLoadContext = yield* ReactRouterEx.AppLoadContext;
-//     const accountMember = yield* Effect.fromNullable(
-//       appLoadContext.accountMember,
-//     );
-//     const members = yield* IdentityMgr.getAccountMembers(accountMember.account);
-//     return {
-//       accountMember,
-//       userId: accountMember.userId,
-//       ownerId: accountMember.account.userId,
-//       canEdit: appLoadContext.permissions.has("member:edit"),
-//       members,
-//     };
-//   }),
-// );
 
 // const inviteMembers = (emails: ReadonlySet<User["email"]>) =>
 //   ReactRouterEx.AppLoadContext.pipe(
@@ -165,7 +149,7 @@ export async function loader({
  * | Leave account  | No            | N/A     | Yes (if not owner)        |
  */
 export default function RouteComponent({
-  loaderData: { organization },
+  loaderData: { fullOrganization },
   // loaderData: { members, userId, ownerId, canEdit, accountMember },
   actionData,
 }: Route.ComponentProps) {
@@ -301,7 +285,7 @@ export default function RouteComponent({
           )} */}
         </CardContent>
       </Card>
-      <pre>{JSON.stringify({ organization, actionData }, null, 2)}</pre>
+      <pre>{JSON.stringify({ fullOrganization, actionData }, null, 2)}</pre>
     </div>
   );
 }
