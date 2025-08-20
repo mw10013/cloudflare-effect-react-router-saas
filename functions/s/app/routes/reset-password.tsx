@@ -10,6 +10,8 @@ import {
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
+import * as z from "zod";
+import { FormErrorAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -19,15 +21,22 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export async function action({ request, context }: Route.ActionArgs) {
-  const formData = await request.formData();
-  const password = formData.get("password");
-  const token = formData.get("token");
-  if (typeof password !== "string" || typeof token !== "string") {
-    throw new Error("Invalid form data");
+  const schema = z.object({
+    password: z.string().min(8),
+    token: z.string().min(1),
+  });
+  const parseResult = schema.safeParse(
+    Object.fromEntries(await request.formData()),
+  );
+  if (!parseResult.success) {
+    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
+      parseResult.error,
+    );
+    return { formErrors, validationErrors };
   }
   const { auth } = context.get(appLoadContext);
   const response = await auth.api.resetPassword({
-    body: { token, newPassword: password },
+    body: { token: parseResult.data.token, newPassword: parseResult.data.password },
     asResponse: true,
   });
   if (!response.ok) throw response;
@@ -46,7 +55,13 @@ export default function RouteComponent({
           <CardDescription>Enter your new password below.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Rac.Form method="post" className="flex flex-col gap-6">
+          <Rac.Form
+            method="post"
+            validationBehavior="aria"
+            validationErrors={actionData?.validationErrors}
+            className="flex flex-col gap-6"
+          >
+            <FormErrorAlert formErrors={actionData?.formErrors} />
             <input type="hidden" name="token" value={loaderData.token} />
             <Oui.TextFieldEx
               name="password"
