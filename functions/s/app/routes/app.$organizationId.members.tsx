@@ -9,11 +9,30 @@ import {
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
+import { appLoadContext } from "~/lib/middleware";
 
 /*
 #fetch https://react-spectrum.adobe.com/react-aria/GridList.html
 #fetch https://react-spectrum.adobe.com/react-aria/ListBox.html
 */
+
+export async function loader({
+  request,
+  context,
+  params: { organizationId },
+}: Route.LoaderArgs) {
+  const { auth, session } = context.get(appLoadContext);
+  if (!session || !session.session.activeOrganizationId)
+    throw new Error("Missing session or active organization");
+  return {
+    organization: await auth.api.getFullOrganization({
+      headers: request.headers,
+      query: {
+        organizationId,
+      },
+    }),
+  };
+}
 
 // export const loader = ReactRouterEx.routeEffect(() =>
 //   Effect.gen(function* () {
@@ -146,12 +165,13 @@ import { redirect } from "react-router";
  * | Leave account  | No            | N/A     | Yes (if not owner)        |
  */
 export default function RouteComponent({
+  loaderData: { organization },
   // loaderData: { members, userId, ownerId, canEdit, accountMember },
   actionData,
 }: Route.ComponentProps) {
   const canEdit = false;
   return (
-    <div className="p-6 flex flex-col gap-8">
+    <div className="flex flex-col gap-8 p-6">
       <header>
         <h1 className="text-3xl font-bold tracking-tight">
           Manage Organization Members
@@ -281,20 +301,7 @@ export default function RouteComponent({
           )} */}
         </CardContent>
       </Card>
-      {/* <pre>
-        {JSON.stringify(
-          {
-            actionData,
-            accountMember,
-            members,
-            userId,
-            ownerId,
-            canEdit,
-          },
-          null,
-          2,
-        )}
-      </pre> */}
+      <pre>{JSON.stringify({ organization, actionData }, null, 2)}</pre>
     </div>
   );
 }
