@@ -11,19 +11,32 @@ import {
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
 import { appLoadContext } from "~/lib/middleware";
+import * as z from "zod";
+import { FormErrorAlert } from "~/components/FormAlert";
+
 
 export async function action({ request, context }: Route.ActionArgs) {
-  const formData = await request.formData();
-  const email = formData.get("email");
-  const password = formData.get("password");
-  if (typeof email !== "string" || typeof password !== "string") {
-    throw new Error("Invalid form data");
+  const schema = z.object({
+    email: z.string().email(),
+    password: z.string().min(6),
+  });
+  const parseResult = schema.safeParse(
+    Object.fromEntries(await request.formData()),
+  );
+  if (!parseResult.success) {
+    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
+      parseResult.error,
+    );
+    return {
+      formErrors,
+      validationErrors,
+    };
   }
   const { auth } = context.get(appLoadContext);
   const response = await auth.api.signInEmail({
     body: {
-      email,
-      password,
+      email: parseResult.data.email,
+      password: parseResult.data.password,
       callbackURL: "/email-verification", // http://localhost:3000/api/auth/verify-email?token=ey&callbackURL=/email-verification
     },
     asResponse: true,
@@ -36,7 +49,7 @@ export async function action({ request, context }: Route.ActionArgs) {
   return redirect("/", { headers: response.headers });
 }
 
-export default function RouteComponent() {
+export default function RouteComponent({ actionData }: Route.ComponentProps) {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <Card className="w-full max-w-sm">
@@ -47,7 +60,13 @@ export default function RouteComponent() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Rac.Form method="post" className="flex flex-col gap-6">
+          <FormErrorAlert formErrors={actionData?.formErrors} />
+          <Rac.Form
+            method="post"
+            validationBehavior="aria"
+            validationErrors={actionData?.validationErrors}
+            className="flex flex-col gap-6"
+          >
             <Oui.TextFieldEx
               name="email"
               type="email"
@@ -82,3 +101,4 @@ export default function RouteComponent() {
     </div>
   );
 }
+
