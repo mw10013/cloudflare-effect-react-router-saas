@@ -10,6 +10,7 @@ import {
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
 import * as z from "zod";
+import { FormErrorAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function action({ request, context }: Route.ActionArgs) {
@@ -62,6 +63,7 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <FormErrorAlert formErrors={actionData?.formErrors} />
           <Rac.Form
             method="post"
             validationBehavior="aria"

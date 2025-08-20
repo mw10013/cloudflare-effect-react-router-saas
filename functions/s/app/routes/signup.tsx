@@ -1,11 +1,6 @@
 import type { Route } from "./+types/signup";
 import * as Oui from "@workspace/oui";
 import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@workspace/ui/components/ui/alert";
-import {
   Card,
   CardContent,
   CardDescription,
@@ -16,6 +11,7 @@ import {
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
 import * as z from "zod";
+import { FormErrorAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function action({ request, context }: Route.ActionArgs) {
@@ -66,18 +62,7 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {(actionData?.formErrors?.length ?? 0) > 0 && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>
-                {(actionData?.formErrors ?? []).map(
-                  (err: string, i: number) => (
-                    <div key={i}>{err}</div>
-                  ),
-                )}
-              </AlertDescription>
-            </Alert>
-          )}
+          <FormErrorAlert formErrors={actionData?.formErrors} />
           <Rac.Form
             method="post"
             validationBehavior="aria"
