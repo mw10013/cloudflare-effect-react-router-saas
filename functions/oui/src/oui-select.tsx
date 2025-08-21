@@ -90,6 +90,23 @@ interface SelectExProps<T extends object>
   ) => React.ReactNode;
 }
 
+/**
+ * @example
+ *
+ * ```tsx
+ * <Oui.SelectEx
+ *   name="role"
+ *   label="Role"
+ *   defaultSelectedKey={"member"}
+ *   items={[
+ *     { id: "member", name: "Member" },
+ *     { id: "admin", name: "Admin" },
+ *   ]}
+ * >
+ *   {(item) => <Oui.ListBoxItem>{item.name}</Oui.ListBoxItem>}
+ * </Oui.SelectEx>
+ * ```
+ */
 export function SelectEx<T extends object>({
   label,
   description,
@@ -135,7 +152,26 @@ interface SelectEx1Props<T extends object>
 
 /**
  * Children are rendered as the contents of Popover and not in a ListBox.
- * Userful for Autocomplete.
+ * Useful for Autocomplete.
+ *
+ * @example
+ *
+ * ```tsx
+ * <Oui.SelectEx1 label="Users" defaultSelectedKey={users[0].id}>
+ *   <Oui.AutocompleteEx
+ *     placeholder="Select user..."
+ *     searchFieldProps={{ "aria-label": "User", autoFocus: true }}
+ *   >
+ *     <Rac.ListBox items={users}>
+ *       {(item) => (
+ *         <Oui.ListBoxItem id={item.userId}>
+ *           {item.username}
+ *         </Oui.ListBoxItem>
+ *       )}
+ *     </Rac.ListBox>
+ *   </Oui.AutocompleteEx>
+ * </Oui.SelectEx1>
+ * ```
  */
 export function SelectEx1<T extends object>({
   label,

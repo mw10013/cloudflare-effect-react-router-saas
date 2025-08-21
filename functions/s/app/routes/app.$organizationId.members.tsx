@@ -9,6 +9,7 @@ import {
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
+import * as Domain from "~/lib/Domain";
 import { appLoadContext } from "~/lib/middleware";
 
 /*
@@ -22,8 +23,7 @@ export async function loader({
   params: { organizationId },
 }: Route.LoaderArgs) {
   const { auth, session } = context.get(appLoadContext);
-  if (!session)
-    throw new Error("Missing session or active organization");
+  if (!session) throw new Error("Missing session or active organization");
   return {
     fullOrganization: await auth.api.getFullOrganization({
       headers: request.headers,
@@ -34,6 +34,9 @@ export async function loader({
   };
 }
 
+export async function action({ request, context }: Route.ActionArgs) {
+  const { auth, session } = context.get(appLoadContext);
+}
 
 // const inviteMembers = (emails: ReadonlySet<User["email"]>) =>
 //   ReactRouterEx.AppLoadContext.pipe(
@@ -186,6 +189,17 @@ export default function RouteComponent({
               placeholder="e.g., user1@example.com, user2@example.com"
               isDisabled={!canEdit}
             />
+            <Oui.SelectEx
+              name="role"
+              label="Role"
+              defaultSelectedKey={"member"}
+              items={[
+                { id: "member", name: "Member" },
+                { id: "admin", name: "Admin" },
+              ]}
+            >
+              {(item) => <Oui.ListBoxItem>{item.name}</Oui.ListBoxItem>}
+            </Oui.SelectEx>
             <Oui.Button
               type="submit"
               name="intent"
