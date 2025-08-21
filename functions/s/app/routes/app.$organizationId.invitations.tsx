@@ -73,12 +73,11 @@ export async function action({
   }
   const { auth } = context.get(appLoadContext);
   if (parseResult.data.intent === "cancel") {
-    return { error: "Failed to cancel invitation." };
     await auth.api.cancelInvitation({
       headers: request.headers,
       body: { invitationId: parseResult.data.invitationId },
     });
-    return { success: "Invitation canceled." };
+    return {};
   }
 
   for (const email of parseResult.data.emails) {
@@ -92,7 +91,7 @@ export async function action({
       },
     });
   }
-  return { success: "Invitations sent." };
+  return {};
 }
 
 export default function RouteComponent({
@@ -224,11 +223,15 @@ function InvitationItem({
               Cancel
             </Oui.Button>
           </fetcher.Form>
-          <div role="status" aria-atomic="true" className="text-xs">
-            {result?.error && (
-              <span className="text-destructive">{result.error}</span>
-            )}
-          </div>
+          {result?.error && (
+            <div
+              role="status"
+              aria-atomic="true"
+              className="text-destructive text-xs"
+            >
+              {result.error}
+            </div>
+          )}
         </div>
       )}
     </li>
