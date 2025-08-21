@@ -20,6 +20,8 @@ import {
 import * as Rac from "react-aria-components"; // Use Rac directly for components that don't need styles such as <Rac.Form>
 import { redirect } from "react-router";
 import { appLoadContext } from "~/lib/middleware";
+import * as z from "zod"; // If using zod for validation
+import * as Domain from "~/lib/domain";
 
 // Use Route to type the loader arguments
 export async function loader({ request, context }: Route.LoaderArgs) {
@@ -30,44 +32,64 @@ export async function loader({ request, context }: Route.LoaderArgs) {
 
 // Use Route to type the action arguments
 export async function action({ request, context }: Route.ActionArgs) {
-  const formData = await request.formData();
-  const email = formData.get("email");
-  const password = formData.get("password");
-  if (typeof email !== "string" || typeof password !== "string") {
-    throw new Error("Invalid form data");
+  const schema = z.object({
+    email: z.email(),
+  });
+  const parseResult = schema.safeParse(
+    Object.fromEntries(await request.formData()),
+  );
+  if (!parseResult.success) {
+    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
+      parseResult.error,
+    );
+    return {
+      formErrors, // For FormErrorAlert formErrors
+      validationErrors, // For Rac.Form validationErrors
+    }; // Let typescript infer the type.
   }
   const { auth, session } = context.get(appLoadContext); // appLoadContext has better-auth auth and session objects
-  const response = await auth.api.signUpEmail({ // server-side better-auth api call.
-    body: {
-      email,
-      password,
-      name: "",
-      callbackURL: "/email-verification", // http://localhost:3000/api/auth/verify-email?token=ey&callbackURL=/email-verification
-    },
-    asResponse: true, // Use reponses server-side
+  await auth.api.signInMagicLink({ // server-side better-auth api call.
+    headers: request.headers,
+    body: { email: parseResult.data.email, callbackURL: "/magic-link" },
   });
-
-  if (!response.ok) {
-    if (response.status === 422) return redirect("/signin");
-    throw response; // Throw errors so react-router can handle them
-  }
-  return redirect("/");
+  return { magicLinkSent: true }; // Let typescript infer the type.
 }
 
 // Name the default export for the route `RouteComponent`
-// Destructure `loaderData` and `actionData` from props
+// Destructure `loaderData` and `actionData` from props inline
 export default function RouteComponent({ loaderData, actionData}: Route.ComponentProps) {
+  if (actionData?.magicLinkSent) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center">
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle>Check your email</CardTitle>
+            <CardDescription>
+              If an account exists for that email, a magic sign-in link has been
+              sent.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>Sign up for an account</CardTitle>
+          <CardTitle>Sign in / Sign up</CardTitle>
           <CardDescription>
-            Enter your email and password to create your account
+            Enter your email to receive a magic sign-in link
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Rac.Form method="post" className="flex flex-col gap-6">
+          <Rac.Form
+            method="post"
+            validationBehavior="aria"
+            validationErrors={actionData?.validationErrors}
+            className="flex flex-col gap-6"
+          >
+            <FormErrorAlert formErrors={actionData?.formErrors} />
             <Oui.TextFieldEx
               name="email"
               type="email"
@@ -75,20 +97,13 @@ export default function RouteComponent({ loaderData, actionData}: Route.Componen
               placeholder="m@example.com"
               isRequired
             />
-            <Oui.TextFieldEx
-              name="password"
-              type="password"
-              label="Password"
-              isRequired
-            />
             <Oui.Button type="submit" className="w-full">
-              Sign up
+              Send magic link
             </Oui.Button>
           </Rac.Form>
         </CardContent>
         <CardFooter />
       </Card>
-      <pre>{JSON.stringify({ loaderData, actionData }, null, 2)}</pre>
     </div>
   );
 }
