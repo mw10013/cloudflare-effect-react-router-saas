@@ -51,3 +51,11 @@ import { Outlet, useRouteLoaderData } from 'react-router'
 ## Testing
 
 - Use `pnpm -F s test` to run tests for the s package.
+
+## Zod
+
+- Your knowledge of Zod is out of date especially for version 4.
+- Consult https://zod.dev/api to ensure you define schemas correctly.
+- Consult https://zod.dev/error-customization to ensure you define custom error messages correctly.
+  - Virtually every Zod API accepts an optional error message. `z.string("Not a string.")`
+  - All `z` functions and schema methods accept custom errors. `z.array(z.string(), "Not an array.").min(5, "Too few items!")`
