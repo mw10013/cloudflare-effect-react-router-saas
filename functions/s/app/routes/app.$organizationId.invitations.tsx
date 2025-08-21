@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
+import { useFetcher } from "react-router";
 import * as z from "zod";
 import * as Domain from "~/lib/domain";
 import { appLoadContext } from "~/lib/middleware";
@@ -72,6 +73,7 @@ export async function action({
   }
   const { auth } = context.get(appLoadContext);
   if (parseResult.data.intent === "cancel") {
+    return { error: "Failed to cancel invitation." };
     await auth.api.cancelInvitation({
       headers: request.headers,
       body: { invitationId: parseResult.data.invitationId },
@@ -167,44 +169,8 @@ export default function RouteComponent({
         <CardContent>
           {invitations && invitations.length > 0 ? (
             <ul className="divide-border divide-y">
-              {invitations.map((inv) => (
-                <li
-                  key={inv.id}
-                  className="flex items-center justify-between gap-4 py-4"
-                >
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium">{inv.email}</span>
-                    <span className="text-muted-foreground text-sm">
-                      {inv.role} — {inv.status}
-                    </span>
-                    {inv.status === "pending" && (
-                      <span className="text-muted-foreground text-xs">
-                        Expires: {new Date(inv.expiresAt).toLocaleString()}
-                      </span>
-                    )}
-                  </div>
-                  {inv.status === "pending" && (
-                    <div>
-                      <Rac.Form method="post">
-                        <input
-                          type="hidden"
-                          name="invitationId"
-                          value={inv.id}
-                        />
-                        <Oui.Button
-                          type="submit"
-                          name="intent"
-                          value="cancel"
-                          variant="outline"
-                          size="sm"
-                          aria-label={`Cancel invitation for ${inv.email}`}
-                        >
-                          Cancel
-                        </Oui.Button>
-                      </Rac.Form>
-                    </div>
-                  )}
-                </li>
+              {invitations.map((i) => (
+                <InvitationItem key={i.id} invitation={i} />
               ))}
             </ul>
           ) : (
@@ -214,7 +180,57 @@ export default function RouteComponent({
           )}
         </CardContent>
       </Card>
-      <pre>{JSON.stringify({ invitations, actionData }, null, 2)}</pre>
     </div>
+  );
+}
+
+function InvitationItem({
+  invitation,
+}: {
+  invitation: Route.ComponentProps["loaderData"]["invitations"][number];
+}) {
+  const fetcher = useFetcher();
+  const pending = fetcher.state !== "idle";
+  const result = fetcher.data;
+  return (
+    <li
+      key={invitation.id}
+      className="flex items-center justify-between gap-4 py-4"
+    >
+      <div className="flex flex-col">
+        <span className="text-sm font-medium">{invitation.email}</span>
+        <span className="text-muted-foreground text-sm">
+          {invitation.role} — {invitation.status}
+        </span>
+        {invitation.status === "pending" && (
+          <span className="text-muted-foreground text-xs">
+            Expires: {new Date(invitation.expiresAt).toLocaleString()}
+          </span>
+        )}
+      </div>
+      {invitation.status === "pending" && (
+        <div className="flex flex-col items-end gap-1">
+          <fetcher.Form method="post">
+            <input type="hidden" name="invitationId" value={invitation.id} />
+            <Oui.Button
+              type="submit"
+              name="intent"
+              value="cancel"
+              variant="outline"
+              size="sm"
+              aria-label={`Cancel invitation for ${invitation.email}`}
+              isDisabled={pending}
+            >
+              Cancel
+            </Oui.Button>
+          </fetcher.Form>
+          <div role="status" aria-atomic="true" className="text-xs">
+            {result?.error && (
+              <span className="text-destructive">{result.error}</span>
+            )}
+          </div>
+        </div>
+      )}
+    </li>
   );
 }
