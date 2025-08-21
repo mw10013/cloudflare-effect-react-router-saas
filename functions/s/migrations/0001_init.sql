@@ -75,7 +75,7 @@ create table Member (
   memberId integer primary key,
   userId integer not null references User (userid),
   organizationId integer not null references Organization (organizationId),
-  role text not null,
+  role text not null references MemberRole (memberRoleId),
   createdAt text not null default (datetime('now'))
 );
 
@@ -85,8 +85,8 @@ create table Invitation (
   email text not null,
   inviterId integer not null references User (userId),
   organizationId integer not null references Organization (organizationId),
-  role text not null,
-  status text not null,
+  role text not null references MemberRole (memberRoleId),
+  status text not null references InvitationStatus (invitationStatusId),
   expiresAt text not null
 );
 
