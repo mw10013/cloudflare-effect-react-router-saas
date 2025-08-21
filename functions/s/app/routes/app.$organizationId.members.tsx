@@ -34,10 +34,10 @@ export async function action({ request, context }: Route.ActionArgs) {
     intent: z.literal("invite"),
     emails: z
       .string()
-      .transform((val) =>
-        val
+      .transform((v) =>
+        v
           .split(",")
-          .map((e) => e.trim())
+          .map((i) => i.trim())
           .filter(Boolean),
       )
       .pipe(
