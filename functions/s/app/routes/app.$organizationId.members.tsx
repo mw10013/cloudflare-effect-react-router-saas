@@ -29,7 +29,11 @@ export async function loader({
   };
 }
 
-export async function action({ request, context }: Route.ActionArgs) {
+export async function action({
+  request,
+  context,
+  params: { organizationId },
+}: Route.ActionArgs) {
   const schema = z.object({
     intent: z.literal("invite"),
     emails: z
@@ -60,9 +64,19 @@ export async function action({ request, context }: Route.ActionArgs) {
       validationErrors,
     };
   }
-  const { auth, session } = context.get(appLoadContext);
-  // TODO: Implement invite logic here
-  return { success: "Invitations sent (not really, logic not implemented)." };
+  const { auth } = context.get(appLoadContext);
+  for (const email of parseResult.data.emails) {
+    await auth.api.createInvitation({
+      headers: request.headers,
+      body: {
+        email,
+        role: parseResult.data.role,
+        organizationId,
+        resend: true,
+      },
+    });
+  }
+  return { success: "Invitations sent." };
 }
 
 // const inviteMembers = (emails: ReadonlySet<User["email"]>) =>
