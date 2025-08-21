@@ -50,7 +50,7 @@ describe("better-auth sign up flow", async () => {
     });
 
     expect(response.status).toBe(422);
-    expect(((await response.json()) as any)?.code).toBe("USER_ALREADY_EXISTS");
+    expect(((await response.json()) as any)?.code).toBe("USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL");
   });
 
   it("does not sign in with unverified email", async () => {
