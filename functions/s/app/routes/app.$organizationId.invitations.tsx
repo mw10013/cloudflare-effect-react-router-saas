@@ -34,37 +34,50 @@ export async function action({
   context,
   params: { organizationId },
 }: Route.ActionArgs) {
-  const schema = z.object({
-    intent: z.literal("invite"),
-    emails: z
-      .string()
-      .transform((v) =>
-        v
-          .split(",")
-          .map((i) => i.trim())
-          .filter(Boolean),
-      )
-      .pipe(
-        z
-          .array(z.email({ error: "Please provide valid email addresses." }))
-          .min(1, { error: "At least one email is required" }),
-      ),
-    role: Domain.MemberRole.extract(["member", "admin"], {
-      error: "Role must be Member or Admin.",
+  const schema = z.discriminatedUnion("intent", [
+    z.object({
+      intent: z.literal("cancel"),
+      invitationId: z.string().min(1, { error: "Missing invitationId" }),
     }),
-  });
-  const formData = await request.formData();
-  const parseResult = schema.safeParse(Object.fromEntries(formData));
+    z.object({
+      intent: z.literal("invite"),
+      emails: z
+        .string()
+        .transform((v) =>
+          String(v)
+            .split(",")
+            .map((i) => i.trim())
+            .filter(Boolean),
+        )
+        .pipe(
+          z
+            .array(z.email({ error: "Please provide valid email addresses." }))
+            .min(1, { error: "At least one email is required" }),
+        ),
+      role: Domain.MemberRole.extract(["member", "admin"], {
+        error: "Role must be Member or Admin.",
+      }),
+    }),
+  ]);
+
+  const parseResult = schema.safeParse(
+    Object.fromEntries(await request.formData()),
+  );
   if (!parseResult.success) {
     const { formErrors, fieldErrors: validationErrors } = z.flattenError(
       parseResult.error,
     );
-    return {
-      formErrors,
-      validationErrors,
-    };
+    return { formErrors, validationErrors };
   }
   const { auth } = context.get(appLoadContext);
+  if (parseResult.data.intent === "cancel") {
+    await auth.api.cancelInvitation({
+      headers: request.headers,
+      body: { invitationId: parseResult.data.invitationId },
+    });
+    return { success: "Invitation canceled." };
+  }
+
   for (const email of parseResult.data.emails) {
     await auth.api.createInvitation({
       headers: request.headers,
