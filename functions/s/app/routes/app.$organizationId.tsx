@@ -126,6 +126,10 @@ export function AppSidebar({
       href: `/app/${organization.id}/members`,
     },
     {
+      id: "Invitations",
+      href: `/app/${organization.id}/invitations`,
+    },
+    {
       id: "Billing",
       href: `/app/${organization.id}/billing`,
     },

@@ -78,6 +78,22 @@ export async function action({
   }
   return { success: "Invitations sent." };
 }
+
+// const inviteMembers = (emails: ReadonlySet<User["email"]>) =>
+//   ReactRouterEx.AppLoadContext.pipe(
+//     Effect.flatMap((appLoadContext) =>
+//       Effect.fromNullable(appLoadContext.accountMember),
+//     ),
+//     Effect.flatMap((accountMember) =>
+//       IdentityMgr.invite({
+//         emails,
+//         accountId: accountMember.accountId,
+//         accountEmail: accountMember.account.user.email,
+//       }),
+//     ),
+//     Policy.withPolicy(Policy.permission("member:edit")),
+//   );
+
 // const revokeMember = (accountMemberId: AccountMember["accountMemberId"]) =>
 //   ReactRouterEx.AppLoadContext.pipe(
 //     Effect.flatMap((appLoadContext) =>
@@ -185,17 +201,67 @@ export default function RouteComponent({
   return (
     <div className="flex flex-col gap-8 p-6">
       <header>
-        <h1 className="text-3xl font-bold tracking-tight">Members</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Invitations</h1>
         <p className="text-muted-foreground text-sm">
-          Manage organization members and control access to your organization.
+          Invite new members and manage your invitations.
         </p>
       </header>
 
       <Card>
         <CardHeader>
-          <CardTitle>Current Members</CardTitle>
+          <CardTitle>Invite New Members</CardTitle>
           <CardDescription>
-            Review and manage members currently part of this organization.
+            Enter email addresses separated by commas to send invitations.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Rac.Form
+            method="post"
+            validationErrors={actionData?.validationErrors}
+            className="grid gap-6"
+          >
+            <Oui.TextFieldEx
+              name="emails"
+              label="Email Addresses"
+              type="text"
+              placeholder="e.g., user1@example.com, user2@example.com"
+              isDisabled={!canEdit}
+            />
+            <Oui.SelectEx
+              name="role"
+              label="Role"
+              defaultSelectedKey={"member"}
+              items={[
+                { id: "member", name: "Member" },
+                { id: "admin", name: "Admin" },
+              ]}
+            >
+              {(item) => <Oui.ListBoxItem>{item.name}</Oui.ListBoxItem>}
+            </Oui.SelectEx>
+            <Oui.Button
+              type="submit"
+              name="intent"
+              value="invite"
+              variant="outline"
+              isDisabled={!canEdit}
+              aria-label={
+                canEdit
+                  ? "Send Invites"
+                  : "Invite action disabled: Requires 'member:edit' permission"
+              }
+              className="justify-self-end"
+            >
+              Send Invites
+            </Oui.Button>
+          </Rac.Form>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Invitations</CardTitle>
+          <CardDescription>
+            Review and manage invitations sent for this organization.
           </CardDescription>
         </CardHeader>
         <CardContent>
