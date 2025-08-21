@@ -1,4 +1,36 @@
 -- Migration number: 0001 	 2025-01-31T00:42:00.000Z
+create table UserRole (userRoleId text primary key);
+
+--> statement-breakpoint
+insert into
+  UserRole (userRoleId)
+values
+  ('user'),
+  ('admin');
+
+--> statement-breakpoint
+create table MemberRole (memberRoleId text primary key);
+
+--> statement-breakpoint
+insert into
+  MemberRole (memberRoleId)
+values
+  ('member'),
+  ('owner'),
+  ('admin');
+
+--> statement-breakpoint
+create table InvitationStatus (invitationStatusId text primary key);
+
+--> statement-breakpoint
+insert into
+  InvitationStatus (invitationStatusId)
+values
+  ('pending'),
+  ('accepted'),
+  ('rejected'),
+  ('canceled');
+
 --> statement-breakpoint
 create table User (
   userId integer primary key,
@@ -6,7 +38,7 @@ create table User (
   email text not null unique,
   emailVerified integer not null default 0,
   image text,
-  role text not null default 'user',
+  role text not null default 'user' references UserRole (userRoleId),
   banned integer not null default 0,
   banReason text,
   banExpires text,
