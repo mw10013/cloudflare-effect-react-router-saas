@@ -46,12 +46,10 @@ export async function action({
       )
       .pipe(
         z
-          .array(z.email({ error: "Please provide valid email addresses." }))
-          .min(1, { error: "At least one email is required" }),
+          .array(z.email("Please provide valid email addresses."))
+          .min(1, "At least one email is required"),
       ),
-    role: Domain.MemberRole.extract(["member", "admin"], {
-      error: "Role must be Member or Admin.",
-    }),
+    role: Domain.MemberRole.extract(["member", "admin"], "Role must be Member or Admin."),
   });
   const formData = await request.formData();
   const parseResult = schema.safeParse(Object.fromEntries(formData));

@@ -37,7 +37,7 @@ export async function action({
   const schema = z.discriminatedUnion("intent", [
     z.object({
       intent: z.literal("cancel"),
-      invitationId: z.string().min(1, { error: "Missing invitationId" }),
+      invitationId: z.string().min(1, "Missing invitationId"),
     }),
     z.object({
       intent: z.literal("invite"),
@@ -51,12 +51,13 @@ export async function action({
         )
         .pipe(
           z
-            .array(z.email({ error: "Please provide valid email addresses." }))
-            .min(1, { error: "At least one email is required" }),
+            .array(z.email("Please provide valid email addresses."))
+            .min(1, "At least one email is required"),
         ),
-      role: Domain.MemberRole.extract(["member", "admin"], {
-        error: "Role must be Member or Admin.",
-      }),
+      role: Domain.MemberRole.extract(
+        ["member", "admin"],
+        "Role must be Member or Admin.",
+      ),
     }),
   ]);
 
