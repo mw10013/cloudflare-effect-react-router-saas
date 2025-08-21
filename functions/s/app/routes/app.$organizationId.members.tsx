@@ -8,14 +8,9 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
-import { redirect } from "react-router";
-import * as Domain from "~/lib/Domain";
+import * as z from "zod";
+import * as Domain from "~/lib/domain";
 import { appLoadContext } from "~/lib/middleware";
-
-/*
-#fetch https://react-spectrum.adobe.com/react-aria/GridList.html
-#fetch https://react-spectrum.adobe.com/react-aria/ListBox.html
-*/
 
 export async function loader({
   request,
@@ -35,7 +30,39 @@ export async function loader({
 }
 
 export async function action({ request, context }: Route.ActionArgs) {
+  const schema = z.object({
+    intent: z.literal("invite"),
+    emails: z
+      .string()
+      .transform((val) =>
+        val
+          .split(",")
+          .map((e) => e.trim())
+          .filter(Boolean),
+      )
+      .pipe(
+        z
+          .array(z.email({ error: "Please provide valid email addresses." }))
+          .min(1, { error: "At least one email is required" }),
+      ),
+    role: Domain.MemberRole.extract(["member", "admin"], {
+      error: "Role must be Member or Admin.",
+    }),
+  });
+  const formData = await request.formData();
+  const parseResult = schema.safeParse(Object.fromEntries(formData));
+  if (!parseResult.success) {
+    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
+      parseResult.error,
+    );
+    return {
+      formErrors,
+      validationErrors,
+    };
+  }
   const { auth, session } = context.get(appLoadContext);
+  // TODO: Implement invite logic here
+  return { success: "Invitations sent (not really, logic not implemented)." };
 }
 
 // const inviteMembers = (emails: ReadonlySet<User["email"]>) =>
@@ -156,7 +183,7 @@ export default function RouteComponent({
   // loaderData: { members, userId, ownerId, canEdit, accountMember },
   actionData,
 }: Route.ComponentProps) {
-  const canEdit = false;
+  const canEdit = true;
   return (
     <div className="flex flex-col gap-8 p-6">
       <header>
@@ -179,8 +206,8 @@ export default function RouteComponent({
         <CardContent>
           <Rac.Form
             method="post"
-            className="grid gap-6"
             validationErrors={actionData?.validationErrors}
+            className="grid gap-6"
           >
             <Oui.TextFieldEx
               name="emails"
