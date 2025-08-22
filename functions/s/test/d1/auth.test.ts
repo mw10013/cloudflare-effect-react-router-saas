@@ -1,3 +1,4 @@
+import { invariant } from "@epic-web/invariant";
 import { User } from "better-auth/types";
 import { env } from "cloudflare:workers";
 import { unstable_RouterContextProvider } from "react-router";
@@ -14,7 +15,7 @@ import { action as resetPasswordAction } from "~/routes/reset-password";
 import { action as signInAction } from "~/routes/signin";
 import { action as signOutAction } from "~/routes/signout";
 import { action as signUpAction } from "~/routes/signup";
-import { expectInvariant, resetDb } from "../test-utils";
+import { resetDb } from "../test-utils";
 
 type TestContext = Awaited<ReturnType<typeof createTestContext>>;
 type TestUser = Awaited<ReturnType<TestContext["createTestUser"]>>;
@@ -116,8 +117,8 @@ describe("accept invitation flow", () => {
 
   it("creates invitation", async () => {
     const session = await testUser.session();
-    expectInvariant(session, "Expected session");
-    expectInvariant(
+    invariant(session, "Expected session");
+    invariant(
       session.session.activeOrganizationId,
       "Expected activeOrganizationId",
     );
@@ -136,13 +137,13 @@ describe("accept invitation flow", () => {
     expect(response.status).toBe(200);
     expect(c.mockSendInvitationEmail).toHaveBeenCalledTimes(1);
     invitationId = c.mockSendInvitationEmail.mock.calls[0][0].invitation.id;
-    expectInvariant(invitationId, "Expected invitationId");
+    invariant(invitationId, "Expected invitationId");
   });
 
   it("creates admin invitation (repro)", async () => {
     const session = await testUser.session();
-    expectInvariant(session, "Expected session");
-    expectInvariant(
+    invariant(session, "Expected session");
+    invariant(
       session.session.activeOrganizationId,
       "Expected activeOrganizationId",
     );
@@ -163,12 +164,12 @@ describe("accept invitation flow", () => {
     expect(sendInvitationEmailData).toBeDefined();
     expect(sendInvitationEmailData.invitation?.role).toBe("admin");
     const invitationId = sendInvitationEmailData.invitation?.id;
-    expectInvariant(invitationId, "Expected invitationId");
+    invariant(invitationId, "Expected invitationId");
     const row = await c.db
       .prepare("select role from Invitation where invitationId = ? limit 1")
       .bind(Number(invitationId))
       .first<{ role: string }>();
-    expectInvariant(row, "Expected row from Invitation table");
+    invariant(row, "Expected row from Invitation table");
     expect(row.role).toBe("admin");
   });
 
@@ -205,7 +206,7 @@ describe("accept invitation flow", () => {
       params: { invitationId },
     });
 
-    expectInvariant(response instanceof Response, "Expected Response");
+    invariant(response instanceof Response, "Expected Response");
     expect(response.status).toBe(302);
   });
 });
@@ -229,8 +230,8 @@ describe("reject invitation flow", () => {
 
   it("creates invitation", async () => {
     const session = await testUser.session();
-    expectInvariant(session, "Expected session");
-    expectInvariant(
+    invariant(session, "Expected session");
+    invariant(
       session.session.activeOrganizationId,
       "Expected activeOrganizationId",
     );
@@ -267,7 +268,7 @@ describe("reject invitation flow", () => {
       params: { invitationId },
     });
 
-    expectInvariant(response instanceof Response, "Expected Response");
+    invariant(response instanceof Response, "Expected Response");
     expect(response.status).toBe(302);
   });
 });
@@ -302,7 +303,7 @@ describe("auth sign up flow", () => {
       params: {},
     });
 
-    expectInvariant(result instanceof Response, "Expected Response");
+    invariant(result instanceof Response, "Expected Response");
     expect(result.status).toBe(302);
     expect(result.headers.get("location")).toBe("/");
     expect(c.mockSendVerificationEmail).toHaveBeenCalledTimes(1);
@@ -327,7 +328,7 @@ describe("auth sign up flow", () => {
       params: {},
     });
 
-    expectInvariant(result instanceof Response, "Expected Response");
+    invariant(result instanceof Response, "Expected Response");
     expect(result.status).toBe(302);
     expect(result.headers.get("location")).toBe("/signin");
   });
@@ -347,7 +348,7 @@ describe("auth sign up flow", () => {
       params: {},
     });
 
-    expectInvariant(result instanceof Response, "Expected Response");
+    invariant(result instanceof Response, "Expected Response");
     expect(result.status).toBe(302);
     expect(result.headers.get("location")).toBe("/email-verification");
     expect(c.mockSendVerificationEmail).toHaveBeenCalledTimes(1);
@@ -356,7 +357,7 @@ describe("auth sign up flow", () => {
   });
 
   it("verifies email", async () => {
-    expectInvariant(emailVerificationUrl, "Expected emailVerificationUrl");
+    invariant(emailVerificationUrl, "Expected emailVerificationUrl");
     const request = new Request(emailVerificationUrl);
 
     const response = await c.auth.handler(request);
@@ -368,7 +369,7 @@ describe("auth sign up flow", () => {
 
   it("has valid session", async () => {
     const session = await c.auth.api.getSession({ headers });
-    expectInvariant(session, "Expected session");
+    invariant(session, "Expected session");
     expect(session.user.email).toBe(email);
   });
 
@@ -421,7 +422,7 @@ describe("auth sign up flow", () => {
       params: {},
     });
 
-    expectInvariant(result instanceof Response, "Expected Response");
+    invariant(result instanceof Response, "Expected Response");
     expect(result.status).toBe(302);
     expect(result.headers.has("Set-Cookie")).toBe(true);
   });
@@ -465,7 +466,7 @@ describe("auth forgot password flow", () => {
   });
 
   it("allows reset password", async () => {
-    expectInvariant(resetPasswordUrl, "Expected resetPasswordUrl");
+    invariant(resetPasswordUrl, "Expected resetPasswordUrl");
     const request = new Request(resetPasswordUrl);
 
     const response = await c.auth.handler(request);
@@ -479,7 +480,7 @@ describe("auth forgot password flow", () => {
   it("resets password", async () => {
     const form = new FormData();
     form.append("password", newPassword);
-    expectInvariant(resetToken, "Expected resetToken");
+    invariant(resetToken, "Expected resetToken");
     form.append("token", resetToken);
     const request = new Request("http://localhost/reset-password", {
       method: "POST",
@@ -492,7 +493,7 @@ describe("auth forgot password flow", () => {
       params: {},
     });
 
-    expectInvariant(result instanceof Response, "Expected Response");
+    invariant(result instanceof Response, "Expected Response");
     expect(result.status).toBe(302);
   });
 
@@ -511,7 +512,7 @@ describe("auth forgot password flow", () => {
       params: {},
     });
 
-    expectInvariant(result instanceof Response, "Expected Response");
+    invariant(result instanceof Response, "Expected Response");
     expect(result.status).toBe(302);
   });
 });
@@ -546,7 +547,7 @@ describe("admin bootstrap", () => {
   });
 
   it("signs in with magic link", async () => {
-    expectInvariant(magicLinkUrl, "Expected magicLinkUrl");
+    invariant(magicLinkUrl, "Expected magicLinkUrl");
     const request = new Request(magicLinkUrl);
 
     const response = await c.auth.handler(request);

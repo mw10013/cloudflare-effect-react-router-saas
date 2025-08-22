@@ -33,6 +33,7 @@
     "script": "node --env-file=.dev.vars"
   },
   "dependencies": {
+    "@epic-web/invariant": "catalog:",
     "@workspace/oui": "workspace:*",
     "@workspace/ui": "workspace:*",
     "better-auth": "catalog:",
