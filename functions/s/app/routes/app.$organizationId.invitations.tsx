@@ -81,8 +81,7 @@ export async function action({
   }
 
   for (const email of parseResult.data.emails) {
-    console.log("createInvitation", { email, role: parseResult.data.role });
-    await auth.api.createInvitation({
+    const result = await auth.api.createInvitation({
       headers: request.headers,
       body: {
         email,
@@ -91,6 +90,17 @@ export async function action({
         resend: true,
       },
     });
+    // Workaround for better-auth createInvitation role bug
+    if (result.role !== parseResult.data.role) {
+      const {
+        cloudflare: {
+          env: { D1 },
+        },
+      } = context.get(appLoadContext);
+      await D1.prepare("update Invitation set role = ? where invitationId = ?")
+        .bind(parseResult.data.role, Number(result.id))
+        .run();
+    }
   }
   return {};
 }
