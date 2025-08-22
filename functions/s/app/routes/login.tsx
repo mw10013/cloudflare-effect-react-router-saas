@@ -29,12 +29,21 @@ export async function action({ request, context }: Route.ActionArgs) {
       validationErrors,
     };
   }
-  const { auth } = context.get(appLoadContext);
+  const {
+    auth,
+    cloudflare: { env },
+  } = context.get(appLoadContext);
   await auth.api.signInMagicLink({
     headers: request.headers,
     body: { email: parseResult.data.email, callbackURL: "/magic-link" },
   });
-  return { magicLinkSent: true };
+  const magicLink =
+    env.ENVIRONMENT === "local"
+      ? await env.KV.get(`local:magicLink`)
+      : undefined;
+  console.log("magicLink", magicLink);
+
+  return { magicLinkSent: true, magicLink };
 }
 
 export default function RouteComponent({ actionData }: Route.ComponentProps) {
@@ -49,6 +58,19 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
               sent.
             </CardDescription>
           </CardHeader>
+          {actionData.magicLink && (
+            <CardContent>
+              <CardDescription>
+                Your magic link is ready:
+                <Oui.Link
+                  href={actionData.magicLink}
+                  className="block mt-2 break-all font-medium text-primary hover:opacity-90"
+                >
+                  {actionData.magicLink}
+                </Oui.Link>
+              </CardDescription>
+            </CardContent>
+          )}
         </Card>
       </div>
     );

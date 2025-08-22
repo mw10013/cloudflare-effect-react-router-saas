@@ -74,7 +74,7 @@ function createBetterAuthOptions({
         (async ({ user, url, token }) => {
           console.log("sendVerificationEmail", { to: user.email, url, token });
         }),
-      afterEmailVerification
+      afterEmailVerification,
     },
     advanced: { database: { generateId: false, useNumberId: true } },
     databaseHooks: {
@@ -104,6 +104,9 @@ function createBetterAuthOptions({
           sendMagicLink ??
           (async (data) => {
             console.log("sendMagicLink", data);
+            if (env.ENVIRONMENT === "local") {
+              await env.KV.put(`local:magicLink`, data.url, { expirationTtl: 60 });
+            }
           }),
       }),
       admin(),
