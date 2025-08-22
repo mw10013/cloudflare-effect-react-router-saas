@@ -64,7 +64,7 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
                 Your magic link is ready:
                 <Oui.Link
                   href={actionData.magicLink}
-                  className="block mt-2 break-all font-medium text-primary hover:opacity-90"
+                  className="text-primary mt-2 block break-all font-medium hover:opacity-90"
                 >
                   {actionData.magicLink}
                 </Oui.Link>
