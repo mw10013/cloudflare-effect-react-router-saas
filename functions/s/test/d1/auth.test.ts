@@ -14,7 +14,7 @@ import { action as resetPasswordAction } from "~/routes/reset-password";
 import { action as signInAction } from "~/routes/signin";
 import { action as signOutAction } from "~/routes/signout";
 import { action as signUpAction } from "~/routes/signup";
-import { expectInstanceOf, expectToBeDefined, resetDb } from "../test-utils";
+import {  expectInvariant, resetDb } from "../test-utils";
 
 type TestContext = Awaited<ReturnType<typeof createTestContext>>;
 type TestUser = Awaited<ReturnType<TestContext["createTestUser"]>>;
@@ -138,15 +138,15 @@ describe("accept invitation flow", () => {
 
   it("creates admin invitation (repro)", async () => {
     const session = await testUser.session();
-    expectToBeDefined(session);
-    expectToBeDefined(session.session.activeOrganizationId);
+    expectInvariant(session, "Expected session");
+    expectInvariant(session.session.activeOrganizationId, "Expected activeOrganizationId");
 
     const result = await c.auth.api.createInvitation({
       headers: testUser.headers,
       body: {
         email: "admin-invite@test.com",
         role: "admin",
-        organizationId: String(session.session.activeOrganizationId),
+        organizationId: session.session.activeOrganizationId,
         resend: true,
       },
     });
@@ -298,7 +298,7 @@ describe("auth sign up flow", () => {
       params: {},
     });
 
-    expectInstanceOf(result, Response);
+    expectInvariant(result instanceof Response, "Expected Response");
     expect(result.status).toBe(302);
     expect(result.headers.get("location")).toBe("/");
     expect(c.mockSendVerificationEmail).toHaveBeenCalledTimes(1);
@@ -323,7 +323,7 @@ describe("auth sign up flow", () => {
       params: {},
     });
 
-    expectInstanceOf(result, Response);
+    expectInvariant(result instanceof Response, "Expected Response");
     expect(result.status).toBe(302);
     expect(result.headers.get("location")).toBe("/signin");
   });
@@ -343,7 +343,7 @@ describe("auth sign up flow", () => {
       params: {},
     });
 
-    expectInstanceOf(result, Response);
+    expectInvariant(result instanceof Response, "Expected Response");
     expect(result.status).toBe(302);
     expect(result.headers.get("location")).toBe("/email-verification");
     expect(c.mockSendVerificationEmail).toHaveBeenCalledTimes(1);
@@ -418,7 +418,7 @@ describe("auth sign up flow", () => {
       params: {},
     });
 
-    expectInstanceOf(result, Response);
+    expectInvariant(result instanceof Response, "Expected Response");
     expect(result.status).toBe(302);
     expect(result.headers.has("Set-Cookie")).toBe(true);
   });
@@ -489,7 +489,7 @@ describe("auth forgot password flow", () => {
       params: {},
     });
 
-    expectInstanceOf(result, Response);
+    expectInvariant(result instanceof Response, "Expected Response");
     expect(result.status).toBe(302);
   });
 
@@ -508,7 +508,7 @@ describe("auth forgot password flow", () => {
       params: {},
     });
 
-    expectInstanceOf(result, Response);
+    expectInvariant(result instanceof Response, "Expected Response");
     expect(result.status).toBe(302);
   });
 });
