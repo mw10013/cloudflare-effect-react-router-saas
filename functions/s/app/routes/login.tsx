@@ -61,13 +61,10 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
           {actionData.magicLink && (
             <CardContent>
               <CardDescription>
-                Your magic link is ready:
-                <Oui.Link
-                  href={actionData.magicLink}
-                  className="text-primary mt-2 block break-all font-medium hover:opacity-90"
-                >
+                {/* <a> used to bypass react router routing and hit the api endpoint directly */}
+                <a href={actionData.magicLink} className="block">
                   {actionData.magicLink}
-                </Oui.Link>
+                </a>
               </CardDescription>
             </CardContent>
           )}
