@@ -1,5 +1,4 @@
 import { env } from "cloudflare:test";
-import { expect } from "vitest";
 
 export class ExpectInvariantError extends Error {
   constructor(message: string) {
