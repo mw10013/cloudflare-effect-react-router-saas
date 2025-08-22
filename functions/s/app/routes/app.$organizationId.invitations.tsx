@@ -109,7 +109,6 @@ export default function RouteComponent({
   loaderData: { invitations },
   actionData,
 }: Route.ComponentProps) {
-  const canEdit = true;
   return (
     <div className="flex flex-col gap-8 p-6">
       <header>
@@ -137,7 +136,6 @@ export default function RouteComponent({
               label="Email Addresses"
               type="text"
               placeholder="e.g., user1@example.com, user2@example.com"
-              isDisabled={!canEdit}
             />
             <Oui.SelectEx
               name="role"
@@ -155,12 +153,6 @@ export default function RouteComponent({
               name="intent"
               value="invite"
               variant="outline"
-              isDisabled={!canEdit}
-              aria-label={
-                canEdit
-                  ? "Send Invites"
-                  : "Invite action disabled: Requires 'member:edit' permission"
-              }
               className="justify-self-end"
             >
               Send Invites

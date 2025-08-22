@@ -1,3 +1,4 @@
+import { invariant } from "@epic-web/invariant";
 import type { Route } from "./+types/app.$organizationId.members";
 import * as Oui from "@workspace/oui";
 import {
@@ -18,7 +19,7 @@ export async function loader({
   params: { organizationId },
 }: Route.LoaderArgs) {
   const { auth, session } = context.get(appLoadContext);
-  if (!session) throw new Error("Missing session or active organization");
+  invariant(session, "Missing session");
   return {
     fullOrganization: await auth.api.getFullOrganization({
       headers: request.headers,
@@ -76,107 +77,9 @@ export async function action({
   }
   return { success: "Invitations sent." };
 }
-// const revokeMember = (accountMemberId: AccountMember["accountMemberId"]) =>
-//   ReactRouterEx.AppLoadContext.pipe(
-//     Effect.flatMap((appLoadContext) =>
-//       Effect.fromNullable(appLoadContext.accountMember?.account.accountId).pipe(
-//         Effect.flatMap((accountId) =>
-//           IdentityMgr.revokeAccountMembership({ accountMemberId, accountId }),
-//         ),
-//       ),
-//     ),
-//     Policy.withPolicy(Policy.permission("member:edit")),
-//   );
 
-// const leaveAccount = (accountMemberId: AccountMember["accountMemberId"]) =>
-//   ReactRouterEx.AppLoadContext.pipe(
-//     Effect.flatMap((appLoadContext) =>
-//       Effect.fromNullable(appLoadContext.accountMember?.userId).pipe(
-//         Effect.flatMap((userId) =>
-//           IdentityMgr.leaveAccountMembership({ accountMemberId, userId }),
-//         ),
-//       ),
-//     ),
-//     Effect.map(() => redirect("/app")),
-//     Policy.withPolicy(
-//       Policy.all(
-//         Policy.isCurrentAccountMember(accountMemberId),
-//         Policy.isCurrentAccountMemberNotAccountOwner,
-//       ),
-//     ),
-//   );
-
-// export const action = ReactRouterEx.routeEffect(
-//   ({ request }: Route.ActionArgs) =>
-//     Effect.gen(function* () {
-//       const FormDataSchema = Schema.Union(
-//         Schema.Struct({
-//           intent: Schema.Literal("invite"),
-//           emails: Schema.compose(
-//             Schema.compose(Schema.NonEmptyString, Schema.split(",")),
-//             Schema.ReadonlySet(Email),
-//           )
-//             .annotations({
-//               message: () => ({
-//                 message: "Please provide valid email addresses.",
-//                 override: true,
-//               }),
-//             })
-//             .pipe(
-//               Schema.filter((s: ReadonlySet<Email>) => s.size <= 3, {
-//                 message: () => "Too many email addresses.",
-//               }),
-//             ),
-//         }),
-//         Schema.Struct({
-//           intent: Schema.Union(
-//             Schema.Literal("revoke"),
-//             Schema.Literal("leave"),
-//           ),
-//           accountMemberId: AccountMemberIdFromString,
-//         }),
-//       );
-//       const formData = yield* SchemaEx.decodeRequestFormData({
-//         request,
-//         schema: FormDataSchema,
-//       });
-//       switch (formData.intent) {
-//         case "invite":
-//           yield* inviteMembers(formData.emails);
-//           break;
-//         case "revoke":
-//           yield* revokeMember(formData.accountMemberId);
-//           break;
-//         case "leave":
-//           yield* leaveAccount(formData.accountMemberId);
-//           break;
-//         default:
-//           return yield* Effect.fail(new Error("Invalid intent"));
-//       }
-//     }).pipe(
-//       SchemaEx.catchValidationError,
-//       // Using `Effect.catchIf` because `Effect.catchTag` would prevent other errors
-//       // from propagating to the main `routeEffect` handler unless explicitly re-thrown.
-//       Effect.catchIf(
-//         (e: unknown): e is InviteError => e instanceof InviteError,
-//         (error: InviteError) =>
-//           Effect.succeed({ validationErrors: { emails: error.message } }),
-//       ),
-//     ),
-// );
-
-/**
- * ## Member Management Capabilities
- *
- * | Action         | Account Owner | canEdit | ABAC: User is this Member |
- * | :------------- | :------------ | :------ | :------------------------ |
- * | Invite members | N/A           | Yes     | N/A                       |
- * | Revoke member  | N/A           | Yes     | N/A                       |
- * | Leave account  | No            | N/A     | Yes (if not owner)        |
- */
 export default function RouteComponent({
   loaderData: { fullOrganization },
-  // loaderData: { members, userId, ownerId, canEdit, accountMember },
   actionData,
 }: Route.ComponentProps) {
   const canEdit = true;
@@ -274,6 +177,15 @@ export default function RouteComponent({
   );
 }
 
+/**
+ * ## Member Management Capabilities
+ *
+ * | Action         | Account Owner | canEdit | ABAC: User is this Member |
+ * | :------------- | :------------ | :------ | :------------------------ |
+ * | Invite members | N/A           | Yes     | N/A                       |
+ * | Revoke member  | N/A           | Yes     | N/A                       |
+ * | Leave account  | No            | N/A     | Yes (if not owner)        |
+ */
 // export default function RouteComponent({
 //   loaderData: { members, userId, ownerId, canEdit, accountMember },
 //   actionData,
