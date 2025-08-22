@@ -14,7 +14,7 @@ import { action as resetPasswordAction } from "~/routes/reset-password";
 import { action as signInAction } from "~/routes/signin";
 import { action as signOutAction } from "~/routes/signout";
 import { action as signUpAction } from "~/routes/signup";
-import { expectInstanceOf, resetDb } from "../test-utils";
+import { expectInstanceOf, expectToBeDefined, resetDb } from "../test-utils";
 
 type TestContext = Awaited<ReturnType<typeof createTestContext>>;
 type TestUser = Awaited<ReturnType<TestContext["createTestUser"]>>;
@@ -134,6 +134,37 @@ describe("accept invitation flow", () => {
     expect(c.mockSendInvitationEmail).toHaveBeenCalledTimes(1);
     invitationId = c.mockSendInvitationEmail.mock.calls[0][0].invitation.id;
     expect(invitationId).toBeDefined();
+  });
+
+  it("creates admin invitation (repro)", async () => {
+    const session = await testUser.session();
+    expectToBeDefined(session);
+    expectToBeDefined(session.session.activeOrganizationId);
+
+    const result = await c.auth.api.createInvitation({
+      headers: testUser.headers,
+      body: {
+        email: "admin-invite@test.com",
+        role: "admin",
+        organizationId: String(session.session.activeOrganizationId),
+        resend: true,
+      },
+    });
+
+    expect(result.role).toBe("admin");
+    expect(c.mockSendInvitationEmail).toHaveBeenCalledTimes(1);
+    const sendInvitationEmailData = c.mockSendInvitationEmail.mock.calls[0][0];
+    expect(sendInvitationEmailData).toBeDefined();
+    expect(sendInvitationEmailData.invitation?.role).toBe("admin");
+    const invitationId = sendInvitationEmailData.invitation?.id;
+    expect(invitationId).toBeDefined();
+    const row = await c.db
+      .prepare("select role from Invitation where invitationId = ? limit 1")
+      .bind(Number(invitationId))
+      .first<{ role: string }>();
+    expect(row).not.toBeNull();
+    expect(row!.role).toBe("admin");
+    console.log("creates admin invitation (repro)", { result, sendInvitationEmailData, row });
   });
 
   it("detects unauthenticated user trying to accept invitation", async () => {

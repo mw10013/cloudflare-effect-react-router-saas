@@ -81,6 +81,7 @@ export async function action({
   }
 
   for (const email of parseResult.data.emails) {
+    console.log("createInvitation", { email, role: parseResult.data.role });
     await auth.api.createInvitation({
       headers: request.headers,
       body: {
