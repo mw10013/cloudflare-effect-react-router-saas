@@ -72,35 +72,41 @@ export async function action({
     return { formErrors, validationErrors };
   }
   const { auth } = context.get(appLoadContext);
-  if (parseResult.data.intent === "cancel") {
-    await auth.api.cancelInvitation({
-      headers: request.headers,
-      body: { invitationId: parseResult.data.invitationId },
-    });
-    return {};
-  }
-
-  for (const email of parseResult.data.emails) {
-    const result = await auth.api.createInvitation({
-      headers: request.headers,
-      body: {
-        email,
-        role: parseResult.data.role,
-        organizationId,
-        resend: true,
-      },
-    });
-    // Workaround for better-auth createInvitation role bug
-    if (result.role !== parseResult.data.role) {
-      const {
-        cloudflare: {
-          env: { D1 },
-        },
-      } = context.get(appLoadContext);
-      await D1.prepare("update Invitation set role = ? where invitationId = ?")
-        .bind(parseResult.data.role, Number(result.id))
-        .run();
-    }
+  switch (parseResult.data.intent) {
+    case "cancel":
+      await auth.api.cancelInvitation({
+        headers: request.headers,
+        body: { invitationId: parseResult.data.invitationId },
+      });
+      break;
+    case "invite":
+      for (const email of parseResult.data.emails) {
+        const result = await auth.api.createInvitation({
+          headers: request.headers,
+          body: {
+            email,
+            role: parseResult.data.role,
+            organizationId,
+            resend: true,
+          },
+        });
+        // Workaround for better-auth createInvitation role bug
+        if (result.role !== parseResult.data.role) {
+          const {
+            cloudflare: {
+              env: { D1 },
+            },
+          } = context.get(appLoadContext);
+          await D1.prepare(
+            "update Invitation set role = ? where invitationId = ?",
+          )
+            .bind(parseResult.data.role, Number(result.id))
+            .run();
+        }
+      }
+      break;
+    default:
+      void (parseResult.data satisfies never);
   }
   return {};
 }
