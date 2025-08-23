@@ -1,5 +1,5 @@
-import { invariant } from "@epic-web/invariant";
 import type { Route } from "./+types/app.$organizationId.members";
+import { invariant } from "@epic-web/invariant";
 import * as Oui from "@workspace/oui";
 import {
   Card,
@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
+import { useFetcher } from "react-router";
 import * as z from "zod";
 import * as Domain from "~/lib/domain";
 import { appLoadContext } from "~/lib/middleware";
@@ -21,12 +22,14 @@ export async function loader({
   const { auth, session } = context.get(appLoadContext);
   invariant(session, "Missing session");
   return {
-    fullOrganization: await auth.api.getFullOrganization({
-      headers: request.headers,
-      query: {
-        organizationId,
-      },
-    }),
+    members: (
+      await auth.api.listMembers({
+        headers: request.headers,
+        query: {
+          organizationId,
+        },
+      })
+    ).members,
   };
 }
 
@@ -35,51 +38,69 @@ export async function action({
   context,
   params: { organizationId },
 }: Route.ActionArgs) {
-  const schema = z.object({
-    intent: z.literal("invite"),
-    emails: z
-      .string()
-      .transform((v) =>
-        v
-          .split(",")
-          .map((i) => i.trim())
-          .filter(Boolean),
-      )
-      .pipe(
-        z
-          .array(z.email("Please provide valid email addresses."))
-          .min(1, "At least one email is required"),
-      ),
-    role: Domain.MemberRole.extract(["member", "admin"], "Role must be Member or Admin."),
-  });
-  const formData = await request.formData();
-  const parseResult = schema.safeParse(Object.fromEntries(formData));
+  const schema = z.discriminatedUnion("intent", [
+    z.object({
+      intent: z.literal("remove"),
+      memberId: z.string().min(1, "Missing memberId"),
+    }),
+    z.object({
+      intent: z.literal("leave"),
+    }),
+  ]);
+
+  const parseResult = schema.safeParse(
+    Object.fromEntries(await request.formData()),
+  );
   if (!parseResult.success) {
     const { formErrors, fieldErrors: validationErrors } = z.flattenError(
       parseResult.error,
     );
-    return {
-      formErrors,
-      validationErrors,
-    };
+    return { formErrors, validationErrors };
   }
+
   const { auth } = context.get(appLoadContext);
-  for (const email of parseResult.data.emails) {
-    await auth.api.createInvitation({
-      headers: request.headers,
-      body: {
-        email,
-        role: parseResult.data.role,
-        organizationId,
-        resend: true,
-      },
-    });
+  switch (parseResult.data.intent) {
+    case "remove":
+      await auth.api.removeMember({
+        headers: request.headers,
+        body: { memberIdOrEmail: parseResult.data.memberId, organizationId },
+      });
+      break;
+    case "leave":
+      await auth.api.leaveOrganization({
+        headers: request.headers,
+        body: { organizationId },
+      });
+      break;
+    default:
+      void (parseResult.data satisfies never);
   }
-  return { success: "Invitations sent." };
+  return {};
 }
 
+/*
+{
+    "members": [
+      {
+        "organizationId": "1",
+        "userId": "2",
+        "role": "owner",
+        "createdAt": "2025-08-22T15:16:21.539Z",
+        "id": "1",
+        "user": {
+          "id": "2",
+          "name": "",
+          "email": "u@u.com",
+          "image": null
+        }
+      }
+    ],
+  }
+}
+*/
+
 export default function RouteComponent({
-  loaderData: { fullOrganization },
+  loaderData: { members },
   actionData,
 }: Route.ComponentProps) {
   const canEdit = true;
@@ -100,80 +121,77 @@ export default function RouteComponent({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {/* {members && members.length > 0 ? (
+          {members && members.length > 0 ? (
             <ul className="divide-border divide-y">
-              {members.map((member) => {
-                const isCurrentUser = member.user.userId === userId;
-                const isOwner = member.user.userId === ownerId;
-                const canRevokeThisMember = canEdit && !isOwner;
-                const canLeaveAccount = isCurrentUser && !isOwner;
-
-                return (
-                  <li
-                    key={member.accountMemberId}
-                    className="flex flex-wrap items-center justify-between gap-4 py-4"
-                  >
-                    <div className="flex items-center gap-2 text-sm font-medium">
-                      {member.user.email}
-                      {member.status === "pending" && (
-                        <span className="text-muted-foreground text-xs font-normal">
-                          Pending
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex gap-2">
-                      {isCurrentUser && canLeaveAccount && (
-                        <Rac.Form method="post">
-                          <input
-                            type="hidden"
-                            name="accountMemberId"
-                            value={member.accountMemberId}
-                          />
-                          <Oui.Button
-                            type="submit"
-                            name="intent"
-                            value="leave"
-                            variant="outline"
-                            size="sm"
-                            aria-label="Leave this account"
-                          >
-                            Leave
-                          </Oui.Button>
-                        </Rac.Form>
-                      )}
-                      {!isCurrentUser && canRevokeThisMember && (
-                        <Rac.Form method="post">
-                          <input
-                            type="hidden"
-                            name="accountMemberId"
-                            value={member.accountMemberId}
-                          />
-                          <Oui.Button
-                            type="submit"
-                            name="intent"
-                            value="revoke"
-                            variant="outline"
-                            size="sm"
-                            aria-label={`Revoke access for ${member.user.email}`}
-                          >
-                            Revoke
-                          </Oui.Button>
-                        </Rac.Form>
-                      )}
-                    </div>
-                  </li>
-                );
-              })}
+              {members.map((member) => (
+                <MemberItem key={member.id} member={member} />
+              ))}
             </ul>
           ) : (
             <p className="text-muted-foreground text-sm">
-              No members have been added to this account yet.
+              No members have been added to this organization yet.
             </p>
-          )} */}
+          )}
         </CardContent>
       </Card>
-      <pre>{JSON.stringify({ fullOrganization, actionData }, null, 2)}</pre>
+      <pre>{JSON.stringify({ members, actionData }, null, 2)}</pre>
     </div>
+  );
+}
+
+function MemberItem({
+  member,
+}: {
+  member: Route.ComponentProps["loaderData"]["members"][number];
+}) {
+  const fetcher = useFetcher();
+  const pending = fetcher.state !== "idle";
+  const result = fetcher.data as any;
+  return (
+    <li className="flex items-center justify-between gap-4 py-4">
+      <div className="flex flex-col">
+        <span className="text-sm font-medium">{member.user.email}</span>
+        <span className="text-muted-foreground text-sm">{member.role}</span>
+      </div>
+      {member.role !== "owner" && (
+        <div className="flex flex-col items-end gap-1">
+          <fetcher.Form method="post">
+            <input type="hidden" name="memberId" value={member.id} />
+            <Oui.Button
+              type="submit"
+              name="intent"
+              value="remove"
+              variant="outline"
+              size="sm"
+              isDisabled={pending}
+            >
+              Remove
+            </Oui.Button>
+          </fetcher.Form>
+          <fetcher.Form method="post">
+            <Oui.Button
+              type="submit"
+              name="intent"
+              value="leave"
+              variant="outline"
+              size="sm"
+              isDisabled={pending}
+            >
+              Leave
+            </Oui.Button>
+          </fetcher.Form>
+          {result?.error && (
+            <div
+              role="status"
+              aria-atomic="true"
+              className="text-destructive text-xs"
+            >
+              {result.error}
+            </div>
+          )}
+        </div>
+      )}
+    </li>
   );
 }
 
