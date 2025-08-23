@@ -39,7 +39,7 @@ async function createTestContext() {
       ? ((await auth.api.getSession({ headers })) ?? undefined)
       : undefined;
     const context = new unstable_RouterContextProvider();
-    context.set(appLoadContext, { auth, session });
+    context.set(appLoadContext, { auth, session, cloudflare: { env } });
     return context;
   };
 
