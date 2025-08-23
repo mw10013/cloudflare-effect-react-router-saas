@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
-import { useFetcher } from "react-router";
+import { redirect, useFetcher } from "react-router";
 import * as z from "zod";
 import * as Domain from "~/lib/domain";
 import { appLoadContext } from "~/lib/middleware";
@@ -67,11 +67,12 @@ export async function action({
       });
       break;
     case "leave":
+      console.log("leave", { organizationId})
       await auth.api.leaveOrganization({
         headers: request.headers,
         body: { organizationId },
       });
-      break;
+      return redirect("/app");
     default:
       void (parseResult.data satisfies never);
   }

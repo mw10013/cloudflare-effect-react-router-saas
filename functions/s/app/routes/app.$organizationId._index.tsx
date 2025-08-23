@@ -1,4 +1,5 @@
 import type { Route } from "./+types/app.$organizationId._index";
+import { invariant } from "@epic-web/invariant";
 import * as Oui from "@workspace/oui";
 import {
   Card,
@@ -15,21 +16,28 @@ import { appLoadContext } from "~/lib/middleware";
 
 export async function loader({ request, context }: Route.LoaderArgs) {
   const { auth, session } = context.get(appLoadContext);
-  if (!session || !session.session.activeOrganizationId)
-    throw new Error("Missing session or active organization");
+  invariant(session, "Missing session");
   return {
-    invitations: await auth.api.listUserInvitations({
-      headers: request.headers,
-      query: { email: session.user.email },
-    }),
+    invitations: (
+      await auth.api.listUserInvitations({
+        headers: request.headers,
+        query: { email: session.user.email },
+      })
+    ).filter((v) => v.status === "pending"),
   };
 }
 
 export async function action({ request, context }: Route.ActionArgs) {
-  const schema = z.object({
-    invitationId: z.string().min(1, "Invitation is required"),
-    intent: z.enum(["accept", "reject"]),
-  });
+  const schema = z.discriminatedUnion("intent", [
+    z.object({
+      intent: z.literal("accept"),
+      invitationId: z.string().min(1, "Invitation is required"),
+    }),
+    z.object({
+      intent: z.literal("reject"),
+      invitationId: z.string().min(1, "Invitation is required"),
+    }),
+  ]);
   const formData = await request.formData();
   const parseResult = schema.safeParse(Object.fromEntries(formData));
   if (!parseResult.success) {
@@ -42,21 +50,21 @@ export async function action({ request, context }: Route.ActionArgs) {
     };
   }
   const { auth } = context.get(appLoadContext);
-  const { invitationId, intent } = parseResult.data;
-  if (intent === "accept") {
-    await auth.api.acceptInvitation({
-      body: { invitationId },
-      headers: request.headers,
-    });
-    return { success: "Invitation accepted." };
-  } else if (intent === "reject") {
-    await auth.api.rejectInvitation({
-      body: { invitationId },
-      headers: request.headers,
-    });
-    return { success: "Invitation rejected." };
-  } else {
-    return { error: `Invalid intent: ${intent}` };
+  switch (parseResult.data.intent) {
+    case "accept":
+      await auth.api.acceptInvitation({
+        body: { invitationId: parseResult.data.invitationId },
+        headers: request.headers,
+      });
+      return { success: "Invitation accepted." };
+    case "reject":
+      await auth.api.rejectInvitation({
+        body: { invitationId: parseResult.data.invitationId },
+        headers: request.headers,
+      });
+      return { success: "Invitation rejected." };
+    default:
+      void (parseResult.data satisfies never);
   }
 }
 
@@ -83,9 +91,6 @@ export default function RouteComponent({
     <div className="flex flex-col gap-6 p-6">
       {actionData?.success && (
         <Oui.Text className="text-success">{actionData.success}</Oui.Text>
-      )}
-      {actionData?.error && (
-        <Oui.Text className="text-destructive">{actionData.error}</Oui.Text>
       )}
       {invitations.length > 0 && (
         <Card>
