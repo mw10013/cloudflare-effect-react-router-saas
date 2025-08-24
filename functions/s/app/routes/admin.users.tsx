@@ -36,7 +36,6 @@ export async function action({ request, context }: Route.ActionArgs) {
     }),
     z.object({ intent: z.literal("unban"), userId: z.string() }),
   ]);
-
   const parseResult = schema.safeParse(
     Object.fromEntries(await request.formData()),
   );
@@ -232,7 +231,6 @@ function BanDialog({
   onOpenChange: (isOpen: boolean) => void;
 }) {
   const fetcher = useFetcher<Route.ComponentProps["actionData"]>();
-
   useEffect(() => {
     if (fetcher.data?.success) {
       onOpenChange(false);
@@ -240,7 +238,6 @@ function BanDialog({
   }, [fetcher.data?.success, onOpenChange]);
 
   if (!userId) return null; // After hooks per Rules of Hooks.
-
   return (
     <Oui.DialogEx isOpen={isOpen} onOpenChange={onOpenChange}>
       <Rac.Form
