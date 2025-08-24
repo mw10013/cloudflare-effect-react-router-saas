@@ -116,6 +116,13 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
     userId?: string;
   }>({ isOpen: false });
   const fetcher = useFetcher();
+  const onOpenChangeBanDialog = useCallback(
+    (isOpen: boolean) =>
+      setBanDialog((prev) =>
+        prev.isOpen === isOpen ? prev : { ...prev, isOpen },
+      ),
+    [setBanDialog],
+  );
 
   const onAction = (
     intent: "ban" | "unban",
@@ -207,9 +214,7 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
           key={banDialog.userId}
           userId={banDialog.userId}
           isOpen={banDialog.isOpen}
-          onOpenChange={(isOpen) =>
-            setBanDialog((prev) => ({ ...prev, isOpen }))
-          }
+          onOpenChange={onOpenChangeBanDialog}
         />
       </div>
     </BanPromiseDialogProvider>
@@ -226,7 +231,16 @@ function BanDialog({
   onOpenChange: (isOpen: boolean) => void;
 }) {
   const fetcher = useFetcher();
-
+  useEffect(() => {
+    if (
+      fetcher.state === "idle" &&
+      fetcher.data &&
+      !(fetcher.data as any).validationErrors &&
+      (fetcher.data as any).success
+    ) {
+      onOpenChange(false);
+    }
+  }, [fetcher.state, fetcher.data, onOpenChange]);
   return (
     <Oui.DialogEx isOpen={isOpen} onOpenChange={onOpenChange}>
       <Rac.Form
@@ -234,10 +248,6 @@ function BanDialog({
         validationErrors={fetcher.data?.validationErrors}
         onSubmit={(e) => {
           e.preventDefault();
-          console.log("BanDialog submitting", {
-            userId,
-            currentTarget: e.currentTarget,
-          });
           fetcher.submit(e.currentTarget, { method: "post" });
         }}
         className="flex flex-col gap-4"
@@ -262,7 +272,9 @@ function BanDialog({
           >
             Cancel
           </Oui.Button>
-          <Oui.Button type="submit">Ban</Oui.Button>
+          <Oui.Button type="submit" isDisabled={fetcher.state !== "idle"}>
+            Ban
+          </Oui.Button>
         </Oui.DialogFooter>
       </Rac.Form>
     </Oui.DialogEx>
