@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { invariant } from "@epic-web/invariant";
 import * as Oui from "@workspace/oui";
 import * as Rac from "react-aria-components";
-import { useFetcher, useNavigate } from "react-router";
+import { redirect, useFetcher, useNavigate } from "react-router";
 import * as z from "zod";
 import { FormErrorAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
@@ -44,14 +44,16 @@ export async function loader({ request, context }: Route.LoaderArgs) {
     headers: request.headers,
   });
   invariant("limit" in result, "Expected 'limit' to be in result");
-
-  const total = result.total ?? 0;
-  const totalPages = Math.ceil(total / limit) || 1;
+  const totalPages = Math.max(1, Math.ceil(result.total / limit));
+  if (page > totalPages) {
+    const u = new URL(request.url);
+    u.searchParams.set("page", String(totalPages));
+    return redirect(u.toString());
+  }
 
   return {
     users: result.users,
     page,
-    pageSize: limit,
     totalPages,
     filter,
   };
