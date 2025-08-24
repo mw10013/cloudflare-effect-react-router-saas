@@ -232,7 +232,7 @@ function BanDialog({
 }) {
   const fetcher = useFetcher();
   useEffect(() => {
-    if (fetcher.data?.success === true) {
+    if (fetcher.data?.success) {
       onOpenChange(false);
     }
   }, [fetcher.data, onOpenChange]);
