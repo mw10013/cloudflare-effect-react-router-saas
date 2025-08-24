@@ -1,30 +1,60 @@
 import type { Route } from "./+types/admin.users";
-import {
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { useCallback, useEffect, useState } from "react";
 import { invariant } from "@epic-web/invariant";
 import * as Oui from "@workspace/oui";
 import * as Rac from "react-aria-components";
-import { useFetcher } from "react-router";
+import { useFetcher, useNavigate } from "react-router";
 import * as z from "zod";
 import { FormErrorAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function loader({ request, context }: Route.LoaderArgs) {
+  const url = new URL(request.url);
+  const pageParam = url.searchParams.get("page");
+  const filterParam = url.searchParams.get("filter");
+
+  const PageSchema = z.preprocess((val) => {
+    if (val == null) return undefined;
+    const n = Number(String(val));
+    return Number.isFinite(n) ? n : undefined;
+  }, z.number().int().min(1).default(1));
+
+  const FilterSchema = z.preprocess(
+    (val) => (val == null ? "" : String(val)),
+    z.string().default(""),
+  );
+
+  const page = PageSchema.parse(pageParam);
+  const filter = FilterSchema.parse(filterParam);
+
   const limit = 5;
+  const offset = (page - 1) * limit;
+
   const { auth } = context.get(appLoadContext);
   const result = await auth.api.listUsers({
     query: {
       limit,
+      offset,
+      searchField: "email",
+      searchValue: filter || undefined,
+      searchOperator: filter ? "contains" : undefined,
       sortBy: "email",
       sortDirection: "asc",
     },
     headers: request.headers,
   });
   invariant("limit" in result, "Expected 'limit' to be in result");
-  return result;
+
+  const total = result.total ?? 0;
+  const totalPages = Math.ceil(total / limit) || 1;
+
+  return {
+    users: result.users,
+    page,
+    pageSize: limit,
+    totalPages,
+    filter,
+  };
 }
 
 export async function action({ request, context }: Route.ActionArgs) {
@@ -103,6 +133,7 @@ loaderData:
 */
 
 export default function RouteComponent({ loaderData }: Route.ComponentProps) {
+  const navigate = useNavigate();
   const [banDialog, setBanDialog] = useState<{
     isOpen: boolean;
     userId?: string;
@@ -128,6 +159,18 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
           Manage your users and roles.
         </p>
       </header>
+
+      <div>
+        <Oui.SearchFieldEx
+          aria-label="Filter by email"
+          placeholder="Filter by email..."
+          defaultValue={loaderData?.filter ?? ""}
+          name="filter"
+          onSubmit={(filter: string) => {
+            navigate(`./?filter=${encodeURIComponent(filter)}&page=1`);
+          }}
+        />
+      </div>
 
       <Oui.Table aria-label="Users">
         <Oui.TableHeader>
@@ -198,6 +241,34 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
           )}
         </Oui.TableBody>
       </Oui.Table>
+
+      {loaderData && loaderData.totalPages > 1 && (
+        <Oui.ListBoxEx1Pagination selectedKeys={[loaderData.page]}>
+          <Oui.ListBoxItemEx1Pagination
+            id="prev"
+            href={`/admin/users?page=${loaderData.page > 1 ? loaderData.page - 1 : 1}${loaderData.filter ? `&filter=${encodeURIComponent(loaderData.filter)}` : ""}`}
+            isDisabled={loaderData.page <= 1}
+          >
+            Previous
+          </Oui.ListBoxItemEx1Pagination>
+          {Array.from({ length: loaderData.totalPages }, (_, i) => (
+            <Oui.ListBoxItemEx1Pagination
+              key={i + 1}
+              id={i + 1}
+              href={`/admin/users?page=${i + 1}${loaderData.filter ? `&filter=${encodeURIComponent(loaderData.filter)}` : ""}`}
+            >
+              {i + 1}
+            </Oui.ListBoxItemEx1Pagination>
+          ))}
+          <Oui.ListBoxItemEx1Pagination
+            id="next"
+            href={`/admin/users?page=${loaderData.page < loaderData.totalPages ? loaderData.page + 1 : loaderData.totalPages}${loaderData.filter ? `&filter=${encodeURIComponent(loaderData.filter)}` : ""}`}
+            isDisabled={loaderData.page >= loaderData.totalPages}
+          >
+            Next
+          </Oui.ListBoxItemEx1Pagination>
+        </Oui.ListBoxEx1Pagination>
+      )}
 
       <BanDialog
         key={banDialog.userId}
