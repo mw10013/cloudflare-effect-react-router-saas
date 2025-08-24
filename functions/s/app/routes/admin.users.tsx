@@ -232,15 +232,10 @@ function BanDialog({
 }) {
   const fetcher = useFetcher();
   useEffect(() => {
-    if (
-      fetcher.state === "idle" &&
-      fetcher.data &&
-      !(fetcher.data as any).validationErrors &&
-      (fetcher.data as any).success
-    ) {
+    if (fetcher.data?.success === true) {
       onOpenChange(false);
     }
-  }, [fetcher.state, fetcher.data, onOpenChange]);
+  }, [fetcher.data, onOpenChange]);
   return (
     <Oui.DialogEx isOpen={isOpen} onOpenChange={onOpenChange}>
       <Rac.Form
@@ -265,11 +260,7 @@ function BanDialog({
         <input type="hidden" name="userId" value={userId ?? ""} />
         <input type="hidden" name="intent" value="ban" />
         <Oui.DialogFooter>
-          <Oui.Button
-            variant="outline"
-            slot="close"
-            onPress={() => onOpenChange(false)}
-          >
+          <Oui.Button variant="outline" slot="close">
             Cancel
           </Oui.Button>
           <Oui.Button type="submit" isDisabled={fetcher.state !== "idle"}>
@@ -329,12 +320,7 @@ function BanPromiseDialogProvider({ children }: { children: React.ReactNode }) {
   const submitting = fetcher.state !== "idle";
   useEffect(() => {
     if (!open) return;
-    if (
-      fetcher.state === "idle" &&
-      fetcher.data &&
-      !(fetcher.data as any).validationErrors &&
-      (fetcher.data as any).success
-    ) {
+    if (fetcher.state === "idle" && fetcher.data?.success) {
       close(true);
     }
   }, [fetcher.state, fetcher.data, open, close]);
