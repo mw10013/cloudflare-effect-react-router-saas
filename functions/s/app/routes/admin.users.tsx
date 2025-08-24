@@ -9,8 +9,10 @@ import {
 } from "react";
 import { invariant } from "@epic-web/invariant";
 import * as Oui from "@workspace/oui";
+import * as Rac from "react-aria-components";
 import { useFetcher } from "react-router";
 import * as z from "zod";
+import { FormErrorAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function loader({ request, context }: Route.LoaderArgs) {
@@ -45,6 +47,10 @@ export async function action({ request, context }: Route.ActionArgs) {
     const { formErrors, fieldErrors: validationErrors } = z.flattenError(
       parseResult.error,
     );
+    console.log("admin.users: action: parse error", {
+      formErrors,
+      validationErrors,
+    });
     return { formErrors, validationErrors };
   }
   const { auth } = context.get(appLoadContext);
@@ -199,15 +205,11 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
 
         <BanDialog
           key={banDialog.userId}
+          userId={banDialog.userId}
           isOpen={banDialog.isOpen}
           onOpenChange={(isOpen) =>
             setBanDialog((prev) => ({ ...prev, isOpen }))
           }
-          onConfirm={(reason) => {
-            if (banDialog.userId !== undefined) {
-              onAction("ban", banDialog.userId, reason);
-            }
-          }}
         />
       </div>
     </BanPromiseDialogProvider>
@@ -215,56 +217,54 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
 }
 
 function BanDialog({
+  userId,
   isOpen,
   onOpenChange,
-  onConfirm,
 }: {
+  userId?: string;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  onConfirm: (banReason: string) => void;
 }) {
-  const [banReason, setBanReason] = useState("");
-
-  const handleConfirm = () => {
-    onConfirm(banReason);
-    onOpenChange(false);
-  };
+  const fetcher = useFetcher();
 
   return (
     <Oui.DialogEx isOpen={isOpen} onOpenChange={onOpenChange}>
-      <Oui.DialogHeader>
-        <Oui.Heading slot="title">Ban User</Oui.Heading>
-      </Oui.DialogHeader>
-      <div>
-        <p className="text-muted-foreground mb-2 text-sm">
-          Provide a reason for banning this user (optional).
-        </p>
-        <Oui.Input
-          value={banReason}
-          onChange={(e) => setBanReason(e.target.value)}
-          placeholder="Reason for ban..."
+      <Rac.Form
+        validationBehavior="aria"
+        validationErrors={fetcher.data?.validationErrors}
+        onSubmit={(e) => {
+          e.preventDefault();
+          console.log("BanDialog submitting", {
+            userId,
+            currentTarget: e.currentTarget,
+          });
+          fetcher.submit(e.currentTarget, { method: "post" });
+        }}
+        className="flex flex-col gap-4"
+      >
+        <Oui.DialogHeader>
+          <Oui.Heading slot="title">Ban User</Oui.Heading>
+        </Oui.DialogHeader>
+        <FormErrorAlert formErrors={fetcher.data?.formErrors} />
+        <Oui.TextFieldEx
+          name="banReason"
+          label="Reason"
+          defaultValue=""
           autoFocus
-          onFocus={(e) => e.target.select()}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              handleConfirm();
-            }
-          }}
         />
-      </div>
-      <Oui.DialogFooter>
-        <Oui.Button
-          variant="outline"
-          slot="close"
-          onPress={() => onOpenChange(false)}
-        >
-          Cancel
-        </Oui.Button>
-        <Oui.Button slot="close" onPress={handleConfirm}>
-          Ban
-        </Oui.Button>
-      </Oui.DialogFooter>
+        <input type="hidden" name="userId" value={userId ?? ""} />
+        <input type="hidden" name="intent" value="ban" />
+        <Oui.DialogFooter>
+          <Oui.Button
+            variant="outline"
+            slot="close"
+            onPress={() => onOpenChange(false)}
+          >
+            Cancel
+          </Oui.Button>
+          <Oui.Button type="submit">Ban</Oui.Button>
+        </Oui.DialogFooter>
+      </Rac.Form>
     </Oui.DialogEx>
   );
 }
