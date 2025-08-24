@@ -35,7 +35,7 @@ export async function action({ request, context }: Route.ActionArgs) {
     z.object({
       intent: z.literal("ban"),
       userId: z.string(),
-      banReason: z.string().max(4).optional(),
+      banReason: z.string().max(4),
     }),
     z.object({ intent: z.literal("unban"), userId: z.string() }),
   ]);
@@ -47,10 +47,6 @@ export async function action({ request, context }: Route.ActionArgs) {
     const { formErrors, fieldErrors: validationErrors } = z.flattenError(
       parseResult.error,
     );
-    console.log("admin.users: action: parse error", {
-      formErrors,
-      validationErrors,
-    });
     return { formErrors, validationErrors };
   }
   const { auth } = context.get(appLoadContext);
@@ -115,7 +111,6 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
     isOpen: boolean;
     userId?: string;
   }>({ isOpen: false });
-  const fetcher = useFetcher();
   const onOpenChangeBanDialog = useCallback(
     (isOpen: boolean) =>
       setBanDialog((prev) =>
@@ -127,18 +122,8 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
       ),
     [setBanDialog],
   );
+  const fetcher = useFetcher(); // Caution: shared fetcher for simplicity.
 
-  const onAction = (
-    intent: "ban" | "unban",
-    userId: string,
-    banReason?: string,
-  ) => {
-    const formData = new FormData();
-    formData.append("intent", intent);
-    formData.append("userId", userId);
-    if (banReason !== undefined) formData.append("banReason", banReason);
-    fetcher.submit(formData, { method: "post" });
-  };
   return (
     <div className="flex flex-col gap-8 p-6">
       <header>
@@ -188,7 +173,15 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
                     <Oui.MenuItem
                       key="unban"
                       id="unban"
-                      onAction={() => onAction("unban", user.id)}
+                      onAction={() => {
+                        fetcher.submit(
+                          new URLSearchParams({
+                            intent: "unban",
+                            userId: user.id,
+                          }),
+                          { method: "post" },
+                        );
+                      }}
                     >
                       Unban
                     </Oui.MenuItem>
@@ -241,7 +234,6 @@ function BanDialog({
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
 }) {
-  console.log("BanDialog", { userId, isOpen });
   const fetcher = useFetcher<Route.ComponentProps["actionData"]>();
 
   useEffect(() => {
@@ -279,6 +271,7 @@ function BanDialog({
           <Oui.Button variant="outline" slot="close">
             Cancel
           </Oui.Button>
+          {/* Do not set slot='close' — we keep the dialog open until the server confirms success. */}
           <Oui.Button type="submit" isDisabled={fetcher.state !== "idle"}>
             Ban
           </Oui.Button>
