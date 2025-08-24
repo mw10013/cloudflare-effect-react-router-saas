@@ -9,42 +9,30 @@ import { FormErrorAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function loader({ request, context }: Route.LoaderArgs) {
+  const LIMIT = 5;
   const url = new URL(request.url);
-  const pageParam = url.searchParams.get("page");
-  const filterParam = url.searchParams.get("filter");
-
-  const PageSchema = z.preprocess((val) => {
-    if (val == null) return undefined;
-    const n = Number(String(val));
-    return Number.isFinite(n) ? n : undefined;
-  }, z.number().int().min(1).default(1));
-
-  const FilterSchema = z.preprocess(
-    (val) => (val == null ? "" : String(val)),
-    z.string().default(""),
-  );
-
-  const page = PageSchema.parse(pageParam);
-  const filter = FilterSchema.parse(filterParam);
-
-  const limit = 5;
-  const offset = (page - 1) * limit;
-
+  const params = Object.fromEntries(url.searchParams);
+  const schema = z.object({
+    page: z.coerce.number().int().min(1).default(1),
+    filter: z.string().trim().optional(),
+  });
+  const { page, filter } = schema.parse(params);
+  const offset = (page - 1) * LIMIT;
   const { auth } = context.get(appLoadContext);
   const result = await auth.api.listUsers({
     query: {
-      limit,
+      limit: LIMIT,
       offset,
       searchField: "email",
-      searchValue: filter || undefined,
-      searchOperator: filter ? "contains" : undefined,
+      searchValue: filter === "" ? undefined : filter,
+      searchOperator: "contains",
       sortBy: "email",
       sortDirection: "asc",
     },
     headers: request.headers,
   });
   invariant("limit" in result, "Expected 'limit' to be in result");
-  const pageCount = Math.max(1, Math.ceil(result.total / limit));
+  const pageCount = Math.max(1, Math.ceil(result.total / LIMIT));
   if (page > pageCount) {
     const u = new URL(request.url);
     u.searchParams.set("page", String(pageCount));
