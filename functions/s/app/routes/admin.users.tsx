@@ -119,7 +119,11 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
   const onOpenChangeBanDialog = useCallback(
     (isOpen: boolean) =>
       setBanDialog((prev) =>
-        prev.isOpen === isOpen ? prev : { ...prev, isOpen },
+        prev.isOpen === isOpen
+          ? prev
+          : isOpen
+            ? { ...prev, isOpen }
+            : { isOpen: false, userId: undefined },
       ),
     [setBanDialog],
   );
@@ -136,91 +140,98 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
     fetcher.submit(formData, { method: "post" });
   };
   return (
-    <BanPromiseDialogProvider>
-      <div className="flex flex-col gap-8 p-6">
-        <header>
-          <h1 className="text-3xl font-bold tracking-tight">Users</h1>
-          <p className="text-muted-foreground text-sm">
-            Manage your users and roles.
-          </p>
-        </header>
+    <div className="flex flex-col gap-8 p-6">
+      <header>
+        <h1 className="text-3xl font-bold tracking-tight">Users</h1>
+        <p className="text-muted-foreground text-sm">
+          Manage your users and roles.
+        </p>
+      </header>
 
-        <Oui.Table aria-label="Users">
-          <Oui.TableHeader>
-            <Oui.Column isRowHeader className="w-8">
-              Id
-            </Oui.Column>
-            <Oui.Column>Email</Oui.Column>
-            <Oui.Column>Role</Oui.Column>
-            <Oui.Column>Verified</Oui.Column>
-            <Oui.Column>Banned</Oui.Column>
-            <Oui.Column>Ban Reason</Oui.Column>
-            <Oui.Column>Created</Oui.Column>
-            <Oui.Column className="w-10 text-right" aria-label="Actions">
-              <span className="sr-only">Actions</span>
-            </Oui.Column>
-          </Oui.TableHeader>
-          <Oui.TableBody items={loaderData.users}>
-            {(user) => (
-              <Oui.Row id={user.id}>
-                <Oui.Cell>{user.id}</Oui.Cell>
-                <Oui.Cell>{user.email}</Oui.Cell>
-                <Oui.Cell>{user.role}</Oui.Cell>
-                <Oui.Cell>{String(user.emailVerified)}</Oui.Cell>
-                <Oui.Cell>{String(user.banned)}</Oui.Cell>
-                <Oui.Cell>{user.banReason ?? ""}</Oui.Cell>
-                <Oui.Cell>{user.createdAt.toLocaleString()}</Oui.Cell>
-                <Oui.Cell className="text-right">
-                  <Oui.MenuEx
-                    triggerElement={
-                      <Oui.Button variant="ghost" className="size-8 p-0">
-                        <span className="sr-only">
-                          Open menu for {user.email}
-                        </span>
-                        ⋮
-                      </Oui.Button>
-                    }
-                  >
-                    {user.banned ? (
-                      <Oui.MenuItem
-                        key="unban"
-                        id="unban"
-                        onAction={() => onAction("unban", user.id)}
-                      >
-                        Unban
-                      </Oui.MenuItem>
-                    ) : (
-                      <>
-                        <Oui.MenuItem
-                          key="ban"
-                          id="ban"
-                          onAction={() =>
-                            setBanDialog({ isOpen: true, userId: user.id })
-                          }
-                        >
-                          Ban
-                        </Oui.MenuItem>
-                        <BanPromiseMenuItem userId={user.id} />
-                      </>
-                    )}
-                  </Oui.MenuEx>
-                </Oui.Cell>
-              </Oui.Row>
-            )}
-          </Oui.TableBody>
-        </Oui.Table>
+      <Oui.Table aria-label="Users">
+        <Oui.TableHeader>
+          <Oui.Column isRowHeader className="w-8">
+            Id
+          </Oui.Column>
+          <Oui.Column>Email</Oui.Column>
+          <Oui.Column>Role</Oui.Column>
+          <Oui.Column>Verified</Oui.Column>
+          <Oui.Column>Banned</Oui.Column>
+          <Oui.Column>Ban Reason</Oui.Column>
+          <Oui.Column>Created</Oui.Column>
+          <Oui.Column className="w-10 text-right" aria-label="Actions">
+            <span className="sr-only">Actions</span>
+          </Oui.Column>
+        </Oui.TableHeader>
+        <Oui.TableBody items={loaderData.users}>
+          {(user) => (
+            <Oui.Row id={user.id}>
+              <Oui.Cell>{user.id}</Oui.Cell>
+              <Oui.Cell>{user.email}</Oui.Cell>
+              <Oui.Cell>{user.role}</Oui.Cell>
+              <Oui.Cell>{String(user.emailVerified)}</Oui.Cell>
+              <Oui.Cell>{String(user.banned)}</Oui.Cell>
+              <Oui.Cell>{user.banReason ?? ""}</Oui.Cell>
+              <Oui.Cell>{user.createdAt.toLocaleString()}</Oui.Cell>
+              <Oui.Cell className="text-right">
+                <Oui.MenuEx
+                  triggerElement={
+                    <Oui.Button variant="ghost" className="size-8 p-0">
+                      <span className="sr-only">
+                        Open menu for {user.email}
+                      </span>
+                      ⋮
+                    </Oui.Button>
+                  }
+                >
+                  {user.banned ? (
+                    <Oui.MenuItem
+                      key="unban"
+                      id="unban"
+                      onAction={() => onAction("unban", user.id)}
+                    >
+                      Unban
+                    </Oui.MenuItem>
+                  ) : (
+                    <Oui.MenuItem
+                      key="ban"
+                      id="ban"
+                      onAction={() =>
+                        setBanDialog({ isOpen: true, userId: user.id })
+                      }
+                    >
+                      Ban
+                    </Oui.MenuItem>
+                  )}
+                </Oui.MenuEx>
+              </Oui.Cell>
+            </Oui.Row>
+          )}
+        </Oui.TableBody>
+      </Oui.Table>
 
-        <BanDialog
-          key={banDialog.userId}
-          userId={banDialog.userId}
-          isOpen={banDialog.isOpen}
-          onOpenChange={onOpenChangeBanDialog}
-        />
-      </div>
-    </BanPromiseDialogProvider>
+      <BanDialog
+        key={banDialog.userId}
+        userId={banDialog.userId}
+        isOpen={banDialog.isOpen}
+        onOpenChange={onOpenChangeBanDialog}
+      />
+    </div>
   );
 }
 
+/**
+ * Dialog used to ban a user.
+ *
+ * The parent should pass `key={userId}` when rendering this component so
+ * React will remount the dialog whenever the `userId` changes, preventing
+ * stale hook state tied to a previous user.
+ *
+ * `onOpenChange` must be stable (e.g. wrapped with `useCallback`) to avoid runaway effect re-runs.
+ * When `onOpenChange(false)` is invoked the parent should also clear
+ * `userId` (set it to `undefined`) so the dialog unmounts cleanly and
+ * doesn't retain a stale selection tied to a previous user.
+ */
 function BanDialog({
   userId,
   isOpen,
@@ -230,12 +241,17 @@ function BanDialog({
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
 }) {
-  const fetcher = useFetcher();
+  console.log("BanDialog", { userId, isOpen });
+  const fetcher = useFetcher<Route.ComponentProps["actionData"]>();
+
   useEffect(() => {
     if (fetcher.data?.success) {
       onOpenChange(false);
     }
-  }, [fetcher.data, onOpenChange]);
+  }, [fetcher.data?.success, onOpenChange]);
+
+  if (!userId) return null; // After hooks per Rules of Hooks.
+
   return (
     <Oui.DialogEx isOpen={isOpen} onOpenChange={onOpenChange}>
       <Rac.Form
@@ -269,116 +285,5 @@ function BanDialog({
         </Oui.DialogFooter>
       </Rac.Form>
     </Oui.DialogEx>
-  );
-}
-
-function BanPromiseMenuItem({ userId }: { userId: string }) {
-  const { show } = useBanPromiseDialog();
-  return (
-    <Oui.MenuItem
-      key="ban-promise"
-      id="ban-promise"
-      onAction={async () => {
-        await show({ userId });
-      }}
-    >
-      Ban Promise
-    </Oui.MenuItem>
-  );
-}
-
-const BanPromiseDialogContext = createContext<
-  { show: (options: { userId: string }) => Promise<boolean> } | undefined
->(undefined);
-
-function useBanPromiseDialog() {
-  const context = useContext(BanPromiseDialogContext);
-  if (!context)
-    throw new Error(
-      "useBanPromiseDialog must be used within BanPromiseDialogProvider",
-    );
-  return context;
-}
-
-function BanPromiseDialogProvider({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useState<{ userId: string } | null>(null);
-  const [banReason, setBanReason] = useState("");
-  const resolverRef = useRef<null | ((v: boolean) => void)>(null);
-  const fetcher = useFetcher();
-  const show = useCallback((o: { userId: string }) => {
-    setBanReason("");
-    setOpen({ userId: o.userId });
-    return new Promise<boolean>((resolve) => {
-      resolverRef.current = resolve;
-    });
-  }, []);
-  const close = useCallback((result: boolean) => {
-    if (resolverRef.current) resolverRef.current(result);
-    resolverRef.current = null;
-    setOpen(null);
-  }, []);
-  const submitting = fetcher.state !== "idle";
-  useEffect(() => {
-    if (!open) return;
-    if (fetcher.state === "idle" && fetcher.data?.success) {
-      close(true);
-    }
-  }, [fetcher.state, fetcher.data, open, close]);
-  return (
-    <BanPromiseDialogContext.Provider value={{ show }}>
-      {children}
-      {open && (
-        <Oui.DialogEx
-          isOpen
-          onOpenChange={(v) => {
-            if (!v) close(false);
-          }}
-        >
-          <Oui.DialogHeader>
-            <Oui.Heading slot="title">Ban User</Oui.Heading>
-          </Oui.DialogHeader>
-          <fetcher.Form
-            method="post"
-            className="flex flex-col gap-4"
-            onSubmit={() => {
-              console.log("BanPromiseDialog submitting", {
-                userId: open.userId,
-                banReason,
-              });
-            }}
-          >
-            <input type="hidden" name="intent" value="ban" />
-            <input type="hidden" name="userId" value={open.userId} />
-            <Oui.Input
-              name="banReason"
-              value={banReason}
-              onChange={(e) => setBanReason(e.target.value)}
-              placeholder="Reason for ban..."
-              autoFocus
-              onFocus={(e) => e.target.select()}
-            />
-            {(fetcher.data as any)?.formErrors && (
-              <ul className="text-destructive list-disc pl-4 text-sm">
-                {(fetcher.data as any).formErrors.map((f: string) => (
-                  <li key={f}>{f}</li>
-                ))}
-              </ul>
-            )}
-            <Oui.DialogFooter>
-              <Oui.Button
-                variant="outline"
-                onPress={() => close(false)}
-                isDisabled={submitting}
-              >
-                Cancel
-              </Oui.Button>
-              <Oui.Button type="submit" isDisabled={submitting}>
-                {submitting ? "Banning..." : "Ban"}
-              </Oui.Button>
-            </Oui.DialogFooter>
-          </fetcher.Form>
-        </Oui.DialogEx>
-      )}
-    </BanPromiseDialogContext.Provider>
   );
 }
