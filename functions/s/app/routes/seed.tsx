@@ -1,16 +1,18 @@
 import type { User } from "better-auth/types";
 import type { AppLoadContext } from "react-router";
 import type { Route } from "./+types/seed";
+import { invariant } from "@epic-web/invariant";
+import { magicLink } from "better-auth/plugins";
 import { redirect, unstable_RouterContextProvider } from "react-router";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
 
 async function createSeedContext(cloudflare: AppLoadContext["cloudflare"]) {
-  let magicLinkToken: string;
+  const magicLinkTokens = new Map<string, string>();
   const auth = await createAuth({
     d1: cloudflare.env.D1,
-    sendMagicLink: async ({ token }) => {
-      magicLinkToken = token;
+    sendMagicLink: async ({ email, token }) => {
+      magicLinkTokens.set(email, token);
     },
     sendInvitationEmail: async () => {},
   });
@@ -47,11 +49,14 @@ async function createSeedContext(cloudflare: AppLoadContext["cloudflare"]) {
       throw new Error("createUser: failed to signInMagicLink", {
         cause: signInMagicLinkResponse,
       });
+    const token = magicLinkTokens.get(user.email);
+    invariant(token, "Missing magic link token");
+    console.log("createUser", { email, token });
     const magicLinkVerifyResponse = await auth.api.magicLinkVerify({
       asResponse: true,
       headers: {},
       query: {
-        token: magicLinkToken,
+        token,
         // No callbackURL's so response is not redirect and we can check for status 200
       },
     });
@@ -66,7 +71,6 @@ async function createSeedContext(cloudflare: AppLoadContext["cloudflare"]) {
   return {
     auth,
     createUser,
-    magicLinkToken: () => magicLinkToken,
   };
 }
 
@@ -75,9 +79,11 @@ export async function loader({ context }: Route.ActionArgs) {
   const db = cloudflare.env.D1;
   const c = await createSeedContext(cloudflare);
 
-  const u = await c.createUser("u@u.com");
-  const u1 = await c.createUser("u1@u.com");
-  const u2 = await c.createUser("u2@u.com");
+  const [u, u1, u2, u3, u4, u5] = await Promise.all(
+    ["u@u.com", "u1@u.com", "u2@u.com", "u3@u.com", "u4@u.com", "u5@u.com"].map(
+      (email) => c.createUser(email),
+    ),
+  );
 
   /*
 

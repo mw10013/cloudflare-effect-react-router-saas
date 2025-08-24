@@ -44,17 +44,17 @@ export async function loader({ request, context }: Route.LoaderArgs) {
     headers: request.headers,
   });
   invariant("limit" in result, "Expected 'limit' to be in result");
-  const totalPages = Math.max(1, Math.ceil(result.total / limit));
-  if (page > totalPages) {
+  const pageCount = Math.max(1, Math.ceil(result.total / limit));
+  if (page > pageCount) {
     const u = new URL(request.url);
-    u.searchParams.set("page", String(totalPages));
+    u.searchParams.set("page", String(pageCount));
     return redirect(u.toString());
   }
 
   return {
     users: result.users,
     page,
-    totalPages,
+    pageCount,
     filter,
   };
 }
@@ -244,7 +244,7 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
         </Oui.TableBody>
       </Oui.Table>
 
-      {loaderData && loaderData.totalPages > 1 && (
+      {loaderData && loaderData.pageCount > 1 && (
         <Oui.ListBoxEx1Pagination selectedKeys={[loaderData.page]}>
           <Oui.ListBoxItemEx1Pagination
             id="prev"
@@ -253,7 +253,7 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
           >
             Previous
           </Oui.ListBoxItemEx1Pagination>
-          {Array.from({ length: loaderData.totalPages }, (_, i) => (
+          {Array.from({ length: loaderData.pageCount }, (_, i) => (
             <Oui.ListBoxItemEx1Pagination
               key={i + 1}
               id={i + 1}
@@ -264,8 +264,8 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
           ))}
           <Oui.ListBoxItemEx1Pagination
             id="next"
-            href={`/admin/users?page=${loaderData.page < loaderData.totalPages ? loaderData.page + 1 : loaderData.totalPages}${loaderData.filter ? `&filter=${encodeURIComponent(loaderData.filter)}` : ""}`}
-            isDisabled={loaderData.page >= loaderData.totalPages}
+            href={`/admin/users?page=${loaderData.page < loaderData.pageCount ? loaderData.page + 1 : loaderData.pageCount}${loaderData.filter ? `&filter=${encodeURIComponent(loaderData.filter)}` : ""}`}
+            isDisabled={loaderData.page >= loaderData.pageCount}
           >
             Next
           </Oui.ListBoxItemEx1Pagination>
