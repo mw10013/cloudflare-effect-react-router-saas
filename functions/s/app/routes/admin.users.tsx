@@ -67,6 +67,7 @@ export async function action({ request, context }: Route.ActionArgs) {
       banReason: z.string().max(4),
     }),
     z.object({ intent: z.literal("unban"), userId: z.string() }),
+    z.object({ intent: z.literal("impersonate"), userId: z.string() }),
   ]);
   const parseResult = schema.safeParse(
     Object.fromEntries(await request.formData()),
@@ -94,6 +95,14 @@ export async function action({ request, context }: Route.ActionArgs) {
         body: { userId: parseResult.data.userId },
       });
       return { success: true };
+    case "impersonate": {
+      const { headers } = await auth.api.impersonateUser({
+        returnHeaders: true,
+        headers: request.headers,
+        body: { userId: parseResult.data.userId },
+      });
+      return redirect("/app", { headers });
+    }
     default:
       void (parseResult.data satisfies never);
   }
@@ -237,6 +246,21 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
                       Ban
                     </Oui.MenuItem>
                   )}
+                  <Oui.MenuItem
+                    key="impersonate"
+                    id="impersonate"
+                    onAction={() => {
+                      fetcher.submit(
+                        new URLSearchParams({
+                          intent: "impersonate",
+                          userId: user.id,
+                        }),
+                        { method: "post" },
+                      );
+                    }}
+                  >
+                    Impersonate
+                  </Oui.MenuItem>
                 </Oui.MenuEx>
               </Oui.Cell>
             </Oui.Row>

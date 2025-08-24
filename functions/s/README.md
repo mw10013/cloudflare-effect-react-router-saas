@@ -3,6 +3,13 @@
 pnpm -F s test --project d1 auth
 ```
 
+## TODO
+
+- accept/reject invitation fetchers
+- middleware for organizationId
+- gridlist for invitations and members
+- sign out a11y in sidebar
+
 ## Vitest
 
 - BUG: Discrepancy in Node Module Compatibility Between wrangler deploy and vitest-pool-workers Testing : https://github.com/cloudflare/workers-sdk/issues/7324
