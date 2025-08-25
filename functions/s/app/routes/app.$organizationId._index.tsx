@@ -12,15 +12,20 @@ import { useFetcher } from "react-router";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function loader({ request, context }: Route.LoaderArgs) {
+  const MIN_TTL_MS = 5 * 60 * 1000;
   const { auth, session } = context.get(appLoadContext);
   invariant(session, "Missing session");
+  const now = Date.now();
   return {
     invitations: (
       await auth.api.listUserInvitations({
         headers: request.headers,
         query: { email: session.user.email },
       })
-    ).filter((v) => v.status === "pending"),
+    ).filter(
+      (v) =>
+        v.status === "pending" && v.expiresAt.getTime() - now >= MIN_TTL_MS,
+    ),
   };
 }
 
