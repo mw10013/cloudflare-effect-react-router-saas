@@ -123,16 +123,16 @@ export default function RouteComponent({
                           String(inv.expiresAt))}
                     </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Rac.Form
-                      onSubmit={handleFormSubmit}
-                      method="post"
-                      validationBehavior="aria"
-                      validationErrors={actionData?.validationErrors}
-                      className="flex flex-col gap-2"
-                    >
-                      <FormErrorAlert formErrors={actionData?.formErrors} />
-                      <input type="hidden" name="invitationId" value={inv.id} />
+                  <Rac.Form
+                    onSubmit={handleFormSubmit}
+                    method="post"
+                    validationBehavior="aria"
+                    validationErrors={actionData?.validationErrors}
+                    className="flex flex-col gap-2"
+                  >
+                    <FormErrorAlert formErrors={actionData?.formErrors} />
+                    <input type="hidden" name="invitationId" value={inv.id} />
+                    <div className="flex gap-2">
                       <Oui.Button
                         type="submit"
                         name="intent"
@@ -142,16 +142,6 @@ export default function RouteComponent({
                       >
                         Accept
                       </Oui.Button>
-                    </Rac.Form>
-                    <Rac.Form
-                      onSubmit={handleFormSubmit}
-                      method="post"
-                      validationBehavior="aria"
-                      validationErrors={actionData?.validationErrors}
-                      className="flex flex-col gap-2"
-                    >
-                      <FormErrorAlert formErrors={actionData?.formErrors} />
-                      <input type="hidden" name="invitationId" value={inv.id} />
                       <Oui.Button
                         type="submit"
                         name="intent"
@@ -161,8 +151,8 @@ export default function RouteComponent({
                       >
                         Reject
                       </Oui.Button>
-                    </Rac.Form>
-                  </div>
+                    </div>
+                  </Rac.Form>
                 </li>
               ))}
             </ul>
