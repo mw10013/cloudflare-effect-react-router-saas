@@ -97,6 +97,56 @@ export async function loader({ context }: Route.ActionArgs) {
         { user: u5, role: "member", add: false },
       ],
     ],
+    [
+      u1,
+      [
+        { user: u, role: "member", add: true },
+        { user: u2, role: "member", add: true },
+        { user: u3, role: "member", add: false },
+        { user: u4, role: "member", add: false },
+        { user: u5, role: "member", add: false },
+      ],
+    ],
+    [
+      u2,
+      [
+        { user: u, role: "member", add: true },
+        { user: u1, role: "member", add: true },
+        { user: u3, role: "member", add: false },
+        { user: u4, role: "member", add: false },
+        { user: u5, role: "member", add: false },
+      ],
+    ],
+    [
+      u3,
+      [
+        { user: u, role: "member", add: true },
+        { user: u1, role: "member", add: true },
+        { user: u2, role: "member", add: false },
+        { user: u4, role: "member", add: false },
+        { user: u5, role: "member", add: false },
+      ],
+    ],
+    [
+      u4,
+      [
+        { user: u, role: "member", add: false },
+        { user: u1, role: "member", add: false },
+        { user: u2, role: "member", add: false },
+        { user: u3, role: "member", add: false },
+        { user: u5, role: "member", add: false },
+      ],
+    ],
+    [
+      u5,
+      [
+        { user: u, role: "member", add: false },
+        { user: u1, role: "member", add: false },
+        { user: u2, role: "member", add: false },
+        { user: u3, role: "member", add: false },
+        { user: u5, role: "member", add: false },
+      ],
+    ],
   ] as const) {
     const session = await owner.session();
     invariant(session, "Missing session");
