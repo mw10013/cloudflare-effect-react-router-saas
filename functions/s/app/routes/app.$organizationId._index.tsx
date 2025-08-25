@@ -79,31 +79,28 @@ function InvitationItem({
         <div>Role: {invitation.role}</div>
         <div>Expires: {expiresIn(invitation.expiresAt)}</div>
       </div>
-      <fetcher.Form method="post" className="flex flex-col gap-2">
-        {/* https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent */}
+      <fetcher.Form method="post" className="flex gap-2">
         <input type="hidden" name="invitationId" value={invitation.id} />
-        <div className="flex gap-2">
-          <Oui.Button
-            type="submit"
-            name="intent"
-            value="accept"
-            variant="outline"
-            size="sm"
-            isDisabled={disabled}
-          >
-            Accept
-          </Oui.Button>
-          <Oui.Button
-            type="submit"
-            name="intent"
-            value="reject"
-            variant="destructive"
-            size="sm"
-            isDisabled={disabled}
-          >
-            Reject
-          </Oui.Button>
-        </div>
+        <Oui.Button
+          type="submit"
+          name="intent"
+          value="accept"
+          variant="outline"
+          size="sm"
+          isDisabled={disabled}
+        >
+          Accept
+        </Oui.Button>
+        <Oui.Button
+          type="submit"
+          name="intent"
+          value="reject"
+          variant="destructive"
+          size="sm"
+          isDisabled={disabled}
+        >
+          Reject
+        </Oui.Button>
       </fetcher.Form>
     </li>
   );
