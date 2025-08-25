@@ -90,8 +90,11 @@ export async function loader({ context }: Route.ActionArgs) {
     [
       u,
       [
-        { user: u1, role: "member", add: false },
+        { user: u1, role: "member", add: true },
         { user: u2, role: "member", add: true },
+        { user: u3, role: "member", add: false },
+        { user: u4, role: "member", add: false },
+        { user: u5, role: "member", add: false },
       ],
     ],
   ] as const) {
