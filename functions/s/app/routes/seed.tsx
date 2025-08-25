@@ -67,6 +67,7 @@ async function createSeedContext(cloudflare: AppLoadContext["cloudflare"]) {
     user.headers.set("Cookie", sessionCookie(magicLinkVerifyResponse.headers));
     return user;
   };
+  type SeedUser = Awaited<ReturnType<typeof createUser>>;
 
   return {
     auth,
@@ -85,19 +86,60 @@ export async function loader({ context }: Route.ActionArgs) {
     ),
   );
 
-  /*
+  for (const [owner, users] of [
+    [
+      u,
+      [
+        { user: u1, role: "member", add: false },
+        { user: u2, role: "member", add: true },
+      ],
+    ],
+  ] as const) {
+    const session = await owner.session();
+    invariant(session, "Missing session");
+    const organizationId = session.session.activeOrganizationId;
+    invariant(organizationId, "Missing active organization");
+    const fullOrganization = await c.auth.api.getFullOrganization({
+      headers: owner.headers,
+      query: { organizationId },
+    });
+    invariant(fullOrganization, "Missing full organization");
 
-      "results": [
-        {
-          "id": 1,
-          "email": "u@u.com",
-          "inviterId": 3,
-          "organizationId": 2,
-          "role": "member",
-          "status": "canceled",
-          "expiresAt": "2025-08-17T14:11:59.399Z"
-        },
-       */
+    for (const { user, role, add } of users) {
+      if (fullOrganization.members.some((m) => m.user.email === user.email))
+        continue;
+      if (
+        fullOrganization.invitations.some(
+          (i) =>
+            i.email === user.email &&
+            ["pending", "accepted", "rejected"].includes(i.status),
+        )
+      )
+        continue;
+      if (add) {
+        const session = await user.session();
+        invariant(session, "Missing session");
+        await c.auth.api.addMember({
+          headers: owner.headers,
+          body: {
+            userId: session.user.id,
+            role,
+            organizationId,
+          },
+        });
+      } else {
+        await c.auth.api.createInvitation({
+          headers: owner.headers,
+          body: {
+            email: user.email,
+            role,
+            organizationId,
+            resend: true,
+          },
+        });
+      }
+    }
+  }
 
   const [
     { results: invitations },
@@ -114,40 +156,6 @@ export async function loader({ context }: Route.ActionArgs) {
     any,
     any,
   ];
-
-  // resend: true is creating a duplicate invite instead of reusing the existing one: https://github.com/better-auth/better-auth/issues/3507
-  for (const [inviter, invitee] of [
-    [u, u1],
-    [u, u2],
-    [u1, u],
-    [u1, u2],
-    [u2, u],
-  ]) {
-    const session = await inviter.session();
-    if (session === null) throw new Error("Missing session for inviter");
-    const organizationId = session.session.activeOrganizationId;
-    if (typeof organizationId !== "string")
-      throw new Error("Invalid organizationId");
-    const invitationExists =
-      (await db
-        .prepare(
-          "select 1 from Invitation where email = ? and organizationId = ? limit 1",
-        )
-        .bind(invitee.email, Number(organizationId))
-        .first()) !== null;
-    if (invitationExists) continue;
-
-    await c.auth.api.createInvitation({
-      headers: inviter.headers,
-      body: {
-        email: invitee.email,
-        role: "member",
-        organizationId,
-        resend: true,
-      },
-    });
-  }
-
   return {
     invitationCount: invitations.length,
     invitations,
@@ -164,3 +172,23 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
     </div>
   );
 }
+
+// resend: true is creating a duplicate invite instead of reusing the existing one: https://github.com/better-auth/better-auth/issues/3507
+// const invitationExists =
+//   (await db
+//     .prepare(
+//       "select 1 from Invitation where email = ? and organizationId = ? limit 1",
+//     )
+//     .bind(invitee.email, Number(organizationId))
+//     .first()) !== null;
+// if (invitationExists) continue;
+
+// await c.auth.api.createInvitation({
+//   headers: inviter.headers,
+//   body: {
+//     email: invitee.email,
+//     role: "member",
+//     organizationId,
+//     resend: true,
+//   },
+// });
