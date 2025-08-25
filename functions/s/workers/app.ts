@@ -14,7 +14,8 @@ declare module "react-router" {
     };
     auth: ReturnType<typeof createAuth>;
     session?: ReturnType<typeof createAuth>["$Infer"]["Session"];
-    // runtime: ReturnType<typeof makeRuntime>;
+    organization?: ReturnType<typeof createAuth>["$Infer"]["Organization"];
+    organizations?: ReturnType<typeof createAuth>["$Infer"]["Organization"][];
   }
 }
 

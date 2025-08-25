@@ -2,6 +2,7 @@ import type { Organization } from "better-auth/plugins";
 import type { User } from "better-auth/types";
 import type { Route } from "./+types/app.$organizationId";
 import React from "react";
+import { invariant } from "@epic-web/invariant";
 import * as Oui from "@workspace/oui";
 import {
   Sidebar,
@@ -13,70 +14,34 @@ import {
 } from "@workspace/ui/components/ui/sidebar";
 import { ChevronsUpDown, LogOut } from "lucide-react";
 import * as Rac from "react-aria-components";
-import { Outlet, redirect, useNavigate } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import { appLoadContext } from "~/lib/middleware";
 
-// const accountMiddleware: Route.unstable_MiddlewareFunction =
-//   ReactRouterEx.middlewareEffect(({ params, context }) =>
-//     Effect.gen(function* () {
-//       const appLoadContext = context.get(ReactRouterEx.appLoadContext);
-//       const AccountIdFromPath = Schema.compose(
-//         Schema.NumberFromString,
-//         Account.fields.accountId,
-//       );
-//       const accountId = yield* Schema.decodeUnknown(AccountIdFromPath)(
-//         params.accountId,
-//       );
-//       const accountMember = yield* Effect.fromNullable(
-//         appLoadContext.session.get("sessionUser"),
-//       ).pipe(
-//         Effect.flatMap((sessionUser) =>
-//           IdentityMgr.getAccountMemberForAccount({
-//             accountId,
-//             userId: sessionUser.userId,
-//           }),
-//         ),
-//         Effect.catchTag("NoSuchElementException", () => Effect.succeed(null)),
-//       );
-//       if (!accountMember) {
-//         return yield* Effect.fail(redirect("/app"));
-//       }
-//       context.set(ReactRouterEx.appLoadContext, {
-//         ...appLoadContext,
-//         accountMember,
-//         permissions: Policy.getAccountMemberRolePermissions(accountMember.role),
-//       });
-//     }),
-//   );
-
-// export const unstable_middleware = [accountMiddleware];
-
-// export const loader = ReactRouterEx.routeEffect(() =>
-//   Effect.gen(function* () {
-//     const appLoadContext = yield* ReactRouterEx.AppLoadContext;
-//     const sessionUser = yield* Effect.fromNullable(
-//       appLoadContext.session.get("sessionUser"),
-//     );
-//     return {
-//       accountMember: yield* Effect.fromNullable(appLoadContext.accountMember),
-//       accounts: yield* IdentityMgr.getAccounts(sessionUser),
-//       sessionUser,
-//     };
-//   }),
-// );
-
-export async function loader({
+const middleware: Route.unstable_MiddlewareFunction = async ({
   request,
   context,
   params: { organizationId },
-}: Route.ActionArgs) {
-  const { auth, session } = context.get(appLoadContext);
-  if (!session) throw new Error("Missing session");
-  const organizations = await auth.api.listOrganizations({
+}) => {
+  const alc = context.get(appLoadContext);
+  const organizations = await alc.auth.api.listOrganizations({
     headers: request.headers,
   });
   const organization = organizations.find((org) => org.id === organizationId);
-  if (!organization) throw new Error("Missing organization");
+  if (!organization) throw new Response("Forbidden", { status: 403 });
+  context.set(appLoadContext, { ...alc, organization, organizations });
+};
+
+export const unstable_middleware = [middleware];
+
+export async function loader({
+  context,
+  params: { organizationId },
+}: Route.ActionArgs) {
+  const { organization, organizations, session } = context.get(appLoadContext);
+  invariant(organization, "Missing organization");
+  invariant(organization.id === organizationId, "Organization ID mismatch");
+  invariant(organizations, "Missing organizations");
+  invariant(session, "Missing session");
   return {
     organization,
     organizations,
