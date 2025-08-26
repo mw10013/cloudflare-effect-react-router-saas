@@ -122,7 +122,7 @@ export default function RouteComponent({
           </CardHeader>
           <CardContent>
             {/* <ul className="flex flex-col gap-4"> */}
-            <ul className="divide-y-1 flex flex-col">
+            <ul className="divide-y flex flex-col">
               {invitations.map((invitation) => (
                 <InvitationItem key={invitation.id} invitation={invitation} />
               ))}
