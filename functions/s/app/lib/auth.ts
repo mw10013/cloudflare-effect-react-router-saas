@@ -141,8 +141,16 @@ function createBetterAuthOptions({
             modelName: "Subscription",
           },
         },
+        onCustomerCreate: async ({ stripeCustomer, user }) => {
+          console.log(
+            `stripe plugin: onCustomerCreate: customer ${stripeCustomer.id} created for user ${user.email}`,
+          );
+        },
         onEvent: async (event: Stripe.Event) => {
-          console.log(`Stripe event received: ${event.type}`, event);
+          console.log(
+            `stripe plugin: onEvent: stripe event received: ${event.type}`,
+            event,
+          );
         },
       }),
     ],
