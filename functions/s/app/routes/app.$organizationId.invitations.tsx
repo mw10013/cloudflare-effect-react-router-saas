@@ -18,9 +18,20 @@ export async function loader({
   context,
   params: { organizationId },
 }: Route.LoaderArgs) {
-  const { auth, session } = context.get(appLoadContext);
-  if (!session) throw new Error("Missing session or active organization");
+  const { auth } = context.get(appLoadContext);
+
+  const { success: canManageInvitations } = await auth.api.hasPermission({
+    headers: request.headers,
+    body: {
+      organizationId,
+      permissions: {
+        invitation: ["create", "cancel"],
+      },
+    },
+  });
+
   return {
+    canManageInvitations,
     invitations: await auth.api.listInvitations({
       headers: request.headers,
       query: {
@@ -62,10 +73,13 @@ export async function action({
     }),
   ]);
 
-  const parseResult = schema.safeParse(
-    Object.fromEntries(await request.formData()),
-  );
+  const form = Object.fromEntries(await request.formData());
+  const parseResult = schema.safeParse(form);
   if (!parseResult.success) {
+    if (form.intent !== "invite")
+      throw new Response(`Invalid form submission: intent: ${form.intent}`, {
+        status: 400,
+      });
     const { formErrors, fieldErrors: validationErrors } = z.flattenError(
       parseResult.error,
     );
@@ -112,7 +126,7 @@ export async function action({
 }
 
 export default function RouteComponent({
-  loaderData: { invitations },
+  loaderData: { canManageInvitations, invitations },
   actionData,
 }: Route.ComponentProps) {
   return (
@@ -142,10 +156,12 @@ export default function RouteComponent({
               label="Email Addresses"
               type="text"
               placeholder="e.g., user1@example.com, user2@example.com"
+              isDisabled={!canManageInvitations}
             />
             <Oui.SelectEx
               name="role"
               label="Role"
+              isDisabled={!canManageInvitations}
               defaultSelectedKey={"member"}
               items={[
                 { id: "member", name: "Member" },
@@ -159,6 +175,7 @@ export default function RouteComponent({
               name="intent"
               value="invite"
               variant="outline"
+              isDisabled={!canManageInvitations}
               className="justify-self-end"
             >
               Send Invites
@@ -178,7 +195,11 @@ export default function RouteComponent({
           {invitations && invitations.length > 0 ? (
             <ul className="divide-y">
               {invitations.map((i) => (
-                <InvitationItem key={i.id} invitation={i} />
+                <InvitationItem
+                  key={i.id}
+                  invitation={i}
+                  canManageInvitations={canManageInvitations}
+                />
               ))}
             </ul>
           ) : (
@@ -194,8 +215,10 @@ export default function RouteComponent({
 
 function InvitationItem({
   invitation,
+  canManageInvitations,
 }: {
   invitation: Route.ComponentProps["loaderData"]["invitations"][number];
+  canManageInvitations: boolean;
 }) {
   const fetcher = useFetcher();
   const pending = fetcher.state !== "idle";
@@ -212,11 +235,16 @@ function InvitationItem({
         </span>
         {invitation.status === "pending" && (
           <span className="text-muted-foreground text-xs">
-            Expires: {new Date(invitation.expiresAt).toLocaleString()}
+            Expires:{" "}
+            {new Date(invitation.expiresAt)
+              .toISOString()
+              .replace("T", " ")
+              .slice(0, 16)}{" "}
+            UTC
           </span>
         )}
       </div>
-      {invitation.status === "pending" && (
+      {canManageInvitations && invitation.status === "pending" && (
         <div className="flex flex-col items-end gap-1">
           <fetcher.Form method="post">
             <input type="hidden" name="invitationId" value={invitation.id} />
