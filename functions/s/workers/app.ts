@@ -26,7 +26,8 @@ export default {
       d1: env.D1,
     });
     hono.all("/api/auth/*", (c) => {
-      console.log(`/api/auth/*`, c.req.raw.url);
+      // http://localhost:5173/api/auth/stripe/webhook
+      console.log(`worker fetch: /api/auth/* ${c.req.raw.url}`);
       return auth.handler(c.req.raw);
     });
     hono.all("*", async (c) => {
