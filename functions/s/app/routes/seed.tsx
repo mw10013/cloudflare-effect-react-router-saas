@@ -80,8 +80,8 @@ export async function loader({ context }: Route.ActionArgs) {
   const db = cloudflare.env.D1;
   const c = await createSeedContext(cloudflare);
 
-  const [u, u1, u2, u3, u4, u5] = await Promise.all(
-    ["u@u.com", "u1@u.com", "u2@u.com", "u3@u.com", "u4@u.com", "u5@u.com"].map(
+  const [u, v, w, x, y, z] = await Promise.all(
+    ["u@u.com", "v@v.com", "w@w.com", "x@x.com", "y@y.com", "z@z.com"].map(
       (email) => c.createUser(email),
     ),
   );
@@ -90,61 +90,61 @@ export async function loader({ context }: Route.ActionArgs) {
     [
       u,
       [
-        { user: u1, role: "member", add: true },
-        { user: u2, role: "member", add: true },
-        { user: u3, role: "member", add: false },
-        { user: u4, role: "member", add: false },
-        { user: u5, role: "member", add: false },
+        { user: v, role: "member", add: true },
+        { user: w, role: "member", add: true },
+        { user: x, role: "member", add: false },
+        { user: y, role: "member", add: false },
+        { user: z, role: "member", add: false },
       ],
     ],
     [
-      u1,
+      v,
       [
         { user: u, role: "member", add: true },
-        { user: u2, role: "member", add: true },
-        { user: u3, role: "member", add: false },
-        { user: u4, role: "member", add: false },
-        { user: u5, role: "member", add: false },
+        { user: w, role: "member", add: true },
+        { user: x, role: "member", add: false },
+        { user: y, role: "member", add: false },
+        { user: z, role: "member", add: false },
       ],
     ],
     [
-      u2,
+      w,
       [
         { user: u, role: "member", add: true },
-        { user: u1, role: "member", add: true },
-        { user: u3, role: "member", add: false },
-        { user: u4, role: "member", add: false },
-        { user: u5, role: "member", add: false },
+        { user: v, role: "member", add: true },
+        { user: x, role: "member", add: false },
+        { user: y, role: "member", add: false },
+        { user: z, role: "member", add: false },
       ],
     ],
     [
-      u3,
+      x,
       [
         { user: u, role: "member", add: true },
-        { user: u1, role: "member", add: true },
-        { user: u2, role: "member", add: false },
-        { user: u4, role: "member", add: false },
-        { user: u5, role: "member", add: false },
+        { user: v, role: "member", add: true },
+        { user: w, role: "member", add: false },
+        { user: y, role: "member", add: false },
+        { user: z, role: "member", add: false },
       ],
     ],
     [
-      u4,
+      y,
       [
         { user: u, role: "member", add: false },
-        { user: u1, role: "member", add: false },
-        { user: u2, role: "member", add: false },
-        { user: u3, role: "member", add: false },
-        { user: u5, role: "member", add: false },
+        { user: v, role: "member", add: false },
+        { user: w, role: "member", add: false },
+        { user: x, role: "member", add: false },
+        { user: z, role: "member", add: false },
       ],
     ],
     [
-      u5,
+      z,
       [
         { user: u, role: "member", add: false },
-        { user: u1, role: "member", add: false },
-        { user: u2, role: "member", add: false },
-        { user: u3, role: "member", add: false },
-        { user: u5, role: "member", add: false },
+        { user: v, role: "member", add: false },
+        { user: w, role: "member", add: false },
+        { user: x, role: "member", add: false },
+        { user: z, role: "member", add: false },
       ],
     ],
   ] as const) {
