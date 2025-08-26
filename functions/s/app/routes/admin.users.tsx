@@ -213,10 +213,10 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
                       id="unban"
                       onAction={() => {
                         fetcher.submit(
-                          new URLSearchParams({
+                          {
                             intent: "unban",
                             userId: user.id,
-                          }),
+                          },
                           { method: "post" },
                         );
                       }}
@@ -239,10 +239,10 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
                     id="impersonate"
                     onAction={() => {
                       fetcher.submit(
-                        new URLSearchParams({
+                        {
                           intent: "impersonate",
                           userId: user.id,
-                        }),
+                        },
                         { method: "post" },
                       );
                     }}
