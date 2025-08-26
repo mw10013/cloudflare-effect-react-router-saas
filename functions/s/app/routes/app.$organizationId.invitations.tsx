@@ -176,7 +176,7 @@ export default function RouteComponent({
         </CardHeader>
         <CardContent>
           {invitations && invitations.length > 0 ? (
-            <ul className="divide-border divide-y">
+            <ul className="divide-y">
               {invitations.map((i) => (
                 <InvitationItem key={i.id} invitation={i} />
               ))}
@@ -203,7 +203,7 @@ function InvitationItem({
   return (
     <li
       key={invitation.id}
-      className="flex items-center justify-between gap-4 py-4"
+      className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0"
     >
       <div className="flex flex-col">
         <span className="text-sm font-medium">{invitation.email}</span>
