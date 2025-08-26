@@ -26,6 +26,7 @@ export default {
       d1: env.D1,
     });
     hono.all("/api/auth/*", (c) => {
+      console.log(`/api/auth/*`, c.req.raw.url);
       return auth.handler(c.req.raw);
     });
     hono.all("*", async (c) => {
