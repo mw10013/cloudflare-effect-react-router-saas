@@ -73,7 +73,7 @@ function InvitationItem({
   const disabled = fetcher.state !== "idle";
   return (
     // <li className="flex items-center justify-between gap-4 border-b pb-4 last:border-b-0 last:pb-0">
-    <li className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
+    <li className="flex items-center justify-between py-4 first:pt-0 last:pb-0">
       <div className="flex-grow text-sm">
         <div>Inviter ID: {invitation.inviterId}</div>
         <div>Organization ID: {invitation.organizationId}</div>

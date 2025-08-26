@@ -47,7 +47,6 @@ export async function action({
       intent: z.literal("leave"),
     }),
   ]);
-
   const parseResult = schema.safeParse(
     Object.fromEntries(await request.formData()),
   );
@@ -67,7 +66,7 @@ export async function action({
       });
       break;
     case "leave":
-      console.log("leave", { organizationId})
+      console.log("leave", { organizationId });
       await auth.api.leaveOrganization({
         headers: request.headers,
         body: { organizationId },
@@ -123,7 +122,7 @@ export default function RouteComponent({
         </CardHeader>
         <CardContent>
           {members && members.length > 0 ? (
-            <ul className="divide-border divide-y">
+            <ul className="divide-y">
               {members.map((member) => (
                 <MemberItem key={member.id} member={member} />
               ))}
@@ -149,7 +148,7 @@ function MemberItem({
   const pending = fetcher.state !== "idle";
   const result = fetcher.data as any;
   return (
-    <li className="flex items-center justify-between gap-4 py-4">
+    <li className="flex items-center justify-between gap-4 py-4 first:pt-0 last:pb-0">
       <div className="flex flex-col">
         <span className="text-sm font-medium">{member.user.email}</span>
         <span className="text-muted-foreground text-sm">{member.role}</span>
