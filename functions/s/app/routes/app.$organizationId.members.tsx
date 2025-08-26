@@ -8,10 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card";
-import * as Rac from "react-aria-components";
 import { redirect, useFetcher } from "react-router";
 import * as z from "zod";
-import * as Domain from "~/lib/domain";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function loader({
@@ -21,15 +19,31 @@ export async function loader({
 }: Route.LoaderArgs) {
   const { auth, session } = context.get(appLoadContext);
   invariant(session, "Missing session");
+  const members = (
+    await auth.api.listMembers({
+      headers: request.headers,
+      query: {
+        organizationId,
+      },
+    })
+  ).members;
+  const { success: canRemove } = await auth.api.hasPermission({
+    headers: request.headers,
+    body: {
+      organizationId,
+      permissions: {
+        member: ["delete"],
+      },
+    },
+  });
+  const member = members.find((m) => m.user.id === session.user.id);
+  invariant(member, "Missing member");
+  const canLeaveMemberId = member.role !== "owner" ? member.id : undefined;
   return {
-    members: (
-      await auth.api.listMembers({
-        headers: request.headers,
-        query: {
-          organizationId,
-        },
-      })
-    ).members,
+    canRemove,
+    canLeaveMemberId,
+    userId: session.user.id,
+    members,
   };
 }
 
@@ -70,29 +84,8 @@ export async function action({
   return null;
 }
 
-/*
-{
-    "members": [
-      {
-        "organizationId": "1",
-        "userId": "2",
-        "role": "owner",
-        "createdAt": "2025-08-22T15:16:21.539Z",
-        "id": "1",
-        "user": {
-          "id": "2",
-          "name": "",
-          "email": "u@u.com",
-          "image": null
-        }
-      }
-    ],
-  }
-}
-*/
-
 export default function RouteComponent({
-  loaderData: { members },
+  loaderData: { canRemove, canLeaveMemberId, userId, members },
   actionData,
 }: Route.ComponentProps) {
   const canEdit = true;
@@ -116,7 +109,12 @@ export default function RouteComponent({
           {members && members.length > 0 ? (
             <ul className="divide-y">
               {members.map((member) => (
-                <MemberItem key={member.id} member={member} />
+                <MemberItem
+                  key={member.id}
+                  member={member}
+                  canRemove={canRemove}
+                  canLeaveMemberId={canLeaveMemberId}
+                />
               ))}
             </ul>
           ) : (
@@ -133,8 +131,12 @@ export default function RouteComponent({
 
 function MemberItem({
   member,
+  canRemove,
+  canLeaveMemberId,
 }: {
   member: Route.ComponentProps["loaderData"]["members"][number];
+  canRemove: boolean;
+  canLeaveMemberId?: string;
 }) {
   const fetcher = useFetcher();
   const pending = fetcher.state !== "idle";
@@ -146,31 +148,35 @@ function MemberItem({
       </div>
       {member.role !== "owner" && (
         <div className="flex gap-2">
-          <fetcher.Form method="post">
-            <input type="hidden" name="memberId" value={member.id} />
-            <Oui.Button
-              type="submit"
-              name="intent"
-              value="remove"
-              variant="outline"
-              size="sm"
-              isDisabled={pending}
-            >
-              Remove
-            </Oui.Button>
-          </fetcher.Form>
-          <fetcher.Form method="post">
-            <Oui.Button
-              type="submit"
-              name="intent"
-              value="leave"
-              variant="outline"
-              size="sm"
-              isDisabled={pending}
-            >
-              Leave
-            </Oui.Button>
-          </fetcher.Form>
+          {canRemove && (
+            <fetcher.Form method="post">
+              <input type="hidden" name="memberId" value={member.id} />
+              <Oui.Button
+                type="submit"
+                name="intent"
+                value="remove"
+                variant="outline"
+                size="sm"
+                isDisabled={pending}
+              >
+                Remove
+              </Oui.Button>
+            </fetcher.Form>
+          )}
+          {member.id === canLeaveMemberId && (
+            <fetcher.Form method="post">
+              <Oui.Button
+                type="submit"
+                name="intent"
+                value="leave"
+                variant="outline"
+                size="sm"
+                isDisabled={pending}
+              >
+                Leave
+              </Oui.Button>
+            </fetcher.Form>
+          )}
         </div>
       )}
     </li>
