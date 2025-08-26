@@ -1,10 +1,13 @@
 import type { BetterAuthOptions } from "better-auth";
+import { stripe } from "@better-auth/stripe";
 import { betterAuth } from "better-auth";
 import { admin, magicLink, organization } from "better-auth/plugins";
 import { env } from "cloudflare:workers";
+import { Stripe } from "stripe";
 import { d1Adapter } from "~/lib/d1-adapter";
 
-// https://github.com/better-auth/better-auth/issues/3067#issuecomment-2988246817
+// STRIPE. Duplicate customers are created when using createCustomerOnSignUp: true and and a customer with same email exists in stripe: https://github.com/better-auth/better-auth/issues/3670
+// TypeScript Error: "The inferred type of this node exceeds the maximum length the compiler will serialize" when using admin and organization plugins together. : https://github.com/better-auth/better-auth/issues/3067#issuecomment-2988246817
 
 interface CreateAuthOptions {
   d1: D1Database;
@@ -105,7 +108,9 @@ function createBetterAuthOptions({
           (async (data) => {
             console.log("sendMagicLink", data);
             if (env.ENVIRONMENT === "local") {
-              await env.KV.put(`local:magicLink`, data.url, { expirationTtl: 60 });
+              await env.KV.put(`local:magicLink`, data.url, {
+                expirationTtl: 60,
+              });
             }
           }),
       }),
@@ -124,6 +129,18 @@ function createBetterAuthOptions({
           (async (data) => {
             console.log("sendInvitationEmail", data);
           }),
+      }),
+      stripe({
+        stripeClient: new Stripe(env.STRIPE_SECRET_KEY, {
+          apiVersion: "2025-07-30.basil",
+        }),
+        stripeWebhookSecret: env.STRIPE_WEBHOOK_SECRET,
+        createCustomerOnSignUp: true,
+        schema: {
+          subscription: {
+            modelName: "Subscription",
+          },
+        },
       }),
     ],
   } satisfies BetterAuthOptions;

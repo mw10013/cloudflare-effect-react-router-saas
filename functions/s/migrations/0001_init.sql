@@ -42,6 +42,7 @@ create table User (
   banned integer not null default 0,
   banReason text,
   banExpires text,
+  stripeCustomerId text,
   createdAt text not null default (datetime('now')),
   updatedAt text not null default (datetime('now'))
 );
@@ -115,6 +116,22 @@ create table Verification (
   expiresAt text not null,
   createdAt text not null default (datetime('now')),
   updatedAt text not null default (datetime('now'))
+);
+
+--> statement-breakpoint
+create table Subscription (
+  subscriptionId integer primary key,
+  plan text not null,
+  referenceId integer not null,
+  stripeCustomerId text,
+  stripeSubscriptionId text,
+  status text not null,
+  periodStart text,
+  periodEnd text,
+  cancelAtPeriodEnd integer,
+  seats integer,
+  trialStart text,
+  trialEnd text
 );
 
 --> statement-breakpoint

@@ -8,6 +8,7 @@ catalog:
   "@ai-sdk/react": 2.0.0-beta.9
   "@aws-sdk/client-sesv2": 3.777.0
   "@better-auth/cli": 1.3.4
+  "@better-auth/stripe": 1.3.7
   "@cloudflare/vite-plugin": 1.11.2
   "@cloudflare/vitest-pool-workers": 0.8.61
   "@cloudflare/workers-types": 4.20250810.0
