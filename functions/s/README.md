@@ -16,82 +16,80 @@ pnpm -F s test --project d1 auth
 - Async operations don't work inside databaseHooks on Cloudflare Workers: https://github.com/better-auth/better-auth/issues/2841
 - The inferred type of 'auth' cannot be named without a reference: https://github.com/better-auth/better-auth/issues/2123
 
-# Welcome to React Router!
+## Stripe
 
-A modern, production-ready template for building full-stack React applications using React Router.
+- https://docs.stripe.com/checkout/fulfillment
+- https://github.com/t3dotgg/stripe-recommendations
 
-## Features
-
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
-
-## Getting Started
-
-### Installation
-
-Install the dependencies:
-
-```bash
-npm install
+```
+checkout.session.completed
+customer.subscription.created
+customer.subscription.deleted
+customer.subscription.paused
+customer.subscription.pending_update_applied
+customer.subscription.pending_update_expired
+customer.subscription.resumed
+customer.subscription.trial_will_end
+customer.subscription.updated
+invoice.marked_uncollectible
+invoice.paid
+invoice.payment_action_required
+invoice.payment_failed
+invoice.payment_succeeded
+invoice.upcoming
+payment_intent.created
+payment_intent.payment_failed
+payment_intent.succeeded
 ```
 
-### Development
+- Set API version in Stripe Workbench and confirm it matches version used by Stripe service.
+- stripe trigger payment_intent.succeeded
+- stripe trigger customer.subscription.updated
 
-Start the development server with HMR:
+- https://docs.stripe.com/development
+- https://docs.stripe.com/workbench/guides#view-api-versions
 
-```bash
-npm run dev
+- Prevent customer creation race conditions: https://github.com/stripe/stripe-node/issues/476#issuecomment-402541143
+- https://docs.stripe.com/api/idempotent_requests
+
+- https://github.com/stripe/stripe-node
+- https://docs.stripe.com/api?lang=node
+- https://github.com/nextjs/saas-starter
+- https://www.youtube.com/watch?v=Wdyndb17K58&t=173s
+
+```
+Double subscriptions are not an issue when you create a customer first, then create a payment intent for that customer and then load your checkout forms using that intent. It won't matter whether the user goes back, forward, refreshes or whatever. As long as the payment intent doesn't change, it won't be a double subscription. Also a lot of projects actually do allow multiple subscriptions, so they can't just make such a critical option on by default (limit to 1). On the price IDs between environments - use price lookup keys instead.
 ```
 
-Your application will be available at `http://localhost:5173`.
+### Disable Cash App Pay
 
-## Previewing the Production Build
+- https://github.com/t3dotgg/stripe-recommendations?tab=readme-ov-file#disable-cash-app-pay
+- Settings | Payments | Payment methods
 
-Preview the production build locally:
+### Limit Customers to One Subscription
 
-```bash
-npm run preview
-```
+- https://github.com/t3dotgg/stripe-recommendations?tab=readme-ov-file#enable-limit-customers-to-one-subscription
+- https://docs.stripe.com/payments/checkout/limit-subscriptions
+- https://billing.stripe.com/p/login/test_3cs9EBfMn4Qn7Ze144
 
-## Building for Production
+### Webhook
 
-Create a production build:
+- stripe listen --load-from-webhooks-api --forward-to localhost:8787
+  - Must have stripe webhook endpoint url with path /api/stripe/webhook
+  - STRIPE_WEBHOOK_SECRET must align with listen secret
+- stripe listen --forward-to localhost:8787/api/stripe/webhook
+- stripe listen --print-secret
 
-```bash
-npm run build
-```
+### Billing Portal
 
-## Deployment
+- Settings | Billing | Customer portal
+- https://docs.stripe.com/customer-management/activate-no-code-customer-portal
+- https://billing.stripe.com/p/login/test_9AQeYV6bN1Eb6VafYZ
 
-Deployment is done using the Wrangler CLI.
+### Testing Payments
 
-To build and deploy directly to production:
+To test Stripe payments, use the following test card details:
 
-```sh
-npm run deploy
-```
-
-To deploy a preview URL:
-
-```sh
-npx wrangler versions upload
-```
-
-You can then promote a version to production after verification or roll it out progressively.
-
-```sh
-npx wrangler versions deploy
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+- Card Number: `4242 4242 4242 4242`
+- Expiration: Any future date
+- CVC: Any 3-digit number

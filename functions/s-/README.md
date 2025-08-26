@@ -83,11 +83,6 @@ To test Stripe payments, use the following test card details:
 - Expiration: Any future date
 - CVC: Any 3-digit number
 
-## Shadcn
-
-- https://v4.shadcn.com/
-- pnpm -F <PACKAGE_NAME> exec shadcn add button
-
 ## Tailwind
 
 - @fetch https://tailwindcss.com/docs/upgrade-guide
