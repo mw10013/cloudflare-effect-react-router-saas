@@ -124,8 +124,8 @@ catalogs:
       specifier: 2.0.7
       version: 2.0.7
     stripe:
-      specifier: 18.2.1
-      version: 18.2.1
+      specifier: 18.4.0
+      version: 18.4.0
     tailwind-merge:
       specifier: 3.3.1
       version: 3.3.1
@@ -389,6 +389,9 @@ importers:
       shadcn:
         specifier: 'catalog:'
         version: 2.10.0(@types/node@24.2.1)(typescript@5.9.2)
+      stripe:
+        specifier: 'catalog:'
+        version: 18.4.0(@types/node@24.2.1)
       tailwindcss:
         specifier: 'catalog:'
         version: 4.1.9
@@ -484,7 +487,7 @@ importers:
         version: 2.0.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       stripe:
         specifier: 'catalog:'
-        version: 18.2.1(@types/node@22.13.14)
+        version: 18.4.0(@types/node@22.13.14)
       tailwind-merge:
         specifier: 'catalog:'
         version: 3.3.1
@@ -5763,8 +5766,8 @@ packages:
   strip-literal@3.0.0:
     resolution: {integrity: sha512-TcccoMhJOM3OebGhSBEmp3UZ2SfDMZUEBdRA/9ynfLi8yYajyWX3JiXArcJt4Umh4vISpspkQIY8ZZoCqjbviA==}
 
-  stripe@18.2.1:
-    resolution: {integrity: sha512-GwB1B7WSwEBzW4dilgyJruUYhbGMscrwuyHsPUmSRKrGHZ5poSh2oU9XKdii5BFVJzXHn35geRvGJ6R8bYcp8w==}
+  stripe@18.4.0:
+    resolution: {integrity: sha512-LKFeDnDYo4U/YzNgx2Lc9PT9XgKN0JNF1iQwZxgkS4lOw5NunWCnzyH5RhTlD3clIZnf54h7nyMWkS8VXPmtTQ==}
     engines: {node: '>=12.*'}
     peerDependencies:
       '@types/node': '>=12.x.x'
@@ -12427,11 +12430,17 @@ snapshots:
     dependencies:
       js-tokens: 9.0.1
 
-  stripe@18.2.1(@types/node@22.13.14):
+  stripe@18.4.0(@types/node@22.13.14):
     dependencies:
       qs: 6.14.0
     optionalDependencies:
       '@types/node': 22.13.14
+
+  stripe@18.4.0(@types/node@24.2.1):
+    dependencies:
+      qs: 6.14.0
+    optionalDependencies:
+      '@types/node': 24.2.1
 
   style-to-js@1.1.17:
     dependencies:
