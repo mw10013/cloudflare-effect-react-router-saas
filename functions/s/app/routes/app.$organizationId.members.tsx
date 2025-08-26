@@ -47,35 +47,27 @@ export async function action({
       intent: z.literal("leave"),
     }),
   ]);
-  const parseResult = schema.safeParse(
+  const parseResult = schema.parse(
     Object.fromEntries(await request.formData()),
   );
-  if (!parseResult.success) {
-    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
-      parseResult.error,
-    );
-    return { formErrors, validationErrors };
-  }
-
   const { auth } = context.get(appLoadContext);
-  switch (parseResult.data.intent) {
+  switch (parseResult.intent) {
     case "remove":
       await auth.api.removeMember({
         headers: request.headers,
-        body: { memberIdOrEmail: parseResult.data.memberId, organizationId },
+        body: { memberIdOrEmail: parseResult.memberId, organizationId },
       });
       break;
     case "leave":
-      console.log("leave", { organizationId });
       await auth.api.leaveOrganization({
         headers: request.headers,
         body: { organizationId },
       });
       return redirect("/app");
     default:
-      void (parseResult.data satisfies never);
+      void (parseResult satisfies never);
   }
-  return {};
+  return null;
 }
 
 /*
@@ -146,7 +138,6 @@ function MemberItem({
 }) {
   const fetcher = useFetcher();
   const pending = fetcher.state !== "idle";
-  const result = fetcher.data as any;
   return (
     <li className="flex items-center justify-between gap-4 py-4 first:pt-0 last:pb-0">
       <div className="flex flex-col">
@@ -154,7 +145,7 @@ function MemberItem({
         <span className="text-muted-foreground text-sm">{member.role}</span>
       </div>
       {member.role !== "owner" && (
-        <div className="flex flex-col items-end gap-1">
+        <div className="flex gap-2">
           <fetcher.Form method="post">
             <input type="hidden" name="memberId" value={member.id} />
             <Oui.Button
@@ -180,15 +171,6 @@ function MemberItem({
               Leave
             </Oui.Button>
           </fetcher.Form>
-          {result?.error && (
-            <div
-              role="status"
-              aria-atomic="true"
-              className="text-destructive text-xs"
-            >
-              {result.error}
-            </div>
-          )}
         </div>
       )}
     </li>

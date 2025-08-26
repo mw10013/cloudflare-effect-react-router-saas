@@ -4,7 +4,6 @@ pnpm -F s test --project d1 auth
 
 ## TODO
 
-- gridlist for invitations and members
 - sign out a11y in sidebar
 - stripe
 
