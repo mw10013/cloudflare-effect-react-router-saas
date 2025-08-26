@@ -26,6 +26,7 @@ export async function loader({ request, context }: Route.LoaderArgs) {
       (v) =>
         v.status === "pending" && v.expiresAt.getTime() - now >= MIN_TTL_MS,
     ),
+    session,
   };
 }
 
@@ -108,7 +109,7 @@ function InvitationItem({
 }
 
 export default function RouteComponent({
-  loaderData: { invitations },
+  loaderData: { session, invitations },
 }: Route.ComponentProps) {
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -122,7 +123,7 @@ export default function RouteComponent({
           </CardHeader>
           <CardContent>
             {/* <ul className="flex flex-col gap-4"> */}
-            <ul className="divide-y flex flex-col">
+            <ul className="flex flex-col divide-y">
               {invitations.map((invitation) => (
                 <InvitationItem key={invitation.id} invitation={invitation} />
               ))}
@@ -130,7 +131,7 @@ export default function RouteComponent({
           </CardContent>
         </Card>
       )}
-      <pre>{JSON.stringify({ invitations }, null, 2)}</pre>
+      <pre>{JSON.stringify({ session }, null, 2)}</pre>
     </div>
   );
 }

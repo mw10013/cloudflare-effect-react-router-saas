@@ -141,6 +141,9 @@ function createBetterAuthOptions({
             modelName: "Subscription",
           },
         },
+        onEvent: async (event: Stripe.Event) => {
+          console.log("Stripe event received:", event);
+        },
       }),
     ],
   } satisfies BetterAuthOptions;
