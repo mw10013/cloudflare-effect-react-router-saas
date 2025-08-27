@@ -11,7 +11,7 @@ export default defineWorkersProject(async () => {
   return {
     plugins: [tsconfigPaths()],
     ssr: {
-      noExternal: ["better-auth"],
+      noExternal: ["better-auth", "@better-auth/stripe"],
     },
     test: {
       include: ["*.test.ts"],
