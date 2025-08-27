@@ -25,7 +25,7 @@ import * as Domain from "~/lib/domain";
 
 // Use Route to type the loader arguments
 export async function loader({ request, context }: Route.LoaderArgs) {
-  const { auth } = context.get(appLoadContext); // Get better-auth auth from the appLoadContext
+  const { auth, stripe } = context.get(appLoadContext); // Get better-auth auth and stripe from the appLoadContext
   const session = await auth.api.getSession({ headers: request.headers });
   return { isSignedIn: Boolean(session?.user), session }; // Let typescript infer the type.
 }
