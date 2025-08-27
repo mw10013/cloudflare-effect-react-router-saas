@@ -2,15 +2,16 @@ import type { User } from "better-auth/types";
 import type { AppLoadContext } from "react-router";
 import type { Route } from "./+types/seed";
 import { invariant } from "@epic-web/invariant";
-import { magicLink } from "better-auth/plugins";
-import { redirect, unstable_RouterContextProvider } from "react-router";
+import { unstable_RouterContextProvider } from "react-router";
+import Stripe from "stripe";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
 
-async function createSeedContext(cloudflare: AppLoadContext["cloudflare"]) {
+async function createSeedContext({ cloudflare, stripe }: { cloudflare: AppLoadContext["cloudflare"]; stripe: Stripe }) {
   const magicLinkTokens = new Map<string, string>();
   const auth = await createAuth({
     d1: cloudflare.env.D1,
+    stripeClient: stripe,
     sendMagicLink: async ({ email, token }) => {
       magicLinkTokens.set(email, token);
     },
@@ -22,7 +23,7 @@ async function createSeedContext(cloudflare: AppLoadContext["cloudflare"]) {
       ? ((await auth.api.getSession({ headers })) ?? undefined)
       : undefined;
     const context = new unstable_RouterContextProvider();
-    context.set(appLoadContext, { cloudflare, auth, session });
+    context.set(appLoadContext, { cloudflare, auth, stripe, session });
     return context;
   };
 
@@ -67,7 +68,6 @@ async function createSeedContext(cloudflare: AppLoadContext["cloudflare"]) {
     user.headers.set("Cookie", sessionCookie(magicLinkVerifyResponse.headers));
     return user;
   };
-  type SeedUser = Awaited<ReturnType<typeof createUser>>;
 
   return {
     auth,
@@ -76,9 +76,8 @@ async function createSeedContext(cloudflare: AppLoadContext["cloudflare"]) {
 }
 
 export async function loader({ context }: Route.ActionArgs) {
-  const { cloudflare } = context.get(appLoadContext);
-  const db = cloudflare.env.D1;
-  const c = await createSeedContext(cloudflare);
+  const { cloudflare, stripe } = context.get(appLoadContext) as AppLoadContext;
+  const c = await createSeedContext({cloudflare, stripe});
 
   const [u, v, w, x, y, z] = await Promise.all(
     ["u@u.com", "v@v.com", "w@w.com", "x@x.com", "y@y.com", "z@z.com"].map(
@@ -194,6 +193,7 @@ export async function loader({ context }: Route.ActionArgs) {
     }
   }
 
+  const db = cloudflare.env.D1;
   const [
     { results: invitations },
     { results: organizations },

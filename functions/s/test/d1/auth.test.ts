@@ -4,6 +4,7 @@ import { env } from "cloudflare:workers";
 import { unstable_RouterContextProvider } from "react-router";
 import { afterEach, beforeAll, describe, expect, it, Test, vi } from "vitest";
 import { createAuth } from "~/lib/auth";
+import { createStripe } from "~/lib/stripe";
 import { appLoadContext } from "~/lib/middleware";
 import {
   action as acceptInvitationAction,
@@ -29,6 +30,7 @@ async function createTestContext() {
   const mockSendInvitationEmail = vi.fn().mockResolvedValue(undefined);
   const auth = createAuth({
     d1: env.D1,
+    stripeClient: createStripe(),
     sendResetPassword: mockSendResetPassword,
     sendVerificationEmail: mockSendVerificationEmail,
     sendMagicLink: mockSendMagicLink,

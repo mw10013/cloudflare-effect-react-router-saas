@@ -2,6 +2,7 @@ import { env } from "cloudflare:workers";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { createAuth } from "~/lib/auth";
 import { resetDb } from "../test-utils";
+import { createStripe } from "~/lib/stripe";
 
 describe("better-auth sign up flow", async () => {
   const email = "email@test.com";
@@ -18,6 +19,7 @@ describe("better-auth sign up flow", async () => {
     mockSendVerificationEmail = vi.fn().mockResolvedValue(undefined);
     auth = createAuth({
       d1: env.D1,
+      stripeClient: createStripe(),
       sendVerificationEmail: mockSendVerificationEmail,
     });
   });

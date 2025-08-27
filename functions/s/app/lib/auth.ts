@@ -11,6 +11,7 @@ import { d1Adapter } from "~/lib/d1-adapter";
 
 interface CreateAuthOptions {
   d1: D1Database;
+  stripeClient: Stripe;
   sendResetPassword?: NonNullable<
     BetterAuthOptions["emailAndPassword"]
   >["sendResetPassword"];
@@ -38,6 +39,7 @@ interface CreateAuthOptions {
 
 function createBetterAuthOptions({
   d1,
+  stripeClient,
   sendResetPassword,
   sendVerificationEmail,
   afterEmailVerification,
@@ -131,9 +133,7 @@ function createBetterAuthOptions({
           }),
       }),
       stripe({
-        stripeClient: new Stripe(env.STRIPE_SECRET_KEY, {
-          apiVersion: "2025-07-30.basil",
-        }),
+        stripeClient,
         stripeWebhookSecret: env.STRIPE_WEBHOOK_SECRET,
         createCustomerOnSignUp: true,
         schema: {
