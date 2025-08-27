@@ -4,8 +4,11 @@ pnpm -F s test --project d1 auth
 
 ## TODO
 
+- restrict auth api
 - sign out a11y in sidebar
 - stripe
+  - authorizeReference
+  - referenceId -> organizationId
 
 ## Better-Auth
 

@@ -135,10 +135,24 @@ function createBetterAuthOptions({
       stripe({
         stripeClient,
         stripeWebhookSecret: env.STRIPE_WEBHOOK_SECRET,
-        createCustomerOnSignUp: true,
+        createCustomerOnSignUp: false,
         subscription: {
           enabled: true,
-          plans: [],
+          requireEmailVerification: true,
+          plans: [
+            {
+              name: "basic",
+              lookupKey: "basic",
+            },
+            {
+              name: "pro",
+              lookupKey: "pro",
+            },
+          ],
+          authorizeReference: async({user, referenceId, action}) => {
+            console.log(`stripe plugin: authorizeReference: user ${user.id} is attempting to ${action} subscription for referenceId ${referenceId}`);
+            return true
+          },
           onSubscriptionComplete: async ({ subscription, plan }) => {
             console.log(
               `stripe plugin: onSubscriptionComplete: subscription ${subscription.id} completed for plan ${plan.name}`,

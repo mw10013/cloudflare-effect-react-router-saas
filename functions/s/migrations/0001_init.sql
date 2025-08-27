@@ -122,7 +122,7 @@ create table Verification (
 create table Subscription (
   subscriptionId integer primary key,
   plan text not null,
-  referenceId integer not null,
+  referenceId integer not null references Organization (organizationId),
   stripeCustomerId text,
   stripeSubscriptionId text,
   status text not null,

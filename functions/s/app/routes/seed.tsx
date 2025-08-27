@@ -116,11 +116,11 @@ export async function loader({ context }: Route.ActionArgs) {
   const { cloudflare, stripe } = context.get(appLoadContext) as AppLoadContext;
   const c = await createSeedContext({ cloudflare, stripe });
 
-  const [corePrice, completePrice] = await Promise.all([
-    c.ensurePrice("core", 5000), // $50 in cents
-    c.ensurePrice("complete", 10000),
+  const [basicPrice, proPrice] = await Promise.all([
+    c.ensurePrice("basic", 5000), // $50 in cents
+    c.ensurePrice("pro", 10000),
   ]);
-  console.log({ corePrice, completePrice });
+  console.log({ basicPrice, proPrice });
 
   const [u, v, w, x, y, z] = await Promise.all(
     ["u@u.com", "v@v.com", "w@w.com", "x@x.com", "y@y.com", "z@z.com"].map(
