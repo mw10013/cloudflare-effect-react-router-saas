@@ -38,7 +38,7 @@ catalog:
   lucide-react: 0.514.0
   miniflare: 4.20250726.0
   openai: 5.8.2
-  oxlint: 1.12.0
+  oxlint: 1.13.0
   radix-ui: 1.4.3
   react: 19.1.0
   react-aria-components: 1.11.0

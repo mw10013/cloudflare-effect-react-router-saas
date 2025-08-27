@@ -85,10 +85,9 @@ export async function action({
 }
 
 export default function RouteComponent({
-  loaderData: { canRemove, canLeaveMemberId, userId, members },
+  loaderData: { canRemove, canLeaveMemberId, members },
   actionData,
 }: Route.ComponentProps) {
-  const canEdit = true;
   return (
     <div className="flex flex-col gap-8 p-6">
       <header>

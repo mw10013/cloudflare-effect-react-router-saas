@@ -2,9 +2,6 @@ import * as Oui from "@workspace/oui";
 import {
   Sidebar,
   SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarInset,
   SidebarProvider,
 } from "@workspace/ui/components/ui/sidebar";

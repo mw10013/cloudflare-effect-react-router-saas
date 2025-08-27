@@ -1,7 +1,4 @@
-import * as React from "react";
 import * as Oui from "@workspace/oui";
-import { Label } from "@workspace/ui/components/ui/label";
-import { Slider } from "@workspace/ui/components/ui/slider";
 
 export function OuiSliderDemo() {
   return (

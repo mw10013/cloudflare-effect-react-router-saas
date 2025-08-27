@@ -2,7 +2,7 @@ import { invariant } from "@epic-web/invariant";
 import { User } from "better-auth/types";
 import { env } from "cloudflare:workers";
 import { unstable_RouterContextProvider } from "react-router";
-import { afterEach, beforeAll, describe, expect, it, Test, vi } from "vitest";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { createAuth } from "~/lib/auth";
 import { createStripe } from "~/lib/stripe";
 import { appLoadContext } from "~/lib/middleware";

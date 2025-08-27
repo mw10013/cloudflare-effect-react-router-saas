@@ -11,7 +11,6 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
-  SidebarTrigger,
 } from "@workspace/ui/components/ui/sidebar";
 import { GalleryVerticalEnd } from "lucide-react";
 

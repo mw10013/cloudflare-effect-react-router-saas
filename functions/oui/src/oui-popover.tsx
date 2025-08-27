@@ -1,4 +1,3 @@
-import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";

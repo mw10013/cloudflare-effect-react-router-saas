@@ -12,7 +12,7 @@ export async function loader({ context }: Route.LoaderArgs) {
   };
 }
 
-export default function RouteComponent({}: Route.ComponentProps) {
+export default function RouteComponent() {
   return (
     // shadcn AppLayout
     <div data-wrapper="" className="border-grid flex flex-1 flex-col">

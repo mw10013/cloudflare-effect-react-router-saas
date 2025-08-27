@@ -1,4 +1,3 @@
-import type { VariantProps } from "class-variance-authority";
 import React from "react";
 import { cva } from "class-variance-authority";
 import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react";
