@@ -136,6 +136,30 @@ function createBetterAuthOptions({
         stripeClient,
         stripeWebhookSecret: env.STRIPE_WEBHOOK_SECRET,
         createCustomerOnSignUp: true,
+        subscription: {
+          enabled: true,
+          plans: [],
+          onSubscriptionComplete: async ({ subscription, plan }) => {
+            console.log(
+              `stripe plugin: onSubscriptionComplete: subscription ${subscription.id} completed for plan ${plan.name}`,
+            );
+          },
+          onSubscriptionUpdate: async ({ subscription }) => {
+            console.log(
+              `stripe plugin: onSubscriptionUpdate: subscription ${subscription.id} updated`,
+            );
+          },
+          onSubscriptionCancel: async ({ subscription }) => {
+            console.log(
+              `stripe plugin: onSubscriptionCancel: subscription ${subscription.id} canceled`,
+            );
+          },
+          onSubscriptionDeleted: async ({ subscription }) => {
+            console.log(
+              `stripe plugin: onSubscriptionDeleted: subscription ${subscription.id} deleted`,
+            );
+          },
+        },
         schema: {
           subscription: {
             modelName: "Subscription",
