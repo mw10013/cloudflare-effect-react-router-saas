@@ -1,5 +1,6 @@
 import type { User } from "better-auth/types";
 import type { AppLoadContext } from "react-router";
+import type { Stripe as StripeType } from "stripe";
 import type { Route } from "./+types/seed";
 import { invariant } from "@epic-web/invariant";
 import { unstable_RouterContextProvider } from "react-router";
@@ -7,7 +8,42 @@ import Stripe from "stripe";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
 
-async function createSeedContext({ cloudflare, stripe }: { cloudflare: AppLoadContext["cloudflare"]; stripe: Stripe }) {
+async function createSeedContext({
+  cloudflare,
+  stripe,
+}: {
+  cloudflare: AppLoadContext["cloudflare"];
+  stripe: Stripe;
+}) {
+  const ensurePrice = async (
+    lookup_key: string,
+    unit_amount: number,
+  ): Promise<StripeType.Price> => {
+    const list = await stripe.prices.list({
+      lookup_keys: [lookup_key],
+      limit: 1,
+    });
+    if (list.data[0]) {
+      return list.data[0];
+    } else {
+      const name = lookup_key.charAt(0).toUpperCase() + lookup_key.slice(1);
+      const product = await stripe.products.create({
+        name,
+        description: `${name} subscription plan`,
+      });
+      return await stripe.prices.create({
+        product: product.id,
+        unit_amount,
+        currency: "usd",
+        recurring: {
+          interval: "month",
+          trial_period_days: 7,
+        },
+        lookup_key,
+      });
+    }
+  };
+
   const magicLinkTokens = new Map<string, string>();
   const auth = await createAuth({
     d1: cloudflare.env.D1,
@@ -70,6 +106,7 @@ async function createSeedContext({ cloudflare, stripe }: { cloudflare: AppLoadCo
   };
 
   return {
+    ensurePrice,
     auth,
     createUser,
   };
@@ -77,7 +114,13 @@ async function createSeedContext({ cloudflare, stripe }: { cloudflare: AppLoadCo
 
 export async function loader({ context }: Route.ActionArgs) {
   const { cloudflare, stripe } = context.get(appLoadContext) as AppLoadContext;
-  const c = await createSeedContext({cloudflare, stripe});
+  const c = await createSeedContext({ cloudflare, stripe });
+
+  const [basePrice, plusPrice] = await Promise.all([
+    c.ensurePrice("base", 800), // $8 in cents
+    c.ensurePrice("plus", 1200),
+  ]);
+  console.log({ basePrice, plusPrice });
 
   const [u, v, w, x, y, z] = await Promise.all(
     ["u@u.com", "v@v.com", "w@w.com", "x@x.com", "y@y.com", "z@z.com"].map(
