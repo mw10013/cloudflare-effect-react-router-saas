@@ -1,4 +1,5 @@
 import type { Route } from "./+types/_mkt.pricing";
+import { invariant } from "@epic-web/invariant";
 import * as Oui from "@workspace/oui";
 import {
   Card,
@@ -8,6 +9,8 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
+import { redirect } from "react-router";
+import * as z from "zod";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function loader({ context }: Route.LoaderArgs) {
@@ -16,10 +19,67 @@ export async function loader({ context }: Route.LoaderArgs) {
     lookup_keys: ["basic", "pro"],
     expand: ["data.product"],
   });
-  const prices = priceList.data.sort((a, b) =>
-    a.lookup_key && b.lookup_key ? a.lookup_key.localeCompare(b.lookup_key) : 0,
-  );
+
+  type Price = (typeof priceList.data)[number];
+  type PriceWithLookupKey = Price & { lookup_key: string };
+  const isPriceWithLookupKey = (p: Price): p is PriceWithLookupKey =>
+    p.lookup_key !== null;
+  const prices = priceList.data
+    .filter(isPriceWithLookupKey)
+    .sort((a, b) => a.lookup_key.localeCompare(b.lookup_key));
+  invariant(prices.length > 1, `Not enough prices (${prices.length})`);
   return { prices };
+}
+
+export async function action({ request, context }: Route.ActionArgs) {
+  const { auth, session } = context.get(appLoadContext);
+  if (!session) {
+    return redirect("/login");
+  }
+  invariant(session.user.role === "user", "User role must be 'user'");
+  const schema = z.object({
+    plan: z.string().min(1, "Missing plan"),
+  });
+  const { plan } = schema.parse(Object.fromEntries(await request.formData()));
+
+  const activeOrganizationId = session.session.activeOrganizationId;
+  invariant(activeOrganizationId, "Missing activeOrganizationId");
+
+  const subscriptions = await auth.api.listActiveSubscriptions({
+    headers: request.headers,
+    query: { referenceId: activeOrganizationId },
+  });
+  invariant(
+    subscriptions.length <= 1,
+    `Too many subscriptions (${subscriptions.length})`,
+  );
+  const subscriptionId =
+    subscriptions.length === 1
+      ? subscriptions[0].stripeSubscriptionId
+      : undefined;
+  console.log(`pricing`, { plan, subscriptionId });
+  const result = await auth.api.upgradeSubscription({
+    headers: request.headers,
+    body: {
+      plan, // required
+      annual: false,
+      referenceId: activeOrganizationId,
+      subscriptionId,
+      seats: 1,
+      successUrl: "/app",
+      cancelUrl: "/pricing",
+      // returnUrl,
+      // disableRedirect: true,
+    },
+  });
+
+  console.log(`pricing`, { result });
+
+  if (result && typeof (result as any).url === "string") {
+    return redirect((result as any).url);
+  }
+
+  return null;
 }
 
 export default function RouteComponent({
@@ -40,7 +100,7 @@ export default function RouteComponent({
               </CardContent>
               <CardFooter className="justify-end">
                 <Rac.Form method="post">
-                  <input type="hidden" name="priceId" value={price.id} />
+                  <input type="hidden" name="plan" value={price.lookup_key} />
                   <Oui.Button type="submit">Get Started</Oui.Button>
                 </Rac.Form>
               </CardFooter>
