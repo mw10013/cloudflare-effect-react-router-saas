@@ -16,6 +16,7 @@ import { ChevronsUpDown, LogOut } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { Outlet, useNavigate } from "react-router";
 import { appLoadContext } from "~/lib/middleware";
+import { AppLogoIcon } from "~/components/AppLogoIcon";
 
 const middleware: Route.unstable_MiddlewareFunction = async ({
   request,
@@ -99,12 +100,6 @@ export function AppSidebar({
       href: `/app/${organization.id}/billing`,
     },
   ];
-
-  const AppLogoIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg viewBox="0 0 100 100" {...props}>
-      <circle cx="50" cy="50" r="40" fill="currentColor" />
-    </svg>
-  );
 
   return (
     <Sidebar>

@@ -2,6 +2,7 @@ import type { Route } from "./+types/_mkt";
 import * as Oui from "@workspace/oui";
 import * as Rac from "react-aria-components";
 import { Outlet, useRouteLoaderData } from "react-router";
+import { AppLogoIcon } from "~/components/AppLogoIcon";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function loader({ context }: Route.LoaderArgs) {
@@ -92,7 +93,7 @@ function MainNav() {
   return (
     <div className="mr-4 hidden md:flex">
       <Oui.Link href="/" className="mr-4 flex items-center gap-2 lg:mr-6">
-        {/* <Logo className="h-6 w-6" /> */}
+        <AppLogoIcon className="text-primary size-7" />
         <span className="hidden font-bold lg:inline-block">SaaS</span>
       </Oui.Link>
       <nav className="flex items-center gap-4 text-sm xl:gap-6">
