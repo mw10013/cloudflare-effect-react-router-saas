@@ -6,6 +6,7 @@ import { env } from "cloudflare:workers";
 import { Stripe } from "stripe";
 import { d1Adapter } from "~/lib/d1-adapter";
 
+// [BUG]: Stripe plugin does not handle lookupKey and annualDiscountLookupKey in onCheckoutSessionCompleted: https://github.com/better-auth/better-auth/issues/3537
 // STRIPE. Duplicate customers are created when using createCustomerOnSignUp: true and and a customer with same email exists in stripe: https://github.com/better-auth/better-auth/issues/3670
 // TypeScript Error: "The inferred type of this node exceeds the maximum length the compiler will serialize" when using admin and organization plugins together. : https://github.com/better-auth/better-auth/issues/3067#issuecomment-2988246817
 
@@ -35,6 +36,8 @@ interface CreateAuthOptions {
       NonNullable<BetterAuthOptions["databaseHooks"]>["session"]
     >["create"]
   >["before"];
+  // basicPriceId: string;
+  // proPriceId: string;
 }
 
 function createBetterAuthOptions({
@@ -47,6 +50,8 @@ function createBetterAuthOptions({
   sendInvitationEmail,
   databaseHookUserCreateAfter,
   databaseHookSessionCreateBefore,
+  // basicPriceId,
+  // proPriceId,
 }: CreateAuthOptions) {
   return {
     baseURL: env.BETTER_AUTH_URL,
@@ -143,10 +148,12 @@ function createBetterAuthOptions({
             {
               name: "basic",
               lookupKey: "basic",
+              // priceId: basicPriceId,
             },
             {
               name: "pro",
               lookupKey: "pro",
+              // priceId: proPriceId,
             },
           ],
           authorizeReference: async ({ user, referenceId, action }) => {

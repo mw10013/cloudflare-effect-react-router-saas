@@ -9,6 +9,7 @@ pnpm -F s test --project d1 auth
 - stripe
   - authorizeReference
   - referenceId -> organizationId
+  - remove basicPriceId and proPriceId
 
 ## Better-Auth
 

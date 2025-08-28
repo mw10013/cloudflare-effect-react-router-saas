@@ -4,7 +4,6 @@ import type { Stripe as StripeType } from "stripe";
 import type { Route } from "./+types/seed";
 import { invariant } from "@epic-web/invariant";
 import { unstable_RouterContextProvider } from "react-router";
-import Stripe from "stripe";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
 
@@ -13,13 +12,13 @@ async function createSeedContext({
   stripe,
 }: {
   cloudflare: AppLoadContext["cloudflare"];
-  stripe: Stripe;
+  stripe: AppLoadContext["stripe"];
 }) {
   const ensurePrice = async (
     lookup_key: string,
     unit_amount: number,
   ): Promise<StripeType.Price> => {
-    const list = await stripe.prices.list({
+    const list = await stripe.stripe.prices.list({
       lookup_keys: [lookup_key],
       limit: 1,
     });
@@ -27,11 +26,11 @@ async function createSeedContext({
       return list.data[0];
     } else {
       const name = lookup_key.charAt(0).toUpperCase() + lookup_key.slice(1);
-      const product = await stripe.products.create({
+      const product = await stripe.stripe.products.create({
         name,
         description: `${name} subscription plan`,
       });
-      return await stripe.prices.create({
+      return await stripe.stripe.prices.create({
         product: product.id,
         unit_amount,
         currency: "usd",
@@ -47,7 +46,7 @@ async function createSeedContext({
   const magicLinkTokens = new Map<string, string>();
   const auth = await createAuth({
     d1: cloudflare.env.D1,
-    stripeClient: stripe,
+    stripeClient: stripe.stripe,
     sendMagicLink: async ({ email, token }) => {
       magicLinkTokens.set(email, token);
     },

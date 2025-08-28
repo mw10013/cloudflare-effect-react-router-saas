@@ -19,7 +19,7 @@ describe("better-auth sign up flow", async () => {
     mockSendVerificationEmail = vi.fn().mockResolvedValue(undefined);
     auth = createAuth({
       d1: env.D1,
-      stripeClient: createStripe(),
+      stripeClient: createStripe().stripe,
       sendVerificationEmail: mockSendVerificationEmail,
     });
   });

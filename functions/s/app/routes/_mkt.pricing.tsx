@@ -14,8 +14,12 @@ import { redirect } from "react-router";
 import * as z from "zod";
 import { appLoadContext } from "~/lib/middleware";
 
+// [BUG]: Stripe plugin does not handle lookupKey and annualDiscountLookupKey in onCheckoutSessionCompleted: https://github.com/better-auth/better-auth/issues/3537
+
 export async function loader({ context }: Route.LoaderArgs) {
-  const { stripe } = context.get(appLoadContext);
+  const {
+    stripe: { stripe },
+  } = context.get(appLoadContext);
   const priceList = await stripe.prices.list({
     lookup_keys: ["basic", "pro"],
     expand: ["data.product"],
