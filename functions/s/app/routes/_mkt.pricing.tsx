@@ -67,10 +67,10 @@ export async function action({ request, context }: Route.ActionArgs) {
       referenceId: activeOrganizationId,
       subscriptionId,
       seats: 1,
-      successUrl: "/app",
+      successUrl: "/app", // stripe checkout session
       cancelUrl: "/pricing",
-      returnUrl: `/app/${activeOrganizationId}/billing`,
-      disableRedirect: false,
+      returnUrl: `/app/${activeOrganizationId}/billing`, // stripe billing portal
+      disableRedirect: false, // disable since we redirect after successful subscription
     },
   });
   console.log(`pricing`, { isRedirect, url });
