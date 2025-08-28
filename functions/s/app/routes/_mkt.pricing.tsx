@@ -58,28 +58,24 @@ export async function action({ request, context }: Route.ActionArgs) {
       ? subscriptions[0].stripeSubscriptionId
       : undefined;
   console.log(`pricing`, { plan, subscriptionId });
-  const result = await auth.api.upgradeSubscription({
+  const { url, redirect: isRedirect } = await auth.api.upgradeSubscription({
     headers: request.headers,
     body: {
-      plan, // required
+      plan,
       annual: false,
       referenceId: activeOrganizationId,
       subscriptionId,
       seats: 1,
       successUrl: "/app",
       cancelUrl: "/pricing",
-      // returnUrl,
-      // disableRedirect: true,
+      returnUrl: `/app/${activeOrganizationId}/billing`,
+      disableRedirect: false,
     },
   });
-
-  console.log(`pricing`, { result });
-
-  if (result && typeof (result as any).url === "string") {
-    return redirect((result as any).url);
-  }
-
-  return null;
+  console.log(`pricing`, { redirect, url });
+  invariant(isRedirect, "isRedirect is not true");
+  invariant(url, "Missing url");
+  return redirect(url);
 }
 
 export default function RouteComponent({
