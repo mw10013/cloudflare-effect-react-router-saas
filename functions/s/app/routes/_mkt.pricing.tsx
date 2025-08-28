@@ -36,7 +36,8 @@ export async function action({ request, context }: Route.ActionArgs) {
   if (!session) {
     return redirect("/login");
   }
-  invariant(session.user.role === "user", "User role must be 'user'");
+  if (session.user.role !== "user")
+    throw new Response("Forbidden", { status: 403 });
   const schema = z.object({
     plan: z.string().min(1, "Missing plan"),
   });
@@ -72,7 +73,7 @@ export async function action({ request, context }: Route.ActionArgs) {
       disableRedirect: false,
     },
   });
-  console.log(`pricing`, { redirect, url });
+  console.log(`pricing`, { isRedirect, url });
   invariant(isRedirect, "isRedirect is not true");
   invariant(url, "Missing url");
   return redirect(url);
