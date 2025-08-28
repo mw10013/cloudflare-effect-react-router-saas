@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card";
+import { env } from "cloudflare:workers";
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
 import * as z from "zod";
@@ -28,7 +29,18 @@ export async function loader({ context }: Route.LoaderArgs) {
     .filter(isPriceWithLookupKey)
     .sort((a, b) => a.lookup_key.localeCompare(b.lookup_key));
   invariant(prices.length > 1, `Not enough prices (${prices.length})`);
-  return { prices };
+
+  const subscriptions = (
+    await env.D1.prepare(
+      `
+select u.email as email, u.stripeCustomerId as userStripeCustomerId, s.*, o.name as organizationName from Subscription s 
+inner join Organization o on o.organizationId = s.referenceId
+inner join Member m on m.organizationId = o.organizationId and m.role = 'owner'
+inner join User u on u.userId = m.userId`,
+    ).all()
+  ).results;
+
+  return { prices, subscriptions };
 }
 
 export async function action({ request, context }: Route.ActionArgs) {
@@ -80,7 +92,7 @@ export async function action({ request, context }: Route.ActionArgs) {
 }
 
 export default function RouteComponent({
-  loaderData: { prices },
+  loaderData: { prices, subscriptions },
 }: Route.ComponentProps) {
   return (
     <div className="p-6">
@@ -105,6 +117,7 @@ export default function RouteComponent({
           );
         })}
       </div>
+      <pre>{JSON.stringify({ subscriptions }, null, 2)}</pre>
     </div>
   );
 }

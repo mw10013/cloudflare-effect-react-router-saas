@@ -149,9 +149,11 @@ function createBetterAuthOptions({
               lookupKey: "pro",
             },
           ],
-          authorizeReference: async({user, referenceId, action}) => {
-            console.log(`stripe plugin: authorizeReference: user ${user.id} is attempting to ${action} subscription for referenceId ${referenceId}`);
-            return true
+          authorizeReference: async ({ user, referenceId, action }) => {
+            console.log(
+              `stripe plugin: authorizeReference: user ${user.id} is attempting to ${action} subscription for referenceId ${referenceId}`,
+            );
+            return true;
           },
           onSubscriptionComplete: async ({ subscription, plan }) => {
             console.log(
@@ -187,7 +189,6 @@ function createBetterAuthOptions({
         onEvent: async (event: Stripe.Event) => {
           console.log(
             `stripe plugin: onEvent: stripe event received: ${event.type}`,
-            event,
           );
         },
       }),

@@ -42,7 +42,7 @@ create table User (
   banned integer not null default 0,
   banReason text,
   banExpires text,
-  stripeCustomerId text,
+  stripeCustomerId text unique,
   createdAt text not null default (datetime('now')),
   updatedAt text not null default (datetime('now'))
 );
