@@ -70,7 +70,7 @@ export async function action({ request, context }: Route.ActionArgs) {
     subscriptions.length === 1
       ? subscriptions[0].stripeSubscriptionId
       : undefined;
-  console.log(`pricing`, { plan, subscriptionId });
+  console.log(`pricing: action`, { plan, subscriptionId });
   const { url, redirect: isRedirect } = await auth.api.upgradeSubscription({
     headers: request.headers,
     body: {
@@ -85,7 +85,7 @@ export async function action({ request, context }: Route.ActionArgs) {
       disableRedirect: false, // disable since we redirect after successful subscription
     },
   });
-  console.log(`pricing`, { isRedirect, url });
+  console.log(`pricing: action`, { isRedirect, url });
   invariant(isRedirect, "isRedirect is not true");
   invariant(url, "Missing url");
   return redirect(url);

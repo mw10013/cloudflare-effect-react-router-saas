@@ -22,6 +22,16 @@ pnpm -F s test --project d1 auth
 ## Stripe
 
 - https://docs.stripe.com/checkout/fulfillment
+
+### Events
+- https://www.better-auth.com/docs/plugins/stripe#set-up-stripe-webhooks
+
+```
+checkout.session.completed
+customer.subscription.updated
+customer.subscription.deleted
+```
+
 - https://github.com/t3dotgg/stripe-recommendations
 
 ```

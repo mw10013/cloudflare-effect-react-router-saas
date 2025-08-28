@@ -189,6 +189,7 @@ function createBetterAuthOptions({
         onEvent: async (event: Stripe.Event) => {
           console.log(
             `stripe plugin: onEvent: stripe event received: ${event.type}`,
+            event,
           );
         },
       }),
