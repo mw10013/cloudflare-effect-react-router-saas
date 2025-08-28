@@ -120,7 +120,6 @@ export async function loader({ context }: Route.ActionArgs) {
     c.ensurePrice("basic", 5000), // $50 in cents
     c.ensurePrice("pro", 10000),
   ]);
-  console.log({ basicPrice, proPrice });
 
   const [u, v, w, x, y, z] = await Promise.all(
     ["u@u.com", "v@v.com", "w@w.com", "x@x.com", "y@y.com", "z@z.com"].map(
