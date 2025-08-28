@@ -35,6 +35,12 @@ export default {
       console.log(`worker fetch: /api/auth/* ${c.req.raw.url}`);
       return auth.handler(c.req.raw);
     });
+    if (env.ENVIRONMENT === "local") {
+      hono.all(
+        "/.well-known/appspecific/com.chrome.devtools.json",
+        () => new Response(null, { status: 204 }),
+      );
+    }
     hono.all("*", async (c) => {
       const context = new unstable_RouterContextProvider();
       context.set(appLoadContext, {
