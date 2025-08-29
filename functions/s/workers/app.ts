@@ -5,7 +5,7 @@ import {
 } from "react-router";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
-import { createStripe } from "~/lib/stripe";
+import { createStripeService } from "~/lib/stripe-service";
 
 declare module "react-router" {
   export interface AppLoadContext {
@@ -14,7 +14,7 @@ declare module "react-router" {
       ctx: ExecutionContext;
     };
     auth: ReturnType<typeof createAuth>;
-    stripe: ReturnType<typeof createStripe>;
+    stripeService: ReturnType<typeof createStripeService>;
     session?: ReturnType<typeof createAuth>["$Infer"]["Session"];
     organization?: ReturnType<typeof createAuth>["$Infer"]["Organization"];
     organizations?: ReturnType<typeof createAuth>["$Infer"]["Organization"][];
@@ -24,13 +24,10 @@ declare module "react-router" {
 export default {
   async fetch(request, env, ctx) {
     const hono = new Hono.Hono();
-    const stripe = createStripe();
-    const [basicPrice, proPrice] = await stripe.getPrices();
+    const stripeService = createStripeService();
     const auth = createAuth({
       d1: env.D1,
-      stripeClient: stripe.stripe,
-      basicPriceId: basicPrice.id,
-      proPriceId: proPrice.id,
+      stripeService,
     });
     hono.all("/api/auth/*", (c) => {
       // http://localhost:5173/api/auth/stripe/webhook
@@ -49,7 +46,7 @@ export default {
       context.set(appLoadContext, {
         cloudflare: { env, ctx },
         auth,
-        stripe,
+        stripeService,
         session:
           (await auth.api.getSession({ headers: c.req.raw.headers })) ??
           undefined,

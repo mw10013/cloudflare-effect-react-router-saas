@@ -17,22 +17,8 @@ import { appLoadContext } from "~/lib/middleware";
 // [BUG]: Stripe plugin does not handle lookupKey and annualDiscountLookupKey in onCheckoutSessionCompleted: https://github.com/better-auth/better-auth/issues/3537
 
 export async function loader({ context }: Route.LoaderArgs) {
-  const { stripe } = context.get(appLoadContext);
-  const prices = await stripe.getPrices();
-  // const priceList = await stripe.prices.list({
-  //   lookup_keys: ["basic", "pro"],
-  //   expand: ["data.product"],
-  // });
-
-  // type Price = (typeof priceList.data)[number];
-  // type PriceWithLookupKey = Price & { lookup_key: string };
-  // const isPriceWithLookupKey = (p: Price): p is PriceWithLookupKey =>
-  //   p.lookup_key !== null;
-  // const prices = priceList.data
-  //   .filter(isPriceWithLookupKey)
-  //   .sort((a, b) => a.lookup_key.localeCompare(b.lookup_key));
-  // invariant(prices.length > 1, `Not enough prices (${prices.length})`);
-
+  const { stripeService } = context.get(appLoadContext);
+  const prices = await stripeService.getPrices();
   const subscriptions = (
     await env.D1.prepare(
       `
@@ -42,7 +28,6 @@ inner join Member m on m.organizationId = o.organizationId and m.role = 'owner'
 inner join User u on u.userId = m.userId`,
     ).all()
   ).results;
-
   return { prices, subscriptions };
 }
 

@@ -9,51 +9,19 @@ import { appLoadContext } from "~/lib/middleware";
 
 async function createSeedContext({
   cloudflare,
-  stripe,
+  stripeService,
 }: {
   cloudflare: AppLoadContext["cloudflare"];
-  stripe: AppLoadContext["stripe"];
+  stripeService: AppLoadContext["stripeService"];
 }) {
-  const ensurePrice = async (
-    lookup_key: string,
-    unit_amount: number,
-  ): Promise<StripeType.Price> => {
-    const list = await stripe.stripe.prices.list({
-      lookup_keys: [lookup_key],
-      limit: 1,
-    });
-    if (list.data[0]) {
-      return list.data[0];
-    } else {
-      const name = lookup_key.charAt(0).toUpperCase() + lookup_key.slice(1);
-      const product = await stripe.stripe.products.create({
-        name,
-        description: `${name} subscription plan`,
-      });
-      return await stripe.stripe.prices.create({
-        product: product.id,
-        unit_amount,
-        currency: "usd",
-        recurring: {
-          interval: "month",
-          trial_period_days: 7,
-        },
-        lookup_key,
-      });
-    }
-  };
-
   const magicLinkTokens = new Map<string, string>();
-  const [basicPrice, proPrice] = await stripe.getPrices();
   const auth = await createAuth({
     d1: cloudflare.env.D1,
-    stripeClient: stripe.stripe,
+    stripeService,
     sendMagicLink: async ({ email, token }) => {
       magicLinkTokens.set(email, token);
     },
     sendInvitationEmail: async () => {},
-    basicPriceId: basicPrice.id,
-    proPriceId: proPrice.id,
   });
 
   const context = async ({ headers }: { headers?: Headers } = {}) => {
@@ -61,7 +29,12 @@ async function createSeedContext({
       ? ((await auth.api.getSession({ headers })) ?? undefined)
       : undefined;
     const context = new unstable_RouterContextProvider();
-    context.set(appLoadContext, { cloudflare, auth, stripe, session });
+    context.set(appLoadContext, {
+      cloudflare,
+      auth,
+      stripeService: stripeService,
+      session,
+    });
     return context;
   };
 
@@ -108,20 +81,16 @@ async function createSeedContext({
   };
 
   return {
-    ensurePrice,
     auth,
     createUser,
   };
 }
 
 export async function loader({ context }: Route.ActionArgs) {
-  const { cloudflare, stripe } = context.get(appLoadContext) as AppLoadContext;
-  const c = await createSeedContext({ cloudflare, stripe });
-
-  const [basicPrice, proPrice] = await Promise.all([
-    c.ensurePrice("basic", 5000), // $50 in cents
-    c.ensurePrice("pro", 10000),
-  ]);
+  const { cloudflare, stripeService: stripe } = context.get(
+    appLoadContext,
+  ) as AppLoadContext;
+  const c = await createSeedContext({ cloudflare, stripeService: stripe });
 
   const [u, v, w, x, y, z] = await Promise.all(
     ["u@u.com", "v@v.com", "w@w.com", "x@x.com", "y@y.com", "z@z.com"].map(
@@ -269,23 +238,3 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
     </div>
   );
 }
-
-// resend: true is creating a duplicate invite instead of reusing the existing one: https://github.com/better-auth/better-auth/issues/3507
-// const invitationExists =
-//   (await db
-//     .prepare(
-//       "select 1 from Invitation where email = ? and organizationId = ? limit 1",
-//     )
-//     .bind(invitee.email, Number(organizationId))
-//     .first()) !== null;
-// if (invitationExists) continue;
-
-// await c.auth.api.createInvitation({
-//   headers: inviter.headers,
-//   body: {
-//     email: invitee.email,
-//     role: "member",
-//     organizationId,
-//     resend: true,
-//   },
-// });

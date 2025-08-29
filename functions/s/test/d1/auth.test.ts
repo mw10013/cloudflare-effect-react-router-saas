@@ -5,7 +5,7 @@ import { unstable_RouterContextProvider } from "react-router";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
-import { createStripe } from "~/lib/stripe";
+import { createStripeService } from "~/lib/stripe-service";
 import {
   action as acceptInvitationAction,
   loader as acceptInvitationLoader,
@@ -28,17 +28,13 @@ async function createTestContext() {
   const mockSendVerificationEmail = vi.fn().mockResolvedValue(undefined);
   const mockSendMagicLink = vi.fn().mockResolvedValue(undefined);
   const mockSendInvitationEmail = vi.fn().mockResolvedValue(undefined);
-  const stripe = createStripe();
-  const [basicPrice, proPrice] = await stripe.getPrices();
   const auth = createAuth({
     d1: env.D1,
-    stripeClient: stripe.stripe,
+    stripeService: createStripeService(),
     sendResetPassword: mockSendResetPassword,
     sendVerificationEmail: mockSendVerificationEmail,
     sendMagicLink: mockSendMagicLink,
     sendInvitationEmail: mockSendInvitationEmail,
-    basicPriceId: basicPrice.id,
-    proPriceId: proPrice.id,
   });
   const context = async ({ headers }: { headers?: Headers } = {}) => {
     const session = headers

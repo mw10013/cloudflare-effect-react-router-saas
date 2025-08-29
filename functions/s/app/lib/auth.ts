@@ -1,9 +1,9 @@
+import type { createStripeService } from "~/lib/stripe-service";
 import type { BetterAuthOptions } from "better-auth";
 import { stripe } from "@better-auth/stripe";
 import { betterAuth } from "better-auth";
 import { admin, magicLink, organization } from "better-auth/plugins";
 import { env } from "cloudflare:workers";
-import { Stripe } from "stripe";
 import { d1Adapter } from "~/lib/d1-adapter";
 
 // [BUG]: Stripe plugin does not handle lookupKey and annualDiscountLookupKey in onCheckoutSessionCompleted: https://github.com/better-auth/better-auth/issues/3537
@@ -12,7 +12,7 @@ import { d1Adapter } from "~/lib/d1-adapter";
 
 interface CreateAuthOptions {
   d1: D1Database;
-  stripeClient: Stripe;
+  stripeService: ReturnType<typeof createStripeService>;
   sendResetPassword?: NonNullable<
     BetterAuthOptions["emailAndPassword"]
   >["sendResetPassword"];
@@ -36,13 +36,11 @@ interface CreateAuthOptions {
       NonNullable<BetterAuthOptions["databaseHooks"]>["session"]
     >["create"]
   >["before"];
-  basicPriceId: string;
-  proPriceId: string;
 }
 
 function createBetterAuthOptions({
   d1,
-  stripeClient,
+  stripeService,
   sendResetPassword,
   sendVerificationEmail,
   afterEmailVerification,
@@ -50,10 +48,7 @@ function createBetterAuthOptions({
   sendInvitationEmail,
   databaseHookUserCreateAfter,
   databaseHookSessionCreateBefore,
-  basicPriceId,
-  proPriceId,
 }: CreateAuthOptions) {
-  console.log("createBetterAuthOptions", { basicPriceId, proPriceId });
   return {
     baseURL: env.BETTER_AUTH_URL,
     secret: env.BETTER_AUTH_SECRET,
@@ -139,24 +134,27 @@ function createBetterAuthOptions({
           }),
       }),
       stripe({
-        stripeClient,
+        stripeClient: stripeService.stripe,
         stripeWebhookSecret: env.STRIPE_WEBHOOK_SECRET,
         createCustomerOnSignUp: false,
         subscription: {
           enabled: true,
           requireEmailVerification: true,
-          plans: [
-            {
-              name: "basic",
-              lookupKey: "basic",
-              priceId: basicPriceId,
-            },
-            {
-              name: "pro",
-              lookupKey: "pro",
-              priceId: proPriceId,
-            },
-          ],
+          plans: async () => {
+            const [basicPrice, proPrice] = await stripeService.getPrices();
+            return [
+              {
+                name: "basic",
+                priceId: basicPrice.id,
+                lookupKey: "basic",
+              },
+              {
+                name: "pro",
+                priceId: proPrice.id,
+                lookupKey: "pro",
+              },
+            ];
+          },
           authorizeReference: async ({ user, referenceId, action }) => {
             console.log(
               `stripe plugin: authorizeReference: user ${user.id} is attempting to ${action} subscription for referenceId ${referenceId}`,
@@ -194,7 +192,7 @@ function createBetterAuthOptions({
             `stripe plugin: onCustomerCreate: customer ${stripeCustomer.id} created for user ${user.email}`,
           );
         },
-        onEvent: async (event: Stripe.Event) => {
+        async onEvent(event) {
           console.log(
             `stripe plugin: onEvent: stripe event received: ${event.type}`,
           );

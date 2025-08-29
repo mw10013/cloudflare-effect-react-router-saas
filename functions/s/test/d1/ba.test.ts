@@ -1,7 +1,7 @@
 import { env } from "cloudflare:workers";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { createAuth } from "~/lib/auth";
-import { createStripe } from "~/lib/stripe";
+import { createStripeService } from "~/lib/stripe-service";
 import { resetDb } from "../test-utils";
 
 describe("better-auth sign up flow", async () => {
@@ -17,14 +17,10 @@ describe("better-auth sign up flow", async () => {
   beforeAll(async () => {
     await resetDb();
     mockSendVerificationEmail = vi.fn().mockResolvedValue(undefined);
-    const stripe = createStripe();
-    const [basicPrice, proPrice] = await stripe.getPrices();
     auth = createAuth({
       d1: env.D1,
-      stripeClient: stripe.stripe,
+      stripeService: createStripeService(),
       sendVerificationEmail: mockSendVerificationEmail,
-      basicPriceId: basicPrice.id,
-      proPriceId: proPrice.id,
     });
   });
 
