@@ -44,7 +44,7 @@ async function createSeedContext({
   };
 
   const magicLinkTokens = new Map<string, string>();
-    const [basicPrice, proPrice] = await stripe.getPrices()
+  const [basicPrice, proPrice] = await stripe.getPrices();
   const auth = await createAuth({
     d1: cloudflare.env.D1,
     stripeClient: stripe.stripe,

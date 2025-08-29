@@ -25,7 +25,7 @@ export default {
   async fetch(request, env, ctx) {
     const hono = new Hono.Hono();
     const stripe = createStripe();
-    const [basicPrice, proPrice] = await stripe.getPrices()
+    const [basicPrice, proPrice] = await stripe.getPrices();
     const auth = createAuth({
       d1: env.D1,
       stripeClient: stripe.stripe,
