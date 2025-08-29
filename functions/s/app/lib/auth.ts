@@ -2,6 +2,7 @@ import type { createStripeService } from "~/lib/stripe-service";
 import type { BetterAuthOptions } from "better-auth";
 import { stripe } from "@better-auth/stripe";
 import { betterAuth } from "better-auth";
+import { createAuthMiddleware } from "better-auth/api";
 import { admin, magicLink, organization } from "better-auth/plugins";
 import { env } from "cloudflare:workers";
 import { d1Adapter } from "~/lib/d1-adapter";
@@ -102,6 +103,17 @@ function createBetterAuthOptions({
             }),
         },
       },
+    },
+    hooks: {
+      before: createAuthMiddleware(async (ctx) => {
+        if (
+          ctx.path === "/subscription/billing-portal" ||
+          ctx.path === "/subscription/cancel-subscription"
+        ) {
+          console.log(`better-auth: hooks: before: ${ctx.path}`);
+          await stripeService.ensureBillingPortalConfiguration();
+        }
+      }),
     },
     plugins: [
       magicLink({
