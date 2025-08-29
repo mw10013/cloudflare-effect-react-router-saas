@@ -1,6 +1,5 @@
 import type { User } from "better-auth/types";
 import type { AppLoadContext } from "react-router";
-import type { Stripe as StripeType } from "stripe";
 import type { Route } from "./+types/seed";
 import { invariant } from "@epic-web/invariant";
 import { unstable_RouterContextProvider } from "react-router";

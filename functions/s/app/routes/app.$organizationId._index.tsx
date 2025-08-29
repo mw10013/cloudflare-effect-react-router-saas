@@ -11,7 +11,7 @@ import {
 import { useFetcher } from "react-router";
 import { appLoadContext } from "~/lib/middleware";
 
-export async function loader({ request, context }: Route.LoaderArgs) {
+export async function loader({ request, context, params: { organizationId } }: Route.LoaderArgs) {
   const MIN_TTL_MS = 5 * 60 * 1000;
   const { auth, session } = context.get(appLoadContext);
   invariant(session, "Missing session");
@@ -26,6 +26,10 @@ export async function loader({ request, context }: Route.LoaderArgs) {
       (v) =>
         v.status === "pending" && v.expiresAt.getTime() - now >= MIN_TTL_MS,
     ),
+    subscriptions: await auth.api.listActiveSubscriptions({
+      headers: request.headers,
+      query: { referenceId: organizationId },
+    }),
     session,
   };
 }
@@ -109,7 +113,7 @@ function InvitationItem({
 }
 
 export default function RouteComponent({
-  loaderData: { session, invitations },
+  loaderData: { invitations, ...loaderData },
 }: Route.ComponentProps) {
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -131,7 +135,7 @@ export default function RouteComponent({
           </CardContent>
         </Card>
       )}
-      <pre>{JSON.stringify({ session }, null, 2)}</pre>
+      <pre>{JSON.stringify(loaderData, null, 2)}</pre>
     </div>
   );
 }
