@@ -43,10 +43,12 @@ export async function action({
   const parseResult = schema.parse(
     Object.fromEntries(await request.formData()),
   );
-  const { auth } = context.get(appLoadContext);
+  const { auth, stripeService } = context.get(appLoadContext);
 
   switch (parseResult.intent) {
     case "manage": {
+      await stripeService.ensureBillingPortalConfiguration();
+
       const result = await auth.api.createBillingPortal({
         headers: request.headers,
         body: {
@@ -57,6 +59,8 @@ export async function action({
       throw redirect(result.url);
     }
     case "cancel": {
+      await stripeService.ensureBillingPortalConfiguration();
+
       const result = await auth.api.cancelSubscription({
         headers: request.headers,
         body: {

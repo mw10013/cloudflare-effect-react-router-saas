@@ -141,6 +141,7 @@ function createBetterAuthOptions({
           enabled: true,
           requireEmailVerification: true,
           plans: async () => {
+            console.log(`stripe plugin: plans`);
             const [basicPrice, proPrice] = await stripeService.getPrices();
             return [
               {

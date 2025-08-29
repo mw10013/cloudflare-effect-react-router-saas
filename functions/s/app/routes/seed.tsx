@@ -91,6 +91,8 @@ export async function loader({ context }: Route.ActionArgs) {
   ) as AppLoadContext;
   const c = await createSeedContext({ cloudflare, stripeService: stripe });
 
+  await stripe.ensureBillingPortalConfiguration();
+
   const [u, v, w, x, y, z] = await Promise.all(
     ["u@u.com", "v@v.com", "w@w.com", "x@x.com", "y@y.com", "z@z.com"].map(
       (email) => c.createUser(email),
@@ -221,6 +223,7 @@ export async function loader({ context }: Route.ActionArgs) {
     any,
     any,
   ];
+
   return {
     invitationCount: invitations.length,
     invitations,

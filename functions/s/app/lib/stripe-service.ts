@@ -40,7 +40,7 @@ export function createStripeService() {
               lookup_key.charAt(0).toUpperCase() + lookup_key.slice(1);
             const product = await stripe.products.create({
               name,
-              description: `${name} subscription plan`,
+              description: `${name} plan`,
             });
             const { lastResponse: _lr, ...price } = await stripe.prices.create({
               product: product.id,
@@ -71,8 +71,83 @@ export function createStripeService() {
     return prices;
   };
 
+  const ensureBillingPortalConfiguration = async (): Promise<void> => {
+    const key = "stripe:billing-portal-configured";
+    const isConfigured = await env.KV.get(key);
+
+    if (isConfigured === "true") {
+      console.log(
+        `stripeService: ensureBillingPortalConfiguration: already configured`,
+      );
+      return;
+    }
+    console.log(
+      `stripeService: ensureBillingPortalConfiguration: checking Stripe API`,
+    );
+    const configurations = await stripe.billingPortal.configurations.list();
+
+    if (configurations.data.length === 0) {
+      console.log(
+        `stripeService: ensureBillingPortalConfiguration: creating configuration`,
+      );
+      const [basicPrice, proPrice] = await getPrices();
+      await stripe.billingPortal.configurations.create({
+        business_profile: {
+          headline: "Manage your subscription and billing information",
+        },
+        features: {
+          customer_update: {
+            enabled: true,
+            allowed_updates: ["name", "phone"],
+          },
+          invoice_history: {
+            enabled: true,
+          },
+          payment_method_update: {
+            enabled: true,
+          },
+          subscription_cancel: {
+            enabled: true,
+            mode: "at_period_end",
+            proration_behavior: "none",
+          },
+          subscription_update: {
+            enabled: true,
+            default_allowed_updates: ["price"],
+            proration_behavior: "none",
+            products: [
+              {
+                product:
+                  typeof basicPrice.product === "string"
+                    ? basicPrice.product
+                    : basicPrice.product.id,
+                prices: [basicPrice.id],
+              },
+              {
+                product:
+                  typeof proPrice.product === "string"
+                    ? proPrice.product
+                    : proPrice.product.id,
+                prices: [proPrice.id],
+              },
+            ],
+          },
+        },
+      });
+      console.log(
+        `stripeService: ensureBillingPortalConfiguration: configuration created`,
+      );
+    } else {
+      console.log(
+        `stripeService: ensureBillingPortalConfiguration: configuration already exists`,
+      );
+    }
+    await env.KV.put(key, "true");
+  };
+
   return {
     stripe,
     getPrices,
+    ensureBillingPortalConfiguration,
   };
 }
