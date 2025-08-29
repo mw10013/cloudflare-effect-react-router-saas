@@ -36,8 +36,8 @@ interface CreateAuthOptions {
       NonNullable<BetterAuthOptions["databaseHooks"]>["session"]
     >["create"]
   >["before"];
-  // basicPriceId: string;
-  // proPriceId: string;
+  basicPriceId: string;
+  proPriceId: string;
 }
 
 function createBetterAuthOptions({
@@ -50,9 +50,10 @@ function createBetterAuthOptions({
   sendInvitationEmail,
   databaseHookUserCreateAfter,
   databaseHookSessionCreateBefore,
-  // basicPriceId,
-  // proPriceId,
+  basicPriceId,
+  proPriceId,
 }: CreateAuthOptions) {
+  console.log("createBetterAuthOptions", { basicPriceId, proPriceId });
   return {
     baseURL: env.BETTER_AUTH_URL,
     secret: env.BETTER_AUTH_SECRET,
@@ -148,12 +149,12 @@ function createBetterAuthOptions({
             {
               name: "basic",
               lookupKey: "basic",
-              // priceId: basicPriceId,
+              priceId: basicPriceId,
             },
             {
               name: "pro",
               lookupKey: "pro",
-              // priceId: proPriceId,
+              priceId: proPriceId,
             },
           ],
           authorizeReference: async ({ user, referenceId, action }) => {

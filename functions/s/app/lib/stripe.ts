@@ -16,7 +16,7 @@ export function createStripe() {
     apiVersion: "2025-07-30.basil",
   });
 
-  const getPrices = async (): Promise<Price[]> => {
+  const getPrices = async (): Promise<PriceWithLookupKey[]> => {
     const priceData = [
       { lookup_key: "basic", unit_amount: 5000 }, // $50 in cents
       { lookup_key: "pro", unit_amount: 10000 }, // $100 in cents
@@ -50,7 +50,10 @@ export function createStripe() {
       const prices = priceList.data
         .filter(isPriceWithLookupKey)
         .sort((a, b) => a.lookup_key.localeCompare(b.lookup_key));
-      invariant(prices.length > 1, `Not enough prices (${prices.length})`);
+      invariant(
+        prices.length === 2,
+        `Count of prices not 2 (${prices.length})`,
+      );
       return prices;
     }
   };

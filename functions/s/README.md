@@ -7,6 +7,7 @@ pnpm -F s test --project d1 auth
 - restrict auth api
 - sign out a11y in sidebar
 - stripe
+  - KV
   - authorizeReference
   - referenceId -> organizationId
   - remove basicPriceId and proPriceId

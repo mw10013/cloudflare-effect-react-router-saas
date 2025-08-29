@@ -1,8 +1,8 @@
 import { env } from "cloudflare:workers";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { createAuth } from "~/lib/auth";
-import { resetDb } from "../test-utils";
 import { createStripe } from "~/lib/stripe";
+import { resetDb } from "../test-utils";
 
 describe("better-auth sign up flow", async () => {
   const email = "email@test.com";
@@ -17,10 +17,14 @@ describe("better-auth sign up flow", async () => {
   beforeAll(async () => {
     await resetDb();
     mockSendVerificationEmail = vi.fn().mockResolvedValue(undefined);
+    const stripe = createStripe();
+    const [basicPrice, proPrice] = await stripe.getPrices();
     auth = createAuth({
       d1: env.D1,
-      stripeClient: createStripe().stripe,
+      stripeClient: stripe.stripe,
       sendVerificationEmail: mockSendVerificationEmail,
+      basicPriceId: basicPrice.id,
+      proPriceId: proPrice.id,
     });
   });
 
@@ -52,7 +56,9 @@ describe("better-auth sign up flow", async () => {
     });
 
     expect(response.status).toBe(422);
-    expect(((await response.json()) as any)?.code).toBe("USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL");
+    expect(((await response.json()) as any)?.code).toBe(
+      "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL",
+    );
   });
 
   it("does not sign in with unverified email", async () => {
@@ -129,7 +135,7 @@ describe("better-auth sign up flow", async () => {
       asResponse: true,
       body: { email, password, callbackURL },
     });
-    
+
     expect(response.ok).toBe(true);
     expect(response.headers.has("Set-Cookie")).toBe(true);
   });

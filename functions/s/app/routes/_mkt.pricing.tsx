@@ -17,22 +17,21 @@ import { appLoadContext } from "~/lib/middleware";
 // [BUG]: Stripe plugin does not handle lookupKey and annualDiscountLookupKey in onCheckoutSessionCompleted: https://github.com/better-auth/better-auth/issues/3537
 
 export async function loader({ context }: Route.LoaderArgs) {
-  const {
-    stripe: { stripe },
-  } = context.get(appLoadContext);
-  const priceList = await stripe.prices.list({
-    lookup_keys: ["basic", "pro"],
-    expand: ["data.product"],
-  });
+  const { stripe } = context.get(appLoadContext);
+  const prices = await stripe.getPrices();
+  // const priceList = await stripe.prices.list({
+  //   lookup_keys: ["basic", "pro"],
+  //   expand: ["data.product"],
+  // });
 
-  type Price = (typeof priceList.data)[number];
-  type PriceWithLookupKey = Price & { lookup_key: string };
-  const isPriceWithLookupKey = (p: Price): p is PriceWithLookupKey =>
-    p.lookup_key !== null;
-  const prices = priceList.data
-    .filter(isPriceWithLookupKey)
-    .sort((a, b) => a.lookup_key.localeCompare(b.lookup_key));
-  invariant(prices.length > 1, `Not enough prices (${prices.length})`);
+  // type Price = (typeof priceList.data)[number];
+  // type PriceWithLookupKey = Price & { lookup_key: string };
+  // const isPriceWithLookupKey = (p: Price): p is PriceWithLookupKey =>
+  //   p.lookup_key !== null;
+  // const prices = priceList.data
+  //   .filter(isPriceWithLookupKey)
+  //   .sort((a, b) => a.lookup_key.localeCompare(b.lookup_key));
+  // invariant(prices.length > 1, `Not enough prices (${prices.length})`);
 
   const subscriptions = (
     await env.D1.prepare(
