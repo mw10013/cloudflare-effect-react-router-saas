@@ -30,6 +30,7 @@ export default {
       stripeService,
     });
     hono.all("/api/auth/*", (c) => {
+      // http://localhost:5173/api/auth/magic-link/verify?token=UstZiCHCBTxwWIxGQrQdabmwWMXkvkMa&callbackURL=%2Fmagic-link
       // http://localhost:5173/api/auth/stripe/webhook
       // http://localhost:5173/api/auth/subscription/success?callbackURL=%2Fapp&subscriptionId=13
       console.log(`worker fetch: /api/auth/* ${c.req.raw.url}`);

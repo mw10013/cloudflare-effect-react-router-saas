@@ -72,24 +72,11 @@ export function createStripeService() {
   };
 
   const ensureBillingPortalConfiguration = async (): Promise<void> => {
-    const key = "stripe:billing-portal-configured";
+    const key = "stripe:isBillingPortalConfigured";
     const isConfigured = await env.KV.get(key);
-
-    if (isConfigured === "true") {
-      console.log(
-        `stripeService: ensureBillingPortalConfiguration: already configured`,
-      );
-      return;
-    }
-    console.log(
-      `stripeService: ensureBillingPortalConfiguration: checking Stripe API`,
-    );
+    if (isConfigured === "true") return;
     const configurations = await stripe.billingPortal.configurations.list();
-
     if (configurations.data.length === 0) {
-      console.log(
-        `stripeService: ensureBillingPortalConfiguration: creating configuration`,
-      );
       const [basicPrice, proPrice] = await getPrices();
       await stripe.billingPortal.configurations.create({
         business_profile: {
@@ -135,11 +122,7 @@ export function createStripeService() {
         },
       });
       console.log(
-        `stripeService: ensureBillingPortalConfiguration: configuration created`,
-      );
-    } else {
-      console.log(
-        `stripeService: ensureBillingPortalConfiguration: configuration already exists`,
+        `stripeService: ensureBillingPortalConfiguration: created billing portal configuration`,
       );
     }
     await env.KV.put(key, "true");
