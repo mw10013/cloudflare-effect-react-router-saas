@@ -4,7 +4,6 @@ pnpm -F s test --project d1 auth
 
 ## TODO
 
-- limit 2 on ensure
 - restrict auth api
 - sign out a11y in sidebar
 - stripe
