@@ -102,7 +102,11 @@ export default function RouteComponent({
                     {activeSubscription.plan} Plan
                   </p>
                   <p className="text-muted-foreground text-sm">
-                    Status: {activeSubscription.status}
+                    Status:{" "}
+                    {activeSubscription.status === "active" &&
+                    activeSubscription.cancelAtPeriodEnd
+                      ? `Active ${activeSubscription.periodEnd ? `(Cancels ${new Date(activeSubscription.periodEnd).toISOString().split("T")[0]})` : ""}`
+                      : activeSubscription.status}
                   </p>
                 </div>
                 <div className="flex gap-2">

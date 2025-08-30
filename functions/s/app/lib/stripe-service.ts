@@ -93,6 +93,8 @@ export function createStripeService() {
           payment_method_update: {
             enabled: true,
           },
+          // 'at_period_end' keeps subscription active until period end, ensuring full payment for SMBs.
+          // 'create_prorations' ensures fair billing for plan changes, preventing abuse.
           subscription_cancel: {
             enabled: true,
             mode: "at_period_end",
