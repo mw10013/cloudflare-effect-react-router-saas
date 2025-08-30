@@ -18,9 +18,6 @@ build.log
 # React Router
 .react-router/
 
-# Tests
-test-results/
-playwright-report/
 
 # Miscellaneous
 .local/
@@ -29,3 +26,9 @@ playwright-report/
 .tmp/
 .nc
 *.tsbuildinfo
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/

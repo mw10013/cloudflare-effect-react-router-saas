@@ -16,6 +16,7 @@ catalog:
   "@epic-web/invariant": 1.0.0
   "@openauthjs/openauth": 0.4.3
   "@paralleldrive/cuid2": 2.2.2
+  "@playwright/test": 1.55.0
   "@react-router/cloudflare": 7.8.1
   "@react-router/dev": 7.8.1
   "@react-router/fs-routes": 7.8.1
@@ -39,6 +40,7 @@ catalog:
   miniflare: 4.20250726.0
   openai: 5.8.2
   oxlint: 1.13.0
+  playwright: 1.55.0
   radix-ui: 1.4.3
   react: 19.1.0
   react-aria-components: 1.11.0
