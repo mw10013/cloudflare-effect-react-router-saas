@@ -4,13 +4,21 @@ pnpm -F s test --project d1 auth
 
 ## TODO
 
+- limit 2 on ensure
+- billing: review, cancel, restore
+- pricing: already subscribed behavior
 - restrict auth api
 - sign out a11y in sidebar
 - stripe
-  - KV
   - authorizeReference
   - referenceId -> organizationId
-  - remove basicPriceId and proPriceId
+  - trial period
+- playwright
+- admin
+  - customers
+  - sessions
+- deploy  
+- agent 
 
 ## Better-Auth
 
