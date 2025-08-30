@@ -107,6 +107,7 @@ function createBetterAuthOptions({
     hooks: {
       before: createAuthMiddleware(async (ctx) => {
         if (
+          ctx.path === "/subscription/upgrade" ||
           ctx.path === "/subscription/billing-portal" ||
           ctx.path === "/subscription/cancel-subscription"
         ) {
