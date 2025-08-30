@@ -5,12 +5,9 @@ pnpm -F s test --project d1 auth
 ## TODO
 
 - limit 2 on ensure
-- billing: review, cancel, restore
-- pricing: already subscribed behavior
 - restrict auth api
 - sign out a11y in sidebar
 - stripe
-  - authorizeReference
   - referenceId -> organizationId
   - trial period
 - playwright

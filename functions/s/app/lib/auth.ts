@@ -172,10 +172,18 @@ function createBetterAuthOptions({
             ];
           },
           authorizeReference: async ({ user, referenceId, action }) => {
-            console.log(
-              `stripe plugin: authorizeReference: user ${user.id} is attempting to ${action} subscription for referenceId ${referenceId}`,
+            const result = Boolean(
+              await d1
+                .prepare(
+                  "select 1 from Member where userId = ? and organizationId = ? and role = 'owner'",
+                )
+                .bind(Number(user.id), Number(referenceId))
+                .first(),
             );
-            return true;
+            console.log(
+              `stripe plugin: authorizeReference: user ${user.id} is attempting to ${action} subscription for referenceId ${referenceId}, authorized: ${result}`,
+            );
+            return result;
           },
           onSubscriptionComplete: async ({ subscription, plan }) => {
             console.log(
