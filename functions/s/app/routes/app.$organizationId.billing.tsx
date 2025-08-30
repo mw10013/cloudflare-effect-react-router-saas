@@ -22,7 +22,10 @@ export async function loader({
     headers: request.headers,
     query: { referenceId: organizationId },
   });
-  return { subscriptions };
+  const activeSubscription = subscriptions.find(
+    (v) => v.status === "active" || v.status === "trialing",
+  );
+  return { activeSubscription, subscriptions };
 }
 
 export async function action({
@@ -43,7 +46,6 @@ export async function action({
     Object.fromEntries(await request.formData()),
   );
   const { auth } = context.get(appLoadContext);
-
   switch (parseResult.intent) {
     case "manage": {
       const result = await auth.api.createBillingPortal({
@@ -73,12 +75,8 @@ export async function action({
 }
 
 export default function RouteComponent({
-  loaderData: { subscriptions },
+  loaderData: { activeSubscription, subscriptions },
 }: Route.ComponentProps) {
-  const activeSubscription = subscriptions.find(
-    (sub) => sub.status === "active" || sub.status === "trialing",
-  );
-
   return (
     <div className="flex flex-col gap-8 p-6">
       <header>
@@ -122,14 +120,13 @@ export default function RouteComponent({
                     <input
                       type="hidden"
                       name="subscriptionId"
-                      value={activeSubscription.stripeSubscriptionId || ""}
+                      value={activeSubscription.id}
                     />
                     <Oui.Button
                       type="submit"
                       name="intent"
                       value="cancel"
                       variant="destructive"
-                      isDisabled={!activeSubscription.stripeSubscriptionId}
                     >
                       Cancel Subscription
                     </Oui.Button>
@@ -139,7 +136,7 @@ export default function RouteComponent({
             </div>
           ) : (
             <p className="text-muted-foreground text-sm">
-              No active subscription found for this organization.
+              No active subscription for this organization.
             </p>
           )}
         </CardContent>

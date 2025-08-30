@@ -96,12 +96,12 @@ export function createStripeService() {
           subscription_cancel: {
             enabled: true,
             mode: "at_period_end",
-            proration_behavior: "none",
+            proration_behavior: "create_prorations",
           },
           subscription_update: {
             enabled: true,
             default_allowed_updates: ["price"],
-            proration_behavior: "none",
+            proration_behavior: "create_prorations",
             products: [
               {
                 product:
