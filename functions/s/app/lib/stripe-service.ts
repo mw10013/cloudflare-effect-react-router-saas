@@ -75,7 +75,9 @@ export function createStripeService() {
     const key = "stripe:isBillingPortalConfigured";
     const isConfigured = await env.KV.get(key);
     if (isConfigured === "true") return;
-    const configurations = await stripe.billingPortal.configurations.list();
+    const configurations = await stripe.billingPortal.configurations.list({
+      limit: 2,
+    });
     if (configurations.data.length === 0) {
       const [basicPrice, proPrice] = await getPrices();
       await stripe.billingPortal.configurations.create({
@@ -126,8 +128,14 @@ export function createStripeService() {
       console.log(
         `stripeService: ensureBillingPortalConfiguration: created billing portal configuration`,
       );
+    } else {
+      if (configurations.data.length > 1) {
+        console.log(
+          "WARNING: More than 1 billing portal configuration found. Should not be more than 1.",
+        );
+      }
+      await env.KV.put(key, "true");
     }
-    await env.KV.put(key, "true");
   };
 
   return {
