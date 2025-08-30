@@ -153,6 +153,8 @@ function createBetterAuthOptions({
         subscription: {
           enabled: true,
           requireEmailVerification: true,
+          // [BUG]: Stripe plugin does not handle lookupKey and annualDiscountLookupKey in onCheckoutSessionCompleted: https://github.com/better-auth/better-auth/issues/3537
+          // Workaround: populate `priceId`.
           plans: async () => {
             console.log(`stripe plugin: plans`);
             const [basicPrice, proPrice] = await stripeService.getPrices();
