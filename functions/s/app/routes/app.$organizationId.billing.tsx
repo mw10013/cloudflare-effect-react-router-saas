@@ -177,20 +177,7 @@ export default function RouteComponent({
           )}
         </CardContent>
       </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Subscription Details</CardTitle>
-          <CardDescription>
-            Current subscription information and status.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <pre className="text-xs">
-            {JSON.stringify({ subscriptions }, null, 2)}
-          </pre>
-        </CardContent>
-      </Card>
+      <pre>{JSON.stringify({ subscriptions }, null, 2)}</pre>
     </div>
   );
 }
