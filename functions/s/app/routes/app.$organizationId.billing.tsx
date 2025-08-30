@@ -41,6 +41,10 @@ export async function action({
       intent: z.literal("cancel"),
       subscriptionId: z.string().min(1, "Missing subscriptionId"),
     }),
+    z.object({
+      intent: z.literal("restore"),
+      subscriptionId: z.string().min(1, "Missing subscriptionId"),
+    }),
   ]);
   const parseResult = schema.parse(
     Object.fromEntries(await request.formData()),
@@ -55,7 +59,7 @@ export async function action({
           returnUrl: `${new URL(request.url).origin}/app/${organizationId}/billing`,
         },
       });
-      throw redirect(result.url);
+      return redirect(result.url);
     }
     case "cancel": {
       const result = await auth.api.cancelSubscription({
@@ -66,7 +70,17 @@ export async function action({
           returnUrl: `${new URL(request.url).origin}/app/${organizationId}/billing`,
         },
       });
-      throw redirect(result.url);
+      return redirect(result.url);
+    }
+    case "restore": {
+      await auth.api.restoreSubscription({
+        headers: request.headers,
+        body: {
+          referenceId: organizationId,
+          subscriptionId: parseResult.subscriptionId,
+        },
+      });
+      return null;
     }
     default:
       void (parseResult satisfies never);
@@ -120,21 +134,39 @@ export default function RouteComponent({
                       Manage Billing
                     </Oui.Button>
                   </Rac.Form>
-                  <Rac.Form method="post">
-                    <input
-                      type="hidden"
-                      name="subscriptionId"
-                      value={activeSubscription.id}
-                    />
-                    <Oui.Button
-                      type="submit"
-                      name="intent"
-                      value="cancel"
-                      variant="destructive"
-                    >
-                      Cancel Subscription
-                    </Oui.Button>
-                  </Rac.Form>
+                  {activeSubscription.cancelAtPeriodEnd ? (
+                    <Rac.Form method="post">
+                      <input
+                        type="hidden"
+                        name="subscriptionId"
+                        value={activeSubscription.id}
+                      />
+                      <Oui.Button
+                        type="submit"
+                        name="intent"
+                        value="restore"
+                        variant="default"
+                      >
+                        Restore Subscription
+                      </Oui.Button>
+                    </Rac.Form>
+                  ) : (
+                    <Rac.Form method="post">
+                      <input
+                        type="hidden"
+                        name="subscriptionId"
+                        value={activeSubscription.id}
+                      />
+                      <Oui.Button
+                        type="submit"
+                        name="intent"
+                        value="cancel"
+                        variant="destructive"
+                      >
+                        Cancel Subscription
+                      </Oui.Button>
+                    </Rac.Form>
+                  )}
                 </div>
               </div>
             </div>
