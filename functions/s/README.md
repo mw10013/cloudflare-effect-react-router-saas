@@ -4,17 +4,26 @@ pnpm -F s test --project d1 auth
 
 ## TODO
 
-- restrict auth api
-- sign out a11y in sidebar
 - stripe
   - referenceId -> organizationId
   - trial period
-- playwright
+  - annual
+- organization
+  - update member role
+  - teams?
 - admin
   - customers
   - sessions
-- deploy  
-- agent 
+- ses
+  - aws policy
+- playwright
+- database
+  - indexes: https://www.better-auth.com/docs/guides/optimizing-for-performance#database-optimizations
+- deploy
+- secondary storage: https://www.better-auth.com/docs/concepts/database#secondary-storage
+- restrict auth api
+- sign out a11y in sidebar
+- agent
 
 ## Better-Auth
 
@@ -63,6 +72,7 @@ Visit https://playwright.dev/docs/intro for more information.
 - https://docs.stripe.com/checkout/fulfillment
 
 ### Events
+
 - https://www.better-auth.com/docs/plugins/stripe#set-up-stripe-webhooks
 
 ```
