@@ -156,7 +156,7 @@ function createBetterAuthOptions({
           // [BUG]: Stripe plugin does not handle lookupKey and annualDiscountLookupKey in onCheckoutSessionCompleted: https://github.com/better-auth/better-auth/issues/3537
           // Workaround: populate `priceId`.
           plans: async () => {
-            console.log(`stripe plugin: plans`);
+            // console.log(`stripe plugin: plans`);
             const [basicPrice, proPrice] = await stripeService.getPrices();
             return [
               {
@@ -164,7 +164,22 @@ function createBetterAuthOptions({
                 priceId: basicPrice.id,
                 lookupKey: "basic",
                 freeTrial: {
-                  days: 14,
+                  days: 2,
+                  onTrialStart: async (subscription) => {
+                    console.log(
+                      `stripe plugin: onTrialStart: basic plan trial started for subscription ${subscription.id}`,
+                    );
+                  },
+                  onTrialEnd: async ({ subscription }, ctx) => {
+                    console.log(
+                      `stripe plugin: onTrialEnd: basic plan trial ended for subscription ${subscription.id}`,
+                    );
+                  },
+                  onTrialExpired: async (subscription) => {
+                    console.log(
+                      `stripe plugin: onTrialExpired: basic plan trial expired for subscription ${subscription.id}`,
+                    );
+                  },
                 },
               },
               {
@@ -172,7 +187,22 @@ function createBetterAuthOptions({
                 priceId: proPrice.id,
                 lookupKey: "pro",
                 freeTrial: {
-                  days: 14,
+                  days: 2,
+                  onTrialStart: async (subscription) => {
+                    console.log(
+                      `stripe plugin: onTrialStart: pro plan trial started for subscription ${subscription.id}`,
+                    );
+                  },
+                  onTrialEnd: async ({ subscription }, ctx) => {
+                    console.log(
+                      `stripe plugin: onTrialEnd: pro plan trial ended for subscription ${subscription.id}`,
+                    );
+                  },
+                  onTrialExpired: async (subscription) => {
+                    console.log(
+                      `stripe plugin: onTrialExpired: pro plan trial expired for subscription ${subscription.id}`,
+                    );
+                  },
                 },
               },
             ];

@@ -20,7 +20,7 @@ export function createStripeService() {
     const key = "stripe:prices";
     const cachedPrices = await env.KV.get(key, { type: "json" });
     if (cachedPrices) {
-      console.log(`stripeService: getPrices: cache hit`);
+      // console.log(`stripeService: getPrices: cache hit`);
       return cachedPrices as PriceWithLookupKey[];
     }
     console.log(`stripeService: getPrices: cache miss`);
@@ -95,11 +95,10 @@ export function createStripeService() {
           payment_method_update: {
             enabled: true,
           },
-          // 'at_period_end' keeps subscription active until period end, ensuring full payment for SMBs.
-          // 'create_prorations' ensures fair billing for plan changes, preventing abuse.
+          // Allow immediate cancellation with prorated refunds for unused time
           subscription_cancel: {
             enabled: true,
-            mode: "at_period_end",
+            mode: "immediately",
             proration_behavior: "create_prorations",
           },
           subscription_update: {
