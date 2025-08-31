@@ -171,9 +171,17 @@ export default function RouteComponent({
               </div>
             </div>
           ) : (
-            <p className="text-muted-foreground text-sm">
-              No active subscription for this organization.
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-muted-foreground text-sm">
+                No active subscription for this organization.
+              </p>
+              <Oui.Link
+                href="/pricing"
+                className={Oui.buttonClassName({ variant: "outline" })}
+              >
+                Pricing
+              </Oui.Link>
+            </div>
           )}
         </CardContent>
       </Card>
