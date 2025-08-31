@@ -36,6 +36,7 @@
     "@playwright/test": "catalog:",
     "@workspace/oui": "workspace:*",
     "@workspace/ui": "workspace:*",
+    "aws4fetch": "catalog:",
     "better-auth": "catalog:",
     "hono": "catalog:",
     "isbot": "catalog:",
