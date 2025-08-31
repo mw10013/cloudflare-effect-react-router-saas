@@ -163,11 +163,17 @@ function createBetterAuthOptions({
                 name: "basic",
                 priceId: basicPrice.id,
                 lookupKey: "basic",
+                freeTrial: {
+                  days: 14,
+                },
               },
               {
                 name: "pro",
                 priceId: proPrice.id,
                 lookupKey: "pro",
+                freeTrial: {
+                  days: 14,
+                },
               },
             ];
           },
