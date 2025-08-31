@@ -138,7 +138,8 @@ create table Subscription (
 insert into
   User (userId, name, email, role)
 values
-  (1, 'Admin', 'a@a.com', 'admin');
+  (1, 'Admin', 'a@a.com', 'admin'),
+  (2, 'Motio Admin', 'motio@mail.com', 'admin');
 
 --> statement-breakpoint
 insert into
@@ -150,4 +151,5 @@ insert into
     password
   )
 values
-  (1, '1', 'credential', 1, '');
+  (1, '1', 'credential', 1, ''),
+  (2, '2', 'credential', 2, '');

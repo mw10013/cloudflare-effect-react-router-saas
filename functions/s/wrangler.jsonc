@@ -6,6 +6,7 @@
   "compatibility_flags": ["nodejs_compat"],
   "vars": {
     "ENVIRONMENT": "local",
+    "COMPANY_EMAIL": "motio@mail.com",
     "BETTER_AUTH_URL": "http://localhost:5173"
   },
   "observability": {
@@ -33,7 +34,8 @@
     "production": {
       "vars": {
         "ENVIRONMENT": "production",
-        "BETTER_AUTH_URL": "https://cloudflare.com"
+        "COMPANY_EMAIL": "motio@mail.com",
+        "BETTER_AUTH_URL": "https://cloudflare-effect-react-router-saas-production.devxo.workers.dev"
       },
       "observability": {
         "enabled": true,

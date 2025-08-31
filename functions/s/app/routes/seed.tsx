@@ -17,6 +17,9 @@ async function createSeedContext({
   const auth = await createAuth({
     d1: cloudflare.env.D1,
     stripeService,
+    ses: {
+      async sendEmail() {},
+    },
     sendMagicLink: async ({ email, token }) => {
       magicLinkTokens.set(email, token);
     },

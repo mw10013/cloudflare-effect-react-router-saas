@@ -2,7 +2,23 @@ import { invariant } from "@epic-web/invariant";
 import { AwsClient } from "aws4fetch";
 import { env } from "cloudflare:workers";
 
-export function createSes() {
+export interface Ses {
+  sendEmail: ({
+    to,
+    from,
+    html,
+    text,
+    subject,
+  }: {
+    to: string;
+    from: string;
+    html: string;
+    text: string;
+    subject: string;
+  }) => Promise<void>;
+}
+
+export function createSes(): Ses {
   const AWS_ENDPOINT =
     "https://email.us-east-1.amazonaws.com/v2/email/outbound-emails";
   const AWS_REGION = "us-east-1";

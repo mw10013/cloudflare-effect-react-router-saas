@@ -31,6 +31,9 @@ async function createTestContext() {
   const auth = createAuth({
     d1: env.D1,
     stripeService: createStripeService(),
+    ses: {
+      async sendEmail() {},
+    },
     sendResetPassword: mockSendResetPassword,
     sendVerificationEmail: mockSendVerificationEmail,
     sendMagicLink: mockSendMagicLink,

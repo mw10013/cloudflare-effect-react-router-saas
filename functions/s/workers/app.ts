@@ -5,6 +5,7 @@ import {
 } from "react-router";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
+import { createSes } from "~/lib/ses";
 import { createStripeService } from "~/lib/stripe-service";
 
 declare module "react-router" {
@@ -28,6 +29,7 @@ export default {
     const auth = createAuth({
       d1: env.D1,
       stripeService,
+      ses: createSes(),
     });
     hono.all("/api/auth/*", (c) => {
       // http://localhost:5173/api/auth/magic-link/verify?token=UstZiCHCBTxwWIxGQrQdabmwWMXkvkMa&callbackURL=%2Fmagic-link

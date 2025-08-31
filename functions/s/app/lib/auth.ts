@@ -1,5 +1,6 @@
 import type { createStripeService } from "~/lib/stripe-service";
 import type { BetterAuthOptions } from "better-auth";
+import type { createSes } from "./ses";
 import { stripe } from "@better-auth/stripe";
 import { betterAuth } from "better-auth";
 import { createAuthMiddleware } from "better-auth/api";
@@ -14,6 +15,7 @@ import { d1Adapter } from "~/lib/d1-adapter";
 interface CreateAuthOptions {
   d1: D1Database;
   stripeService: ReturnType<typeof createStripeService>;
+  ses: ReturnType<typeof createSes>;
   sendResetPassword?: NonNullable<
     BetterAuthOptions["emailAndPassword"]
   >["sendResetPassword"];
@@ -42,6 +44,7 @@ interface CreateAuthOptions {
 function createBetterAuthOptions({
   d1,
   stripeService,
+  ses,
   sendResetPassword,
   sendVerificationEmail,
   afterEmailVerification,
@@ -70,6 +73,13 @@ function createBetterAuthOptions({
         sendResetPassword ??
         (async ({ user, url, token }) => {
           console.log("sendResetPassword", { to: user.email, url, token });
+          ses.sendEmail({
+            to: user.email,
+            from: env.COMPANY_EMAIL,
+            subject: "Reset your password",
+            text: `Click the link to reset your password: ${url}`,
+            html: `<a href="${url}">Click here to reset your password</a>`,
+          });
         }),
     },
     emailVerification: {
@@ -80,6 +90,13 @@ function createBetterAuthOptions({
         sendVerificationEmail ??
         (async ({ user, url, token }) => {
           console.log("sendVerificationEmail", { to: user.email, url, token });
+          ses.sendEmail({
+            to: user.email,
+            from: env.COMPANY_EMAIL,
+            subject: "Please verify your email",
+            text: `Click the link to verify your email: ${url}`,
+            html: `<a href="${url}">Click here to verify your email</a>`,
+          });
         }),
       afterEmailVerification,
     },
@@ -128,6 +145,13 @@ function createBetterAuthOptions({
                 expirationTtl: 60,
               });
             }
+            ses.sendEmail({
+              to: data.email,
+              from: env.COMPANY_EMAIL,
+              subject: "Your Magic Link",
+              text: `Click the link to sign in: ${data.url}`,
+              html: `<a href="${data.url}">Click here to sign in</a>`,
+            });
           }),
       }),
       admin(),
@@ -144,6 +168,14 @@ function createBetterAuthOptions({
           sendInvitationEmail ??
           (async (data) => {
             console.log("sendInvitationEmail", data);
+            const url = `${env.BETTER_AUTH_URL}/accept-invitation/${data.id}`;
+            ses.sendEmail({
+              to: data.email,
+              from: env.COMPANY_EMAIL,
+              subject: "You're invited!",
+              text: `Click the link to accept your invitation: ${url}`,
+              html: `<a href="${url}">Click here to accept your invitation</a>`,
+            });
           }),
       }),
       stripe({

@@ -20,6 +20,9 @@ describe("better-auth sign up flow", async () => {
     auth = createAuth({
       d1: env.D1,
       stripeService: createStripeService(),
+      ses: {
+        async sendEmail() {},
+      },
       sendVerificationEmail: mockSendVerificationEmail,
     });
   });
