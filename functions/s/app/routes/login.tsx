@@ -58,17 +58,15 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
               sent.
             </CardDescription>
           </CardHeader>
-          {actionData.magicLink && (
-            <CardContent>
-              <CardDescription>
-                {/* <a> used to bypass react router routing and hit the api endpoint directly */}
-                <a href={actionData.magicLink} className="block">
-                  {actionData.magicLink}
-                </a>
-              </CardDescription>
-            </CardContent>
-          )}
         </Card>
+        {actionData.magicLink && (
+          <div className="mt-4">
+            {/* <a> used to bypass react router routing and hit the api endpoint directly */}
+            <a href={actionData.magicLink} className="block">
+              {actionData.magicLink}
+            </a>
+          </div>
+        )}
       </div>
     );
   }
