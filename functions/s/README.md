@@ -10,7 +10,6 @@ pnpm -F s test --project d1 auth
   - annual
   - customer.subscription.deleted error on cancel?
 - organization
-  - update member role
   - accept-invitation: layout
   - teams?
 - admin
@@ -18,8 +17,6 @@ pnpm -F s test --project d1 auth
   - sessions
 - repository/domain/zod
 - playwright
-- database
-  - indexes: https://www.better-auth.com/docs/guides/optimizing-for-performance#database-optimizations
 - deploy
 - secondary storage: https://www.better-auth.com/docs/concepts/database#secondary-storage
 - restrict auth api

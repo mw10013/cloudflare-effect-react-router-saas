@@ -62,6 +62,9 @@ create table Session (
 );
 
 --> statement-breakpoint
+create index SessionUserIdIndex on Session (userId);
+
+--> statement-breakpoint
 create table Organization (
   organizationId integer primary key,
   name text not null,
@@ -70,6 +73,9 @@ create table Organization (
   metadata text,
   createdAt text not null default (datetime('now'))
 );
+
+--> statement-breakpoint
+create index OrganizationSlugIndex on Organization (slug);
 
 --> statement-breakpoint
 create table Member (
@@ -81,6 +87,12 @@ create table Member (
 );
 
 --> statement-breakpoint
+create index MemberUserIdIndex on Member (userId);
+
+--> statement-breakpoint
+create index MemberOrganizationIdIndex on Member (organizationId);
+
+--> statement-breakpoint
 create table Invitation (
   invitationId integer primary key,
   email text not null,
@@ -90,6 +102,12 @@ create table Invitation (
   status text not null references InvitationStatus (invitationStatusId),
   expiresAt text not null
 );
+
+--> statement-breakpoint
+create index InvitationEmailIndex on Invitation (email);
+
+--> statement-breakpoint
+create index InvitationOrganizationIdIndex on Invitation (organizationId);
 
 --> statement-breakpoint
 create table Account (
@@ -109,6 +127,9 @@ create table Account (
 );
 
 --> statement-breakpoint
+create index AccountUserIdIndex on Account (userId);
+
+--> statement-breakpoint
 create table Verification (
   verificationId integer primary key,
   identifier text not null,
@@ -117,6 +138,9 @@ create table Verification (
   createdAt text not null default (datetime('now')),
   updatedAt text not null default (datetime('now'))
 );
+
+--> statement-breakpoint
+create index VerificationIdentifierIndex on Verification (identifier);
 
 --> statement-breakpoint
 create table Subscription (
