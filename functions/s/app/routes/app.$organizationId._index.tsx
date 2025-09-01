@@ -137,7 +137,9 @@ export default function RouteComponent({
           </CardContent>
         </Card>
       )}
-        <pre className="overflow-x-auto">{JSON.stringify(loaderData, null, 2)}</pre>
+      <pre className="overflow-x-auto">
+        {JSON.stringify(loaderData, null, 2)}
+      </pre>
     </div>
   );
 }
