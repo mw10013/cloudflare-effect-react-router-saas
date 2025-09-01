@@ -15,8 +15,6 @@ pnpm -F s test --project d1 auth
 - admin
   - customers
   - sessions
-- ses
-  - aws policy
 - playwright
 - database
   - indexes: https://www.better-auth.com/docs/guides/optimizing-for-performance#database-optimizations

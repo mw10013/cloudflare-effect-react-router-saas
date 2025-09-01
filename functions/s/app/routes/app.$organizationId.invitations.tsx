@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
-import { useFetcher } from "react-router";
+import { useFetcher, useSubmit } from "react-router";
 import * as z from "zod";
 import * as Domain from "~/lib/domain";
 import { appLoadContext } from "~/lib/middleware";
@@ -129,6 +129,19 @@ export default function RouteComponent({
   loaderData: { canManageInvitations, invitations },
   actionData,
 }: Route.ComponentProps) {
+  const submit = useSubmit();
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent
+    const nativeEvent = e.nativeEvent;
+    if (
+      nativeEvent instanceof SubmitEvent &&
+      (nativeEvent.submitter instanceof HTMLButtonElement ||
+        nativeEvent.submitter instanceof HTMLInputElement)
+    ) {
+      submit(nativeEvent.submitter);
+    }
+  };
   return (
     <div className="flex flex-col gap-8 p-6">
       <header>
@@ -149,13 +162,14 @@ export default function RouteComponent({
           <Rac.Form
             method="post"
             validationErrors={actionData?.validationErrors}
+            onSubmit={onSubmit}
             className="grid gap-6"
           >
             <Oui.TextFieldEx
               name="emails"
               label="Email Addresses"
               type="text"
-              placeholder="e.g., user1@example.com, user2@example.com"
+              placeholder="user1@example.com, user2@example.com"
               isDisabled={!canManageInvitations}
             />
             <Oui.SelectEx
