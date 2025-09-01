@@ -15,8 +15,8 @@ import {
 import { ChevronsUpDown, LogOut } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { Outlet, useNavigate } from "react-router";
-import { appLoadContext } from "~/lib/middleware";
 import { AppLogoIcon } from "~/components/AppLogoIcon";
+import { appLoadContext } from "~/lib/middleware";
 
 const middleware: Route.unstable_MiddlewareFunction = async ({
   request,
@@ -65,7 +65,7 @@ export default function RouteComponent({
         organizations={organizations}
         user={user}
       />
-      <main className="flex h-svh w-full flex-col">
+      <main className="flex h-svh w-full flex-col overflow-x-hidden">
         <SidebarTrigger />
         <Outlet />
       </main>

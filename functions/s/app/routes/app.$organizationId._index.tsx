@@ -11,7 +11,11 @@ import {
 import { useFetcher } from "react-router";
 import { appLoadContext } from "~/lib/middleware";
 
-export async function loader({ request, context, params: { organizationId } }: Route.LoaderArgs) {
+export async function loader({
+  request,
+  context,
+  params: { organizationId },
+}: Route.LoaderArgs) {
   const MIN_TTL_MS = 5 * 60 * 1000;
   const { auth, session } = context.get(appLoadContext);
   invariant(session, "Missing session");
@@ -77,7 +81,6 @@ function InvitationItem({
   const fetcher = useFetcher();
   const disabled = fetcher.state !== "idle";
   return (
-    // <li className="flex items-center justify-between gap-4 border-b pb-4 last:border-b-0 last:pb-0">
     <li className="flex items-center justify-between py-4 first:pt-0 last:pb-0">
       <div className="flex-grow text-sm">
         <div>Inviter ID: {invitation.inviterId}</div>
@@ -116,7 +119,7 @@ export default function RouteComponent({
   loaderData: { invitations, ...loaderData },
 }: Route.ComponentProps) {
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div data-slot="invite-container" className="flex flex-col gap-6 p-6">
       {invitations.length > 0 && (
         <Card>
           <CardHeader>
@@ -126,7 +129,6 @@ export default function RouteComponent({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {/* <ul className="flex flex-col gap-4"> */}
             <ul className="flex flex-col divide-y">
               {invitations.map((invitation) => (
                 <InvitationItem key={invitation.id} invitation={invitation} />
@@ -135,7 +137,7 @@ export default function RouteComponent({
           </CardContent>
         </Card>
       )}
-      <pre>{JSON.stringify(loaderData, null, 2)}</pre>
+        <pre className="overflow-x-auto">{JSON.stringify(loaderData, null, 2)}</pre>
     </div>
   );
 }

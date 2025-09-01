@@ -11,6 +11,7 @@ pnpm -F s test --project d1 auth
   - customer.subscription.deleted error on cancel?
 - organization
   - update member role
+  - accept-invitation: layout
   - teams?
 - admin
   - customers
