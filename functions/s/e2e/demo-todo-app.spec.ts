@@ -25,7 +25,7 @@ test.describe('New Todo', () => {
     ]);
 
     // Create 2nd todo.
-    await newTodo.fill(TODO_ITEMS[1]);
+    await newTodo.fill(TODO_ITEMS[1]);x
     await newTodo.press('Enter');
 
     // Make sure the list now has two todo items.
