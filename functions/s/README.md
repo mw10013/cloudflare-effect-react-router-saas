@@ -16,14 +16,17 @@ pnpm -F s test --project d1 auth
 - admin
   - customers
   - sessions
+- repository/domain/zod
 - playwright
 - database
   - indexes: https://www.better-auth.com/docs/guides/optimizing-for-performance#database-optimizations
 - deploy
 - secondary storage: https://www.better-auth.com/docs/concepts/database#secondary-storage
 - restrict auth api
-- sign out a11y in sidebar
-- agent
+- css
+  - invitations: pre overflow, main overflow, min-width-0?
+  - sign out a11y in sidebar
+- actor/agent
 
 ## Better-Auth
 

@@ -27,12 +27,12 @@ export async function loader({
       },
     })
   ).members;
-  const { success: canRemove } = await auth.api.hasPermission({
+  const { success: canEdit } = await auth.api.hasPermission({
     headers: request.headers,
     body: {
       organizationId,
       permissions: {
-        member: ["delete"],
+        member: ["update", "delete"],
       },
     },
   });
@@ -40,7 +40,7 @@ export async function loader({
   invariant(member, "Missing member");
   const canLeaveMemberId = member.role !== "owner" ? member.id : undefined;
   return {
-    canRemove,
+    canEdit,
     canLeaveMemberId,
     userId: session.user.id,
     members,
@@ -60,6 +60,11 @@ export async function action({
     z.object({
       intent: z.literal("leave"),
     }),
+    z.object({
+      intent: z.literal("changeRole"),
+      memberId: z.string().min(1, "Missing memberId"),
+      role: z.enum(["member", "admin"]),
+    }),
   ]);
   const parseResult = schema.parse(
     Object.fromEntries(await request.formData()),
@@ -78,6 +83,16 @@ export async function action({
         body: { organizationId },
       });
       return redirect("/app");
+    case "changeRole":
+      await auth.api.updateMemberRole({
+        headers: request.headers,
+        body: {
+          role: parseResult.role,
+          memberId: parseResult.memberId,
+          organizationId,
+        },
+      });
+      break;
     default:
       void (parseResult satisfies never);
   }
@@ -85,7 +100,7 @@ export async function action({
 }
 
 export default function RouteComponent({
-  loaderData: { canRemove, canLeaveMemberId, members },
+  loaderData: { canEdit, canLeaveMemberId, members },
   actionData,
 }: Route.ComponentProps) {
   return (
@@ -111,7 +126,7 @@ export default function RouteComponent({
                 <MemberItem
                   key={member.id}
                   member={member}
-                  canRemove={canRemove}
+                  canEdit={canEdit}
                   canLeaveMemberId={canLeaveMemberId}
                 />
               ))}
@@ -130,24 +145,44 @@ export default function RouteComponent({
 
 function MemberItem({
   member,
-  canRemove,
+  canEdit,
   canLeaveMemberId,
 }: {
   member: Route.ComponentProps["loaderData"]["members"][number];
-  canRemove: boolean;
+  canEdit: boolean;
   canLeaveMemberId?: string;
 }) {
-  const fetcher = useFetcher();
+  const fetcher = useFetcher(); // Caution: sharing fetcher
   const pending = fetcher.state !== "idle";
   return (
     <li className="flex items-center justify-between gap-4 py-4 first:pt-0 last:pb-0">
       <div className="flex flex-col">
         <span className="text-sm font-medium">{member.user.email}</span>
-        <span className="text-muted-foreground text-sm">{member.role}</span>
+        {member.role !== "owner" && canEdit ? (
+          <Oui.SelectEx
+            name="role"
+            defaultSelectedKey={member.role}
+            items={[
+              { id: "member", name: "Member" },
+              { id: "admin", name: "Admin" },
+            ]}
+            onSelectionChange={(key) => {
+              fetcher.submit(
+                { intent: "changeRole", memberId: member.id, role: key },
+                { method: "post" },
+              );
+            }}
+            className="mt-2"
+          >
+            {(item) => <Oui.ListBoxItem>{item.name}</Oui.ListBoxItem>}
+          </Oui.SelectEx>
+        ) : (
+          <span className="text-muted-foreground text-sm">{member.role}</span>
+        )}
       </div>
       {member.role !== "owner" && (
         <div className="flex gap-2">
-          {canRemove && (
+          {canEdit && (
             <fetcher.Form method="post">
               <input type="hidden" name="memberId" value={member.id} />
               <Oui.Button
