@@ -2,6 +2,27 @@ import { invariant } from "@epic-web/invariant";
 import { AwsClient } from "aws4fetch";
 import { env } from "cloudflare:workers";
 
+/*
+
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "Statement1",
+			"Effect": "Allow",
+			"Action": "ses:SendEmail",
+			"Resource": "*",
+			"Condition": {
+				"StringEquals": {
+					"ses:FromAddress": "motio@mail.com"
+				}
+			}
+		}
+	]
+}
+
+*/
+
 export interface Ses {
   sendEmail: ({
     to,

@@ -8,6 +8,7 @@ pnpm -F s test --project d1 auth
   - referenceId -> organizationId
   - trial period
   - annual
+  - customer.subscription.deleted error on cancel?
 - organization
   - update member role
   - teams?
