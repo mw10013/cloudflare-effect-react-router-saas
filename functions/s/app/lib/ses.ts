@@ -4,6 +4,10 @@ import { env } from "cloudflare:workers";
 
 /*
 
+// https://www.daniel-mitchell.com/blog/send-email-with-aws-ses-in-a-cloudflare-workers/
+// https://www.ai.moda/en/blog/ses-emails-from-workers
+// https://github.com/winstxnhdw/mail-worker
+
 {
 	"Version": "2012-10-17",
 	"Statement": [
@@ -40,18 +44,17 @@ export interface Ses {
 }
 
 export function createSes(): Ses {
-  const AWS_ENDPOINT =
-    "https://email.us-east-1.amazonaws.com/v2/email/outbound-emails";
-  const AWS_REGION = "us-east-1";
-  invariant(env.AWS_ACCESS_KEY_ID, "Missing AWS_ACCESS_KEY_ID");
-  invariant(env.AWS_SECRET_ACCESS_KEY, "Missing AWS_SECRET_ACCESS_KEY");
+  invariant(env.AWS_SES_ACCESS_KEY_ID, "Missing AWS_SES_ACCESS_KEY_ID");
+  invariant(env.AWS_SES_SECRET_ACCESS_KEY, "Missing AWS_SES_SECRET_ACCESS_KEY");
+  invariant(env.AWS_SES_ENDPOINT, "Missing AWS_SES_ENDPOINT");
+  invariant(env.AWS_SES_REGION, "Missing AWS_SES_REGION");
   invariant(env.EMAIL_WHITE_LIST, "Missing EMAIL_WHITE_LIST");
   const emailWhitelist = env.EMAIL_WHITE_LIST.split(",");
 
   const aws = new AwsClient({
-    accessKeyId: env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
-    region: AWS_REGION,
+    accessKeyId: env.AWS_SES_ACCESS_KEY_ID,
+    secretAccessKey: env.AWS_SES_SECRET_ACCESS_KEY,
+    region: env.AWS_SES_REGION,
     retries: 1,
   });
 
@@ -75,7 +78,7 @@ export function createSes(): Ses {
       );
       return;
     }
-    const response = await aws.fetch(AWS_ENDPOINT, {
+    const response = await aws.fetch(env.AWS_SES_ENDPOINT, {
       method: "POST",
       headers: {
         "content-type": "application/json",

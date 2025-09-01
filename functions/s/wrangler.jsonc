@@ -7,7 +7,9 @@
   "vars": {
     "ENVIRONMENT": "local",
     "COMPANY_EMAIL": "motio@mail.com",
-    "BETTER_AUTH_URL": "http://localhost:5173"
+    "BETTER_AUTH_URL": "http://localhost:5173",
+    "AWS_SES_ENDPOINT": "https://email.us-east-1.amazonaws.com/v2/email/outbound-emails",
+    "AWS_SES_REGION": "us-east-1"
   },
   "observability": {
     "enabled": true,
@@ -35,7 +37,9 @@
       "vars": {
         "ENVIRONMENT": "production",
         "COMPANY_EMAIL": "motio@mail.com",
-        "BETTER_AUTH_URL": "https://cloudflare-effect-react-router-saas-production.devxo.workers.dev"
+        "BETTER_AUTH_URL": "https://cloudflare-effect-react-router-saas-production.devxo.workers.dev",
+        "AWS_SES_ENDPOINT": "https://email.us-east-1.amazonaws.com/v2/email/outbound-emails",
+        "AWS_SES_REGION": "us-east-1"
       },
       "observability": {
         "enabled": true,
