@@ -16,8 +16,8 @@ pnpm -F s test --project d1 auth
 - admin
   - customers
   - sessions
-- repository/domain/zod
-- playwright
+- domain
+  - zod brands
 - deploy
 - secondary storage: https://www.better-auth.com/docs/concepts/database#secondary-storage
 - restrict auth api

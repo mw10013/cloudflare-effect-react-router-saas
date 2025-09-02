@@ -43,8 +43,8 @@ create table User (
   banReason text,
   banExpires text,
   stripeCustomerId text unique,
-  createdAt text not null default (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
-  updatedAt text not null default (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+  createdAt text not null default (datetime('now')),
+  updatedAt text not null default (datetime('now'))
 );
 
 --> statement-breakpoint
@@ -52,8 +52,8 @@ create table Session (
   sessionId integer primary key,
   expiresAt text not null,
   token text not null unique,
-  createdAt text not null default (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
-  updatedAt text not null default (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+  createdAt text not null default (datetime('now')),
+  updatedAt text not null default (datetime('now')),
   ipAddress text,
   userAgent text,
   userId integer not null references User (userId),
@@ -71,7 +71,7 @@ create table Organization (
   slug text not null unique,
   logo text,
   metadata text,
-  createdAt text not null default (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+  createdAt text not null default (datetime('now'))
 );
 
 --> statement-breakpoint
@@ -83,7 +83,7 @@ create table Member (
   userId integer not null references User (userid),
   organizationId integer not null references Organization (organizationId),
   role text not null references MemberRole (memberRoleId),
-  createdAt text not null default (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+  createdAt text not null default (datetime('now'))
 );
 
 --> statement-breakpoint
@@ -122,8 +122,8 @@ create table Account (
   refreshTokenExpiresAt text,
   scope text,
   password text,
-  createdAt text not null default (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
-  updatedAt text not null default (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+  createdAt text not null default (datetime('now')),
+  updatedAt text not null default (datetime('now'))
 );
 
 --> statement-breakpoint
@@ -135,8 +135,8 @@ create table Verification (
   identifier text not null,
   value text not null,
   expiresAt text not null,
-  createdAt text not null default (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
-  updatedAt text not null default (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+  createdAt text not null default (datetime('now')),
+  updatedAt text not null default (datetime('now'))
 );
 
 --> statement-breakpoint

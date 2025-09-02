@@ -3,7 +3,8 @@ import * as z from "zod";
 /**
  * Domain schemas and inferred types for the application.
  * Each Zod schema is exported in PascalCase, followed by its inferred type with the same name.
- * Schemas must align with corresponding database tables.
+ *
+ * Schemas must align with corresponding database tables especially code tables for roles and statuses.
  */
 
 const intToBoolean = z.codec(z.number().int(), z.boolean(), {
@@ -11,15 +12,31 @@ const intToBoolean = z.codec(z.number().int(), z.boolean(), {
   encode: (bool) => (bool ? 1 : 0),
 });
 
-const isoDatetimeToDate = z.codec(z.iso.datetime(), z.date(), {
-  decode: (isoString) => new Date(isoString),
+/**
+ * Custom codec for ISO datetime strings. Can't use z.iso() because it expects 'T' separator,
+ * but SQLite supports ISO strings without 'T' (e.g., "2023-01-01 12:00:00").
+ */
+const isoDatetimeToDate = z.codec(z.string(), z.date(), {
+  decode: (str, ctx) => {
+    const date = new Date(str);
+    if (isNaN(date.getTime())) {
+      ctx.issues.push({
+        code: "invalid_format",
+        format: "datetime",
+        input: str,
+        message: `Invalid datetime: ${str}`,
+      });
+      return z.NEVER; // Abort processing
+    }
+    return date;
+  },
   encode: (date) => date.toISOString(),
 });
 
-export const UserRole = z.enum(["user", "admin"]); // MUST align with UserRole table.
+export const UserRole = z.enum(["user", "admin"]);
 export type UserRole = z.infer<typeof UserRole>;
 
-export const MemberRole = z.enum(["member", "owner", "admin"]); // MUST align with MemberRole table.
+export const MemberRole = z.enum(["member", "owner", "admin"]);
 export type MemberRole = z.infer<typeof MemberRole>;
 
 export const InvitationStatus = z.enum([
@@ -27,7 +44,7 @@ export const InvitationStatus = z.enum([
   "accepted",
   "rejected",
   "canceled",
-]); // MUST align with InvitationStatus table.
+]);
 export type InvitationStatus = z.infer<typeof InvitationStatus>;
 
 export const User = z.object({
