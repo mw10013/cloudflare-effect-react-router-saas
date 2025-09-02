@@ -24,9 +24,13 @@ export function createRepository() {
   return {
     getUsers: async () => {
       const result = await d1.prepare(`select * from User`).run();
+      console.log(`repository: getUsers`, { result, results: result.results });
       const users = Domain.User.array().parse(result.results);
       console.log(`repository: getUsers`, { users });
       return users;
+    },
+    deleteUser: async (email: string) => {
+      await d1.prepare(`delete from User where email = ?`).bind(email).run();
     },
   };
 }
