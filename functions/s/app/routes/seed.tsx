@@ -5,6 +5,7 @@ import { invariant } from "@epic-web/invariant";
 import { unstable_RouterContextProvider } from "react-router";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
+import { createRepository } from "~/lib/repository";
 
 async function createSeedContext({
   cloudflare,
@@ -33,6 +34,7 @@ async function createSeedContext({
     const context = new unstable_RouterContextProvider();
     context.set(appLoadContext, {
       cloudflare,
+      repository: createRepository(),
       auth,
       stripeService: stripeService,
       session,

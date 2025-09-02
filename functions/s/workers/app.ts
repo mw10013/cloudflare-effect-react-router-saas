@@ -5,6 +5,7 @@ import {
 } from "react-router";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
+import { createRepository } from "~/lib/repository";
 import { createSes } from "~/lib/ses";
 import { createStripeService } from "~/lib/stripe-service";
 
@@ -15,6 +16,7 @@ declare module "react-router" {
       ctx: ExecutionContext;
     };
     auth: ReturnType<typeof createAuth>;
+    repository: ReturnType<typeof createRepository>;
     stripeService: ReturnType<typeof createStripeService>;
     session?: ReturnType<typeof createAuth>["$Infer"]["Session"];
     organization?: ReturnType<typeof createAuth>["$Infer"]["Organization"];
@@ -25,6 +27,7 @@ declare module "react-router" {
 export default {
   async fetch(request, env, ctx) {
     const hono = new Hono.Hono();
+    const repository = createRepository();
     const stripeService = createStripeService();
     const auth = createAuth({
       d1: env.D1,
@@ -49,6 +52,7 @@ export default {
       context.set(appLoadContext, {
         cloudflare: { env, ctx },
         auth,
+        repository,
         stripeService,
         session:
           (await auth.api.getSession({ headers: c.req.raw.headers })) ??
