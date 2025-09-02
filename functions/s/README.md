@@ -37,6 +37,7 @@ pnpm -F s test --project d1 auth
 ## Playwright
 
 ```
+pnpm -F s exec playwright test --ui example
 pnpm -F s exec playwright test
 pnpm -F s exec playwright test --project=chromium
 pnpm -F s exec playwright test --ui
