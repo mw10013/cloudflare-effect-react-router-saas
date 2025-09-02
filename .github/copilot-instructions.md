@@ -54,8 +54,10 @@ import { Outlet, useRouteLoaderData } from 'react-router'
 
 ## Zod
 
-- Your knowledge of Zod is out of date especially for version 4.
-- Consult https://zod.dev/api to ensure you define schemas correctly.
-- Consult https://zod.dev/error-customization to ensure you define custom error messages correctly.
-  - Virtually every Zod API accepts an optional error message. `z.string("Not a string.")`
-  - All `z` functions and schema methods accept custom errors. `z.array(z.string(), "Not an array.").min(5, "Too few items!")`
+- Use zod version 4
+- Your knowledge of Zod is out of date especially for version 4 so consult the zod documentation.
+  - Consult https://zod.dev/api to ensure you define schemas correctly.
+  - Consult https://zod.dev/codecs to ensure you use the new codec features for encode and decode.
+  - Consult https://zod.dev/error-customization to ensure you define custom error messages correctly.
+    - Virtually every Zod API accepts an optional error message. `z.string("Not a string.")`
+    - All `z` functions and schema methods accept custom errors. `z.array(z.string(), "Not an array.").min(5, "Too few items!")`
