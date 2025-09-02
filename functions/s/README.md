@@ -1,4 +1,5 @@
 ```
+http://localhost:5173/
 pnpm -F s test --project d1 auth
 ```
 
