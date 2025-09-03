@@ -27,10 +27,11 @@ export function createRepository() {
       .bind(email)
       .first();
     console.log(`repository: getUser`, { result });
-    return Domain.User.parse(result);
+    return Domain.User.nullable().parse(result);
   };
 
   return {
+    getUser,
     getUsers: async () => {
       const result = await d1.prepare(`select * from User`).run();
       console.log(`repository: getUsers`, { result, results: result.results });
@@ -39,31 +40,25 @@ export function createRepository() {
       return users;
     },
     deleteUser: async ({ email }: { email: Domain.User["email"] }) => {
-      // Get userId from email
-      const userResult = await d1
-        .prepare(`select userId from User where email = ?`)
-        .bind(email)
-        .first();
-      if (!userResult) throw new Error(`User with email ${email} not found`);
-      const userId = userResult.userId as number;
+      const user = await getUser({ email });
+      if (!user) return;
 
       // Find organizations where user is the only owner
       const orphanedOrgs = await d1
         .prepare(
           `
-          select m.organizationId
-          from Member m
-          where m.userId = ? and m.role = 'owner'
-          and not exists (
-            select 1 from Member m2
-            where m2.organizationId = m.organizationId
-            and m2.userId != ? and m2.role = 'owner'
-          )
-        `,
+      select m.organizationId
+      from Member m
+      where m.userId = ?1 and m.role = 'owner'
+      and not exists (
+        select 1 from Member m2
+        where m2.organizationId = m.organizationId
+        and m2.userId != ?1 and m2.role = 'owner'
+      )
+    `,
         )
-        .bind(userId, userId)
+        .bind(user.userId)
         .run();
-
       const statements = [];
 
       // Delete orphaned organizations
@@ -77,10 +72,8 @@ export function createRepository() {
 
       // Delete the user
       statements.push(
-        d1.prepare(`delete from User where userId = ?`).bind(userId),
+        d1.prepare(`delete from User where userId = ?`).bind(user.userId),
       );
-
-      // Execute in batch
       await d1.batch(statements);
     },
   };
