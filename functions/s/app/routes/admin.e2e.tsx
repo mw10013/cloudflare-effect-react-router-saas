@@ -41,9 +41,8 @@ export async function action({ request, context }: Route.ActionArgs) {
   });
   return {
     success: true,
-    intent: parseResult.data.intent,
-    deletedCount,
-  } as const;
+    message: `Deleted user ${parseResult.data.email} (deletedCount: ${deletedCount})`,
+  };
 }
 
 function DeleteUserForm() {

@@ -3,7 +3,21 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@workspace/ui/components/ui/alert";
+import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
+
+export type FormActionResult =
+  | {
+      success: true;
+      message?: string;
+      details?: string[];
+    }
+  | {
+      success: false;
+      message?: string;
+      details?: string[];
+      validationErrors?: Rac.FormProps["validationErrors"];
+    };
 
 export function FormErrorAlert({
   formErrors,
