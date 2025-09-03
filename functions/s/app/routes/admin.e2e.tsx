@@ -38,7 +38,11 @@ export async function action({ request, context }: Route.ActionArgs) {
   const deletedCount = await repository.deleteUser({
     email: parseResult.data.email,
   });
-  return { success: true, intent: parseResult.data.intent, deletedCount } as const;
+  return {
+    success: true,
+    intent: parseResult.data.intent,
+    deletedCount,
+  } as const;
 }
 
 function DeleteUserForm() {
@@ -55,14 +59,14 @@ function DeleteUserForm() {
           Enter the email of the user to delete.
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <Rac.Form
-          method="post"
-          validationBehavior="aria"
-          validationErrors={fetcher.data?.validationErrors}
-          onSubmit={onSubmit}
-          className="flex flex-col gap-6"
-        >
+      <Rac.Form
+        method="post"
+        validationBehavior="aria"
+        validationErrors={fetcher.data?.validationErrors}
+        onSubmit={onSubmit}
+        className="flex flex-col gap-6"
+      >
+        <CardContent>
           <FormErrorAlert formErrors={fetcher.data?.formErrors} />
           <Oui.TextFieldEx
             name="email"
@@ -80,8 +84,8 @@ function DeleteUserForm() {
           >
             Delete User
           </Oui.Button>
-        </Rac.Form>
-      </CardContent>
+        </CardContent>
+      </Rac.Form>
     </Card>
   );
 }

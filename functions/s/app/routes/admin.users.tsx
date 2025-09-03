@@ -325,6 +325,9 @@ function BanDialog({
   if (!userId) return null; // After hooks per Rules of Hooks.
   return (
     <Oui.DialogEx isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Oui.DialogHeader>
+        <Oui.Heading slot="title">Ban User</Oui.Heading>
+      </Oui.DialogHeader>
       <Rac.Form
         validationBehavior="aria"
         validationErrors={fetcher.data?.validationErrors}
@@ -334,9 +337,6 @@ function BanDialog({
         }}
         className="flex flex-col gap-4"
       >
-        <Oui.DialogHeader>
-          <Oui.Heading slot="title">Ban User</Oui.Heading>
-        </Oui.DialogHeader>
         <FormErrorAlert formErrors={fetcher.data?.formErrors} />
         <Oui.TextFieldEx
           name="banReason"

@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card";
@@ -75,7 +74,6 @@ export default function RouteComponent({
             </Oui.Button>
           </Rac.Form>
         </CardContent>
-        <CardFooter />
       </Card>
     </div>
   );
