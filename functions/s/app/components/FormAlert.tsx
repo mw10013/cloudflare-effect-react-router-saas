@@ -5,19 +5,7 @@ import {
 } from "@workspace/ui/components/ui/alert";
 import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
-
-export type FormActionResult =
-  | {
-      success: true;
-      message?: string;
-      details?: string | string[];
-    }
-  | {
-      success: false;
-      message?: string;
-      details?: string | string[];
-      validationErrors?: Rac.FormProps["validationErrors"];
-    };
+import type { FormActionResult } from "~/lib/technical-domain";
 
 export function FormAlert({
   success,
