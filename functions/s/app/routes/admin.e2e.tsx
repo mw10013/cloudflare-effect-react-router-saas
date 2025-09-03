@@ -53,20 +53,19 @@ function DeleteUserForm() {
     fetcher.submit(e.currentTarget, { method: "post" });
   };
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Delete User</CardTitle>
-        <CardDescription>
-          Enter the email of the user to delete.
-        </CardDescription>
-      </CardHeader>
-      <Rac.Form
-        method="post"
-        validationBehavior="aria"
-        validationErrors={fetcher.data?.validationErrors}
-        onSubmit={onSubmit}
-        className="flex flex-col gap-6"
-      >
+    <Rac.Form
+      method="post"
+      validationBehavior="aria"
+      validationErrors={fetcher.data?.validationErrors}
+      onSubmit={onSubmit}
+    >
+      <Card>
+        <CardHeader>
+          <CardTitle>Delete User</CardTitle>
+          <CardDescription>
+            Enter the email of the user to delete.
+          </CardDescription>
+        </CardHeader>
         <CardContent>
           <FormErrorAlert formErrors={fetcher.data?.formErrors} />
           <Oui.TextFieldEx
@@ -88,8 +87,8 @@ function DeleteUserForm() {
             Delete User
           </Oui.Button>
         </CardFooter>
-      </Rac.Form>
-    </Card>
+      </Card>
+    </Rac.Form>
   );
 }
 
