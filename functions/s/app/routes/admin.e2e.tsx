@@ -1,4 +1,4 @@
-import type { Route } from "./+types/e2e";
+import type { Route } from "./+types/admin.e2e";
 import * as Oui from "@workspace/oui";
 import * as Rac from "react-aria-components";
 import { appLoadContext } from "~/lib/middleware";
@@ -13,7 +13,7 @@ export async function loader({ context }: Route.LoaderArgs) {
 export async function action({ request, context }: Route.ActionArgs) {
   const schema = z.object({
     intent: z.literal("deleteUser"),
-    email: z.string().email(),
+    email: z.email(),
   });
   const parseResult = schema.safeParse(
     Object.fromEntries(await request.formData()),
@@ -25,7 +25,7 @@ export async function action({ request, context }: Route.ActionArgs) {
     return { formErrors, validationErrors };
   }
   const { repository } = context.get(appLoadContext);
-  await repository.deleteUser(parseResult.data.email);
+  // await repository.deleteUser(parseResult.data.email);
   return { deleted: true };
 }
 

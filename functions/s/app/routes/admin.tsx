@@ -32,6 +32,10 @@ const items = [
     id: "Users",
     href: "/admin/users",
   },
+  {
+    id: "E2E",
+    href: "/admin/e2e",
+  },
 ];
 
 export function AppSidebar() {

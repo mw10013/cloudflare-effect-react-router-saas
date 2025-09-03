@@ -25,6 +25,8 @@ pnpm -F s test --project d1 auth
   - invitations: pre overflow, main overflow, min-width-0?
   - sign out a11y in sidebar
 - actor/agent
+- batch
+  - scavenge expired verifications
 
 ## Better-Auth
 

@@ -21,6 +21,15 @@ import * as Domain from "~/lib/domain";
 export function createRepository() {
   const d1 = env.D1;
 
+  const getUser = async ({ email }: { email: string }) => {
+    const result = await d1
+      .prepare(`select * from User where email = ?`)
+      .bind(email)
+      .first();
+    console.log(`repository: getUser`, { result });
+    return Domain.User.parse(result);
+  };
+
   return {
     getUsers: async () => {
       const result = await d1.prepare(`select * from User`).run();
@@ -30,7 +39,49 @@ export function createRepository() {
       return users;
     },
     deleteUser: async (email: string) => {
-      await d1.prepare(`delete from User where email = ?`).bind(email).run();
+       // Get userId from email
+      const userResult = await d1
+        .prepare(`select userId from User where email = ?`)
+        .bind(email)
+        .first();
+      if (!userResult) throw new Error(`User with email ${email} not found`);
+      const userId = userResult.userId as number;
+
+      // Find organizations where user is the only owner
+      const orphanedOrgs = await d1
+        .prepare(
+          `
+          select m.organizationId
+          from Member m
+          where m.userId = ? and m.role = 'owner'
+          and not exists (
+            select 1 from Member m2
+            where m2.organizationId = m.organizationId
+            and m2.userId != ? and m2.role = 'owner'
+          )
+        `,
+        )
+        .bind(userId, userId)
+        .run();
+
+      const statements = [];
+
+      // Delete orphaned organizations
+      for (const org of orphanedOrgs.results || []) {
+        statements.push(
+          d1
+            .prepare(`delete from Organization where organizationId = ?`)
+            .bind(org.organizationId),
+        );
+      }
+
+      // Delete the user
+      statements.push(
+        d1.prepare(`delete from User where userId = ?`).bind(userId),
+      );
+
+      // Execute in batch
+      await d1.batch(statements);
     },
   };
 }

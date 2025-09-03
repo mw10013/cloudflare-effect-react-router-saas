@@ -56,7 +56,7 @@ create table Session (
   updatedAt text not null default (datetime('now')),
   ipAddress text,
   userAgent text,
-  userId integer not null references User (userId),
+  userId integer not null references User (userId) on delete cascade,
   impersonatedBy integer references User (userId),
   activeOrganizationId integer references Organization (organizationId)
 );
@@ -80,8 +80,8 @@ create index OrganizationSlugIndex on Organization (slug);
 --> statement-breakpoint
 create table Member (
   memberId integer primary key,
-  userId integer not null references User (userid),
-  organizationId integer not null references Organization (organizationId),
+  userId integer not null references User (userid) on delete cascade,
+  organizationId integer not null references Organization (organizationId) on delete cascade,
   role text not null references MemberRole (memberRoleId),
   createdAt text not null default (datetime('now'))
 );
@@ -97,7 +97,7 @@ create table Invitation (
   invitationId integer primary key,
   email text not null,
   inviterId integer not null references User (userId),
-  organizationId integer not null references Organization (organizationId),
+  organizationId integer not null references Organization (organizationId) on delete cascade,
   role text not null references MemberRole (memberRoleId),
   status text not null references InvitationStatus (invitationStatusId),
   expiresAt text not null
@@ -114,7 +114,7 @@ create table Account (
   accountId integer primary key,
   betterAuthAccountId text not null,
   providerId text not null,
-  userId integer not null references User (userId),
+  userId integer not null references User (userId) on delete cascade,
   accessToken text,
   refreshToken text,
   idToken text,
@@ -143,6 +143,8 @@ create table Verification (
 create index VerificationIdentifierIndex on Verification (identifier);
 
 --> statement-breakpoint
+create index VerificationExpiresAtIndex on Verification (expiresAt);
+
 create table Subscription (
   subscriptionId integer primary key,
   plan text not null,
