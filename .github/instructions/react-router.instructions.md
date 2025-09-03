@@ -70,11 +70,24 @@ export default function RouteComponent({ loaderData, actionData}: Route.Componen
             </CardDescription>
           </CardHeader>
         </Card>
+        {actionData.magicLink && (
+          <div className="mt-4">
+            {/* <a> used to bypass react router routing and hit the api endpoint directly */}
+            <a href={actionData.magicLink} className="block">
+              {actionData.magicLink}
+            </a>
+          </div>
+        )}
       </div>
     );
   }
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
+    <Rac.Form
+      method="post"
+      validationBehavior="aria"
+      validationErrors={actionData?.validationErrors}
+      className="flex min-h-screen flex-col items-center justify-center"
+    >
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Sign in / Sign up</CardTitle>
@@ -83,28 +96,22 @@ export default function RouteComponent({ loaderData, actionData}: Route.Componen
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Rac.Form
-            method="post"
-            validationBehavior="aria"
-            validationErrors={actionData?.validationErrors}
-            className="flex flex-col gap-6"
-          >
-            <FormErrorAlert formErrors={actionData?.formErrors} />
-            <Oui.TextFieldEx
-              name="email"
-              type="email"
-              label="Email"
-              placeholder="m@example.com"
-              isRequired
-            />
-            <Oui.Button type="submit" className="w-full">
-              Send magic link
-            </Oui.Button>
-          </Rac.Form>
+          <FormErrorAlert formErrors={actionData?.formErrors} />
+          <Oui.TextFieldEx
+            name="email"
+            type="email"
+            label="Email"
+            placeholder="m@example.com"
+            isRequired
+          />
         </CardContent>
-        <CardFooter />
+        <CardFooter>
+          <Oui.Button type="submit" className="w-full">
+            Send magic link
+          </Oui.Button>
+        </CardFooter>
       </Card>
-    </div>
+    </Rac.Form>
   );
 }
 ```

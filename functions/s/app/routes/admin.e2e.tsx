@@ -4,6 +4,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card";
@@ -75,6 +76,8 @@ function DeleteUserForm() {
             placeholder="user@example.com"
             isRequired
           />
+        </CardContent>
+        <CardFooter className="justify-end">
           <Oui.Button
             type="submit"
             name="intent"
@@ -84,7 +87,7 @@ function DeleteUserForm() {
           >
             Delete User
           </Oui.Button>
-        </CardContent>
+        </CardFooter>
       </Rac.Form>
     </Card>
   );
