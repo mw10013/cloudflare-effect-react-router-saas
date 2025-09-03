@@ -35,8 +35,10 @@ export async function action({ request, context }: Route.ActionArgs) {
     return { formErrors, validationErrors };
   }
   const { repository } = context.get(appLoadContext);
-  // await repository.deleteUser(parseResult.data.email);
-  return { deleted: true };
+  const deletedCount = await repository.deleteUser({
+    email: parseResult.data.email,
+  });
+  return { success: true, intent: parseResult.data.intent, deletedCount } as const;
 }
 
 function DeleteUserForm() {

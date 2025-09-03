@@ -5,6 +5,8 @@ pnpm -F s test --project d1 auth
 
 ## TODO
 
+- auth
+  - d1 from env
 - stripe
   - referenceId -> organizationId
   - trial period

@@ -148,7 +148,7 @@ create index VerificationExpiresAtIndex on Verification (expiresAt);
 create table Subscription (
   subscriptionId integer primary key,
   plan text not null,
-  referenceId integer not null references Organization (organizationId),
+  referenceId integer not null references Organization (organizationId) on delete cascade,
   stripeCustomerId text,
   stripeSubscriptionId text,
   status text not null,

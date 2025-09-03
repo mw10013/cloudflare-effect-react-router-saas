@@ -34,47 +34,42 @@ export function createRepository() {
     getUser,
     getUsers: async () => {
       const result = await d1.prepare(`select * from User`).run();
-      console.log(`repository: getUsers`, { result, results: result.results });
-      const users = Domain.User.array().parse(result.results);
-      console.log(`repository: getUsers`, { users });
-      return users;
+      return Domain.User.array().parse(result.results);
     },
+
+    /**
+     * Hard delete a user by email.
+     * Intended for testing only.
+     *
+     * Also deletes all the organizations where user is the sole owner.
+     * 
+     * @returns number of users deleted (0 or 1)
+     */
     deleteUser: async ({ email }: { email: Domain.User["email"] }) => {
       const user = await getUser({ email });
-      if (!user) return;
+      if (!user) return 0;
 
-      // Find organizations where user is the only owner
-      const orphanedOrgs = await d1
-        .prepare(
-          `
-      select m.organizationId
-      from Member m
-      where m.userId = ?1 and m.role = 'owner'
-      and not exists (
-        select 1 from Member m2
-        where m2.organizationId = m.organizationId
-        and m2.userId != ?1 and m2.role = 'owner'
-      )
-    `,
-        )
-        .bind(user.userId)
-        .run();
-      const statements = [];
-
-      // Delete orphaned organizations
-      for (const org of orphanedOrgs.results || []) {
-        statements.push(
-          d1
-            .prepare(`delete from Organization where organizationId = ?`)
-            .bind(org.organizationId),
-        );
-      }
-
-      // Delete the user
-      statements.push(
+      const results = await d1.batch([
+        d1
+          .prepare(
+            `
+with t as (
+  select m.organizationId
+  from Member m
+  where m.userId = ?1 and m.role = 'owner'
+  and not exists (
+    select 1 from Member m1
+    where m1.organizationId = m.organizationId
+    and m1.userId != ?1 and m1.role = 'owner'
+  )
+)
+delete from Organization where organizationId in (select organizationId from t)
+`,
+          )
+          .bind(user.userId),
         d1.prepare(`delete from User where userId = ?`).bind(user.userId),
-      );
-      await d1.batch(statements);
+      ]);
+      return results[1].meta.changes
     },
   };
 }
