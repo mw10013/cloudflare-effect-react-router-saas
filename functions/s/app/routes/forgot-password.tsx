@@ -49,7 +49,12 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
     );
   }
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
+    <Rac.Form
+      method="post"
+      validationBehavior="aria"
+      validationErrors={actionData?.validationErrors}
+      className="flex min-h-screen items-center justify-center"
+    >
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Forgot your password?</CardTitle>
@@ -57,27 +62,20 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
             Enter your email to receive a password reset link
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <Rac.Form
-            method="post"
-            validationBehavior="aria"
-            validationErrors={actionData?.validationErrors}
-            className="flex flex-col gap-6"
-          >
-            <FormErrorAlert formErrors={actionData?.formErrors} />
-            <Oui.TextFieldEx
-              name="email"
-              type="email"
-              label="Email"
-              placeholder="m@example.com"
-              isRequired
-            />
-            <Oui.Button type="submit" className="w-full">
-              Send reset link
-            </Oui.Button>
-          </Rac.Form>
+        <CardContent className="flex flex-col gap-6">
+          <FormErrorAlert formErrors={actionData?.formErrors} />
+          <Oui.TextFieldEx
+            name="email"
+            type="email"
+            label="Email"
+            placeholder="m@example.com"
+            isRequired
+          />
+          <Oui.Button type="submit" className="w-full">
+            Send reset link
+          </Oui.Button>
         </CardContent>
       </Card>
-    </div>
+    </Rac.Form>
   );
 }

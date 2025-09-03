@@ -4,6 +4,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card";
@@ -52,7 +53,12 @@ export async function action({ request, context }: Route.ActionArgs) {
 
 export default function RouteComponent({ actionData }: Route.ComponentProps) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
+    <Rac.Form
+      method="post"
+      validationBehavior="aria"
+      validationErrors={actionData?.validationErrors}
+      className="flex min-h-screen items-center justify-center"
+    >
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Sign up for an account</CardTitle>
@@ -60,33 +66,28 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
             Enter your email and password to create your account
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <Rac.Form
-            method="post"
-            validationBehavior="aria"
-            validationErrors={actionData?.validationErrors}
-            className="flex flex-col gap-6"
-          >
-            <FormErrorAlert formErrors={actionData?.formErrors} />
-            <Oui.TextFieldEx
-              name="email"
-              type="email"
-              label="Email"
-              placeholder="m@example.com"
-              isRequired
-            />
-            <Oui.TextFieldEx
-              name="password"
-              type="password"
-              label="Password"
-              isRequired
-            />
-            <Oui.Button type="submit" className="w-full">
-              Sign up
-            </Oui.Button>
-          </Rac.Form>
+        <CardContent className="flex flex-col gap-6">
+          <FormErrorAlert formErrors={actionData?.formErrors} />
+          <Oui.TextFieldEx
+            name="email"
+            type="email"
+            label="Email"
+            placeholder="m@example.com"
+            isRequired
+          />
+          <Oui.TextFieldEx
+            name="password"
+            type="password"
+            label="Password"
+            isRequired
+          />
         </CardContent>
+        <CardFooter>
+          <Oui.Button type="submit" className="w-full">
+            Sign up
+          </Oui.Button>
+        </CardFooter>
       </Card>
-    </div>
+    </Rac.Form>
   );
 }
