@@ -21,7 +21,7 @@ import * as Domain from "~/lib/domain";
 export function createRepository() {
   const d1 = env.D1;
 
-  const getUser = async ({ email }: { email: string }) => {
+  const getUser = async ({ email }: { email: Domain.User["email"] }) => {
     const result = await d1
       .prepare(`select * from User where email = ?`)
       .bind(email)
@@ -38,8 +38,8 @@ export function createRepository() {
       console.log(`repository: getUsers`, { users });
       return users;
     },
-    deleteUser: async (email: string) => {
-       // Get userId from email
+    deleteUser: async ({ email }: { email: Domain.User["email"] }) => {
+      // Get userId from email
       const userResult = await d1
         .prepare(`select userId from User where email = ?`)
         .bind(email)

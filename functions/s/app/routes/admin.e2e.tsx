@@ -1,8 +1,9 @@
 import type { Route } from "./+types/admin.e2e";
 import * as Oui from "@workspace/oui";
 import * as Rac from "react-aria-components";
-import { appLoadContext } from "~/lib/middleware";
 import * as z from "zod";
+import * as Domain from "~/lib/domain";
+import { appLoadContext } from "~/lib/middleware";
 
 export async function loader({ context }: Route.LoaderArgs) {
   const { repository } = context.get(appLoadContext);
@@ -13,7 +14,7 @@ export async function loader({ context }: Route.LoaderArgs) {
 export async function action({ request, context }: Route.ActionArgs) {
   const schema = z.object({
     intent: z.literal("deleteUser"),
-    email: z.email(),
+    email: Domain.User.shape.email,
   });
   const parseResult = schema.safeParse(
     Object.fromEntries(await request.formData()),
