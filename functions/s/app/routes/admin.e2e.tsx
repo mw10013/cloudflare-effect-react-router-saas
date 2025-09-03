@@ -11,7 +11,7 @@ import {
 import * as Rac from "react-aria-components";
 import { useFetcher } from "react-router";
 import * as z from "zod";
-import { FormErrorAlert } from "~/components/FormAlert";
+import { FormAlert } from "~/components/FormAlert";
 import * as Domain from "~/lib/domain";
 import { appLoadContext } from "~/lib/middleware";
 
@@ -66,7 +66,11 @@ function DeleteUserForm() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <FormErrorAlert formErrors={fetcher.data?.formErrors} />
+          <FormAlert
+            success={fetcher.data?.success}
+            message={fetcher.data?.message}
+            details={fetcher.data?.details}
+          />
           <Oui.TextFieldEx
             name="email"
             type="email"
