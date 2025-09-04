@@ -1,14 +1,13 @@
 import type { Route } from "./+types/admin.e2e";
+import { useEffect, useRef } from "react";
 import * as Oui from "@workspace/oui";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card";
-import * as Rac from "react-aria-components";
 import { useFetcher } from "react-router";
 import * as z from "zod";
 import { FormAlert } from "~/components/FormAlert";
@@ -43,13 +42,21 @@ export async function action({
     email: parseResult.data.email,
   });
   return {
-    success: false,
+    success: true,
     message: `Deleted user ${parseResult.data.email} (deletedCount: ${deletedCount})`,
   };
 }
 
 function DeleteUserForm() {
   const fetcher = useFetcher();
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (fetcher.data?.success) {
+      formRef.current?.reset();
+    }
+  }, [fetcher.data]);
+
   return (
     <Card>
       <CardHeader>
@@ -60,6 +67,7 @@ function DeleteUserForm() {
       </CardHeader>
       <CardContent>
         <Oui.Form
+          ref={formRef}
           method="post"
           validationBehavior="aria"
           validationErrors={fetcher.data?.validationErrors}

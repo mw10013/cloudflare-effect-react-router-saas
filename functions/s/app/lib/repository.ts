@@ -26,7 +26,6 @@ export function createRepository() {
       .prepare(`select * from User where email = ?`)
       .bind(email)
       .first();
-    console.log(`repository: getUser`, { result });
     return Domain.User.nullable().parse(result);
   };
 
@@ -42,12 +41,13 @@ export function createRepository() {
      * Intended for testing only.
      *
      * Also deletes all the organizations where user is the sole owner.
-     * 
+     *
      * @returns number of users deleted (0 or 1)
      */
     deleteUser: async ({ email }: { email: Domain.User["email"] }) => {
       const user = await getUser({ email });
       if (!user) return 0;
+      if (user.role === "admin") throw new Error("Cannot delete admin users");
 
       const results = await d1.batch([
         d1
@@ -67,9 +67,13 @@ delete from Organization where organizationId in (select organizationId from t)
 `,
           )
           .bind(user.userId),
-        d1.prepare(`delete from User where userId = ?`).bind(user.userId),
+        d1
+          .prepare(
+            `delete from User where userId = ? and role <> 'admin' returning *`,
+          )
+          .bind(user.userId),
       ]);
-      return results[1].meta.changes
+      return results[1].results.length;
     },
   };
 }

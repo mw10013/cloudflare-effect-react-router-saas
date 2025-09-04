@@ -280,12 +280,12 @@ export const d1Adapter = (db: D1Database) =>
         where,
       }) => {
         const adapted = adapt({ model, where });
-        const sql = `delete from ${adapted.model} ${adapted.whereClause ? `where ${adapted.whereClause}` : ""}`;
+        const sql = `delete from ${adapted.model} ${adapted.whereClause ? `where ${adapted.whereClause}` : ""} returning *`;
         const result = await db
           .prepare(sql)
           .bind(...adapted.whereValues)
           .run();
-        return result.meta.changes;
+        return result.results.length; // result.meta.changes is impacted by 'on delete cascade' so we cannot use.
       };
 
       const count: CustomAdapter["count"] = async ({ model, where }) => {
