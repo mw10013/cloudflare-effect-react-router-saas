@@ -4,16 +4,20 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card";
-import * as Rac from "react-aria-components";
 import * as z from "zod";
-import { FormErrorAlert } from "~/components/FormAlert";
+import { FormAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
+import * as TechnicalDomain from "~/lib/technical-domain";
 
-export async function action({ request, context }: Route.ActionArgs) {
+export async function action({
+  request,
+  context,
+}: Route.ActionArgs): Promise<
+  TechnicalDomain.FormActionResult & { magicLink?: string }
+> {
   const schema = z.object({
     email: z.email(),
   });
@@ -21,13 +25,9 @@ export async function action({ request, context }: Route.ActionArgs) {
     Object.fromEntries(await request.formData()),
   );
   if (!parseResult.success) {
-    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
-      parseResult.error,
-    );
-    return {
-      formErrors,
-      validationErrors,
-    };
+    const { formErrors: details, fieldErrors: validationErrors } =
+      z.flattenError(parseResult.error);
+    return { success: false, details, validationErrors };
   }
   const {
     auth,
@@ -39,15 +39,14 @@ export async function action({ request, context }: Route.ActionArgs) {
   });
   const magicLink =
     env.ENVIRONMENT === "local"
-      ? await env.KV.get(`local:magicLink`)
+      ? ((await env.KV.get(`local:magicLink`)) ?? undefined)
       : undefined;
   console.log("magicLink", magicLink);
-
-  return { magicLinkSent: true, magicLink };
+  return { success: true, magicLink };
 }
 
 export default function RouteComponent({ actionData }: Route.ComponentProps) {
-  if (actionData?.magicLinkSent) {
+  if (actionData?.success) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center">
         <Card className="w-full max-w-sm">
@@ -71,12 +70,7 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
     );
   }
   return (
-    <Rac.Form
-      method="post"
-      validationBehavior="aria"
-      validationErrors={actionData?.validationErrors}
-      className="flex min-h-screen flex-col items-center justify-center"
-    >
+    <div className="flex min-h-screen items-center justify-center">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Sign in / Sign up</CardTitle>
@@ -85,21 +79,29 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <FormErrorAlert formErrors={actionData?.formErrors} />
-          <Oui.TextFieldEx
-            name="email"
-            type="email"
-            label="Email"
-            placeholder="m@example.com"
-            isRequired
-          />
+          <Oui.Form
+            method="post"
+            validationBehavior="aria"
+            validationErrors={actionData?.validationErrors}
+          >
+            <FormAlert
+              success={actionData?.success}
+              message={actionData?.message}
+              details={actionData?.details}
+            />
+            <Oui.TextFieldEx
+              name="email"
+              type="email"
+              label="Email"
+              placeholder="m@example.com"
+              isRequired
+            />
+            <Oui.Button type="submit" className="w-full">
+              Send magic link
+            </Oui.Button>
+          </Oui.Form>
         </CardContent>
-        <CardFooter>
-          <Oui.Button type="submit" className="w-full">
-            Send magic link
-          </Oui.Button>
-        </CardFooter>
       </Card>
-    </Rac.Form>
+    </div>
   );
 }
