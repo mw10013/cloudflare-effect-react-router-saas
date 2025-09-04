@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card";
+import { useSubmit } from "react-router";
 import * as z from "zod";
 import { FormAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
@@ -51,6 +52,7 @@ export async function action({
 }
 
 export default function RouteComponent({ actionData }: Route.ComponentProps) {
+  const submit = useSubmit();
   if (actionData?.success) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center">
@@ -88,6 +90,7 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
             method="post"
             validationBehavior="aria"
             validationErrors={actionData?.validationErrors}
+            onSubmit={TechnicalDomain.onSubmit(submit)}
           >
             <FormAlert
               success={actionData?.success}
