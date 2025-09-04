@@ -1,4 +1,4 @@
-import type { FetcherWithComponents } from "react-router";
+import type { SubmitFunction } from "react-router";
 import React from "react";
 import * as Rac from "react-aria-components";
 
@@ -16,13 +16,12 @@ export type FormActionResult =
     };
 
 /**
- * Creates a form submit handler that prevents default submission and uses fetcher.submit.
- * @param fetcher - React Router fetcher for submitting the form.
+ * Creates a form submit handler that prevents default submission and uses the provided submit function.
+ * @param submit - Submit function (e.g., useSubmit(), fetcher.submit)
  * @returns Event handler function for form onSubmit.
  */
 export const onSubmit =
-  (fetcher: FetcherWithComponents<unknown>) =>
-  (e: React.FormEvent<HTMLFormElement>) => {
+  (submit: SubmitFunction) => (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const nativeEvent = e.nativeEvent;
     const submitter =
@@ -31,5 +30,5 @@ export const onSubmit =
         nativeEvent.submitter instanceof HTMLInputElement)
         ? nativeEvent.submitter
         : null;
-    fetcher.submit(submitter || e.currentTarget, { method: "post" });
+    submit(submitter || e.currentTarget, { method: "post" });
   };

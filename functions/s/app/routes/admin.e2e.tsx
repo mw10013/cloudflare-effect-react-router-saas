@@ -66,7 +66,7 @@ function DeleteUserForm() {
           method="post"
           validationBehavior="aria"
           validationErrors={fetcher.data?.validationErrors}
-          onSubmit={TechnicalDomain.onSubmit(fetcher)}
+          onSubmit={TechnicalDomain.onSubmit(fetcher.submit)}
         >
           <FormAlert
             success={fetcher.data?.success}
