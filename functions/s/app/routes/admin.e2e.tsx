@@ -1,3 +1,4 @@
+import type * as TechnicalDomain from "~/lib/technical-domain";
 import type { Route } from "./+types/admin.e2e";
 import * as Oui from "@workspace/oui";
 import {
@@ -21,7 +22,10 @@ export async function loader({ context }: Route.LoaderArgs) {
   return { users };
 }
 
-export async function action({ request, context }: Route.ActionArgs) {
+export async function action({
+  request,
+  context,
+}: Route.ActionArgs): Promise<TechnicalDomain.FormActionResult> {
   const schema = z.object({
     intent: z.literal("deleteUser"),
     email: Domain.User.shape.email,
@@ -29,27 +33,37 @@ export async function action({ request, context }: Route.ActionArgs) {
   const parseResult = schema.safeParse(
     Object.fromEntries(await request.formData()),
   );
+  console.log(`action`, { parseResult });
   if (!parseResult.success) {
     const { formErrors, fieldErrors: validationErrors } = z.flattenError(
       parseResult.error,
     );
-    return { formErrors, validationErrors };
+    return { success: false, details: formErrors, validationErrors };
   }
   const { repository } = context.get(appLoadContext);
   const deletedCount = await repository.deleteUser({
     email: parseResult.data.email,
   });
+  console.log(`action', { deletedCount }`);
   return {
-    success: true,
+    success: false,
     message: `Deleted user ${parseResult.data.email} (deletedCount: ${deletedCount})`,
-  };
+  } satisfies TechnicalDomain.FormActionResult;
 }
 
 function DeleteUserForm() {
   const fetcher = useFetcher();
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    console.log(`onSubmit`, { target: e.currentTarget });
     e.preventDefault();
-    fetcher.submit(e.currentTarget, { method: "post" });
+    const nativeEvent = e.nativeEvent;
+    if (
+      nativeEvent instanceof SubmitEvent &&
+      (nativeEvent.submitter instanceof HTMLButtonElement ||
+        nativeEvent.submitter instanceof HTMLInputElement)
+    ) {
+      fetcher.submit(nativeEvent.submitter);
+    }
   };
   return (
     <Rac.Form

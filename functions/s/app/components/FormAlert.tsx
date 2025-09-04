@@ -1,20 +1,19 @@
+import type * as TechnicalDomain from "~/lib/technical-domain";
 import {
   Alert,
   AlertDescription,
   AlertTitle,
 } from "@workspace/ui/components/ui/alert";
-import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
-import type { FormActionResult } from "~/lib/technical-domain";
 
 export function FormAlert({
   success,
   message,
   details,
 }: {
-  success?: boolean;
-  message?: string;
-  details?: string | string[];
+  success?: TechnicalDomain.FormActionResult["success"];
+  message?: TechnicalDomain.FormActionResult["message"];
+  details?: TechnicalDomain.FormActionResult["details"];
 }) {
   const detailsArray = Array.isArray(details)
     ? details
