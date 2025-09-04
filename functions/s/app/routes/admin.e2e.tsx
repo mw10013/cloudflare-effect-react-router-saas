@@ -37,14 +37,32 @@ export async function action({
       z.flattenError(parseResult.error);
     return { success: false, details, validationErrors };
   }
-  const { repository } = context.get(appLoadContext);
-  const deletedCount = await repository.deleteUser({
-    email: parseResult.data.email,
-  });
-  return {
-    success: true,
-    message: `Deleted user ${parseResult.data.email} (deletedCount: ${deletedCount})`,
-  };
+  switch (parseResult.data.intent) {
+    case "deleteUser": {
+      const { stripeService, repository } = context.get(appLoadContext);
+      const user = await repository.getUser({ email: parseResult.data.email });
+      if (!user) {
+        return {
+          success: true,
+          message: `User ${parseResult.data.email} not found.`,
+        };
+      }
+      if (user.role === "admin") {
+        return {
+          success: false,
+          message: `Cannot delete admin user ${parseResult.data.email}.`,
+        };
+      }
+      const deletedCount = await repository.deleteUser(user);
+      return {
+        success: true,
+        message: `Deleted user ${parseResult.data.email} (deletedCount: ${deletedCount}).`,
+      };
+    }
+    //   default:
+    //     void (parseResult.data satisfies never);
+    //     throw new Error("Unexpected intent");
+  }
 }
 
 function DeleteUserForm() {

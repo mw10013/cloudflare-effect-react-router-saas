@@ -44,11 +44,7 @@ export function createRepository() {
      *
      * @returns number of users deleted (0 or 1)
      */
-    deleteUser: async ({ email }: { email: Domain.User["email"] }) => {
-      const user = await getUser({ email });
-      if (!user) return 0;
-      if (user.role === "admin") throw new Error("Cannot delete admin users");
-
+    deleteUser: async ({ userId }: Pick<Domain.User, "userId">) => {
       const results = await d1.batch([
         d1
           .prepare(
@@ -66,12 +62,12 @@ with t as (
 delete from Organization where organizationId in (select organizationId from t)
 `,
           )
-          .bind(user.userId),
+          .bind(userId),
         d1
           .prepare(
             `delete from User where userId = ? and role <> 'admin' returning *`,
           )
-          .bind(user.userId),
+          .bind(userId),
       ]);
       return results[1].results.length;
     },
