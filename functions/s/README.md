@@ -6,22 +6,19 @@ pnpm -F s test --project d1 auth
 ## TODO
 
 - test invitations.tsx
-- Oui.Form: className="grid gap-6" vs flex
-- auth
-  - d1 from env
 - stripe
   - referenceId -> organizationId
   - trial period
   - annual
   - customer.subscription.deleted error on cancel?
-- organization
-  - teams?
+- deploy
 - admin
   - customers
   - sessions
+- organization
+  - teams?
 - domain
   - zod brands
-- deploy
 - secondary storage: https://www.better-auth.com/docs/concepts/database#secondary-storage
 - restrict auth api
 - css
