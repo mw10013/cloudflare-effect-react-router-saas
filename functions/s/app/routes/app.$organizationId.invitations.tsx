@@ -1,4 +1,5 @@
 import type { Route } from "./+types/app.$organizationId.invitations";
+import { useEffect, useRef } from "react";
 import * as Oui from "@workspace/oui";
 import {
   Card,
@@ -7,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card";
-import * as Rac from "react-aria-components";
 import { useFetcher, useSubmit } from "react-router";
 import * as z from "zod";
 import * as Domain from "~/lib/domain";
@@ -127,6 +127,15 @@ export default function RouteComponent({
   actionData,
 }: Route.ComponentProps) {
   const submit = useSubmit();
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // Reset form after successful invite
+  useEffect(() => {
+    if (actionData?.success) {
+      formRef.current?.reset();
+    }
+  }, [actionData]);
+
   return (
     <div className="flex flex-col gap-8 p-6">
       <header>
@@ -144,6 +153,8 @@ export default function RouteComponent({
         </CardHeader>
         <CardContent>
           <Oui.Form
+            ref={formRef}
+            id="invite-form"
             method="post"
             validationErrors={actionData?.validationErrors}
             onSubmit={TechnicalDomain.onSubmit(submit)}
