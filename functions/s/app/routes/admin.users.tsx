@@ -328,14 +328,13 @@ function BanDialog({
       <Oui.DialogHeader>
         <Oui.Heading slot="title">Ban User</Oui.Heading>
       </Oui.DialogHeader>
-      <Rac.Form
+      <Oui.Form
         validationBehavior="aria"
         validationErrors={fetcher.data?.validationErrors}
         onSubmit={(e) => {
           e.preventDefault();
           fetcher.submit(e.currentTarget, { method: "post" });
         }}
-        className="flex flex-col gap-4"
       >
         <FormErrorAlert formErrors={fetcher.data?.formErrors} />
         <Oui.TextFieldEx
@@ -355,7 +354,7 @@ function BanDialog({
             Ban
           </Oui.Button>
         </Oui.DialogFooter>
-      </Rac.Form>
+      </Oui.Form>
     </Oui.DialogEx>
   );
 }

@@ -54,7 +54,6 @@ export async function action({
 function DeleteUserForm() {
   const fetcher = useFetcher();
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log(`onSubmit`, { target: e.currentTarget });
     e.preventDefault();
     const nativeEvent = e.nativeEvent;
     if (

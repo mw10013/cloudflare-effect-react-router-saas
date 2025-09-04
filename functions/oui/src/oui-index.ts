@@ -7,6 +7,7 @@ export * from "./oui-combo-box";
 export * from "./oui-dialog";
 export * from "./oui-disclosure";
 export * from "./oui-field-error";
+export * from "./oui-form";
 export * from "./oui-group";
 export * from "./oui-header";
 export * from "./oui-heading";
