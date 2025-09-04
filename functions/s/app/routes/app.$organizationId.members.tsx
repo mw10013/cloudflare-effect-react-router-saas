@@ -101,7 +101,6 @@ export async function action({
 
 export default function RouteComponent({
   loaderData: { canEdit, canLeaveMemberId, members },
-  actionData,
 }: Route.ComponentProps) {
   return (
     <div className="flex flex-col gap-8 p-6">
@@ -138,7 +137,7 @@ export default function RouteComponent({
           )}
         </CardContent>
       </Card>
-      <pre>{JSON.stringify({ members, actionData }, null, 2)}</pre>
+      <pre>{JSON.stringify({ members }, null, 2)}</pre>
     </div>
   );
 }

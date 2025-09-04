@@ -84,8 +84,8 @@ export async function action({
     }
     default:
       void (parseResult satisfies never);
+      return null;
   }
-  return null;
 }
 
 export default function RouteComponent({
