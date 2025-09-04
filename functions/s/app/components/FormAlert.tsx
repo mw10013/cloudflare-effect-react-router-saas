@@ -6,11 +6,17 @@ import {
 } from "@workspace/ui/components/ui/alert";
 import { twMerge } from "tailwind-merge";
 
+/**
+ * Displays an alert based on form action result.
+ * @param props - Component props including success, message, details.
+ */
 export function FormAlert({
   success,
   message,
   details,
-}: {
+  className,
+  ...props
+}: React.ComponentProps<typeof Alert> & {
   success?: TechnicalDomain.FormActionResult["success"];
   message?: TechnicalDomain.FormActionResult["message"];
   details?: TechnicalDomain.FormActionResult["details"];
@@ -24,7 +30,11 @@ export function FormAlert({
   if (!message && detailsArray.length === 0) return null;
 
   return (
-    <Alert variant={success ? "default" : "destructive"} className="mb-4">
+    <Alert
+      variant={success ? "default" : "destructive"}
+      className={className}
+      {...props}
+    >
       {message && <AlertTitle>{message}</AlertTitle>}
       {detailsArray.length > 0 && (
         <AlertDescription>

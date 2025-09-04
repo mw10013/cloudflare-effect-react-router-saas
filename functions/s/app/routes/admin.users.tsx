@@ -2,11 +2,11 @@ import type { Route } from "./+types/admin.users";
 import { useCallback, useEffect, useState } from "react";
 import { invariant } from "@epic-web/invariant";
 import * as Oui from "@workspace/oui";
-import * as Rac from "react-aria-components";
 import { redirect, useFetcher, useNavigate } from "react-router";
 import * as z from "zod";
 import { FormErrorAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
+import * as TechnicalDomain from "~/lib/technical-domain";
 
 export async function loader({ request, context }: Route.LoaderArgs) {
   const LIMIT = 5;
@@ -331,10 +331,7 @@ function BanDialog({
       <Oui.Form
         validationBehavior="aria"
         validationErrors={fetcher.data?.validationErrors}
-        onSubmit={(e) => {
-          e.preventDefault();
-          fetcher.submit(e.currentTarget, { method: "post" });
-        }}
+        onSubmit={TechnicalDomain.onSubmit(fetcher)}
       >
         <FormErrorAlert formErrors={fetcher.data?.formErrors} />
         <Oui.TextFieldEx
@@ -344,13 +341,17 @@ function BanDialog({
           autoFocus
         />
         <input type="hidden" name="userId" value={userId ?? ""} />
-        <input type="hidden" name="intent" value="ban" />
         <Oui.DialogFooter>
           <Oui.Button variant="outline" slot="close">
             Cancel
           </Oui.Button>
           {/* Do not set slot='close' — we keep the dialog open until the server confirms success. */}
-          <Oui.Button type="submit" isDisabled={fetcher.state !== "idle"}>
+          <Oui.Button
+            type="submit"
+            name="intent"
+            value="ban"
+            isDisabled={fetcher.state !== "idle"}
+          >
             Ban
           </Oui.Button>
         </Oui.DialogFooter>

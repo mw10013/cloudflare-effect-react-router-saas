@@ -1,4 +1,3 @@
-import type * as TechnicalDomain from "~/lib/technical-domain";
 import type { Route } from "./+types/admin.e2e";
 import * as Oui from "@workspace/oui";
 import {
@@ -15,6 +14,7 @@ import * as z from "zod";
 import { FormAlert } from "~/components/FormAlert";
 import * as Domain from "~/lib/domain";
 import { appLoadContext } from "~/lib/middleware";
+import * as TechnicalDomain from "~/lib/technical-domain";
 
 export async function loader({ context }: Route.LoaderArgs) {
   const { repository } = context.get(appLoadContext);
@@ -53,32 +53,21 @@ export async function action({
 
 function DeleteUserForm() {
   const fetcher = useFetcher();
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const nativeEvent = e.nativeEvent;
-    if (
-      nativeEvent instanceof SubmitEvent &&
-      (nativeEvent.submitter instanceof HTMLButtonElement ||
-        nativeEvent.submitter instanceof HTMLInputElement)
-    ) {
-      fetcher.submit(nativeEvent.submitter);
-    }
-  };
   return (
-    <Rac.Form
-      method="post"
-      validationBehavior="aria"
-      validationErrors={fetcher.data?.validationErrors}
-      onSubmit={onSubmit}
-    >
-      <Card>
-        <CardHeader>
-          <CardTitle>Delete User</CardTitle>
-          <CardDescription>
-            Enter the email of the user to delete.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+    <Card>
+      <CardHeader>
+        <CardTitle>Delete User</CardTitle>
+        <CardDescription>
+          Enter the email of the user to delete.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Oui.Form
+          method="post"
+          validationBehavior="aria"
+          validationErrors={fetcher.data?.validationErrors}
+          onSubmit={TechnicalDomain.onSubmit(fetcher)}
+        >
           <FormAlert
             success={fetcher.data?.success}
             message={fetcher.data?.message}
@@ -91,8 +80,6 @@ function DeleteUserForm() {
             placeholder="user@example.com"
             isRequired
           />
-        </CardContent>
-        <CardFooter className="justify-end">
           <Oui.Button
             type="submit"
             name="intent"
@@ -102,9 +89,9 @@ function DeleteUserForm() {
           >
             Delete User
           </Oui.Button>
-        </CardFooter>
-      </Card>
-    </Rac.Form>
+        </Oui.Form>
+      </CardContent>
+    </Card>
   );
 }
 
