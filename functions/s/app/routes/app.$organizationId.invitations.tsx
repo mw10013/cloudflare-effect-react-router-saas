@@ -46,7 +46,7 @@ export async function action({
   request,
   context,
   params: { organizationId },
-}: Route.ActionArgs) {
+}: Route.ActionArgs): Promise<TechnicalDomain.FormActionResult> {
   const schema = z.discriminatedUnion("intent", [
     z.object({
       intent: z.literal("cancel"),
@@ -74,17 +74,13 @@ export async function action({
     }),
   ]);
 
-  const form = Object.fromEntries(await request.formData());
-  const parseResult = schema.safeParse(form);
+  const parseResult = schema.safeParse(
+    Object.fromEntries(await request.formData()),
+  );
   if (!parseResult.success) {
-    if (form.intent !== "invite")
-      throw new Response(`Invalid form submission: intent: ${form.intent}`, {
-        status: 400,
-      });
-    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
-      parseResult.error,
-    );
-    return { formErrors, validationErrors };
+    const { formErrors: details, fieldErrors: validationErrors } =
+      z.flattenError(parseResult.error);
+    return { success: false, details, validationErrors };
   }
   const { auth } = context.get(appLoadContext);
   switch (parseResult.data.intent) {
@@ -93,7 +89,7 @@ export async function action({
         headers: request.headers,
         body: { invitationId: parseResult.data.invitationId },
       });
-      break;
+      return { success: true };
     case "invite":
       for (const email of parseResult.data.emails) {
         const result = await auth.api.createInvitation({
@@ -119,11 +115,11 @@ export async function action({
             .run();
         }
       }
-      break;
+      return { success: true };
     default:
       void (parseResult.data satisfies never);
+      throw new Error("Unknown intent");
   }
-  return {};
 }
 
 export default function RouteComponent({
@@ -131,18 +127,6 @@ export default function RouteComponent({
   actionData,
 }: Route.ComponentProps) {
   const submit = useSubmit();
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent
-    const nativeEvent = e.nativeEvent;
-    if (
-      nativeEvent instanceof SubmitEvent &&
-      (nativeEvent.submitter instanceof HTMLButtonElement ||
-        nativeEvent.submitter instanceof HTMLInputElement)
-    ) {
-      submit(nativeEvent.submitter);
-    }
-  };
   return (
     <div className="flex flex-col gap-8 p-6">
       <header>
@@ -151,7 +135,6 @@ export default function RouteComponent({
           Invite new members and manage your invitations.
         </p>
       </header>
-
       <Card>
         <CardHeader>
           <CardTitle>Invite New Members</CardTitle>
@@ -160,11 +143,11 @@ export default function RouteComponent({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Rac.Form
+          <Oui.Form
             method="post"
             validationErrors={actionData?.validationErrors}
-            onSubmit={onSubmit}
-            className="grid gap-6"
+            onSubmit={TechnicalDomain.onSubmit(submit)}
+            className="grid"
           >
             <Oui.TextFieldEx
               name="emails"
@@ -195,10 +178,9 @@ export default function RouteComponent({
             >
               Send Invites
             </Oui.Button>
-          </Rac.Form>
+          </Oui.Form>
         </CardContent>
       </Card>
-
       <Card>
         <CardHeader>
           <CardTitle>Invitations</CardTitle>
@@ -235,7 +217,7 @@ function InvitationItem({
   invitation: Route.ComponentProps["loaderData"]["invitations"][number];
   canManageInvitations: boolean;
 }) {
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<Route.ComponentProps["actionData"]>();
   const pending = fetcher.state !== "idle";
   const result = fetcher.data;
   return (
@@ -275,15 +257,6 @@ function InvitationItem({
               Cancel
             </Oui.Button>
           </fetcher.Form>
-          {result?.error && (
-            <div
-              role="status"
-              aria-atomic="true"
-              className="text-destructive text-xs"
-            >
-              {result.error}
-            </div>
-          )}
         </div>
       )}
     </li>

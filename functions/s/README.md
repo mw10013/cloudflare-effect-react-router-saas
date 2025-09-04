@@ -5,7 +5,6 @@ pnpm -F s test --project d1 auth
 
 ## TODO
 
-- test invitations.tsx
 - stripe
   - referenceId -> organizationId
   - trial period
