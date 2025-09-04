@@ -4,11 +4,9 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card";
-import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
 import * as z from "zod";
 import { FormErrorAlert } from "~/components/FormAlert";
@@ -51,34 +49,33 @@ export default function RouteComponent({
   actionData,
 }: Route.ComponentProps) {
   return (
-    <Rac.Form
-      method="post"
-      validationBehavior="aria"
-      validationErrors={actionData?.validationErrors}
-      className="flex min-h-screen items-center justify-center"
-    >
+    <div className="flex min-h-screen items-center justify-center">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Reset your password</CardTitle>
           <CardDescription>Enter your new password below.</CardDescription>
         </CardHeader>
         <CardContent>
-          <FormErrorAlert formErrors={actionData?.formErrors} />
-          <input type="hidden" name="token" value={loaderData.token} />
-          <Oui.TextFieldEx
-            name="password"
-            type="password"
-            label="New password"
-            placeholder="••••••••"
-            isRequired
-          />
+          <Oui.Form
+            method="post"
+            validationBehavior="aria"
+            validationErrors={actionData?.validationErrors}
+          >
+            <FormErrorAlert formErrors={actionData?.formErrors} />
+            <input type="hidden" name="token" value={loaderData.token} />
+            <Oui.TextFieldEx
+              name="password"
+              type="password"
+              label="New password"
+              placeholder="••••••••"
+              isRequired
+            />
+            <Oui.Button type="submit" className="w-full">
+              Reset password
+            </Oui.Button>
+          </Oui.Form>
         </CardContent>
-        <CardFooter>
-          <Oui.Button type="submit" className="w-full">
-            Reset password
-          </Oui.Button>
-        </CardFooter>
       </Card>
-    </Rac.Form>
+    </div>
   );
 }

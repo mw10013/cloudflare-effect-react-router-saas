@@ -4,11 +4,9 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card";
-import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
 import * as z from "zod";
 import { FormErrorAlert } from "~/components/FormAlert";
@@ -50,12 +48,7 @@ export async function action({ request, context }: Route.ActionArgs) {
 
 export default function RouteComponent({ actionData }: Route.ComponentProps) {
   return (
-    <Rac.Form
-      method="post"
-      validationBehavior="aria"
-      validationErrors={actionData?.validationErrors}
-      className="flex min-h-screen items-center justify-center"
-    >
+    <div className="flex min-h-screen items-center justify-center">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Sign in to your account</CardTitle>
@@ -64,38 +57,42 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-6">
-          <FormErrorAlert formErrors={actionData?.formErrors} />
-          <Oui.TextFieldEx
-            name="email"
-            type="email"
-            label="Email"
-            placeholder="m@example.com"
-            isRequired
-          />
-          <Oui.TextFieldEx
-            name="password"
-            type="password"
-            isRequired
-            label={
-              <div className="flex items-center">
-                <Oui.Label>Password</Oui.Label>
-                <Oui.Link
-                  href="/forgot-password"
-                  className="ml-auto inline-block text-sm"
-                  underline="hover"
-                >
-                  Forgot your password?
-                </Oui.Link>
-              </div>
-            }
-          />
+          <Oui.Form
+            method="post"
+            validationBehavior="aria"
+            validationErrors={actionData?.validationErrors}
+          >
+            <FormErrorAlert formErrors={actionData?.formErrors} />
+            <Oui.TextFieldEx
+              name="email"
+              type="email"
+              label="Email"
+              placeholder="m@example.com"
+              isRequired
+            />
+            <Oui.TextFieldEx
+              name="password"
+              type="password"
+              isRequired
+              label={
+                <div className="flex items-center">
+                  <Oui.Label>Password</Oui.Label>
+                  <Oui.Link
+                    href="/forgot-password"
+                    className="ml-auto inline-block text-sm"
+                    underline="hover"
+                  >
+                    Forgot your password?
+                  </Oui.Link>
+                </div>
+              }
+            />
+            <Oui.Button type="submit" className="w-full">
+              Sign in
+            </Oui.Button>
+          </Oui.Form>
         </CardContent>
-        <CardFooter>
-          <Oui.Button type="submit" className="w-full">
-            Sign in
-          </Oui.Button>
-        </CardFooter>
       </Card>
-    </Rac.Form>
+    </div>
   );
 }
