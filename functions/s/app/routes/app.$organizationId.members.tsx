@@ -161,6 +161,7 @@ function MemberItem({
           <Oui.SelectEx
             name="role"
             defaultSelectedKey={member.role}
+            aria-label={`Change role for ${member.user.email}`}
             items={[
               { id: "member", name: "Member" },
               { id: "admin", name: "Admin" },
