@@ -24,10 +24,9 @@ export async function action({
     Object.fromEntries(await request.formData()),
   );
   if (!parseResult.success) {
-    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
-      parseResult.error,
-    );
-    return { success: false, details: formErrors, validationErrors };
+    const { formErrors: details, fieldErrors: validationErrors } =
+      z.flattenError(parseResult.error);
+    return { success: false, details, validationErrors };
   }
   const { auth } = context.get(appLoadContext);
   const result = await auth.api.forgetPassword({
