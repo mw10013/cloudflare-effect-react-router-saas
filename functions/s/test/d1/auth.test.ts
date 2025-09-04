@@ -511,8 +511,7 @@ describe("auth forgot password flow", () => {
       params: {},
     });
 
-    invariant(result instanceof Response, "Expected Response");
-    expect(result.status).toBe(302);
+    expect(result.success).toBe(true);
   });
 
   it("signs in with new password", async () => {
@@ -524,14 +523,19 @@ describe("auth forgot password flow", () => {
       body: form,
     });
 
-    const result = await signInAction({
-      request,
-      context: await c.context(),
-      params: {},
-    });
-
-    invariant(result instanceof Response, "Expected Response");
-    expect(result.status).toBe(302);
+    await expect(
+      signInAction({
+        request,
+        context: await c.context(),
+        params: {},
+      }),
+    ).rejects.toSatisfy(
+      (response: unknown) =>
+        response instanceof Response &&
+        response.status === 302 &&
+        response.headers.get("location") === "/" &&
+        response.headers.has("Set-Cookie"),
+    );
   });
 });
 
