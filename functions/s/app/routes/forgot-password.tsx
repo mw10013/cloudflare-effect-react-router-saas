@@ -1,4 +1,5 @@
 import type { Route } from "./+types/forgot-password";
+import { invariant } from "@epic-web/invariant";
 import * as Oui from "@workspace/oui";
 import {
   Card,
@@ -8,10 +9,14 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import * as z from "zod";
-import { FormErrorAlert } from "~/components/FormAlert";
+import { FormAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
+import * as TechnicalDomain from "~/lib/technical-domain";
 
-export async function action({ request, context }: Route.ActionArgs) {
+export async function action({
+  request,
+  context,
+}: Route.ActionArgs): Promise<TechnicalDomain.FormActionResult> {
   const schema = z.object({
     email: z.email(),
   });
@@ -22,17 +27,18 @@ export async function action({ request, context }: Route.ActionArgs) {
     const { formErrors, fieldErrors: validationErrors } = z.flattenError(
       parseResult.error,
     );
-    return { formErrors, validationErrors };
+    return { success: false, details: formErrors, validationErrors };
   }
   const { auth } = context.get(appLoadContext);
   const result = await auth.api.forgetPassword({
     body: { email: parseResult.data.email, redirectTo: "/reset-password" },
   });
-  return { emailSent: result.status };
+  invariant(result.status, "Expected forgetPassword to throw error on failure");
+  return { success: result.status };
 }
 
 export default function RouteComponent({ actionData }: Route.ComponentProps) {
-  if (actionData?.emailSent) {
+  if (actionData?.success) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center">
         <Card className="w-full max-w-sm">
@@ -62,7 +68,11 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
             validationBehavior="aria"
             validationErrors={actionData?.validationErrors}
           >
-            <FormErrorAlert formErrors={actionData?.formErrors} />
+            <FormAlert
+              success={actionData?.success}
+              message={actionData?.message}
+              details={actionData?.details}
+            />
             <Oui.TextFieldEx
               name="email"
               type="email"

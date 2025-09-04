@@ -33,7 +33,6 @@ export async function action({
   const parseResult = schema.safeParse(
     Object.fromEntries(await request.formData()),
   );
-  console.log(`action`, { parseResult });
   if (!parseResult.success) {
     const { formErrors, fieldErrors: validationErrors } = z.flattenError(
       parseResult.error,
@@ -44,11 +43,10 @@ export async function action({
   const deletedCount = await repository.deleteUser({
     email: parseResult.data.email,
   });
-  console.log(`action', { deletedCount }`);
   return {
     success: false,
     message: `Deleted user ${parseResult.data.email} (deletedCount: ${deletedCount})`,
-  } satisfies TechnicalDomain.FormActionResult;
+  };
 }
 
 function DeleteUserForm() {
