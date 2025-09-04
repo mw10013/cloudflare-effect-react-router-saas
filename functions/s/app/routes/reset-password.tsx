@@ -1,4 +1,5 @@
 import type { Route } from "./+types/reset-password";
+import { invariant } from "@epic-web/invariant";
 import * as Oui from "@workspace/oui";
 import {
   Card,
@@ -7,18 +8,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card";
-import { redirect } from "react-router";
 import * as z from "zod";
-import { FormErrorAlert } from "~/components/FormAlert";
+import { FormAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
+import * as TechnicalDomain from "~/lib/technical-domain";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
-  const token = url.searchParams.get("token") ?? "";
+  const token = url.searchParams.get("token");
+  invariant(token, "Missing token");
   return { token };
 }
 
-export async function action({ request, context }: Route.ActionArgs) {
+export async function action({
+  request,
+  context,
+}: Route.ActionArgs): Promise<TechnicalDomain.FormActionResult> {
   const schema = z.object({
     password: z.string().min(8),
     token: z.string().min(1),
@@ -27,27 +32,40 @@ export async function action({ request, context }: Route.ActionArgs) {
     Object.fromEntries(await request.formData()),
   );
   if (!parseResult.success) {
-    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
-      parseResult.error,
-    );
-    return { formErrors, validationErrors };
+    const { formErrors: details, fieldErrors: validationErrors } =
+      z.flattenError(parseResult.error);
+    return { success: false, details, validationErrors };
   }
   const { auth } = context.get(appLoadContext);
-  const response = await auth.api.resetPassword({
+  const result = await auth.api.resetPassword({
     body: {
       token: parseResult.data.token,
       newPassword: parseResult.data.password,
     },
-    asResponse: true,
   });
-  if (!response.ok) throw response;
-  return redirect("/", { headers: response.headers });
+  invariant(result.status, "Expected resetPassword to throw error on failure");
+  return { success: result.status };
 }
 
 export default function RouteComponent({
   loaderData,
   actionData,
 }: Route.ComponentProps) {
+  if (actionData?.success) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center">
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle>Password reset successful</CardTitle>
+            <CardDescription>
+              Your password has been reset. You can now sign in with your new
+              password.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
   return (
     <div className="flex min-h-screen items-center justify-center">
       <Card className="w-full max-w-sm">
@@ -61,7 +79,11 @@ export default function RouteComponent({
             validationBehavior="aria"
             validationErrors={actionData?.validationErrors}
           >
-            <FormErrorAlert formErrors={actionData?.formErrors} />
+            <FormAlert
+              success={actionData?.success}
+              message={actionData?.message}
+              details={actionData?.details}
+            />
             <input type="hidden" name="token" value={loaderData.token} />
             <Oui.TextFieldEx
               name="password"
