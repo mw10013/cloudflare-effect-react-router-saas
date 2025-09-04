@@ -9,25 +9,25 @@ import {
 } from "@workspace/ui/components/ui/card";
 import { redirect } from "react-router";
 import * as z from "zod";
-import { FormErrorAlert } from "~/components/FormAlert";
+import { FormAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
+import * as TechnicalDomain from "~/lib/technical-domain";
 
-export async function action({ request, context }: Route.ActionArgs) {
+export async function action({
+  request,
+  context,
+}: Route.ActionArgs): Promise<TechnicalDomain.FormActionResult> {
   const schema = z.object({
-    email: z.string().email(),
+    email: z.email(),
     password: z.string().min(6),
   });
   const parseResult = schema.safeParse(
     Object.fromEntries(await request.formData()),
   );
   if (!parseResult.success) {
-    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
-      parseResult.error,
-    );
-    return {
-      formErrors,
-      validationErrors,
-    };
+    const { formErrors: details, fieldErrors: validationErrors } =
+      z.flattenError(parseResult.error);
+    return { success: false, details, validationErrors };
   }
   const { auth } = context.get(appLoadContext);
   const response = await auth.api.signInEmail({
@@ -40,10 +40,10 @@ export async function action({ request, context }: Route.ActionArgs) {
   });
   // TODO: signin: handle 401: UNAUTHORIZED
   if (!response.ok) {
-    if (response.status === 403) return redirect("/email-verification");
+    if (response.status === 403) throw redirect("/email-verification");
     throw response;
   }
-  return redirect("/", { headers: response.headers });
+  throw redirect("/", { headers: response.headers });
 }
 
 export default function RouteComponent({ actionData }: Route.ComponentProps) {
@@ -56,13 +56,17 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
             Enter your email and password to sign in
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col gap-6">
+        <CardContent>
           <Oui.Form
             method="post"
             validationBehavior="aria"
             validationErrors={actionData?.validationErrors}
           >
-            <FormErrorAlert formErrors={actionData?.formErrors} />
+            <FormAlert
+              success={actionData?.success}
+              message={actionData?.message}
+              details={actionData?.details}
+            />
             <Oui.TextFieldEx
               name="email"
               type="email"

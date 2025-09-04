@@ -2,18 +2,12 @@ import type { SubmitFunction } from "react-router";
 import React from "react";
 import * as Rac from "react-aria-components";
 
-export type FormActionResult =
-  | {
-      success: true;
-      message?: string;
-      details?: string | string[];
-    }
-  | {
-      success: false;
-      message?: string;
-      details?: string | string[];
-      validationErrors?: Rac.FormProps["validationErrors"];
-    };
+export type FormActionResult = {
+  success: boolean;
+  message?: string;
+  details?: string | string[];
+  validationErrors?: Rac.FormProps["validationErrors"];
+};
 
 /**
  * Creates a form submit handler that prevents default submission and uses the provided submit function.

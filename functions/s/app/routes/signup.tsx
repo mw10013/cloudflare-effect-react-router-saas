@@ -9,10 +9,14 @@ import {
 } from "@workspace/ui/components/ui/card";
 import { redirect } from "react-router";
 import * as z from "zod";
-import { FormErrorAlert } from "~/components/FormAlert";
+import { FormAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
+import * as TechnicalDomain from "~/lib/technical-domain";
 
-export async function action({ request, context }: Route.ActionArgs) {
+export async function action({
+  request,
+  context,
+}: Route.ActionArgs): Promise<TechnicalDomain.FormActionResult> {
   const schema = z.object({
     email: z.email(),
     password: z.string().min(6),
@@ -21,13 +25,9 @@ export async function action({ request, context }: Route.ActionArgs) {
     Object.fromEntries(await request.formData()),
   );
   if (!parseResult.success) {
-    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
-      parseResult.error,
-    );
-    return {
-      formErrors,
-      validationErrors,
-    };
+    const { formErrors: details, fieldErrors: validationErrors } =
+      z.flattenError(parseResult.error);
+    return { success: false, details, validationErrors };
   }
   const { auth } = context.get(appLoadContext);
   const response = await auth.api.signUpEmail({
@@ -42,11 +42,11 @@ export async function action({ request, context }: Route.ActionArgs) {
 
   if (!response.ok) {
     // better-auth returns 422 UNPROCESSABLE_ENTITY with { code: 'USER_ALREADY_EXISTS', ... } when an existing user tries to sign up again
-    if (response.status === 422) return redirect("/signin");
+    if (response.status === 422) throw redirect("/signin");
     throw response;
   }
   // With email verification enabled, there is no session cookie set on sign up so no need to pass headers here.
-  return redirect("/");
+  throw redirect("/");
 }
 
 export default function RouteComponent({ actionData }: Route.ComponentProps) {
@@ -59,13 +59,17 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
             Enter your email and password to create your account
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col gap-6">
+        <CardContent>
           <Oui.Form
             method="post"
             validationBehavior="aria"
             validationErrors={actionData?.validationErrors}
           >
-            <FormErrorAlert formErrors={actionData?.formErrors} />
+            <FormAlert
+              success={actionData?.success}
+              message={actionData?.message}
+              details={actionData?.details}
+            />
             <Oui.TextFieldEx
               name="email"
               type="email"
