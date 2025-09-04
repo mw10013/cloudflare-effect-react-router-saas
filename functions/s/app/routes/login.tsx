@@ -1,4 +1,5 @@
 import type { Route } from "./+types/login";
+import { invariant } from "@epic-web/invariant";
 import * as Oui from "@workspace/oui";
 import {
   Card,
@@ -33,10 +34,14 @@ export async function action({
     auth,
     cloudflare: { env },
   } = context.get(appLoadContext);
-  await auth.api.signInMagicLink({
+  const result = await auth.api.signInMagicLink({
     headers: request.headers,
     body: { email: parseResult.data.email, callbackURL: "/magic-link" },
   });
+  invariant(
+    result.status,
+    "Expected signInMagicLink to throw error on failure",
+  );
   const magicLink =
     env.ENVIRONMENT === "local"
       ? ((await env.KV.get(`local:magicLink`)) ?? undefined)
