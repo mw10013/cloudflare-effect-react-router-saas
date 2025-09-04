@@ -1,9 +1,15 @@
 import type { Route } from "./+types/accept-invitation.$invitationId";
 import * as Oui from "@workspace/oui";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/ui/card";
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
 import * as z from "zod";
-import { FormErrorAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
 
 export async function loader({
@@ -23,24 +29,14 @@ export async function action({
     intent: z.enum(["accept", "reject"]),
   });
   const formData = await request.formData();
-  const parseResult = schema.safeParse(Object.fromEntries(formData));
-  if (!parseResult.success) {
-    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
-      parseResult.error,
-    );
-    return {
-      formErrors,
-      validationErrors,
-    };
-  }
+  const parseResult = schema.parse(Object.fromEntries(formData));
   const { auth } = context.get(appLoadContext);
-  const { intent } = parseResult.data;
-  if (intent === "accept") {
+  if (parseResult.intent === "accept") {
     await auth.api.acceptInvitation({
       body: { invitationId },
       headers: request.headers,
     });
-  } else if (intent === "reject") {
+  } else if (parseResult.intent === "reject") {
     await auth.api.rejectInvitation({
       body: { invitationId },
       headers: request.headers,
@@ -66,34 +62,34 @@ export default function RouteComponent({
     );
   }
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
-      <Rac.Form
-        method="post"
-        validationBehavior="aria"
-        validationErrors={actionData?.validationErrors}
-        className="flex w-full max-w-sm flex-col gap-6"
-      >
-        <Oui.Text>Would you like to accept or reject this invitation?</Oui.Text>
-        <FormErrorAlert formErrors={actionData?.formErrors} />
-        <div className="mt-4 flex gap-4">
-          <Oui.Button
-            type="submit"
-            name="intent"
-            value="accept"
-            className="w-full"
+    <div className="flex min-h-screen items-center justify-center">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle>Invitation</CardTitle>
+          <CardDescription>
+            Would you like to accept or reject this invitation?
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Rac.Form
+            method="post"
+            validationBehavior="aria"
+            className="flex justify-end gap-6"
           >
-            Accept
-          </Oui.Button>
-          <Oui.Button
-            type="submit"
-            name="intent"
-            value="reject"
-            className="w-full"
-          >
-            Reject
-          </Oui.Button>
-        </div>
-      </Rac.Form>
+            <Oui.Button type="submit" name="intent" value="accept">
+              Accept
+            </Oui.Button>
+            <Oui.Button
+              type="submit"
+              name="intent"
+              value="reject"
+              variant="destructive"
+            >
+              Reject
+            </Oui.Button>
+          </Rac.Form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

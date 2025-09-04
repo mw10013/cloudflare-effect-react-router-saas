@@ -89,47 +89,12 @@ export async function action({ request, context }: Route.ActionArgs) {
         headers: request.headers,
         body: { userId: parseResult.data.userId },
       });
-      return redirect("/app", { headers });
+      throw redirect("/app", { headers });
     }
     default:
       void (parseResult.data satisfies never);
   }
 }
-
-/*
-loaderData:
-
-"users": [
-    {
-      "name": "Admin",
-      "email": "a@a.com",
-      "emailVerified": true,
-      "image": null,
-      "createdAt": "2025-08-22T19:07:35.000Z",
-      "updatedAt": "2025-08-22T19:07:35.000Z",
-      "role": "admin",
-      "banned": false,
-      "banReason": null,
-      "banExpires": null,
-      "id": "1"
-    },
-    {
-      "name": "",
-      "email": "u1@u.com",
-      "emailVerified": true,
-      "image": null,
-      "createdAt": "2025-08-22T15:16:21.542Z",
-      "updatedAt": "2025-08-22T15:16:21.542Z",
-      "role": "user",
-      "banned": false,
-      "banReason": null,
-      "banExpires": null,
-      "id": "3"
-    },
-  ],
-  "total": 2,
-  "limit": 5
-*/
 
 export default function RouteComponent({ loaderData }: Route.ComponentProps) {
   const navigate = useNavigate();
@@ -331,7 +296,7 @@ function BanDialog({
       <Oui.Form
         validationBehavior="aria"
         validationErrors={fetcher.data?.validationErrors}
-        onSubmit={TechnicalDomain.onSubmit(fetcher)}
+        onSubmit={TechnicalDomain.onSubmit(fetcher.submit)}
       >
         <FormErrorAlert formErrors={fetcher.data?.formErrors} />
         <Oui.TextFieldEx
