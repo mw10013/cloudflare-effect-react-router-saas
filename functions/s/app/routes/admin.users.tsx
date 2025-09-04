@@ -4,7 +4,7 @@ import { invariant } from "@epic-web/invariant";
 import * as Oui from "@workspace/oui";
 import { redirect, useFetcher, useNavigate } from "react-router";
 import * as z from "zod";
-import { FormErrorAlert } from "~/components/FormAlert";
+import { FormAlert } from "~/components/FormAlert";
 import { appLoadContext } from "~/lib/middleware";
 import * as TechnicalDomain from "~/lib/technical-domain";
 
@@ -47,7 +47,10 @@ export async function loader({ request, context }: Route.LoaderArgs) {
   };
 }
 
-export async function action({ request, context }: Route.ActionArgs) {
+export async function action({
+  request,
+  context,
+}: Route.ActionArgs): Promise<TechnicalDomain.FormActionResult> {
   const schema = z.discriminatedUnion("intent", [
     z.object({
       intent: z.literal("ban"),
@@ -61,10 +64,9 @@ export async function action({ request, context }: Route.ActionArgs) {
     Object.fromEntries(await request.formData()),
   );
   if (!parseResult.success) {
-    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
-      parseResult.error,
-    );
-    return { formErrors, validationErrors };
+    const { formErrors: details, fieldErrors: validationErrors } =
+      z.flattenError(parseResult.error);
+    return { success: false, details, validationErrors };
   }
   const { auth } = context.get(appLoadContext);
   switch (parseResult.data.intent) {
@@ -93,6 +95,7 @@ export async function action({ request, context }: Route.ActionArgs) {
     }
     default:
       void (parseResult.data satisfies never);
+      throw new Error("Unexpected intent");
   }
 }
 
@@ -298,7 +301,11 @@ function BanDialog({
         validationErrors={fetcher.data?.validationErrors}
         onSubmit={TechnicalDomain.onSubmit(fetcher.submit)}
       >
-        <FormErrorAlert formErrors={fetcher.data?.formErrors} />
+        <FormAlert
+          success={fetcher.data?.success}
+          message={fetcher.data?.message}
+          details={fetcher.data?.details}
+        />
         <Oui.TextFieldEx
           name="banReason"
           label="Reason"
