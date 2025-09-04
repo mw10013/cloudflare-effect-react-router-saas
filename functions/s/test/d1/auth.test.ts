@@ -302,20 +302,22 @@ describe("auth sign up flow", () => {
       body: form,
     });
 
-    const result = await signUpAction({
-      request,
-      context: await c.context(),
-      params: {},
-    });
+    await expect(
+      signUpAction({
+        request,
+        context: await c.context(),
+        params: {},
+      }),
+    ).rejects.toSatisfy(
+      (response: unknown) =>
+        response instanceof Response &&
+        response.status === 302 &&
+        response.headers.get("location") === "/",
+    );
 
-    invariant(result instanceof Response, "Expected Response");
-    expect(result.status).toBe(302);
-    expect(result.headers.get("location")).toBe("/");
     expect(c.mockSendVerificationEmail).toHaveBeenCalledTimes(1);
     emailVerificationUrl = c.mockSendVerificationEmail.mock.calls[0][0].url;
-    expect(
-      (emailVerificationUrl = c.mockSendVerificationEmail.mock.calls[0][0].url),
-    ).toBeDefined();
+    expect(emailVerificationUrl).toBeDefined();
   });
 
   it("does not sign up when user already exists", async () => {
@@ -327,35 +329,42 @@ describe("auth sign up flow", () => {
       body: form,
     });
 
-    const result = await signUpAction({
-      request,
-      context: await c.context(),
-      params: {},
-    });
-
-    invariant(result instanceof Response, "Expected Response");
-    expect(result.status).toBe(302);
-    expect(result.headers.get("location")).toBe("/signin");
+    await expect(
+      signUpAction({
+        request,
+        context: await c.context(),
+        params: {},
+      }),
+    ).rejects.toSatisfy(
+      (response: unknown) =>
+        response instanceof Response &&
+        response.status === 302 &&
+        response.headers.get("location") === "/signin",
+    );
   });
 
   it("does not sign in with unverified email", async () => {
     const form = new FormData();
     form.append("email", email);
     form.append("password", password);
-    const request = new Request("http://localhost/signup", {
+    const request = new Request("http://localhost/signin", {
       method: "POST",
       body: form,
     });
 
-    const result = await signInAction({
-      request,
-      context: await c.context(),
-      params: {},
-    });
+    await expect(
+      signInAction({
+        request,
+        context: await c.context(),
+        params: {},
+      }),
+    ).rejects.toSatisfy(
+      (response: unknown) =>
+        response instanceof Response &&
+        response.status === 302 &&
+        response.headers.get("location") === "/email-verification",
+    );
 
-    invariant(result instanceof Response, "Expected Response");
-    expect(result.status).toBe(302);
-    expect(result.headers.get("location")).toBe("/email-verification");
     expect(c.mockSendVerificationEmail).toHaveBeenCalledTimes(1);
     emailVerificationUrl = c.mockSendVerificationEmail.mock.calls[0][0].url;
     expect(emailVerificationUrl).toBeDefined();
@@ -421,15 +430,19 @@ describe("auth sign up flow", () => {
       body: form,
     });
 
-    const result = await signInAction({
-      request,
-      context: await c.context(),
-      params: {},
-    });
-
-    invariant(result instanceof Response, "Expected Response");
-    expect(result.status).toBe(302);
-    expect(result.headers.has("Set-Cookie")).toBe(true);
+    await expect(
+      signInAction({
+        request,
+        context: await c.context(),
+        params: {},
+      }),
+    ).rejects.toSatisfy(
+      (response: unknown) =>
+        response instanceof Response &&
+        response.status === 302 &&
+        response.headers.get("location") === "/" &&
+        response.headers.has("Set-Cookie"),
+    );
   });
 });
 
