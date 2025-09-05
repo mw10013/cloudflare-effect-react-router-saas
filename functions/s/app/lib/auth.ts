@@ -1,4 +1,4 @@
-import type { createStripeService } from "~/lib/stripe-service";
+import type { StripeService } from "~/lib/stripe-service";
 import type { BetterAuthOptions } from "better-auth";
 import type { createSes } from "./ses";
 import { stripe } from "@better-auth/stripe";
@@ -8,13 +8,15 @@ import { admin, magicLink, organization } from "better-auth/plugins";
 import { env } from "cloudflare:workers";
 import { d1Adapter } from "~/lib/d1-adapter";
 
+export type Auth = ReturnType<typeof createAuth>;
+
 // [BUG]: Stripe plugin does not handle lookupKey and annualDiscountLookupKey in onCheckoutSessionCompleted: https://github.com/better-auth/better-auth/issues/3537
 // STRIPE. Duplicate customers are created when using createCustomerOnSignUp: true and and a customer with same email exists in stripe: https://github.com/better-auth/better-auth/issues/3670
 // TypeScript Error: "The inferred type of this node exceeds the maximum length the compiler will serialize" when using admin and organization plugins together. : https://github.com/better-auth/better-auth/issues/3067#issuecomment-2988246817
 
 interface CreateAuthOptions {
   d1: D1Database;
-  stripeService: ReturnType<typeof createStripeService>;
+  stripeService: StripeService;
   ses: ReturnType<typeof createSes>;
   sendResetPassword?: NonNullable<
     BetterAuthOptions["emailAndPassword"]

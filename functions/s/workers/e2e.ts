@@ -1,6 +1,6 @@
 import type { Repository } from "~/lib/repository";
+import type { StripeService } from "~/lib/stripe-service";
 import * as Hono from "hono";
-import { createStripeService } from "~/lib/stripe-service";
 
 /*
 curl -X POST http://localhost:5173/api/e2e/delete/user/e2e@e2e.com
@@ -11,7 +11,7 @@ export function createE2eRoutes({
   stripeService,
 }: {
   repository: Repository;
-  stripeService: ReturnType<typeof createStripeService>;
+  stripeService: StripeService;
 }) {
   const e2e = new Hono.Hono().basePath("/api/e2e");
 

@@ -1,4 +1,6 @@
+import type { Auth } from "~/lib/auth";
 import type { Repository } from "~/lib/repository";
+import type { StripeService } from "~/lib/stripe-service";
 import * as Hono from "hono";
 import {
   createRequestHandler,
@@ -17,12 +19,12 @@ declare module "react-router" {
       env: Env;
       ctx: ExecutionContext;
     };
-    auth: ReturnType<typeof createAuth>;
+    auth: Auth;
     repository: Repository;
-    stripeService: ReturnType<typeof createStripeService>;
-    session?: ReturnType<typeof createAuth>["$Infer"]["Session"];
-    organization?: ReturnType<typeof createAuth>["$Infer"]["Organization"];
-    organizations?: ReturnType<typeof createAuth>["$Infer"]["Organization"][];
+    stripeService: StripeService;
+    session?: Auth["$Infer"]["Session"];
+    organization?: Auth["$Infer"]["Organization"];
+    organizations?: Auth["$Infer"]["Organization"][];
   }
 }
 
