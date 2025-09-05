@@ -29,10 +29,13 @@ export function createE2eRoutes({
       });
     }
     if (user.role === "admin") {
-      return c.json({
-        success: false,
-        message: `Cannot delete admin user ${email}.`,
-      }, 403);
+      return c.json(
+        {
+          success: false,
+          message: `Cannot delete admin user ${email}.`,
+        },
+        403,
+      );
     }
     const deletedCount = await repository.deleteUser(user);
     return c.json({
