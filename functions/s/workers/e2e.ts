@@ -18,7 +18,25 @@ export function createE2eRoutes({
   e2e.post("/delete/user/:email", async (c) => {
     const email = c.req.param("email");
     console.log(`E2E: Deleting user ${email}`);
-    return c.json({ message: `User ${email} deletion logged` });
+
+    const user = await repository.getUser({ email });
+    if (!user) {
+      return c.json({
+        success: true,
+        message: `User ${email} already deleted.`,
+      });
+    }
+    if (user.role === "admin") {
+      return c.json({
+        success: false,
+        message: `Cannot delete admin user ${email}.`,
+      });
+    }
+    const deletedCount = await repository.deleteUser(user);
+    return c.json({
+      success: true,
+      message: `Deleted user ${email} (deletedCount: ${deletedCount}).`,
+    });
   });
 
   return e2e;
