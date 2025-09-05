@@ -85,8 +85,8 @@ catalogs:
       specifier: 3.16.12
       version: 3.16.12
     hono:
-      specifier: 4.8.9
-      version: 4.8.9
+      specifier: 4.9.6
+      version: 4.9.6
     isbot:
       specifier: 5.1.28
       version: 5.1.28
@@ -345,7 +345,7 @@ importers:
         version: 1.3.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod@4.1.5)
       hono:
         specifier: 'catalog:'
-        version: 4.8.9
+        version: 4.9.6
       isbot:
         specifier: 'catalog:'
         version: 5.1.28
@@ -448,7 +448,7 @@ importers:
         version: 2.0.0-beta.9(react@19.1.0)(zod@4.1.5)
       '@openauthjs/openauth':
         specifier: 'catalog:'
-        version: 0.4.3(arctic@2.3.4)(hono@4.8.9)
+        version: 0.4.3(arctic@2.3.4)(hono@4.9.6)
       '@react-router/cloudflare':
         specifier: 'catalog:'
         version: 7.8.1(@cloudflare/workers-types@4.20250810.0)(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(typescript@5.9.2)
@@ -472,7 +472,7 @@ importers:
         version: 3.16.12
       hono:
         specifier: 'catalog:'
-        version: 4.8.9
+        version: 4.9.6
       isbot:
         specifier: 'catalog:'
         version: 5.1.28
@@ -4418,8 +4418,8 @@ packages:
   headers-polyfill@4.0.3:
     resolution: {integrity: sha512-IScLbePpkvO846sIwOtOTDjutRMWdXdJmXdMvk6gCBHxFO8d+QKOQedyZSxFTTFYRSmlgSTDtXqqq4pcenBXLQ==}
 
-  hono@4.8.9:
-    resolution: {integrity: sha512-ERIxkXMRhUxGV7nS/Af52+j2KL60B1eg+k6cPtgzrGughS+espS9KQ7QO0SMnevtmRlBfAcN0mf1jKtO6j/doA==}
+  hono@4.9.6:
+    resolution: {integrity: sha512-doVjXhSFvYZ7y0dNokjwwSahcrAfdz+/BCLvAMa/vHLzjj8+CFyV5xteThGUsKdkaasgN+gF2mUxao+SGLpUeA==}
     engines: {node: '>=16.9.0'}
 
   hosted-git-info@6.1.3:
@@ -7242,12 +7242,12 @@ snapshots:
 
   '@open-draft/until@2.1.0': {}
 
-  '@openauthjs/openauth@0.4.3(arctic@2.3.4)(hono@4.8.9)':
+  '@openauthjs/openauth@0.4.3(arctic@2.3.4)(hono@4.9.6)':
     dependencies:
       '@standard-schema/spec': 1.0.0-beta.3
       arctic: 2.3.4
       aws4fetch: 1.0.20
-      hono: 4.8.9
+      hono: 4.9.6
       jose: 5.9.6
 
   '@opentelemetry/api@1.9.0': {}
@@ -10513,7 +10513,7 @@ snapshots:
 
   headers-polyfill@4.0.3: {}
 
-  hono@4.8.9: {}
+  hono@4.9.6: {}
 
   hosted-git-info@6.1.3:
     dependencies:
