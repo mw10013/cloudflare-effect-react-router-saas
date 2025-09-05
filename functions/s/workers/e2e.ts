@@ -13,7 +13,7 @@ export function createE2eRoutes({
   repository: ReturnType<typeof createRepository>;
   stripeService: ReturnType<typeof createStripeService>;
 }) {
-  const e2e = new Hono.Hono();
+  const e2e = new Hono.Hono().basePath("/api/e2e");
 
   e2e.post("/delete/user/:email", async (c) => {
     const email = c.req.param("email");

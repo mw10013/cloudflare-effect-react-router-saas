@@ -47,8 +47,7 @@ export default {
         "/.well-known/appspecific/com.chrome.devtools.json",
         () => new Response(null, { status: 204 }),
       );
-      // Mount E2E routes
-      hono.route("/api/e2e", createE2eRoutes({ repository, stripeService }));
+      hono.route("/", createE2eRoutes({ repository, stripeService }));
     }
     hono.all("*", async (c) => {
       const context = new unstable_RouterContextProvider();
