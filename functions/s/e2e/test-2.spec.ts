@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("delete e2e@e2e.com", async ({ page }) => {
+test.skip("sandbox delete e2e@e2e.com", async ({ page }) => {
   await page.goto("/");
   await expect(
     page.getByRole("link", { name: "Sign in / Sign up" }),
@@ -104,4 +104,37 @@ test("delete e2e@e2e.com", async ({ page }) => {
     .uncheck();
   await expect(page.getByTestId("hosted-payment-submit-button")).toBeVisible();
   await page.getByTestId("hosted-payment-submit-button").click();
+});
+
+test("delete e2e@e2e.com", async ({ page, request }) => {
+  const response = await request.post("/api/e2e/delete/user/e2e@e2e.com");
+  expect(response.ok()).toBe(true);
+
+  await page.goto("/login");
+  await page.getByRole("textbox", { name: "Email" }).click();
+  await page.getByRole("textbox", { name: "Email" }).fill("e2e@e2e.com");
+  await page.getByRole("button", { name: "Send magic link" }).click();
+  await page.getByRole("link", { name: "http://localhost:5173/api/" }).click();
+  await page.getByRole("link", { name: "Home" }).click();
+  await page.getByRole("link", { name: "Pricing" }).click();
+  await page.getByRole("button", { name: "Get Started" }).first().click();
+
+  // Force click needed as normal click fails due to element interception
+  await page
+    .locator("#payment-method-accordion-item-title-card")
+    .click({ force: true });
+
+  await expect(page.getByText("Card information")).toBeVisible();
+
+  await page.getByRole('textbox', { name: 'Card number' }).click();
+  await page.getByRole('textbox', { name: 'Card number' }).fill('4242 4242 4242 4242');
+  await page.getByRole('textbox', { name: 'Expiration' }).click();
+  await page.getByRole('textbox', { name: 'Expiration' }).fill('12 / 34');
+  await page.getByRole('textbox', { name: 'CVC' }).click();
+  await page.getByRole('textbox', { name: 'CVC' }).fill('123');
+  await page.getByRole('textbox', { name: 'Cardholder name' }).click();
+  await page.getByRole('textbox', { name: 'Cardholder name' }).fill('e2e');
+  await page.getByRole('textbox', { name: 'ZIP' }).click();
+  await page.getByRole('textbox', { name: 'ZIP' }).fill('12341');
+  await page.getByRole('checkbox', { name: 'Save my information for' }).uncheck();
 });

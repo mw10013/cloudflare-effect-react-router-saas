@@ -22,7 +22,7 @@ export function createStripeService() {
     const key = "stripe:prices";
     const cachedPrices = await env.KV.get(key, { type: "json" });
     if (cachedPrices) {
-      // console.log(`stripeService: getPrices: cache hit`);
+      console.log(`stripeService: getPrices: cache hit`);
       return cachedPrices as PriceWithLookupKey[];
     }
     console.log(`stripeService: getPrices: cache miss`);
