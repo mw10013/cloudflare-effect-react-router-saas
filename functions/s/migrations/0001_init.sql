@@ -58,7 +58,7 @@ create table Session (
   userAgent text,
   userId integer not null references User (userId) on delete cascade,
   impersonatedBy integer references User (userId),
-  activeOrganizationId integer references Organization (organizationId)
+  activeOrganizationId integer references Organization (organizationId) on delete cascade
 );
 
 --> statement-breakpoint
