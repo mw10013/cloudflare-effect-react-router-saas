@@ -4,6 +4,8 @@ import * as Hono from "hono";
 
 /*
 curl -X POST http://localhost:5173/api/e2e/delete/user/e2e@e2e.com
+curl -X POST http://localhost:5173/api/e2e/delete/user/e2e@e2e.com -w "\nStatus: %{http_code}\n"
+curl -X POST http://localhost:5173/api/e2e/delete/user/a@a.com -w "\nStatus: %{http_code}\n"
 */
 
 export function createE2eRoutes({
@@ -30,7 +32,7 @@ export function createE2eRoutes({
       return c.json({
         success: false,
         message: `Cannot delete admin user ${email}.`,
-      });
+      }, 403);
     }
     const deletedCount = await repository.deleteUser(user);
     return c.json({
