@@ -8,6 +8,7 @@ import { appLoadContext } from "~/lib/middleware";
 import { createRepository } from "~/lib/repository";
 import { createSes } from "~/lib/ses";
 import { createStripeService } from "~/lib/stripe-service";
+import { createE2eRoutes } from "./e2e";
 
 declare module "react-router" {
   export interface AppLoadContext {
@@ -46,6 +47,8 @@ export default {
         "/.well-known/appspecific/com.chrome.devtools.json",
         () => new Response(null, { status: 204 }),
       );
+      // Mount E2E routes
+      hono.route("/api/e2e", createE2eRoutes({ repository, stripeService }));
     }
     hono.all("*", async (c) => {
       const context = new unstable_RouterContextProvider();
