@@ -1,5 +1,5 @@
+import type { Repository } from "~/lib/repository";
 import * as Hono from "hono";
-import { createRepository } from "~/lib/repository";
 import { createStripeService } from "~/lib/stripe-service";
 
 /*
@@ -10,7 +10,7 @@ export function createE2eRoutes({
   repository,
   stripeService,
 }: {
-  repository: ReturnType<typeof createRepository>;
+  repository: Repository;
   stripeService: ReturnType<typeof createStripeService>;
 }) {
   const e2e = new Hono.Hono().basePath("/api/e2e");

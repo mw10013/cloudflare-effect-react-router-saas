@@ -18,6 +18,8 @@ import * as Domain from "~/lib/domain";
  * No use of a.* or b.*; all multi-entity queries use explicit JSON construction.
  */
 
+export type Repository = ReturnType<typeof createRepository>;
+
 export function createRepository() {
   const d1 = env.D1;
 

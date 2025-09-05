@@ -1,3 +1,4 @@
+import type { Repository } from "~/lib/repository";
 import * as Hono from "hono";
 import {
   createRequestHandler,
@@ -17,7 +18,7 @@ declare module "react-router" {
       ctx: ExecutionContext;
     };
     auth: ReturnType<typeof createAuth>;
-    repository: ReturnType<typeof createRepository>;
+    repository: Repository;
     stripeService: ReturnType<typeof createStripeService>;
     session?: ReturnType<typeof createAuth>["$Infer"]["Session"];
     organization?: ReturnType<typeof createAuth>["$Infer"]["Organization"];
