@@ -3,14 +3,14 @@ import type { StripeService } from "~/lib/stripe-service";
 import * as Hono from "hono";
 
 /*
-curl -X POST http://localhost:5173/api/e2e/delete/user/e2e@e2e.com
+curl -X POST http://localhost:5173/api/e2e/delete/user/e2e@e2e.com | jq
 curl -X POST http://localhost:5173/api/e2e/delete/user/e2e@e2e.com -w "\nStatus: %{http_code}\n"
 curl -X POST http://localhost:5173/api/e2e/delete/user/a@a.com -w "\nStatus: %{http_code}\n"
 */
 
 export function createE2eRoutes({
   repository,
-  stripeService,
+  stripeService: { stripe },
 }: {
   repository: Repository;
   stripeService: StripeService;
@@ -19,8 +19,6 @@ export function createE2eRoutes({
 
   e2e.post("/delete/user/:email", async (c) => {
     const email = c.req.param("email");
-    console.log(`E2E: Deleting user ${email}`);
-
     const user = await repository.getUser({ email });
     if (!user) {
       return c.json({
@@ -37,12 +35,19 @@ export function createE2eRoutes({
         403,
       );
     }
+    const customers = await stripe.customers.list({
+      email,
+      expand: ["data.subscriptions"],
+    });
+    for (const customer of customers.data) {
+      await stripe.customers.del(customer.id);
+    }
     const deletedCount = await repository.deleteUser(user);
     return c.json({
       success: true,
       message: `Deleted user ${email} (deletedCount: ${deletedCount}).`,
+      customers: customers.data,
     });
   });
-
   return e2e;
 }
