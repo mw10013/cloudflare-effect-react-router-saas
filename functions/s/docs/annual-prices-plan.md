@@ -1,4 +1,4 @@
-# Annual Prices Plan
+# Annual Prices Plan DEPRECATED
 
 ## Introduction
 
