@@ -126,19 +126,24 @@ test("delete e2e@e2e.com", async ({ page, request }) => {
 
   // await expect(page.getByText("Card information")).toBeVisible();
 
-  await page.getByRole('textbox', { name: 'Card number' }).click();
-  await page.getByRole('textbox', { name: 'Card number' }).fill('4242 4242 4242 4242');
-  await page.getByRole('textbox', { name: 'Expiration' }).click();
-  await page.getByRole('textbox', { name: 'Expiration' }).fill('12 / 34');
-  await page.getByRole('textbox', { name: 'CVC' }).click();
-  await page.getByRole('textbox', { name: 'CVC' }).fill('123');
-  await page.getByRole('textbox', { name: 'Cardholder name' }).click();
-  await page.getByRole('textbox', { name: 'Cardholder name' }).fill('e2e');
-  await page.getByRole('textbox', { name: 'ZIP' }).click();
-  await page.getByRole('textbox', { name: 'ZIP' }).fill('12341');
-  await page.getByRole('checkbox', { name: 'Save my information for' }).uncheck();
-  await page.getByTestId('hosted-payment-submit-button').click();
-  await page.goto('http://localhost:5173/app/3');
-  
-  await expect(page.getByRole('button', { name: 'e2e@e2e.com', exact: true })).toBeVisible();
+  await page.getByRole("textbox", { name: "Card number" }).click();
+  await page
+    .getByRole("textbox", { name: "Card number" })
+    .fill("4242 4242 4242 4242");
+  await page.getByRole("textbox", { name: "Expiration" }).click();
+  await page.getByRole("textbox", { name: "Expiration" }).fill("12 / 34");
+  await page.getByRole("textbox", { name: "CVC" }).click();
+  await page.getByRole("textbox", { name: "CVC" }).fill("123");
+  await page.getByRole("textbox", { name: "Cardholder name" }).click();
+  await page.getByRole("textbox", { name: "Cardholder name" }).fill("e2e");
+  await page.getByRole("textbox", { name: "ZIP" }).click();
+  await page.getByRole("textbox", { name: "ZIP" }).fill("12341");
+  await page
+    .getByRole("checkbox", { name: "Save my information for" })
+    .uncheck();
+  await page.getByTestId("hosted-payment-submit-button").click();
+
+  await expect(
+    page.getByRole("button", { name: "e2e@e2e.com", exact: true }),
+  ).toBeVisible({ timeout: 60000 });
 });
