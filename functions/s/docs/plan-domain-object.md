@@ -87,9 +87,13 @@ Pricing page would jse it to derive the pricing UI.
 3. **Update auth.ts to use getPlans**
 
    - **Description**: Modify `auth.ts` to use the new `getPlans` function instead of `getPrices`. Map the `Plan` objects to the better-auth stripe plugin format, including `priceId: monthlyPriceId`, `annualDiscountPriceId: annualPriceId`, and `freeTrial: { days: freeTrialDays }`. Ensure the plans are provided dynamically via an async function for the plugin configuration.
-   - **Status**: ⏳ Not Started
+   - **Status**: ✅ Completed
    - **Implementation Notes**:
-     - [Add notes here as you implement.]
+     - Updated the plans async function in the stripe plugin configuration to use `stripeService.getPlans()` instead of `getPrices()`.
+     - Mapped each `Plan` object to the better-auth format: `priceId: monthlyPriceId`, `annualDiscountPriceId: annualPriceId`, `freeTrial: { days: freeTrialDays }`.
+     - Removed `lookupKey` as it's no longer needed.
+     - Made the freeTrial days dynamic based on `plan.freeTrialDays` instead of hardcoded 2.
+     - Updated console log messages to include the plan name dynamically.
 
 4. **Update \_mkt.pricing.tsx to use getPlans**
 

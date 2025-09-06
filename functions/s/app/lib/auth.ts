@@ -191,55 +191,30 @@ function createBetterAuthOptions({
           // Workaround: populate `priceId`.
           plans: async () => {
             // console.log(`stripe plugin: plans`);
-            const [basicPrice, proPrice] = await stripeService.getPrices();
-            return [
-              {
-                name: "basic",
-                priceId: basicPrice.id,
-                lookupKey: "basic",
-                freeTrial: {
-                  days: 2,
-                  onTrialStart: async (subscription) => {
-                    console.log(
-                      `stripe plugin: onTrialStart: basic plan trial started for subscription ${subscription.id}`,
-                    );
-                  },
-                  onTrialEnd: async ({ subscription }, ctx) => {
-                    console.log(
-                      `stripe plugin: onTrialEnd: basic plan trial ended for subscription ${subscription.id}`,
-                    );
-                  },
-                  onTrialExpired: async (subscription) => {
-                    console.log(
-                      `stripe plugin: onTrialExpired: basic plan trial expired for subscription ${subscription.id}`,
-                    );
-                  },
+            const plans = await stripeService.getPlans();
+            return plans.map((plan) => ({
+              name: plan.name,
+              priceId: plan.monthlyPriceId,
+              annualDiscountPriceId: plan.annualPriceId,
+              freeTrial: {
+                days: plan.freeTrialDays,
+                onTrialStart: async (subscription) => {
+                  console.log(
+                    `stripe plugin: onTrialStart: ${plan.name} plan trial started for subscription ${subscription.id}`,
+                  );
+                },
+                onTrialEnd: async ({ subscription }, ctx) => {
+                  console.log(
+                    `stripe plugin: onTrialEnd: ${plan.name} plan trial ended for subscription ${subscription.id}`,
+                  );
+                },
+                onTrialExpired: async (subscription) => {
+                  console.log(
+                    `stripe plugin: onTrialExpired: ${plan.name} plan trial expired for subscription ${subscription.id}`,
+                  );
                 },
               },
-              {
-                name: "pro",
-                priceId: proPrice.id,
-                lookupKey: "pro",
-                freeTrial: {
-                  days: 2,
-                  onTrialStart: async (subscription) => {
-                    console.log(
-                      `stripe plugin: onTrialStart: pro plan trial started for subscription ${subscription.id}`,
-                    );
-                  },
-                  onTrialEnd: async ({ subscription }, ctx) => {
-                    console.log(
-                      `stripe plugin: onTrialEnd: pro plan trial ended for subscription ${subscription.id}`,
-                    );
-                  },
-                  onTrialExpired: async (subscription) => {
-                    console.log(
-                      `stripe plugin: onTrialExpired: pro plan trial expired for subscription ${subscription.id}`,
-                    );
-                  },
-                },
-              },
-            ];
+            }));
           },
           authorizeReference: async ({ user, referenceId, action }) => {
             const result = Boolean(
