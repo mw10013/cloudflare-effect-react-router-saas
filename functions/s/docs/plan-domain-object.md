@@ -9,7 +9,7 @@ Pricing page would jse it to derive the pricing UI.
 ## Requirements
 
 - Lives in `domain.ts` and defined as a zod schema and type.
-- Shape is 
+- Shape is
 
 ```
 {
@@ -19,6 +19,7 @@ Pricing page would jse it to derive the pricing UI.
   freeTrialInDays: number;
 }
 ```
+
 - There are two plans: `basic` and `pro`.
 - Each plan has two prices: `monthly` and `annual`.
 - Stripe lookup keys for the prices are `basicMonthly`, `basicAnnual`, `proMonthly`, `proAnnual`.
@@ -37,6 +38,7 @@ Pricing page would jse it to derive the pricing UI.
 ## Research
 
 ### Better-Auth Stripe Plugin
+
 - Plans are defined with `name`, `priceId`, optional `annualDiscountPriceId`, optional `limits`, optional `freeTrial: { days: number }`.
 - Supports static plans array or dynamic async function returning plans.
 - Upgrade API accepts `annual: boolean` to switch between monthly and annual prices.
@@ -44,15 +46,18 @@ Pricing page would jse it to derive the pricing UI.
 - Customer creation and webhook handling are built-in.
 
 ### Stripe API
+
 - Prices can be created with `lookup_key` for easy retrieval.
 - `prices.list({ lookup_keys: [...], expand: ["data.product"] })` fetches prices by lookup keys.
 - Lookup keys must be unique per price.
 
 ### Cloudflare KV
+
 - Used for caching with keys like `"stripe:prices"` or `"stripe:plans"`.
 - Cache miss handling: fetch from Stripe, store in KV, return data.
 
 ### Current Implementation Gaps
+
 - `stripe-service.ts` currently has `getPrices` for two prices (`"basic"`, `"pro"`); needs refactoring to `getPlans` for four prices.
 - `auth.ts` uses `getPrices`; needs update to `getPlans` with mapping.
 - `_mkt.pricing.tsx` uses `getPrices`; needs update to `getPlans` with intent parsing.
@@ -60,3 +65,45 @@ Pricing page would jse it to derive the pricing UI.
 - `stripe.spec.ts` does not exist; needs creation.
 
 ## Plan
+
+1. **Define Plan schema in domain.ts**
+
+   - **Description**: Create a Zod schema and TypeScript type for the `Plan` object in `domain.ts`. The schema should validate the shape `{ name: string; monthlyPriceId: string; annualPriceId: string; freeTrialInDays: number; }`. Ensure it supports the two plans (`basic` and `pro`) and aligns with functional programming principles (e.g., immutable interfaces).
+   - **Status**: ⏳ Not Started
+   - **Implementation Notes**:
+     - [Add notes here as you implement.]
+
+2. **Implement getPlans in stripe-service.ts**
+
+   - **Description**: Refactor the existing `getPrices` function to `getPlans`, which fetches four prices from Stripe using lookup keys `["basicMonthly", "basicAnnual", "proMonthly", "proAnnual"]` with `expand: ["data.product"]`. Implement Cloudflare KV caching with key `"stripe:plans"` (cache miss: fetch from Stripe, store in KV, return data). Construct and return an array of `Plan` objects ordered by `name` ascending. Handle errors gracefully (e.g., Stripe API failures) and ensure the function is async.
+   - **Status**: ⏳ Not Started
+   - **Implementation Notes**:
+     - [Add notes here as you implement.]
+
+3. **Update auth.ts to use getPlans**
+
+   - **Description**: Modify `auth.ts` to use the new `getPlans` function instead of `getPrices`. Map the `Plan` objects to the better-auth stripe plugin format, including `priceId: monthlyPriceId`, `annualDiscountPriceId: annualPriceId`, and `freeTrial: { days: freeTrialInDays }`. Ensure the plans are provided dynamically via an async function for the plugin configuration.
+   - **Status**: ⏳ Not Started
+   - **Implementation Notes**:
+     - [Add notes here as you implement.]
+
+4. **Update \_mkt.pricing.tsx to use getPlans**
+
+   - **Description**: Refactor `_mkt.pricing.tsx` to use `getPlans` for generating the pricing UI. Implement separate buttons for monthly and annual options with `name="intent"` and values like `"basicMonthly"`, `"basicAnnual"`, etc. Add `data-testid` attributes such as `data-testid="proAnnual"`. Update the action to parse the `intent` to extract plan name and annual flag (e.g., `"basicMonthly"` → plan: `"basic"`, annual: `false`).
+   - **Status**: ⏳ Not Started
+   - **Implementation Notes**:
+     - [Add notes here as you implement.]
+
+5. **Update ensureBillingPortalConfiguration in stripe-service.ts**
+
+   - **Description**: Modify `ensureBillingPortalConfiguration` to use the four prices from `getPlans` instead of the previous two prices. Ensure the billing portal is configured with all monthly and annual prices for both basic and pro plans.
+   - **Status**: ⏳ Not Started
+   - **Implementation Notes**:
+     - [Add notes here as you implement.]
+
+6. **Refactor stripe.spec.ts e2e tests**
+
+   - **Description**: Update the existing `stripe.spec.ts` in the e2e directory to test the new plan structure with four options (basicMonthly, basicAnnual, proMonthly, proAnnual). Refactor the parameterized test to use `data-testid` attributes for button selection instead of index-based selection. Keep the same e2e flow: delete user, login, navigate to pricing, select plan via intent button, complete payment, and verify subscription. Use appropriate test emails for each plan variant.
+   - **Status**: ⏳ Not Started
+   - **Implementation Notes**:
+     - [Add notes here as you implement.]
