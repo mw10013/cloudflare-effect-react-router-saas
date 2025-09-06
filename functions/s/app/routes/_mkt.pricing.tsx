@@ -4,7 +4,6 @@ import * as Oui from "@workspace/oui";
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card";
@@ -16,7 +15,7 @@ import { appLoadContext } from "~/lib/middleware";
 
 export async function loader({ context }: Route.LoaderArgs) {
   const { stripeService } = context.get(appLoadContext);
-  const prices = await stripeService.getPrices();
+  const plans = await stripeService.getPlans();
   const subscriptions = (
     await env.D1.prepare(
       `
@@ -26,7 +25,7 @@ inner join Member m on m.organizationId = o.organizationId and m.role = 'owner'
 inner join User u on u.userId = m.userId`,
     ).all()
   ).results;
-  return { prices, subscriptions };
+  return { plans, subscriptions };
 }
 
 export async function action({ request, context }: Route.ActionArgs) {
@@ -37,9 +36,16 @@ export async function action({ request, context }: Route.ActionArgs) {
   if (session.user.role !== "user")
     throw new Response("Forbidden", { status: 403 });
   const schema = z.object({
-    plan: z.string().min(1, "Missing plan"),
+    intent: z.string().min(1, "Missing intent"),
   });
-  const { plan } = schema.parse(Object.fromEntries(await request.formData()));
+  const { intent } = schema.parse(Object.fromEntries(await request.formData()));
+
+  const match = intent.match(/^(\w+)(Monthly|Annual)$/);
+  if (!match) {
+    throw new Response("Invalid intent", { status: 400 });
+  }
+  const plan = match[1];
+  const annual = match[2] === "Annual";
 
   const activeOrganizationId = session.session.activeOrganizationId;
   invariant(activeOrganizationId, "Missing activeOrganizationId");
@@ -56,12 +62,12 @@ export async function action({ request, context }: Route.ActionArgs) {
     subscriptions.length === 1
       ? subscriptions[0].stripeSubscriptionId
       : undefined;
-  console.log(`pricing: action`, { plan, subscriptionId });
+  console.log(`pricing: action`, { plan, annual, subscriptionId });
   const { url, redirect: isRedirect } = await auth.api.upgradeSubscription({
     headers: request.headers,
     body: {
       plan,
-      annual: false,
+      annual,
       referenceId: activeOrganizationId,
       subscriptionId,
       seats: 1,
@@ -78,27 +84,57 @@ export async function action({ request, context }: Route.ActionArgs) {
 }
 
 export default function RouteComponent({
-  loaderData: { prices, subscriptions },
+  loaderData: { plans, subscriptions },
 }: Route.ComponentProps) {
   return (
     <div className="p-6">
       <div className="mx-auto grid max-w-xl gap-8 md:grid-cols-2">
-        {prices.map((price) => {
-          if (!price.unit_amount) return null;
+        {plans.map((plan) => {
           return (
-            <Card key={price.id}>
+            <Card key={plan.name}>
               <CardHeader>
-                <CardTitle className="capitalize">{price.lookup_key}</CardTitle>
+                <CardTitle>{plan.displayName}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold">${price.unit_amount / 100}</p>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-2xl font-bold">
+                      Monthly: ${plan.monthlyPriceInCents / 100}
+                    </p>
+                    <Rac.Form method="post">
+                      <input
+                        type="hidden"
+                        name="intent"
+                        value={`${plan.name}Monthly`}
+                      />
+                      <Oui.Button
+                        type="submit"
+                        data-testid={`${plan.name}Monthly`}
+                      >
+                        Get Started Monthly
+                      </Oui.Button>
+                    </Rac.Form>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold">
+                      Annual: ${plan.annualPriceInCents / 100}
+                    </p>
+                    <Rac.Form method="post">
+                      <input
+                        type="hidden"
+                        name="intent"
+                        value={`${plan.name}Annual`}
+                      />
+                      <Oui.Button
+                        type="submit"
+                        data-testid={`${plan.name}Annual`}
+                      >
+                        Get Started Annual
+                      </Oui.Button>
+                    </Rac.Form>
+                  </div>
+                </div>
               </CardContent>
-              <CardFooter className="justify-end">
-                <Rac.Form method="post">
-                  <input type="hidden" name="plan" value={price.lookup_key} />
-                  <Oui.Button type="submit">Get Started</Oui.Button>
-                </Rac.Form>
-              </CardFooter>
             </Card>
           );
         })}

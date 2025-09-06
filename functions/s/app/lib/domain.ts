@@ -63,7 +63,8 @@ export const User = z.object({
 });
 export type User = z.infer<typeof User>;
 
-export const planData = [ // in display order
+export const planData = [
+  // in display order
   {
     name: "basic", // lowercase to accomodate better-auth
     displayName: "Basic",
@@ -82,13 +83,15 @@ export const planData = [ // in display order
     annualPriceLookupKey: "proAnnual",
     freeTrialDays: 14,
   },
- ] as const;
+] as const;
 
 export const Plan = z.object({
   name: z.string(),
   displayName: z.string(),
   monthlyPriceId: z.string(),
+  monthlyPriceInCents: z.number().int(),
   annualPriceId: z.string(),
+  annualPriceInCents: z.number().int(),
   freeTrialDays: z.number().int(),
 });
 export type Plan = z.infer<typeof Plan>;
