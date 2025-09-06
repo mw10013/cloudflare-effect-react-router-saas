@@ -69,7 +69,7 @@ Pricing page would jse it to derive the pricing UI.
 1. **Define Plan schema in domain.ts**
 
    - **Description**: Create a Zod schema and TypeScript type for the `Plan` object in `domain.ts`. The schema should validate the shape `{ name: string; monthlyPriceId: string; annualPriceId: string; freeTrialInDays: number; }`. Ensure it supports the two plans (`basic` and `pro`) and aligns with functional programming principles (e.g., immutable interfaces).
-   - **Status**: 🔄 In Progress
+   - **Status**: ✅ Completed
    - **Implementation Notes**:
      - Added Zod schema `Plan` and inferred TypeScript type `Plan` in `domain.ts`.
      - Schema validates the required shape: `{ name: string; monthlyPriceId: string; annualPriceId: string; freeTrialInDays: number; }`.
@@ -79,9 +79,16 @@ Pricing page would jse it to derive the pricing UI.
 2. **Implement getPlans in stripe-service.ts**
 
    - **Description**: Refactor the existing `getPrices` function to `getPlans`, which fetches four prices from Stripe using lookup keys `["basicMonthly", "basicAnnual", "proMonthly", "proAnnual"]` with `expand: ["data.product"]`. Implement Cloudflare KV caching with key `"stripe:plans"` (cache miss: fetch from Stripe, store in KV, return data). Construct and return an array of `Plan` objects ordered by `name` ascending. Handle errors gracefully (e.g., Stripe API failures) and ensure the function is async.
-   - **Status**: ⏳ Not Started
+   - **Status**: ✅ Completed
    - **Implementation Notes**:
-     - [Add notes here as you implement.]
+     - Refactored `getPrices` to `getPlans` in `stripe-service.ts`.
+     - Updated to fetch four prices with lookup keys `basicMonthly`, `basicAnnual`, `proMonthly`, `proAnnual`.
+     - For price creation, set appropriate intervals (`month` or `year`) and unit amounts (annual = monthly \* 12).
+     - Construct `Plan` objects by grouping prices by plan name, extracting monthly and annual price IDs.
+     - Set `freeTrialInDays` to 14 for basic and 30 for pro (assumed values; can be adjusted).
+     - Implemented KV caching with key `"stripe:plans"`.
+     - Updated `ensureBillingPortalConfiguration` to use `getPlans` and retrieve monthly prices for compatibility.
+     - Ensured async and added basic error handling via `invariant` for price count.
 
 3. **Update auth.ts to use getPlans**
 

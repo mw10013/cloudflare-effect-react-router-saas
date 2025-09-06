@@ -1,7 +1,9 @@
+import type { Plan } from "~/lib/domain";
 import type { Stripe as StripeType } from "stripe";
 import { invariant } from "@epic-web/invariant";
 import { env } from "cloudflare:workers";
 import Stripe from "stripe";
+import { planData } from "~/lib/domain";
 
 type Price = StripeType.Price;
 type PriceWithLookupKey = Price & { lookup_key: string };
@@ -18,59 +20,89 @@ export function createStripeService() {
     apiVersion: "2025-07-30.basil",
   });
 
-  const getPrices = async (): Promise<PriceWithLookupKey[]> => {
-    const key = "stripe:prices";
-    const cachedPrices = await env.KV.get(key, { type: "json" });
-    if (cachedPrices) {
-      console.log(`stripeService: getPrices: cache hit`);
-      return cachedPrices as PriceWithLookupKey[];
+  const getPlans = async (): Promise<Plan[]> => {
+    const key = "stripe:plans";
+    const cachedPlans = await env.KV.get(key, { type: "json" });
+    if (cachedPlans) {
+      console.log(`stripeService: getPlans: cache hit`);
+      return cachedPlans as Plan[];
     }
-    console.log(`stripeService: getPrices: cache miss`);
-    const priceData = [
-      { lookup_key: "basic", unit_amount: 5000 }, // $50 in cents
-      { lookup_key: "pro", unit_amount: 10000 }, // $100 in cents
-    ];
+    console.log(`stripeService: getPlans: cache miss`);
     const _getPrices = async (): Promise<PriceWithLookupKey[]> => {
+      const lookupKeys = planData.flatMap((plan) => [
+        plan.monthlyPriceLookupKey,
+        plan.annualPriceLookupKey,
+      ]);
       const priceList = await stripe.prices.list({
-        lookup_keys: priceData.map((p) => p.lookup_key),
+        lookup_keys: lookupKeys,
         expand: ["data.product"],
       });
       if (priceList.data.length === 0) {
-        return await Promise.all(
-          priceData.map(async ({ lookup_key, unit_amount }) => {
-            const name =
-              lookup_key.charAt(0).toUpperCase() + lookup_key.slice(1);
+        // Create products first
+        const products = await Promise.all(
+          planData.map(async (plan) => {
             const product = await stripe.products.create({
-              name,
-              description: `${name} plan`,
+              name: plan.displayName,
+              description: `${plan.displayName} plan.`,
             });
-            const { lastResponse: _lr, ...price } = await stripe.prices.create({
-              product: product.id,
-              unit_amount,
-              currency: "usd",
-              recurring: { interval: "month" },
-              lookup_key,
-              expand: ["product"],
-            });
-            assertPriceWithLookupKey(price);
-            return price;
+            return { plan, product };
           }),
         );
+        // Then create prices for each product
+        const prices = await Promise.all(
+          products.flatMap(({ plan, product }) => [
+            stripe.prices.create({
+              product: product.id,
+              unit_amount: plan.monthlyPriceInCents,
+              currency: "usd",
+              recurring: { interval: "month" },
+              lookup_key: plan.monthlyPriceLookupKey,
+              expand: ["product"],
+            }),
+            stripe.prices.create({
+              product: product.id,
+              unit_amount: plan.annualPriceInCents,
+              currency: "usd",
+              recurring: { interval: "year" },
+              lookup_key: plan.annualPriceLookupKey,
+              expand: ["product"],
+            }),
+          ]),
+        );
+        return prices.map((price) => {
+          assertPriceWithLookupKey(price);
+          return price;
+        });
       } else {
-        const prices = priceList.data
-          .filter(isPriceWithLookupKey)
-          .sort((a, b) => a.lookup_key.localeCompare(b.lookup_key));
+        const prices = priceList.data.filter(isPriceWithLookupKey);
         invariant(
-          prices.length === 2,
-          `Count of prices not 2 (${prices.length})`,
+          prices.length === planData.length * 2,
+          `Count of prices not ${planData.length * 2} (${prices.length})`,
         );
         return prices;
       }
     };
 
     const prices = await _getPrices();
-    await env.KV.put(key, JSON.stringify(prices));
-    return prices;
+    const plans: Plan[] = planData.map((plan) => {
+      const monthlyPrice = prices.find(
+        (p) => p.lookup_key === plan.monthlyPriceLookupKey,
+      );
+      invariant(monthlyPrice, `Missing monthly price for ${plan.name}`);
+      const annualPrice = prices.find(
+        (p) => p.lookup_key === plan.annualPriceLookupKey,
+      );
+      invariant(annualPrice, `Missing annual price for ${plan.name}`);
+      return {
+        name: plan.name,
+        displayName: plan.displayName,
+        monthlyPriceId: monthlyPrice.id,
+        annualPriceId: annualPrice.id,
+        freeTrialDays: plan.freeTrialDays,
+      };
+    });
+    await env.KV.put(key, JSON.stringify(plans));
+    return plans;
   };
 
   const ensureBillingPortalConfiguration = async (): Promise<void> => {
@@ -81,7 +113,16 @@ export function createStripeService() {
       limit: 2,
     });
     if (configurations.data.length === 0) {
-      const [basicPrice, proPrice] = await getPrices();
+      const plans = await getPlans();
+      const basicPlan = plans.find((p) => p.name === "basic")!;
+      const proPlan = plans.find((p) => p.name === "pro")!;
+      const basicPrice = await stripe.prices.retrieve(
+        basicPlan.monthlyPriceId,
+        { expand: ["product"] },
+      );
+      const proPrice = await stripe.prices.retrieve(proPlan.monthlyPriceId, {
+        expand: ["product"],
+      });
       await stripe.billingPortal.configurations.create({
         business_profile: {
           headline: "Manage your subscription and billing information",
@@ -141,7 +182,7 @@ export function createStripeService() {
 
   return {
     stripe,
-    getPrices,
+    getPlans,
     ensureBillingPortalConfiguration,
   };
 }
