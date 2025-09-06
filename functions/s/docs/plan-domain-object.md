@@ -69,9 +69,12 @@ Pricing page would jse it to derive the pricing UI.
 1. **Define Plan schema in domain.ts**
 
    - **Description**: Create a Zod schema and TypeScript type for the `Plan` object in `domain.ts`. The schema should validate the shape `{ name: string; monthlyPriceId: string; annualPriceId: string; freeTrialInDays: number; }`. Ensure it supports the two plans (`basic` and `pro`) and aligns with functional programming principles (e.g., immutable interfaces).
-   - **Status**: ⏳ Not Started
+   - **Status**: 🔄 In Progress
    - **Implementation Notes**:
-     - [Add notes here as you implement.]
+     - Added Zod schema `Plan` and inferred TypeScript type `Plan` in `domain.ts`.
+     - Schema validates the required shape: `{ name: string; monthlyPriceId: string; annualPriceId: string; freeTrialInDays: number; }`.
+     - Aligned with functional programming principles by using immutable Zod schema definitions.
+     - Supports two plans (`basic` and `pro`) via the `name` field; actual plan instances will be defined in `stripe-service.ts` as per step 2.
 
 2. **Implement getPlans in stripe-service.ts**
 

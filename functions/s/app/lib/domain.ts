@@ -62,3 +62,11 @@ export const User = z.object({
   updatedAt: isoDatetimeToDate,
 });
 export type User = z.infer<typeof User>;
+
+export const Plan = z.object({
+  name: z.string(),
+  monthlyPriceId: z.string(),
+  annualPriceId: z.string(),
+  freeTrialInDays: z.number().int(),
+});
+export type Plan = z.infer<typeof Plan>;
