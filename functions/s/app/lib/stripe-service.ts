@@ -89,6 +89,10 @@ export function createStripeService() {
         (p) => p.lookup_key === plan.monthlyPriceLookupKey,
       );
       invariant(monthlyPrice, `Missing monthly price for ${plan.name}`);
+      invariant(
+        typeof monthlyPrice.product !== "string",
+        "Product should be expanded",
+      );
       const annualPrice = prices.find(
         (p) => p.lookup_key === plan.annualPriceLookupKey,
       );
@@ -96,6 +100,7 @@ export function createStripeService() {
       return {
         name: plan.name,
         displayName: plan.displayName,
+        productId: monthlyPrice.product.id,
         monthlyPriceId: monthlyPrice.id,
         monthlyPriceLookupKey: plan.monthlyPriceLookupKey,
         monthlyPriceInCents: plan.monthlyPriceInCents,
@@ -120,13 +125,6 @@ export function createStripeService() {
       const plans = await getPlans();
       const basicPlan = plans.find((p) => p.name === "basic")!;
       const proPlan = plans.find((p) => p.name === "pro")!;
-      const basicPrice = await stripe.prices.retrieve(
-        basicPlan.monthlyPriceId,
-        { expand: ["product"] },
-      );
-      const proPrice = await stripe.prices.retrieve(proPlan.monthlyPriceId, {
-        expand: ["product"],
-      });
       await stripe.billingPortal.configurations.create({
         business_profile: {
           headline: "Manage your subscription and billing information",
@@ -154,18 +152,12 @@ export function createStripeService() {
             proration_behavior: "create_prorations",
             products: [
               {
-                product:
-                  typeof basicPrice.product === "string"
-                    ? basicPrice.product
-                    : basicPrice.product.id,
-                prices: [basicPrice.id],
+                product: basicPlan.productId,
+                prices: [basicPlan.monthlyPriceId, basicPlan.annualPriceId],
               },
               {
-                product:
-                  typeof proPrice.product === "string"
-                    ? proPrice.product
-                    : proPrice.product.id,
-                prices: [proPrice.id],
+                product: proPlan.productId,
+                prices: [proPlan.monthlyPriceId, proPlan.annualPriceId],
               },
             ],
           },

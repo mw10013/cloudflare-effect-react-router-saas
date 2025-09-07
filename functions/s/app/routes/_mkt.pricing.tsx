@@ -36,16 +36,17 @@ export async function action({ request, context }: Route.ActionArgs) {
   if (session.user.role !== "user")
     throw new Response("Forbidden", { status: 403 });
   const schema = z.object({
-    intent: z.string().min(1, "Missing intent"),
+    intent: z.string().nonempty("Missing intent"),
   });
   const { intent } = schema.parse(Object.fromEntries(await request.formData()));
 
-  const match = intent.match(/^(\w+)(Monthly|Annual)$/);
-  if (!match) {
-    throw new Response("Invalid intent", { status: 400 });
-  }
-  const plan = match[1];
-  const annual = match[2] === "Annual";
+  const { stripeService } = context.get(appLoadContext);
+  const plans = await stripeService.getPlans();
+  const plan = plans.find(
+    (p) =>
+      p.monthlyPriceLookupKey === intent || p.annualPriceLookupKey === intent,
+  );
+  invariant(plan, `Missing plan for intent ${intent}`);
 
   const activeOrganizationId = session.session.activeOrganizationId;
   invariant(activeOrganizationId, "Missing activeOrganizationId");
@@ -54,20 +55,16 @@ export async function action({ request, context }: Route.ActionArgs) {
     headers: request.headers,
     query: { referenceId: activeOrganizationId },
   });
-  invariant(
-    subscriptions.length <= 1,
-    `Too many subscriptions (${subscriptions.length})`,
-  );
   const subscriptionId =
-    subscriptions.length === 1
+    subscriptions.length > 0
       ? subscriptions[0].stripeSubscriptionId
       : undefined;
-  console.log(`pricing: action`, { plan, annual, subscriptionId });
+  console.log(`pricing: action`, { plan: plan.name, subscriptionId });
   const { url, redirect: isRedirect } = await auth.api.upgradeSubscription({
     headers: request.headers,
     body: {
-      plan,
-      annual,
+      plan: plan.name,
+      annual: intent === plan.annualPriceLookupKey,
       referenceId: activeOrganizationId,
       subscriptionId,
       seats: 1,
@@ -102,14 +99,11 @@ export default function RouteComponent({
                       Monthly: ${plan.monthlyPriceInCents / 100}
                     </p>
                     <Rac.Form method="post">
-                      <input
-                        type="hidden"
-                        name="intent"
-                        value={`${plan.name}Monthly`}
-                      />
                       <Oui.Button
+                        name="intent"
+                        value={plan.monthlyPriceLookupKey}
                         type="submit"
-                        data-testid={`${plan.name}Monthly`}
+                        data-testid={plan.monthlyPriceLookupKey}
                       >
                         Get Started Monthly
                       </Oui.Button>
@@ -120,14 +114,11 @@ export default function RouteComponent({
                       Annual: ${plan.annualPriceInCents / 100}
                     </p>
                     <Rac.Form method="post">
-                      <input
-                        type="hidden"
-                        name="intent"
-                        value={`${plan.name}Annual`}
-                      />
                       <Oui.Button
+                        name="intent"
+                        value={plan.annualPriceLookupKey}
                         type="submit"
-                        data-testid={`${plan.name}Annual`}
+                        data-testid={plan.annualPriceLookupKey}
                       >
                         Get Started Annual
                       </Oui.Button>

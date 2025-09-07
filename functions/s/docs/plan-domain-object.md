@@ -98,16 +98,17 @@ Pricing page would jse it to derive the pricing UI.
 4. **Update \_mkt.pricing.tsx to use getPlans**
 
    - **Description**: Refactor `_mkt.pricing.tsx` to use `getPlans` for generating the pricing UI. Implement separate buttons for monthly and annual options with `name="intent"` and values like `"basicMonthly"`, `"basicAnnual"`, etc. Add `data-testid` attributes such as `data-testid="proAnnual"`. Update the action to parse the `intent` to extract plan name and annual flag (e.g., `"basicMonthly"` → plan: `"basic"`, annual: `false`).
-   - **Status**: ⏳ Not Started
+   - **Status**: ✅ Completed
    - **Implementation Notes**:
      - [Add notes here as you implement.]
 
 5. **Update ensureBillingPortalConfiguration in stripe-service.ts**
 
    - **Description**: Modify `ensureBillingPortalConfiguration` to use the four prices from `getPlans` instead of the previous two prices. Ensure the billing portal is configured with all monthly and annual prices for both basic and pro plans.
-   - **Status**: ⏳ Not Started
+   - **Status**: ✅ Completed
    - **Implementation Notes**:
-     - [Add notes here as you implement.]
+     - Updated the function to retrieve both monthly and annual prices for basic and pro plans using `stripe.prices.retrieve` with `expand: ["product"]`.
+     - Modified the `products` array in the billing portal configuration to include both monthly and annual price IDs for each plan, enabling users to switch between monthly and annual subscriptions in the Stripe billing portal.
 
 6. **Refactor stripe.spec.ts e2e tests**
 
