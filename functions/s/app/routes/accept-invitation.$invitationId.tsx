@@ -47,7 +47,6 @@ export async function action({
 
 export default function RouteComponent({
   loaderData,
-  actionData,
 }: Route.ComponentProps) {
   if (loaderData.needsAuth) {
     return (

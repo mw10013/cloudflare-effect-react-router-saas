@@ -39,41 +39,5 @@ export function createRepository() {
       const result = await d1.prepare(`select * from User`).run();
       return Domain.User.array().parse(result.results);
     },
-
-    /**
-     * Hard delete a user by email.
-     * Intended for testing only.
-     *
-     * Also deletes all the organizations where user is the sole owner.
-     *
-     * @returns number of users deleted (0 or 1)
-     */
-    deleteUser: async ({ userId }: Pick<Domain.User, "userId">) => {
-      const results = await d1.batch([
-        d1
-          .prepare(
-            `
-with t as (
-  select m.organizationId
-  from Member m
-  where m.userId = ?1 and m.role = 'owner'
-  and not exists (
-    select 1 from Member m1
-    where m1.organizationId = m.organizationId
-    and m1.userId != ?1 and m1.role = 'owner'
-  )
-)
-delete from Organization where organizationId in (select organizationId from t)
-`,
-          )
-          .bind(userId),
-        d1
-          .prepare(
-            `delete from User where userId = ? and role <> 'admin' returning *`,
-          )
-          .bind(userId),
-      ]);
-      return results[1].results.length;
-    },
   };
 }

@@ -40,6 +40,7 @@ export async function action({
   switch (parseResult.data.intent) {
     case "deleteUser": {
       const { stripeService, repository } = context.get(appLoadContext);
+      const d1 = context.get(appLoadContext).cloudflare.env.D1;
       const user = await repository.getUser({ email: parseResult.data.email });
       if (!user) {
         return {
@@ -53,7 +54,31 @@ export async function action({
           message: `Cannot delete admin user ${parseResult.data.email}.`,
         };
       }
-      const deletedCount = await repository.deleteUser(user);
+      const results = await d1.batch([
+        d1
+          .prepare(
+            `
+with t as (
+  select m.organizationId
+  from Member m
+  where m.userId = ?1 and m.role = 'owner'
+  and not exists (
+    select 1 from Member m1
+    where m1.organizationId = m.organizationId
+    and m1.userId != ?1 and m1.role = 'owner'
+  )
+)
+delete from Organization where organizationId in (select organizationId from t)
+`,
+          )
+          .bind(user.userId),
+        d1
+          .prepare(
+            `delete from User where userId = ? and role <> 'admin' returning *`,
+          )
+          .bind(user.userId),
+      ]);
+      const deletedCount = results[1].results.length;
       return {
         success: true,
         message: `Deleted user ${parseResult.data.email} (deletedCount: ${deletedCount}).`,

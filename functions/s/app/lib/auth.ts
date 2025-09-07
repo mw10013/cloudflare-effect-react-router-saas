@@ -203,7 +203,7 @@ function createBetterAuthOptions({
                     `stripe plugin: onTrialStart: ${plan.name} plan trial started for subscription ${subscription.id}`,
                   );
                 },
-                onTrialEnd: async ({ subscription }, ctx) => {
+                onTrialEnd: async ({ subscription }) => {
                   console.log(
                     `stripe plugin: onTrialEnd: ${plan.name} plan trial ended for subscription ${subscription.id}`,
                   );

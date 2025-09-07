@@ -1,5 +1,6 @@
 import type { Repository } from "~/lib/repository";
 import type { StripeService } from "~/lib/stripe-service";
+import { env } from "cloudflare:workers";
 import * as Hono from "hono";
 
 /*
@@ -16,6 +17,7 @@ export function createE2eRoutes({
   stripeService: StripeService;
 }) {
   const e2e = new Hono.Hono().basePath("/api/e2e");
+  const d1 = env.D1;
 
   e2e.post("/delete/user/:email", async (c) => {
     const email = c.req.param("email");
@@ -42,7 +44,31 @@ export function createE2eRoutes({
     for (const customer of customers.data) {
       await stripe.customers.del(customer.id);
     }
-    const deletedCount = await repository.deleteUser(user);
+    const results = await d1.batch([
+      d1
+        .prepare(
+          `
+with t as (
+  select m.organizationId
+  from Member m
+  where m.userId = ?1 and m.role = 'owner'
+  and not exists (
+    select 1 from Member m1
+    where m1.organizationId = m.organizationId
+    and m1.userId != ?1 and m1.role = 'owner'
+  )
+)
+delete from Organization where organizationId in (select organizationId from t)
+`,
+        )
+        .bind(user.userId),
+      d1
+        .prepare(
+          `delete from User where userId = ? and role <> 'admin' returning *`,
+        )
+        .bind(user.userId),
+    ]);
+    const deletedCount = results[1].results.length;
     return c.json({
       success: true,
       message: `Deleted user ${email} (deletedCount: ${deletedCount}).`,
