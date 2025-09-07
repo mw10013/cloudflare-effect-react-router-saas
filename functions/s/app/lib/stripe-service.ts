@@ -97,8 +97,10 @@ export function createStripeService() {
         name: plan.name,
         displayName: plan.displayName,
         monthlyPriceId: monthlyPrice.id,
+        monthlyPriceLookupKey: plan.monthlyPriceLookupKey,
         monthlyPriceInCents: plan.monthlyPriceInCents,
         annualPriceId: annualPrice.id,
+        annualPriceLookupKey: plan.annualPriceLookupKey,
         annualPriceInCents: plan.annualPriceInCents,
         freeTrialDays: plan.freeTrialDays,
       };

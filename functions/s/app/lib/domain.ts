@@ -86,11 +86,13 @@ export const planData = [
 ] as const;
 
 export const Plan = z.object({
-  name: z.string(),
-  displayName: z.string(),
-  monthlyPriceId: z.string(),
+  name: z.string().nonempty(),
+  displayName: z.string().nonempty(),
+  monthlyPriceId: z.string().nonempty(),
+  monthlyPriceLookupKey: z.string(),
   monthlyPriceInCents: z.number().int(),
-  annualPriceId: z.string(),
+  annualPriceId: z.string().nonempty(),
+  annualPriceLookupKey: z.string().nonempty(),
   annualPriceInCents: z.number().int(),
   freeTrialDays: z.number().int(),
 });
