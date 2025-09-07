@@ -160,6 +160,7 @@ export interface SidebarTreeNodeEx {
   id: string;
   title?: string;
   href?: string;
+  'data-testid'?: string;
   children?: SidebarTreeNodeEx[];
 }
 
@@ -255,6 +256,7 @@ export function SidebarTreeEx(props: Rac.TreeProps<SidebarTreeNodeEx>) {
             id={item.id}
             title={item.title ?? item.id}
             href={item.href}
+            data-testid={item["data-testid"]}
           >
             <Rac.Collection items={item.children}>
               {renderSidebarTreeNodeEx}

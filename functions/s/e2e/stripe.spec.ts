@@ -18,10 +18,7 @@ test.describe("subscribe", () => {
       },
     ])
     .forEach(({ email, intent, planName }) => {
-      test(`${intent} for ${email}`, async ({
-        page,
-        request,
-      }) => {
+      test(`${intent} for ${email}`, async ({ page, request }) => {
         const response = await request.post(`/api/e2e/delete/user/${email}`);
         expect(response.ok()).toBe(true);
 
@@ -60,11 +57,8 @@ test.describe("subscribe", () => {
           .uncheck();
         await page.getByTestId("hosted-payment-submit-button").click();
 
-        await expect(
-          page.getByRole("button", { name: email, exact: true }),
-        ).toBeVisible({ timeout: 60000 });
-
-        await page.getByText("Billing").click();
+        await page.waitForURL((url) => url.pathname.startsWith("/app"));
+        await page.getByTestId("billing").click();
         await expect(page.getByTestId("active-plan")).toContainText(
           `${planName}`,
           { ignoreCase: true },
@@ -92,10 +86,7 @@ test.describe("subscribe/cancel", () => {
       },
     ])
     .forEach(({ email, intent, planName }) => {
-      test(`${intent} for ${email}`, async ({
-        page,
-        request,
-      }) => {
+      test(`${intent} for ${email}`, async ({ page, request }) => {
         const response = await request.post(`/api/e2e/delete/user/${email}`);
         expect(response.ok()).toBe(true);
 
@@ -134,11 +125,8 @@ test.describe("subscribe/cancel", () => {
           .uncheck();
         await page.getByTestId("hosted-payment-submit-button").click();
 
-        await expect(
-          page.getByRole("button", { name: email, exact: true }),
-        ).toBeVisible({ timeout: 60000 });
-
-        await page.getByText("Billing").click();
+        await page.waitForURL((url) => url.pathname.startsWith("/app"));
+        await page.getByTestId("billing").click();
         await expect(page.getByTestId("active-plan")).toContainText(
           `${planName}`,
           { ignoreCase: true },
