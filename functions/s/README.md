@@ -7,8 +7,6 @@ pnpm -F s test --project d1 auth
 
 - stripe
   - referenceId -> organizationId
-  - trial period
-  - annual
   - customer.subscription.deleted error on cancel?
 - deploy
 - admin
@@ -18,7 +16,6 @@ pnpm -F s test --project d1 auth
   - teams?
 - domain
   - zod brands
-- secondary storage: https://www.better-auth.com/docs/concepts/database#secondary-storage
 - restrict auth api
 - css
   - invitations: pre overflow, main overflow, min-width-0?
@@ -26,6 +23,7 @@ pnpm -F s test --project d1 auth
 - actor/agent
 - batch
   - scavenge expired verifications
+- secondary storage: https://www.better-auth.com/docs/concepts/database#secondary-storage
 
 ## Better-Auth
 

@@ -112,7 +112,11 @@ Pricing page would jse it to derive the pricing UI.
 
 6. **Refactor stripe.spec.ts e2e tests**
 
-   - **Description**: Update the existing `stripe.spec.ts` in the e2e directory to test the new plan structure with four options (basicMonthly, basicAnnual, proMonthly, proAnnual). Refactor the parameterized test to use `data-testid` attributes for button selection instead of index-based selection. Keep the same e2e flow: delete user, login, navigate to pricing, select plan via intent button, complete payment, and verify subscription. Use appropriate test emails for each plan variant.
-   - **Status**: ⏳ Not Started
+   - **Description**: Update the existing `stripe.spec.ts` in the e2e directory to test the new plan structure. Iterate through 'planData' in 'domain.ts'. Use look up keys as the base name for emails ('stripe-basicmonthly@e2e.com') and intent ('proAnnual'). Keep the same e2e flow: delete user, login, navigate to pricing, select plan via intent button, complete payment, and verify subscription. Use appropriate test emails for each plan variant.
+   - **Status**: ✅ Completed
    - **Implementation Notes**:
-     - [Add notes here as you implement.]
+     - Imported `planData` from `domain.ts` to dynamically generate test cases.
+     - Created test cases for each lookup key (monthly and annual for each plan) using `flatMap`.
+     - Updated email format to use lookup keys as base names (e.g., `stripe-basicMonthly@e2e.com`).
+     - Replaced index-based button selection with `data-testid` attributes matching the lookup keys.
+     - Maintained the same e2e flow: delete user, login, navigate to pricing, select plan, complete payment, and verify subscription.

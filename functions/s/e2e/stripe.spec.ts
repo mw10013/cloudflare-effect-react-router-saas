@@ -1,9 +1,18 @@
 import { expect, test } from "@playwright/test";
+import { planData } from "../app/lib/domain";
 
-[
-  { email: "stripe-basic@e2e.com", getStartedIndex: 0 },
-  { email: "stripe-pro@e2e.com", getStartedIndex: 1 },
-].forEach(({ email, getStartedIndex }) => {
+const testCases = planData.flatMap((plan) => [
+  {
+    email: `stripe-${plan.monthlyPriceLookupKey.toLowerCase()}@e2e.com`,
+    intent: plan.monthlyPriceLookupKey,
+  },
+  {
+    email: `stripe-${plan.annualPriceLookupKey.toLowerCase()}@e2e.com`,
+    intent: plan.annualPriceLookupKey,
+  },
+]);
+
+testCases.forEach(({ email, intent }) => {
   test(`subscribe with ${email}`, async ({ page, request }) => {
     const response = await request.post(`/api/e2e/delete/user/${email}`);
     expect(response.ok()).toBe(true);
@@ -17,10 +26,7 @@ import { expect, test } from "@playwright/test";
       .click();
     await page.getByRole("link", { name: "Home" }).click();
     await page.getByRole("link", { name: "Pricing" }).click();
-    await page
-      .getByRole("button", { name: "Get Started" })
-      .nth(getStartedIndex)
-      .click();
+    await page.getByTestId(intent).click();
 
     // Force click needed as normal click fails due to element interception
     await page
