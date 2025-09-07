@@ -3,7 +3,8 @@ import type { Stripe as StripeType } from "stripe";
 import { invariant } from "@epic-web/invariant";
 import { env } from "cloudflare:workers";
 import Stripe from "stripe";
-import { planData } from "~/lib/domain";
+import * as z from "zod";
+import { planData, Plan as PlanSchema } from "~/lib/domain";
 
 type Price = StripeType.Price;
 type PriceWithLookupKey = Price & { lookup_key: string };
@@ -24,8 +25,11 @@ export function createStripeService() {
     const key = "stripe:plans";
     const cachedPlans = await env.KV.get(key, { type: "json" });
     if (cachedPlans) {
-      console.log(`stripeService: getPlans: cache hit`);
-      return cachedPlans as Plan[];
+      const parseResult = z.array(PlanSchema).safeParse(cachedPlans);
+      if (parseResult.success) {
+        console.log(`stripeService: getPlans: cache hit`);
+        return parseResult.data;
+      }
     }
     console.log(`stripeService: getPlans: cache miss`);
     const _getPrices = async (): Promise<PriceWithLookupKey[]> => {

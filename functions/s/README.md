@@ -6,6 +6,7 @@ pnpm -F s test --project d1 auth
 ## TODO
 
 - stripe
+  - cancel -> subscribe -> another free trial!
   - referenceId -> organizationId
   - customer.subscription.deleted error on cancel?
 - deploy
