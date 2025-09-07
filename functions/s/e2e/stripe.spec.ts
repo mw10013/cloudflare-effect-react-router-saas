@@ -57,7 +57,9 @@ test.describe("subscribe", () => {
           .uncheck();
         await page.getByTestId("hosted-payment-submit-button").click();
 
-        await page.waitForURL((url) => url.pathname.startsWith("/app"));
+        await page.waitForURL((url) => {
+          console.log(url.href, url.origin, url.pathname);
+          return url.pathname.startsWith("/app")});
         await page.getByTestId("billing").click();
         await expect(page.getByTestId("active-plan")).toContainText(
           `${planName}`,
