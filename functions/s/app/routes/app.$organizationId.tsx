@@ -98,7 +98,7 @@ export function AppSidebar({
     {
       id: "Billing",
       href: `/app/${organization.id}/billing`,
-      "data-testid": "billing",
+      "data-testid": "sidebar-billing",
     },
   ];
 

@@ -57,11 +57,8 @@ test.describe("subscribe", () => {
           .uncheck();
         await page.getByTestId("hosted-payment-submit-button").click();
 
-        await page.waitForURL(/^(?!.*stripe).*$/);
-        // await page.waitForURL((url) => {
-        //   console.log(url.href, url.origin, url.pathname);
-        //   return url.pathname.startsWith("/app")});
-        await page.getByTestId("billing").click();
+        await page.waitForURL(/^(?!.*stripe\.com).*$/);
+        await page.getByTestId("sidebar-billing").click();
         await expect(page.getByTestId("active-plan")).toContainText(
           `${planName}`,
           { ignoreCase: true },
@@ -128,9 +125,8 @@ test.describe("subscribe/cancel", () => {
           .uncheck();
         await page.getByTestId("hosted-payment-submit-button").click();
 
-        // await page.waitForURL((url) => url.pathname.startsWith("/app"));
-        await page.waitForURL(/^(?!.*stripe).*$/);
-        await page.getByTestId("billing").click();
+        await page.waitForURL(/^(?!.*stripe\.com).*$/);
+        await page.getByTestId("sidebar-billing").click();
         await expect(page.getByTestId("active-plan")).toContainText(
           `${planName}`,
           { ignoreCase: true },
@@ -144,9 +140,12 @@ test.describe("subscribe/cancel", () => {
         await page.getByTestId("return-to-business-link").click();
 
         await page.waitForURL(/^(?!.*stripe).*$/);
-        await expect(
-          page.getByText("No active subscription for"),
-        ).toBeVisible();
+        await expect
+          .poll(async () => {
+            await page.reload();
+            return page.getByText("No active subscription for").isVisible();
+          })
+          .toBe(true);
       });
     });
 });
