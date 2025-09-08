@@ -63,9 +63,8 @@ test.describe("subscribe/cancel", () => {
     });
 });
 
-// test.describe.configure({ timeout: 120_000 });
-
 test.describe("subscribe/upgrade", () => {
+  test.describe.configure({ mode: "parallel", timeout: 120_000 });
   [planData, planData.toReversed()]
     .flatMap(([plan, plan1]) => [
       {
@@ -96,7 +95,6 @@ test.describe("subscribe/upgrade", () => {
         request,
         baseURL,
       }) => {
-        test.slow();
         invariant(baseURL, "Missing baseURL");
         const pom = new StripePom({ page, baseURL });
 
