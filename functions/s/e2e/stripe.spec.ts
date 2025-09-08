@@ -18,7 +18,7 @@ test.describe("subscribe", () => {
       },
     ])
     .forEach(({ email, intent, planName }) => {
-      test(`${intent} for ${email}`, async ({ page, request }) => {
+      test(`${intent} for ${email}`, async ({ page, request, baseURL }) => {
         const response = await request.post(`/api/e2e/delete/user/${email}`);
         expect(response.ok()).toBe(true);
 
@@ -57,7 +57,7 @@ test.describe("subscribe", () => {
           .uncheck();
         await page.getByTestId("hosted-payment-submit-button").click();
 
-        await page.waitForURL(/^(?!.*stripe\.com).*$/);
+        await page.waitForURL(`${baseURL}**`);
         await page.getByTestId("sidebar-billing").click();
         await page.waitForURL(/billing/);
 
@@ -91,7 +91,7 @@ test.describe("subscribe/cancel", () => {
       },
     ])
     .forEach(({ email, intent, planName }) => {
-      test(`${intent} for ${email}`, async ({ page, request }) => {
+      test(`${intent} for ${email}`, async ({ page, request, baseURL }) => {
         const response = await request.post(`/api/e2e/delete/user/${email}`);
         expect(response.ok()).toBe(true);
 
@@ -130,7 +130,7 @@ test.describe("subscribe/cancel", () => {
           .uncheck();
         await page.getByTestId("hosted-payment-submit-button").click();
 
-        await page.waitForURL(/^(?!.*stripe\.com).*$/);
+        await page.waitForURL(`${baseURL}**`);
         await page.getByTestId("sidebar-billing").click();
         await page.waitForURL(/billing/);
 
@@ -150,7 +150,7 @@ test.describe("subscribe/cancel", () => {
         await page.getByTestId("confirm").click();
         await page.getByTestId("return-to-business-link").click();
 
-        await page.waitForURL(/^(?!.*stripe).*$/);
+        await page.waitForURL(`${baseURL}**`);
         await expect(async () => {
           await page.reload();
           expect(page.getByText("No active subscription for")).toBeVisible({
