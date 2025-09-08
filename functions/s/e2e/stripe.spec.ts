@@ -24,11 +24,11 @@ test.describe("subscribe", () => {
         invariant(baseURL, "Missing baseURL");
         const pom = new StripePom({ page, baseURL });
 
-        await pom.deleteUser(request, email);
-        await pom.login(email);
+        await pom.deleteUser({ request, email });
+        await pom.login({ email });
         await pom.subscribe({ email, intent });
         await pom.navigateToBilling();
-        await pom.verifySubscription(planName);
+        await pom.verifySubscription({ planName, status: "trialing" });
       });
     });
 });
@@ -52,16 +52,18 @@ test.describe("subscribe/cancel", () => {
         invariant(baseURL, "Missing baseURL");
         const pom = new StripePom({ page, baseURL });
 
-        await pom.deleteUser(request, email);
-        await pom.login(email);
+        await pom.deleteUser({ request, email });
+        await pom.login({ email });
         await pom.subscribe({ email, intent });
         await pom.navigateToBilling();
-        await pom.verifySubscription(planName);
+        await pom.verifySubscription({ planName, status: "trialing" });
         await pom.cancelSubscription();
         await pom.verifyNoSubscription();
       });
     });
 });
+
+// test.describe.configure({ timeout: 120_000 });
 
 test.describe("subscribe/upgrade", () => {
   [planData, planData.toReversed()]
@@ -94,19 +96,21 @@ test.describe("subscribe/upgrade", () => {
         request,
         baseURL,
       }) => {
+        test.slow();
         invariant(baseURL, "Missing baseURL");
         const pom = new StripePom({ page, baseURL });
 
-        await pom.deleteUser(request, email);
-        await pom.login(email);
+        await pom.deleteUser({ request, email });
+        await pom.login({ email });
         await pom.subscribe({ email, intent });
         await pom.navigateToBilling();
-        await pom.verifySubscription(planName);
+        await pom.verifySubscription({ planName, status: "trialing" });
         await pom.navigateToPricing();
-        await pom.selectPlan(intent1);
+        await pom.selectPlan({ intent: intent1 });
 
-        await page.getByTestId("confirm").click();
-        await page.waitForURL(`${baseURL}**`);
+        await page.getByTestId("confirm").click({ timeout: 60_000 });
+        await page.waitForURL(`${baseURL}**`, { timeout: 120_000 });
+        await pom.verifySubscription({ planName: planName1, status: "active" });
       });
     });
 });
@@ -123,12 +127,18 @@ class StripePom {
     this.baseURL = baseURL;
   }
 
-  async deleteUser(request: APIRequestContext, email: string) {
+  async deleteUser({
+    request,
+    email,
+  }: {
+    request: APIRequestContext;
+    email: string;
+  }) {
     const response = await request.post(`/api/e2e/delete/user/${email}`);
     expect(response.ok()).toBe(true);
   }
 
-  async login(email: string) {
+  async login({ email }: { email: string }) {
     await this.page.goto("/login");
     await this.page.getByRole("textbox", { name: "Email" }).click();
     await this.page.getByRole("textbox", { name: "Email" }).fill(email);
@@ -143,11 +153,11 @@ class StripePom {
     await this.page.getByRole("link", { name: "Pricing" }).click();
   }
 
-  async selectPlan(intent: string) {
+  async selectPlan({ intent }: { intent: string }) {
     await this.page.getByTestId(intent).click();
   }
 
-  async fillPaymentForm(email: string) {
+  async fillPaymentForm({ email }: { email: string }) {
     // Force click needed as normal click fails due to element interception
     await this.page
       .locator("#payment-method-accordion-item-title-card")
@@ -184,16 +194,22 @@ class StripePom {
     await this.page.waitForURL(/billing/);
   }
 
-  async verifySubscription(planName: string) {
+  async verifySubscription({
+    planName,
+    status,
+  }: {
+    planName: string;
+    status: string;
+  }) {
     await expect(async () => {
       await this.page.reload();
       await expect(this.page.getByTestId("active-plan")).toContainText(
         `${planName}`,
-        { ignoreCase: true, timeout: 500 },
+        { ignoreCase: true, timeout: 5000 },
       );
       await expect(this.page.getByTestId("active-status")).toContainText(
-        "trialing",
-        { ignoreCase: true, timeout: 500 },
+        status,
+        { ignoreCase: true, timeout: 5000 },
       );
     }).toPass({ timeout: 60_000 });
   }
@@ -222,8 +238,8 @@ class StripePom {
 
   async subscribe({ email, intent }: { email: string; intent: string }) {
     await this.navigateToPricing();
-    await this.selectPlan(intent);
-    await this.fillPaymentForm(email);
+    await this.selectPlan({ intent });
+    await this.fillPaymentForm({ email });
     await this.submitPayment();
   }
 }
