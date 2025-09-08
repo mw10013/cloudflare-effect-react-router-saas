@@ -5,6 +5,8 @@ pnpm -F s test --project d1 auth
 
 ## TODO
 
+- d1-adapter
+  - not_in: https://github.com/better-auth/better-auth/pull/4449
 - stripe
   - cancel -> subscribe -> another free trial!
   - referenceId -> organizationId

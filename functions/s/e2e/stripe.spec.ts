@@ -26,10 +26,7 @@ test.describe("subscribe", () => {
 
         await pom.deleteUser(request, email);
         await pom.login(email);
-        await pom.navigateToPricing();
-        await pom.selectPlan(intent);
-        await pom.fillPaymentForm(email);
-        await pom.submitPayment();
+        await pom.subscribe({ email, intent });
         await pom.navigateToBilling();
         await pom.verifySubscription(planName);
       });
@@ -57,10 +54,7 @@ test.describe("subscribe/cancel", () => {
 
         await pom.deleteUser(request, email);
         await pom.login(email);
-        await pom.navigateToPricing();
-        await pom.selectPlan(intent);
-        await pom.fillPaymentForm(email);
-        await pom.submitPayment();
+        await pom.subscribe({ email, intent });
         await pom.navigateToBilling();
         await pom.verifySubscription(planName);
         await pom.cancelSubscription();
@@ -68,6 +62,56 @@ test.describe("subscribe/cancel", () => {
       });
     });
 });
+
+test.describe("subscribe/upgrade", () => {
+  [planData, planData.toReversed()]
+    .flatMap(([plan, plan1]) => [
+      {
+        email: `${emailPrefix}${plan.monthlyPriceLookupKey.toLowerCase()}-${plan.monthlyPriceLookupKey.toLowerCase()}-upgrade@e2e.com`,
+        intent: plan.monthlyPriceLookupKey,
+        planName: plan.name,
+        intent1: plan.annualPriceLookupKey,
+        planName1: plan.name,
+      },
+      {
+        email: `${emailPrefix}${plan.monthlyPriceLookupKey.toLowerCase()}-${plan1.monthlyPriceLookupKey.toLowerCase()}-upgrade@e2e.com`,
+        intent: plan.monthlyPriceLookupKey,
+        planName: plan.name,
+        intent1: plan1.monthlyPriceLookupKey,
+        planName1: plan1.name,
+      },
+      {
+        email: `${emailPrefix}${plan.monthlyPriceLookupKey.toLowerCase()}-${plan1.annualPriceLookupKey.toLowerCase()}-upgrade@e2e.com`,
+        intent: plan.monthlyPriceLookupKey,
+        planName: plan.name,
+        intent1: plan1.annualPriceLookupKey,
+        planName1: plan1.name,
+      },
+    ])
+    .forEach(({ email, intent, planName, intent1, planName1 }) => {
+      test(`${intent} to ${intent1} for ${email}`, async ({
+        page,
+        request,
+        baseURL,
+      }) => {
+        invariant(baseURL, "Missing baseURL");
+        const pom = new StripePom({ page, baseURL });
+
+        await pom.deleteUser(request, email);
+        await pom.login(email);
+        await pom.subscribe({ email, intent });
+        await pom.navigateToBilling();
+        await pom.verifySubscription(planName);
+        await pom.navigateToPricing();
+        await pom.selectPlan(intent1);
+
+        await page.getByTestId("confirm").click();
+        await page.waitForURL(`${baseURL}**`);
+      });
+    });
+});
+
+// https://playwright.dev/docs/pom
 
 class StripePom {
   readonly page: Page;
@@ -161,6 +205,7 @@ class StripePom {
     await this.page.getByTestId("confirm").click();
     await expect(this.page.getByTestId("page-container-main")).toContainText(
       "Subscription canceled",
+      { timeout: 60_000 },
     );
     await this.page.getByTestId("return-to-business-link").click();
     await this.page.waitForURL(`${this.baseURL}**`);
@@ -173,5 +218,12 @@ class StripePom {
         timeout: 500,
       });
     }).toPass({ timeout: 60_000 });
+  }
+
+  async subscribe({ email, intent }: { email: string; intent: string }) {
+    await this.navigateToPricing();
+    await this.selectPlan(intent);
+    await this.fillPaymentForm(email);
+    await this.submitPayment();
   }
 }
