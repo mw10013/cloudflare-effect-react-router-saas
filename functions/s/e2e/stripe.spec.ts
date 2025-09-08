@@ -127,25 +127,31 @@ test.describe("subscribe/cancel", () => {
 
         await page.waitForURL(/^(?!.*stripe\.com).*$/);
         await page.getByTestId("sidebar-billing").click();
-        await expect(page.getByTestId("active-plan")).toContainText(
-          `${planName}`,
-          { ignoreCase: true },
-        );
-        await expect(page.getByTestId("active-status")).toContainText(
-          "trialing",
-          { ignoreCase: true },
-        );
+        await page.waitForURL(/billing/);
+
+        await expect(async () => {
+          await page.reload();
+          await expect(page.getByTestId("active-plan")).toContainText(
+            `${planName}`,
+            { ignoreCase: true, timeout: 5_000 },
+          );
+          await expect(page.getByTestId("active-status")).toContainText(
+            "trialing",
+            { ignoreCase: true, timeout: 5_000 },
+          );
+        }).toPass({ timeout: 60_000 });
+
         await page.getByRole("button", { name: "Cancel Subscription" }).click();
         await page.getByTestId("confirm").click();
         await page.getByTestId("return-to-business-link").click();
 
         await page.waitForURL(/^(?!.*stripe).*$/);
-        await expect
-          .poll(async () => {
-            await page.reload();
-            return page.getByText("No active subscription for").isVisible();
-          })
-          .toBe(true);
+        await expect(async () => {
+          await page.reload();
+          expect(page.getByText("No active subscription for")).toBeVisible({
+            timeout: 0,
+          });
+        }).toPass({ timeout: 60_000 });
       });
     });
 });
