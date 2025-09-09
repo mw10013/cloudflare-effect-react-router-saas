@@ -5,13 +5,11 @@ pnpm -F s test --project d1 auth
 
 ## TODO
 
-- d1-adapter
-  - not_in: https://github.com/better-auth/better-auth/pull/4449
+- deploy
+- actor/agent
 - stripe
   - cancel -> subscribe -> another free trial!
   - referenceId -> organizationId
-  - customer.subscription.deleted error on cancel?
-- deploy
 - admin
   - customers
   - sessions
@@ -19,11 +17,9 @@ pnpm -F s test --project d1 auth
   - teams?
 - domain
   - zod brands
-- restrict auth api
 - css
   - invitations: pre overflow, main overflow, min-width-0?
   - sign out a11y in sidebar
-- actor/agent
 - batch
   - scavenge expired verifications
 - secondary storage: https://www.better-auth.com/docs/concepts/database#secondary-storage

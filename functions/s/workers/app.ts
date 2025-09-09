@@ -38,13 +38,15 @@ export default {
       stripeService,
       ses: createSes(),
     });
-    hono.all("/api/auth/*", (c) => {
-      // http://localhost:5173/api/auth/magic-link/verify?token=UstZiCHCBTxwWIxGQrQdabmwWMXkvkMa&callbackURL=%2Fmagic-link
-      // http://localhost:5173/api/auth/stripe/webhook
-      // http://localhost:5173/api/auth/subscription/success?callbackURL=%2Fapp&subscriptionId=13
-      console.log(`worker fetch: /api/auth/* ${c.req.raw.url}`);
+
+    const authHandler = (c: Hono.Context) => {
+      console.log(`worker fetch: auth: ${c.req.raw.url}`);
       return auth.handler(c.req.raw);
-    });
+    };
+    hono.post("/api/auth/stripe/webhook", authHandler);
+    hono.get("/api/auth/magic-link/verify", authHandler);
+    hono.get("/api/auth/subscription/*", authHandler);
+
     if (env.ENVIRONMENT === "local") {
       hono.all(
         "/.well-known/appspecific/com.chrome.devtools.json",
@@ -52,6 +54,7 @@ export default {
       );
       hono.route("/", createE2eRoutes({ repository, stripeService }));
     }
+
     hono.all("*", async (c) => {
       const context = new unstable_RouterContextProvider();
       context.set(appLoadContext, {

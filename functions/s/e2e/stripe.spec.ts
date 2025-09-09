@@ -100,14 +100,9 @@ test.describe("subscribe/upgrade", () => {
         await pom.deleteUser({ request, email });
         await pom.login({ email });
         await pom.subscribe({ email, intent });
-
         await pom.verifySubscription({ planName, status: "trialing" });
 
-        await pom.navigateToPricing();
-        await pom.selectPlan({ intent: intent1 });
-        await page.getByTestId("confirm").click();
-        await page.waitForURL(`${baseURL}**`);
-
+        await pom.upgrade({ intent: intent1 });
         await pom.verifySubscription({ planName: planName1, status: "active" });
       });
     });
@@ -239,5 +234,12 @@ class StripePom {
     await this.selectPlan({ intent });
     await this.fillPaymentForm({ email });
     await this.submitPayment();
+  }
+
+  async upgrade({ intent }: { intent: string }) {
+    await this.navigateToPricing();
+    await this.selectPlan({ intent });
+    await this.page.getByTestId("confirm").click();
+    await this.page.waitForURL(`${this.baseURL}**`);
   }
 }
