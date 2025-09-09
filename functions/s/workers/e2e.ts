@@ -69,6 +69,7 @@ delete from Organization where organizationId in (select organizationId from t)
         .bind(user.userId),
     ]);
     const deletedCount = results[1].results.length;
+    console.log(`e2e deleted user ${email} (deletedCount: ${deletedCount})`);
     return c.json({
       success: true,
       message: `Deleted user ${email} (deletedCount: ${deletedCount}).`,

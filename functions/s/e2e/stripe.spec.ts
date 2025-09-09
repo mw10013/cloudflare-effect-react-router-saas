@@ -156,10 +156,10 @@ class StripePom {
   }
 
   async fillPaymentForm({ email }: { email: string }) {
-    // Force click needed as normal click fails due to element interception
+    // Use dispatchEvent instead of click because the button has 0x0 dimensions and is not considered visible by Playwright
     await this.page
-      .locator("#payment-method-accordion-item-title-card")
-      .click({ force: true });
+      .getByTestId("card-accordion-item-button")
+      .dispatchEvent("click");
 
     await this.page.getByRole("textbox", { name: "Card number" }).click();
     await this.page
@@ -204,11 +204,11 @@ class StripePom {
       await this.page.reload();
       await expect(this.page.getByTestId("active-plan")).toContainText(
         `${planName}`,
-        { ignoreCase: true, timeout: 250 },
+        { ignoreCase: true, timeout: 100 }, // Timeout short since data is static.
       );
       await expect(this.page.getByTestId("active-status")).toContainText(
         status,
-        { ignoreCase: true, timeout: 250 },
+        { ignoreCase: true, timeout: 100 },
       );
     }).toPass({ timeout: 60_000 });
   }
@@ -220,7 +220,6 @@ class StripePom {
     await this.page.getByTestId("confirm").click();
     await expect(this.page.getByTestId("page-container-main")).toContainText(
       "Subscription canceled",
-      { timeout: 10_000 },
     );
     await this.page.getByTestId("return-to-business-link").click();
     await this.page.waitForURL(`${this.baseURL}**`);
@@ -230,7 +229,7 @@ class StripePom {
     await expect(async () => {
       await this.page.reload();
       expect(this.page.getByText("No active subscription for")).toBeVisible({
-        timeout: 250,
+        timeout: 100,
       });
     }).toPass({ timeout: 60_000 });
   }
