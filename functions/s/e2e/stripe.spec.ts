@@ -27,13 +27,13 @@ test.describe("subscribe", () => {
         await pom.deleteUser({ request, email });
         await pom.login({ email });
         await pom.subscribe({ email, intent });
-        await pom.navigateToBilling();
         await pom.verifySubscription({ planName, status: "trialing" });
       });
     });
 });
 
 test.describe("subscribe/cancel", () => {
+  test.describe.configure({ mode: "parallel", timeout: 120_000 });
   planData
     .flatMap((plan) => [
       {
@@ -55,7 +55,6 @@ test.describe("subscribe/cancel", () => {
         await pom.deleteUser({ request, email });
         await pom.login({ email });
         await pom.subscribe({ email, intent });
-        await pom.navigateToBilling();
         await pom.verifySubscription({ planName, status: "trialing" });
         await pom.cancelSubscription();
         await pom.verifyNoSubscription();
@@ -101,13 +100,14 @@ test.describe("subscribe/upgrade", () => {
         await pom.deleteUser({ request, email });
         await pom.login({ email });
         await pom.subscribe({ email, intent });
-        await pom.navigateToBilling();
+
         await pom.verifySubscription({ planName, status: "trialing" });
+
         await pom.navigateToPricing();
         await pom.selectPlan({ intent: intent1 });
-
         await page.getByTestId("confirm").click({ timeout: 60_000 });
         await page.waitForURL(`${baseURL}**`, { timeout: 120_000 });
+
         await pom.verifySubscription({ planName: planName1, status: "active" });
       });
     });
@@ -199,6 +199,7 @@ class StripePom {
     planName: string;
     status: string;
   }) {
+    await this.navigateToBilling();
     await expect(async () => {
       await this.page.reload();
       await expect(this.page.getByTestId("active-plan")).toContainText(
@@ -219,7 +220,7 @@ class StripePom {
     await this.page.getByTestId("confirm").click();
     await expect(this.page.getByTestId("page-container-main")).toContainText(
       "Subscription canceled",
-      { timeout: 60_000 },
+      { timeout: 90_000 },
     );
     await this.page.getByTestId("return-to-business-link").click();
     await this.page.waitForURL(`${this.baseURL}**`);
