@@ -116,6 +116,14 @@ function adaptWhere({ where, modelId }: { where?: Where[]; modelId: string }): {
           sql = "0"; // always false
         }
         break;
+      case "not_in":
+        if (Array.isArray(w.value) && w.value.length > 0) {
+          sql = `${field} not in (${w.value.map(() => "?").join(",")})`;
+          whereValues.push(...w.value.map(serializeWhereValue));
+        } else {
+          sql = "1"; // always true
+        }
+        break;
       case "contains":
         sql = `${field} like ?`;
         whereValues.push(`%${serializeWhereValue(w.value)}%`);
