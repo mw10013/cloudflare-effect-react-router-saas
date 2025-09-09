@@ -105,8 +105,8 @@ test.describe("subscribe/upgrade", () => {
 
         await pom.navigateToPricing();
         await pom.selectPlan({ intent: intent1 });
-        await page.getByTestId("confirm").click({ timeout: 60_000 });
-        await page.waitForURL(`${baseURL}**`, { timeout: 120_000 });
+        await page.getByTestId("confirm").click();
+        await page.waitForURL(`${baseURL}**`);
 
         await pom.verifySubscription({ planName: planName1, status: "active" });
       });
@@ -204,11 +204,11 @@ class StripePom {
       await this.page.reload();
       await expect(this.page.getByTestId("active-plan")).toContainText(
         `${planName}`,
-        { ignoreCase: true, timeout: 5000 },
+        { ignoreCase: true, timeout: 250 },
       );
       await expect(this.page.getByTestId("active-status")).toContainText(
         status,
-        { ignoreCase: true, timeout: 5000 },
+        { ignoreCase: true, timeout: 250 },
       );
     }).toPass({ timeout: 60_000 });
   }
@@ -220,7 +220,7 @@ class StripePom {
     await this.page.getByTestId("confirm").click();
     await expect(this.page.getByTestId("page-container-main")).toContainText(
       "Subscription canceled",
-      { timeout: 90_000 },
+      { timeout: 10_000 },
     );
     await this.page.getByTestId("return-to-business-link").click();
     await this.page.waitForURL(`${this.baseURL}**`);
@@ -230,7 +230,7 @@ class StripePom {
     await expect(async () => {
       await this.page.reload();
       expect(this.page.getByText("No active subscription for")).toBeVisible({
-        timeout: 500,
+        timeout: 250,
       });
     }).toPass({ timeout: 60_000 });
   }
