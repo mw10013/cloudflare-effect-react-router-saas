@@ -1,7 +1,34 @@
+# s
+
+- saas
+
 ```
 http://localhost:5173/
 pnpm -F s test --project d1 auth
 ```
+
+## Local Dev
+
+- pnpm i
+- cp functions/<PACKAGE_NAME>/.env.example functions/<PACKAGE_NAME>/.env
+- pnpm -F <PACKAGE_NAME> d1:reset
+- pnpm -F <PACKAGE_NAME> dev
+
+## Deploy
+
+- pnpm -F <PACKAGE_NAME> exec wrangler kv namespace create <WRANGLER_NAME>-kv-production
+- pnpm -F <PACKAGE_NAME> exec wrangler queues create <WRANGLER_NAME>-q-production
+- Update wrangler.jsonc production kv_namespaces and queues
+- pnpm -F <PACKAGE_NAME> d1:reset:PRODUCTION
+- pnpm -F <PACKAGE_NAME> deploy:PRODUCTION
+- pnpm -F <PACKAGE_NAME> exec wrangler secret put <SECRET> --env production
+- Workers & Pages Settings: <WRANGLER_NAME>-production
+  - Git repository: connect to git repo
+  - Build configuration
+    - Build command: CLOUDFLARE_ENV=production pnpm -F <PACKAGE_NAME> build
+    - Deploy command: pnpm -F <PACKAGE_NAME> exec wrangler deploy
+  - Build watch paths
+    - Include paths: functions/<PACKAGE_NAME>/\* functions/oui/\* functions/shared/\* functions/ui/\*
 
 ## TODO
 

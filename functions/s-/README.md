@@ -1,11 +1,11 @@
-# s
+# s-
 
 - saas
 
 ## Local Dev
 
 - pnpm i
-- cp functions/app/.dev.vars.example functions/app/.dev.vars
+- cp functions/<PACKAGE_NAME>/.env.example functions/<PACKAGE_NAME>/.env
 - pnpm -F <PACKAGE_NAME> d1:reset
 - pnpm -F <PACKAGE_NAME> dev
 
