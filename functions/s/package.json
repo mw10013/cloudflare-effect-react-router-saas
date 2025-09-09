@@ -4,8 +4,10 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
+    "build:PRODUCTION": "CLOUDFLARE_ENV=production pnpm build",
     "cf-typegen": "wrangler types",
     "deploy": "pnpm run build && wrangler deploy",
+    "deploy:PRODUCTION": "pnpm build:PRODUCTION && wrangler deploy",
     "dev": "react-router dev",
     "postinstall": "npm run cf-typegen",
     "preview": "pnpm run build && vite preview",

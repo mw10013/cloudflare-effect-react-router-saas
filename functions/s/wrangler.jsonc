@@ -52,13 +52,13 @@
         {
           "binding": "D1",
           "database_name": "saas-d1-production",
-          "database_id": ""
+          "database_id": "a442eacf-41f9-4e71-a290-44746f71b670" // saas-d1-production
         }
       ],
       "kv_namespaces": [
         {
           "binding": "KV",
-          "id": "" // saas-kv-production
+          "id": "d3d0d87fecbf47c19230137e7a14ec97" // saas-kv-production
         }
       ]
     }
