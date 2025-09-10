@@ -19,20 +19,20 @@ catalogs:
       specifier: 2.0.0-beta.9
       version: 2.0.0-beta.9
     '@better-auth/cli':
-      specifier: 1.3.4
-      version: 1.3.4
+      specifier: 1.3.7
+      version: 1.3.7
     '@better-auth/stripe':
       specifier: 1.3.7
       version: 1.3.7
     '@cloudflare/vite-plugin':
-      specifier: 1.11.2
-      version: 1.11.2
+      specifier: 1.12.4
+      version: 1.12.4
     '@cloudflare/vitest-pool-workers':
-      specifier: 0.8.61
-      version: 0.8.61
+      specifier: 0.8.71
+      version: 0.8.71
     '@cloudflare/workers-types':
-      specifier: 4.20250810.0
-      version: 4.20250810.0
+      specifier: 4.20250910.0
+      version: 4.20250910.0
     '@effect/language-service':
       specifier: 0.21.8
       version: 0.21.8
@@ -157,8 +157,8 @@ catalogs:
       specifier: 0.7.1
       version: 0.7.1
     wrangler:
-      specifier: 4.28.1
-      version: 4.28.1
+      specifier: 4.35.0
+      version: 4.35.0
     zod:
       specifier: 4.1.5
       version: 4.1.5
@@ -245,13 +245,13 @@ importers:
     devDependencies:
       '@cloudflare/vite-plugin':
         specifier: 'catalog:'
-        version: 1.11.2(rollup@4.48.1)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(workerd@1.20250803.0)(wrangler@4.28.1(@cloudflare/workers-types@4.20250810.0))
+        version: 1.12.4(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(workerd@1.20250906.0)(wrangler@4.35.0(@cloudflare/workers-types@4.20250910.0))
       '@react-router/dev':
         specifier: 'catalog:'
-        version: 7.8.1(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(wrangler@4.28.1(@cloudflare/workers-types@4.20250810.0))
+        version: 7.8.1(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(wrangler@4.35.0(@cloudflare/workers-types@4.20250910.0))
       '@react-router/fs-routes':
         specifier: 'catalog:'
-        version: 7.8.1(@react-router/dev@7.8.1(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(wrangler@4.28.1(@cloudflare/workers-types@4.20250810.0)))(typescript@5.9.2)
+        version: 7.8.1(@react-router/dev@7.8.1(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(wrangler@4.35.0(@cloudflare/workers-types@4.20250910.0)))(typescript@5.9.2)
       '@tailwindcss/vite':
         specifier: 'catalog:'
         version: 4.1.9(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))
@@ -284,7 +284,7 @@ importers:
         version: 5.1.4(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))
       wrangler:
         specifier: 'catalog:'
-        version: 4.28.1(@cloudflare/workers-types@4.20250810.0)
+        version: 4.35.0(@cloudflare/workers-types@4.20250910.0)
 
   functions/oui:
     dependencies:
@@ -376,19 +376,19 @@ importers:
     devDependencies:
       '@better-auth/cli':
         specifier: 'catalog:'
-        version: 1.3.4(@cloudflare/workers-types@4.20250810.0)(@opentelemetry/api@1.9.0)(@types/react@19.1.0)(kysely@0.28.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 1.3.7(@cloudflare/workers-types@4.20250910.0)(@opentelemetry/api@1.9.0)(@types/react@19.1.0)(kysely@0.28.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod@4.1.5)
       '@cloudflare/vite-plugin':
         specifier: 'catalog:'
-        version: 1.11.2(rollup@4.48.1)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(workerd@1.20250803.0)(wrangler@4.28.1(@cloudflare/workers-types@4.20250810.0))
+        version: 1.12.4(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(workerd@1.20250906.0)(wrangler@4.35.0(@cloudflare/workers-types@4.20250910.0))
       '@cloudflare/vitest-pool-workers':
         specifier: catalog:default
-        version: 0.8.61(@cloudflare/workers-types@4.20250810.0)(@vitest/runner@3.2.4)(@vitest/snapshot@3.2.4)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(msw@2.10.5(@types/node@22.13.14)(typescript@5.9.2)))
+        version: 0.8.71(@cloudflare/workers-types@4.20250910.0)(@vitest/runner@3.2.4)(@vitest/snapshot@3.2.4)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(msw@2.10.5(@types/node@22.13.14)(typescript@5.9.2)))
       '@react-router/dev':
         specifier: 'catalog:'
-        version: 7.8.1(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(wrangler@4.28.1(@cloudflare/workers-types@4.20250810.0))
+        version: 7.8.1(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(wrangler@4.35.0(@cloudflare/workers-types@4.20250910.0))
       '@react-router/fs-routes':
         specifier: 'catalog:'
-        version: 7.8.1(@react-router/dev@7.8.1(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(wrangler@4.28.1(@cloudflare/workers-types@4.20250810.0)))(typescript@5.9.2)
+        version: 7.8.1(@react-router/dev@7.8.1(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(wrangler@4.35.0(@cloudflare/workers-types@4.20250910.0)))(typescript@5.9.2)
       '@tailwindcss/vite':
         specifier: 'catalog:'
         version: 4.1.9(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))
@@ -427,7 +427,7 @@ importers:
         version: 3.2.4(@types/debug@4.1.12)(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(msw@2.10.5(@types/node@22.13.14)(typescript@5.9.2))
       wrangler:
         specifier: 'catalog:'
-        version: 4.28.1(@cloudflare/workers-types@4.20250810.0)
+        version: 4.35.0(@cloudflare/workers-types@4.20250910.0)
       zx:
         specifier: 'catalog:'
         version: 8.5.5
@@ -451,7 +451,7 @@ importers:
         version: 0.4.3(arctic@2.3.4)(hono@4.9.6)
       '@react-router/cloudflare':
         specifier: 'catalog:'
-        version: 7.8.1(@cloudflare/workers-types@4.20250810.0)(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(typescript@5.9.2)
+        version: 7.8.1(@cloudflare/workers-types@4.20250910.0)(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(typescript@5.9.2)
       '@workspace/oui':
         specifier: workspace:*
         version: link:../oui
@@ -518,13 +518,13 @@ importers:
     devDependencies:
       '@cloudflare/vite-plugin':
         specifier: 'catalog:'
-        version: 1.11.2(rollup@4.48.1)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(workerd@1.20250803.0)(wrangler@4.28.1(@cloudflare/workers-types@4.20250810.0))
+        version: 1.12.4(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(workerd@1.20250906.0)(wrangler@4.35.0(@cloudflare/workers-types@4.20250910.0))
       '@react-router/dev':
         specifier: 'catalog:'
-        version: 7.8.1(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(wrangler@4.28.1(@cloudflare/workers-types@4.20250810.0))
+        version: 7.8.1(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(wrangler@4.35.0(@cloudflare/workers-types@4.20250910.0))
       '@react-router/fs-routes':
         specifier: 'catalog:'
-        version: 7.8.1(@react-router/dev@7.8.1(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(wrangler@4.28.1(@cloudflare/workers-types@4.20250810.0)))(typescript@5.9.2)
+        version: 7.8.1(@react-router/dev@7.8.1(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(wrangler@4.35.0(@cloudflare/workers-types@4.20250910.0)))(typescript@5.9.2)
       '@standard-schema/spec':
         specifier: 'catalog:'
         version: 1.0.0-beta.3
@@ -560,7 +560,7 @@ importers:
         version: 5.1.4(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))
       wrangler:
         specifier: 'catalog:'
-        version: 4.28.1(@cloudflare/workers-types@4.20250810.0)
+        version: 4.35.0(@cloudflare/workers-types@4.20250910.0)
       zx:
         specifier: 'catalog:'
         version: 8.5.5
@@ -576,7 +576,7 @@ importers:
     devDependencies:
       '@cloudflare/workers-types':
         specifier: 'catalog:'
-        version: 4.20250810.0
+        version: 4.20250910.0
       '@types/node':
         specifier: 'catalog:'
         version: 22.13.14
@@ -585,7 +585,7 @@ importers:
         version: 5.9.2
       wrangler:
         specifier: 'catalog:'
-        version: 4.28.1(@cloudflare/workers-types@4.20250810.0)
+        version: 4.35.0(@cloudflare/workers-types@4.20250910.0)
 
   functions/ui:
     dependencies:
@@ -902,17 +902,16 @@ packages:
     resolution: {integrity: sha512-ruv7Ae4J5dUYULmeXw1gmb7rYRz57OWCPM57pHojnLq/3Z1CK2lNSLTCVjxVk1F/TZHwOZZrOWi0ur95BbLxNQ==}
     engines: {node: '>=6.9.0'}
 
-  '@better-auth/cli@1.3.4':
-    resolution: {integrity: sha512-nEVd/j2d2CQd+62+AxuD2v/NxFwaEYr0tkM0A8pVMv/b2TWHL09P7NzRVWCn7QlU1grAlPudMNolAzZ4IyLmNQ==}
+  '@better-auth/cli@1.3.7':
+    resolution: {integrity: sha512-T2UqizojAb7xML9j0smm7UofZo2T/tdxGpKzJl0XWvXPgTJXoW2xmcmtZjDUIwbz2z9O2suphBaNF0qigEovZQ==}
     hasBin: true
+    peerDependencies:
+      zod: 3.25.0 || ^4.0.0
 
   '@better-auth/stripe@1.3.7':
     resolution: {integrity: sha512-hmcWJu9RB1IOf+Mb8izQyLOAkRFKes8O0j/VoIFwLR0l2zWTknXKzkLUjadFPeKXHtV3i2n2++prjuVev6F6zw==}
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
-
-  '@better-auth/utils@0.2.5':
-    resolution: {integrity: sha512-uI2+/8h/zVsH8RrYdG8eUErbuGBk16rZKQfz8CjxQOyCE6v7BqFYEbFwvOkvl1KbUdxhqOnXp78+uE5h8qVEgQ==}
 
   '@better-auth/utils@0.2.6':
     resolution: {integrity: sha512-3y/vaL5Ox33dBwgJ6ub3OPkVqr6B5xL2kgxNHG8eHZuryLyG/4JSPGqjbdRSgjuy9kALUZYDFl+ORIAxlWMSuA==}
@@ -951,60 +950,60 @@ packages:
     resolution: {integrity: sha512-+tv3z+SPp+gqTIcImN9o0hqE9xyfQjI1XD9pL6NuKjua9B1y7mNYv0S9cP+QEbA4ppVgGZEmKOvHX5G5Ei1CVA==}
     engines: {node: '>=18.0.0'}
 
-  '@cloudflare/unenv-preset@2.6.0':
-    resolution: {integrity: sha512-h7Txw0WbDuUbrvZwky6+x7ft+U/Gppfn/rWx6IdR+e9gjygozRJnV26Y2TOr3yrIFa6OsZqqR2lN+jWTrakHXg==}
+  '@cloudflare/unenv-preset@2.7.3':
+    resolution: {integrity: sha512-tsQQagBKjvpd9baa6nWVIv399ejiqcrUBBW6SZx6Z22+ymm+Odv5+cFimyuCsD/fC1fQTwfRmwXBNpzvHSeGCw==}
     peerDependencies:
-      unenv: 2.0.0-rc.19
-      workerd: ^1.20250802.0
+      unenv: 2.0.0-rc.21
+      workerd: ^1.20250828.1
     peerDependenciesMeta:
       workerd:
         optional: true
 
-  '@cloudflare/vite-plugin@1.11.2':
-    resolution: {integrity: sha512-iY/XTYE3TCZLXaIYGljGQeG81XmUkQ2ZOqzVs56a+5QQyxkA9S8sqfBh/FX0vwzUASLFVUru0WsyqCB4fxrSAA==}
+  '@cloudflare/vite-plugin@1.12.4':
+    resolution: {integrity: sha512-hyvTk/uBk5g9nUFwmjLzSyE+1/WABGulbAA6QXK1wDY5/Xxz2w59yKl2vNV2R7/+/jsHC29n0DKEA4pb/QTKPQ==}
     peerDependencies:
       vite: ^6.1.0 || ^7.0.0
-      wrangler: ^4.28.1
+      wrangler: ^4.35.0
 
-  '@cloudflare/vitest-pool-workers@0.8.61':
-    resolution: {integrity: sha512-DcLyUGD0YH33k9OMzqVNOvo3EA2Q9KLByED4QXj1noiTy+DreiIXsIvQP4dqYLQ/x25VZK32Ws20IeMUFUPdyQ==}
+  '@cloudflare/vitest-pool-workers@0.8.71':
+    resolution: {integrity: sha512-keu2HCLQfRNwbmLBCDXJgCFpANTaYnQpE01fBOo4CNwiWHUT7SZGN7w64RKiSWRHyYppStXBuE5Ng7F42+flpg==}
     peerDependencies:
       '@vitest/runner': 2.0.x - 3.2.x
       '@vitest/snapshot': 2.0.x - 3.2.x
       vitest: 2.0.x - 3.2.x
 
-  '@cloudflare/workerd-darwin-64@1.20250803.0':
-    resolution: {integrity: sha512-6QciMnJp1p3F1qUiN0LaLfmw7SuZA/gfUBOe8Ft81pw16JYZ3CyiqIKPJvc1SV8jgDx8r+gz/PRi1NwOMt329A==}
+  '@cloudflare/workerd-darwin-64@1.20250906.0':
+    resolution: {integrity: sha512-E+X/YYH9BmX0ew2j/mAWFif2z05NMNuhCTlNYEGLkqMe99K15UewBqajL9pMcMUKxylnlrEoK3VNxl33DkbnPA==}
     engines: {node: '>=16'}
     cpu: [x64]
     os: [darwin]
 
-  '@cloudflare/workerd-darwin-arm64@1.20250803.0':
-    resolution: {integrity: sha512-DoIgghDowtqoNhL6OoN/F92SKtrk7mRQKc4YSs/Dst8IwFZq+pCShOlWfB0MXqHKPSoiz5xLSrUKR9H6gQMPvw==}
+  '@cloudflare/workerd-darwin-arm64@1.20250906.0':
+    resolution: {integrity: sha512-X5apsZ1SFW4FYTM19ISHf8005FJMPfrcf4U5rO0tdj+TeJgQgXuZ57IG0WeW7SpLVeBo8hM6WC8CovZh41AfnA==}
     engines: {node: '>=16'}
     cpu: [arm64]
     os: [darwin]
 
-  '@cloudflare/workerd-linux-64@1.20250803.0':
-    resolution: {integrity: sha512-mYdz4vNWX3+PoqRjssepVQqgh42IBiSrl+wb7vbh7VVWUVzBnQKtW3G+UFiBF62hohCLexGIEi7L0cFfRlcKSQ==}
+  '@cloudflare/workerd-linux-64@1.20250906.0':
+    resolution: {integrity: sha512-rlKzWgsLnlQ5Nt9W69YBJKcmTmZbOGu0edUsenXPmc6wzULUxoQpi7ZE9k3TfTonJx4WoQsQlzCUamRYFsX+0Q==}
     engines: {node: '>=16'}
     cpu: [x64]
     os: [linux]
 
-  '@cloudflare/workerd-linux-arm64@1.20250803.0':
-    resolution: {integrity: sha512-RmrtUYLRUg6djKU7Z6yebS6YGJVnaDVY6bbXca+2s26vw4ibJDOTPLuBHFQF62Grw3fAfsNbjQh5i14vG2mqUg==}
+  '@cloudflare/workerd-linux-arm64@1.20250906.0':
+    resolution: {integrity: sha512-DdedhiQ+SeLzpg7BpcLrIPEZ33QKioJQ1wvL4X7nuLzEB9rWzS37NNNahQzc1+44rhG4fyiHbXBPOeox4B9XVA==}
     engines: {node: '>=16'}
     cpu: [arm64]
     os: [linux]
 
-  '@cloudflare/workerd-windows-64@1.20250803.0':
-    resolution: {integrity: sha512-uLV8gdudz36o9sUaAKbBxxTwZwLFz1KyW7QpBvOo4+r3Ib8yVKXGiySIMWGD7A0urSMrjf3e5LlLcJKgZUOjMA==}
+  '@cloudflare/workerd-windows-64@1.20250906.0':
+    resolution: {integrity: sha512-Q8Qjfs8jGVILnZL6vUpQ90q/8MTCYaGR3d1LGxZMBqte8Vr7xF3KFHPEy7tFs0j0mMjnqCYzlofmPNY+9ZaDRg==}
     engines: {node: '>=16'}
     cpu: [x64]
     os: [win32]
 
-  '@cloudflare/workers-types@4.20250810.0':
-    resolution: {integrity: sha512-GAJcKMrlWrrgfpFkYAc9AYiyPM1sMfY0gzrNA7T+J7kVh82hdIWXaz7bykc+B/kgDRteO7RBKfwVEU0rB/hk2Q==}
+  '@cloudflare/workers-types@4.20250910.0':
+    resolution: {integrity: sha512-sxkeMWt8IA7OLSAAI0q4nyPdPIKkwheldnutNLESx35MSumXOvYE5HrwJgLRWtjV12k4UzaBy/zvPZ85fiAyAQ==}
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -1571,9 +1570,6 @@ packages:
 
   '@mjackson/node-fetch-server@0.2.0':
     resolution: {integrity: sha512-EMlH1e30yzmTpGLQjlFmaDAjyOeZhng1/XCd7DExR8PNAnG/G1tyruZxEoUe11ClnwGhGrtsdnyyUx1frSzjng==}
-
-  '@mjackson/node-fetch-server@0.6.1':
-    resolution: {integrity: sha512-9ZJnk/DJjt805uv5PPv11haJIW+HHf3YEEyVXv+8iLQxLD/iXA68FH220XoiTPBC4gCg5q+IMadDw8qPqlA5wg==}
 
   '@mjackson/node-fetch-server@0.7.0':
     resolution: {integrity: sha512-un8diyEBKU3BTVj3GzlTPA1kIjCkGdD+AMYQy31Gf9JCkfoZzwgJ79GUtHrF2BN3XPNMLpubbzPcxys+a3uZEw==}
@@ -3124,23 +3120,8 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
-  '@rollup/plugin-replace@6.0.2':
-    resolution: {integrity: sha512-7QaYCf8bqF04dOy7w/eHmJeNExxTYwvKAmlSAH/EaWWUzbT0h5sbF6bktFoX/0F/0qwng5/dWFMyf3gzaM8DsQ==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-
-  '@rollup/pluginutils@5.2.0':
-    resolution: {integrity: sha512-qWJ2ZTbmumwiLFomfzTyt5Kng4hwPi9rwCYN4SHb6eaRU1KNO4ccxINHr/VhH4GgPlt1XfSTLX2LBTme8ne4Zw==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
+  '@remix-run/node-fetch-server@0.8.0':
+    resolution: {integrity: sha512-8/sKegb4HrM6IdcQeU0KPhj9VOHm5SUqswJDHuMCS3mwbr/NRx078QDbySmn0xslahvvZoOENd7EnK40kWKxkg==}
 
   '@rollup/rollup-android-arm-eabi@4.48.1':
     resolution: {integrity: sha512-rGmb8qoG/zdmKoYELCBwu7vt+9HxZ7Koos3pD0+sH5fR3u3Wb/jGcpnqxcnWsPEKDUyzeLSqksN8LJtgXjqBYw==}
@@ -3601,11 +3582,12 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
-  better-auth@1.3.4:
-    resolution: {integrity: sha512-JbZYam6Cs3Eu5CSoMK120zSshfaKvrCftSo/+v7524H1RvhryQ7UtMbzagBcXj0Digjj8hZtVkkR4tTZD/wK2g==}
+  better-auth@1.3.7:
+    resolution: {integrity: sha512-/1fEyx2SGgJQM5ujozDCh9eJksnVkNU/J7Fk/tG5Y390l8nKbrPvqiFlCjlMM+scR+UABJbQzA6An7HT50LHyQ==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
+      zod: ^3.25.0 || ^4.0.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -3625,9 +3607,6 @@ packages:
         optional: true
       react-dom:
         optional: true
-
-  better-call@1.0.16:
-    resolution: {integrity: sha512-42dgJ1rOtc0anOoxjXPOWuel/Z/4aeO7EJ2SiXNwvlkySSgjXhNjAjTMWa8DL1nt6EXS3jl3VKC3mPsU/lUgVA==}
 
   better-call@1.0.18:
     resolution: {integrity: sha512-Ojyck3P3fs/egBmCW50tvfbCJorNV5KphfPOKrkCxPfOr8Brth1ruDtAJuhHVHEUiWrXv+vpEgWQk7m7FzhbbQ==}
@@ -3998,8 +3977,8 @@ packages:
   detect-node-es@1.1.0:
     resolution: {integrity: sha512-ypdmJU/TbBby2Dxibuv7ZLW3Bs1QEmM7nHjEANfohJLvE0XVujisn1qPJcZxg+qDucsr+bP6fLD1rPS3AhJ7EQ==}
 
-  devalue@4.3.3:
-    resolution: {integrity: sha512-UH8EL6H2ifcY8TbD2QsxwCC/pr5xSwPvv85LrLXVihmHVC3T3YqTCIwnR5ak0yO1KYqlxrPVOA/JVZJYPy2ATg==}
+  devalue@5.3.2:
+    resolution: {integrity: sha512-UDsjUbpQn9kvm68slnrs+mfxwFkIflOhkanmyabZ8zOYk8SMEIbJ3TK+88g70hSIeytu4y18f0z/hYHMTrXIWw==}
 
   devlop@1.1.0:
     resolution: {integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==}
@@ -4205,9 +4184,6 @@ packages:
 
   estree-util-is-identifier-name@3.0.0:
     resolution: {integrity: sha512-hFtqIDZTIUZ9BXLb8y4pYGyk6+wekIivNVTcmvk8NoOh+VeRn5y6cEHzbURrWbfp1fIqdVipilzj+lfaadNZmg==}
-
-  estree-walker@2.0.2:
-    resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
 
   estree-walker@3.0.3:
     resolution: {integrity: sha512-7RUKfXgSMMkzt6ZuXmqapOurLGPPfgj6l9uRZ7lRGolvk0y2yocc35LdcxKC5PQZdn2DMqioAQ2NoWcrTKmm6g==}
@@ -4934,8 +4910,8 @@ packages:
     resolution: {integrity: sha512-z0yWI+4FDrrweS8Zmt4Ej5HdJmky15+L2e6Wgn3+iK5fWzb6T3fhNFq2+MeTRb064c6Wr4N/wv0DzQTjNzHNGQ==}
     engines: {node: '>=10'}
 
-  miniflare@4.20250803.0:
-    resolution: {integrity: sha512-1tmCLfmMw0SqRBF9PPII9CVLQRzOrO7uIBmSng8BMSmtgs2kos7OeoM0sg6KbR9FrvP/zAniLyZuCAMAjuu4fQ==}
+  miniflare@4.20250906.0:
+    resolution: {integrity: sha512-T/RWn1sa0ien80s6NjU+Un/tj12gR6wqScZoiLeMJDD4/fK0UXfnbWXJDubnUED8Xjm7RPQ5ESYdE+mhPmMtuQ==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -5986,8 +5962,8 @@ packages:
     resolution: {integrity: sha512-7oZJCPvvMvTd0OlqWsIxTuItTpJBpU1tcbVl24FMn3xt3+VSunwUasmfPJRE57oNO1KsZ4PgA1xTdAX4hq8NyQ==}
     engines: {node: '>=20.18.1'}
 
-  unenv@2.0.0-rc.19:
-    resolution: {integrity: sha512-t/OMHBNAkknVCI7bVB9OWjUUAwhVv9vsPIAGnNUxnu3FxPQN11rjh0sksLMzc3g7IlTgvHmOTl4JM7JHpcv5wA==}
+  unenv@2.0.0-rc.21:
+    resolution: {integrity: sha512-Wj7/AMtE9MRnAXa6Su3Lk0LNCfqDYgfwVjwRFVum9U7wsto1imuHqk4kTm7Jni+5A0Hn7dttL6O/zjvUvoo+8A==}
 
   unified@11.0.5:
     resolution: {integrity: sha512-xKvGhPWw3k84Qjh8bI3ZeJjqnyadK+GEFtazSfZv/rKeTkTjOJho6mFqh2SM96iIcZokxiOpg78GazTSg8+KHA==}
@@ -6209,20 +6185,20 @@ packages:
     engines: {node: '>=8'}
     hasBin: true
 
-  workerd@1.20250803.0:
-    resolution: {integrity: sha512-oYH29mE/wNolPc32NHHQbySaNorj6+KASUtOvQHySxB5mO1NWdGuNv49woxNCF5971UYceGQndY+OLT+24C3wQ==}
+  workerd@1.20250906.0:
+    resolution: {integrity: sha512-ryVyEaqXPPsr/AxccRmYZZmDAkfQVjhfRqrNTlEeN8aftBk6Ca1u7/VqmfOayjCXrA+O547TauebU+J3IpvFXw==}
     engines: {node: '>=16'}
     hasBin: true
 
   workers-ai-provider@0.7.1:
     resolution: {integrity: sha512-DNR5pLwVuAiFHR32bMLSYSVaIVP4MFDjYd/xB8xEgAtrrXPOi4Kil/NonVXdGLE3tuSxYPq6rK8xMnWr6t5/zA==}
 
-  wrangler@4.28.1:
-    resolution: {integrity: sha512-B1w6XS3o1q1Icyx1CyirY5GNyYhucd63Jqml/EYSbB5dgv0VT8ir7L8IkCdbICEa4yYTETIgvTTZqffM6tBulA==}
+  wrangler@4.35.0:
+    resolution: {integrity: sha512-HbyXtbrh4Fi3mU8ussY85tVdQ74qpVS1vctUgaPc+bPrXBTqfDLkZ6VRtHAVF/eBhz4SFmhJtCQpN1caY2Ak8A==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     peerDependencies:
-      '@cloudflare/workers-types': ^4.20250803.0
+      '@cloudflare/workers-types': ^4.20250906.0
     peerDependenciesMeta:
       '@cloudflare/workers-types':
         optional: true
@@ -6602,7 +6578,7 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
 
-  '@better-auth/cli@1.3.4(@cloudflare/workers-types@4.20250810.0)(@opentelemetry/api@1.9.0)(@types/react@19.1.0)(kysely@0.28.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@better-auth/cli@1.3.7(@cloudflare/workers-types@4.20250910.0)(@opentelemetry/api@1.9.0)(@types/react@19.1.0)(kysely@0.28.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod@4.1.5)':
     dependencies:
       '@babel/core': 7.28.3
       '@babel/preset-react': 7.27.1(@babel/core@7.28.3)
@@ -6612,13 +6588,13 @@ snapshots:
       '@prisma/client': 5.22.0(prisma@5.22.0)
       '@types/better-sqlite3': 7.6.13
       '@types/prompts': 2.4.9
-      better-auth: 1.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      better-auth: 1.3.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod@4.1.5)
       better-sqlite3: 11.10.0
       c12: 2.0.4
       chalk: 5.6.0
       commander: 12.1.0
       dotenv: 16.6.1
-      drizzle-orm: 0.33.0(@cloudflare/workers-types@4.20250810.0)(@opentelemetry/api@1.9.0)(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.13)(@types/react@19.1.0)(better-sqlite3@11.10.0)(kysely@0.28.5)(prisma@5.22.0)(react@19.1.0)
+      drizzle-orm: 0.33.0(@cloudflare/workers-types@4.20250910.0)(@opentelemetry/api@1.9.0)(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.13)(@types/react@19.1.0)(better-sqlite3@11.10.0)(kysely@0.28.5)(prisma@5.22.0)(react@19.1.0)
       fs-extra: 11.3.1
       get-tsconfig: 4.10.1
       prettier: 3.4.2
@@ -6665,11 +6641,6 @@ snapshots:
       - '@lynx-js/react'
       - react
       - react-dom
-
-  '@better-auth/utils@0.2.5':
-    dependencies:
-      typescript: 5.9.2
-      uncrypto: 0.1.3
 
   '@better-auth/utils@0.2.6':
     dependencies:
@@ -6720,64 +6691,62 @@ snapshots:
     dependencies:
       mime: 3.0.0
 
-  '@cloudflare/unenv-preset@2.6.0(unenv@2.0.0-rc.19)(workerd@1.20250803.0)':
+  '@cloudflare/unenv-preset@2.7.3(unenv@2.0.0-rc.21)(workerd@1.20250906.0)':
     dependencies:
-      unenv: 2.0.0-rc.19
+      unenv: 2.0.0-rc.21
     optionalDependencies:
-      workerd: 1.20250803.0
+      workerd: 1.20250906.0
 
-  '@cloudflare/vite-plugin@1.11.2(rollup@4.48.1)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(workerd@1.20250803.0)(wrangler@4.28.1(@cloudflare/workers-types@4.20250810.0))':
+  '@cloudflare/vite-plugin@1.12.4(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(workerd@1.20250906.0)(wrangler@4.35.0(@cloudflare/workers-types@4.20250910.0))':
     dependencies:
-      '@cloudflare/unenv-preset': 2.6.0(unenv@2.0.0-rc.19)(workerd@1.20250803.0)
-      '@mjackson/node-fetch-server': 0.6.1
-      '@rollup/plugin-replace': 6.0.2(rollup@4.48.1)
+      '@cloudflare/unenv-preset': 2.7.3(unenv@2.0.0-rc.21)(workerd@1.20250906.0)
+      '@remix-run/node-fetch-server': 0.8.0
       get-port: 7.1.0
-      miniflare: 4.20250803.0
+      miniflare: 4.20250906.0
       picocolors: 1.1.1
       tinyglobby: 0.2.14
-      unenv: 2.0.0-rc.19
+      unenv: 2.0.0-rc.21
       vite: 7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)
-      wrangler: 4.28.1(@cloudflare/workers-types@4.20250810.0)
+      wrangler: 4.35.0(@cloudflare/workers-types@4.20250910.0)
       ws: 8.18.0
     transitivePeerDependencies:
       - bufferutil
-      - rollup
       - utf-8-validate
       - workerd
 
-  '@cloudflare/vitest-pool-workers@0.8.61(@cloudflare/workers-types@4.20250810.0)(@vitest/runner@3.2.4)(@vitest/snapshot@3.2.4)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(msw@2.10.5(@types/node@22.13.14)(typescript@5.9.2)))':
+  '@cloudflare/vitest-pool-workers@0.8.71(@cloudflare/workers-types@4.20250910.0)(@vitest/runner@3.2.4)(@vitest/snapshot@3.2.4)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(msw@2.10.5(@types/node@22.13.14)(typescript@5.9.2)))':
     dependencies:
       '@vitest/runner': 3.2.4
       '@vitest/snapshot': 3.2.4
       birpc: 0.2.14
       cjs-module-lexer: 1.4.3
-      devalue: 4.3.3
-      miniflare: 4.20250803.0
+      devalue: 5.3.2
+      miniflare: 4.20250906.0
       semver: 7.7.2
       vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(msw@2.10.5(@types/node@22.13.14)(typescript@5.9.2))
-      wrangler: 4.28.1(@cloudflare/workers-types@4.20250810.0)
+      wrangler: 4.35.0(@cloudflare/workers-types@4.20250910.0)
       zod: 3.25.76
     transitivePeerDependencies:
       - '@cloudflare/workers-types'
       - bufferutil
       - utf-8-validate
 
-  '@cloudflare/workerd-darwin-64@1.20250803.0':
+  '@cloudflare/workerd-darwin-64@1.20250906.0':
     optional: true
 
-  '@cloudflare/workerd-darwin-arm64@1.20250803.0':
+  '@cloudflare/workerd-darwin-arm64@1.20250906.0':
     optional: true
 
-  '@cloudflare/workerd-linux-64@1.20250803.0':
+  '@cloudflare/workerd-linux-64@1.20250906.0':
     optional: true
 
-  '@cloudflare/workerd-linux-arm64@1.20250803.0':
+  '@cloudflare/workerd-linux-arm64@1.20250906.0':
     optional: true
 
-  '@cloudflare/workerd-windows-64@1.20250803.0':
+  '@cloudflare/workerd-windows-64@1.20250906.0':
     optional: true
 
-  '@cloudflare/workers-types@4.20250810.0': {}
+  '@cloudflare/workers-types@4.20250910.0': {}
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
@@ -7169,8 +7138,6 @@ snapshots:
   '@levischuck/tiny-cbor@0.2.11': {}
 
   '@mjackson/node-fetch-server@0.2.0': {}
-
-  '@mjackson/node-fetch-server@0.6.1': {}
 
   '@mjackson/node-fetch-server@0.7.0': {}
 
@@ -8800,14 +8767,14 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
-  '@react-router/cloudflare@7.8.1(@cloudflare/workers-types@4.20250810.0)(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(typescript@5.9.2)':
+  '@react-router/cloudflare@7.8.1(@cloudflare/workers-types@4.20250910.0)(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(typescript@5.9.2)':
     dependencies:
-      '@cloudflare/workers-types': 4.20250810.0
+      '@cloudflare/workers-types': 4.20250910.0
       react-router: 7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
     optionalDependencies:
       typescript: 5.9.2
 
-  '@react-router/dev@7.8.1(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(wrangler@4.28.1(@cloudflare/workers-types@4.20250810.0))':
+  '@react-router/dev@7.8.1(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(wrangler@4.35.0(@cloudflare/workers-types@4.20250910.0))':
     dependencies:
       '@babel/core': 7.28.3
       '@babel/generator': 7.28.3
@@ -8841,7 +8808,7 @@ snapshots:
       vite-node: 3.2.4(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)
     optionalDependencies:
       typescript: 5.9.2
-      wrangler: 4.28.1(@cloudflare/workers-types@4.20250810.0)
+      wrangler: 4.35.0(@cloudflare/workers-types@4.20250910.0)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -8860,9 +8827,9 @@ snapshots:
       - tsx
       - yaml
 
-  '@react-router/fs-routes@7.8.1(@react-router/dev@7.8.1(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(wrangler@4.28.1(@cloudflare/workers-types@4.20250810.0)))(typescript@5.9.2)':
+  '@react-router/fs-routes@7.8.1(@react-router/dev@7.8.1(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(wrangler@4.35.0(@cloudflare/workers-types@4.20250910.0)))(typescript@5.9.2)':
     dependencies:
-      '@react-router/dev': 7.8.1(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(wrangler@4.28.1(@cloudflare/workers-types@4.20250810.0))
+      '@react-router/dev': 7.8.1(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react-router@7.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(vite@7.1.3(@types/node@22.13.14)(jiti@2.5.1)(lightningcss@1.30.1))(wrangler@4.35.0(@cloudflare/workers-types@4.20250910.0))
       minimatch: 9.0.5
     optionalDependencies:
       typescript: 5.9.2
@@ -9284,20 +9251,7 @@ snapshots:
       '@react-types/shared': 3.32.0(react@19.1.0)
       react: 19.1.0
 
-  '@rollup/plugin-replace@6.0.2(rollup@4.48.1)':
-    dependencies:
-      '@rollup/pluginutils': 5.2.0(rollup@4.48.1)
-      magic-string: 0.30.18
-    optionalDependencies:
-      rollup: 4.48.1
-
-  '@rollup/pluginutils@5.2.0(rollup@4.48.1)':
-    dependencies:
-      '@types/estree': 1.0.8
-      estree-walker: 2.0.2
-      picomatch: 4.0.3
-    optionalDependencies:
-      rollup: 4.48.1
+  '@remix-run/node-fetch-server@0.8.0': {}
 
   '@rollup/rollup-android-arm-eabi@4.48.1':
     optional: true
@@ -9729,15 +9683,15 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  better-auth@1.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  better-auth@1.3.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod@4.1.5):
     dependencies:
-      '@better-auth/utils': 0.2.5
+      '@better-auth/utils': 0.2.6
       '@better-fetch/fetch': 1.1.18
       '@noble/ciphers': 0.6.0
       '@noble/hashes': 1.8.0
       '@simplewebauthn/browser': 13.1.2
       '@simplewebauthn/server': 13.1.2
-      better-call: 1.0.16
+      better-call: 1.0.18
       defu: 6.1.4
       jose: 5.10.0
       kysely: 0.28.5
@@ -9764,13 +9718,6 @@ snapshots:
     optionalDependencies:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
-
-  better-call@1.0.16:
-    dependencies:
-      '@better-fetch/fetch': 1.1.18
-      rou3: 0.5.1
-      set-cookie-parser: 2.7.1
-      uncrypto: 0.1.3
 
   better-call@1.0.18:
     dependencies:
@@ -10113,7 +10060,7 @@ snapshots:
 
   detect-node-es@1.1.0: {}
 
-  devalue@4.3.3: {}
+  devalue@5.3.2: {}
 
   devlop@1.1.0:
     dependencies:
@@ -10130,9 +10077,9 @@ snapshots:
 
   dotenv@16.6.1: {}
 
-  drizzle-orm@0.33.0(@cloudflare/workers-types@4.20250810.0)(@opentelemetry/api@1.9.0)(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.13)(@types/react@19.1.0)(better-sqlite3@11.10.0)(kysely@0.28.5)(prisma@5.22.0)(react@19.1.0):
+  drizzle-orm@0.33.0(@cloudflare/workers-types@4.20250910.0)(@opentelemetry/api@1.9.0)(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.13)(@types/react@19.1.0)(better-sqlite3@11.10.0)(kysely@0.28.5)(prisma@5.22.0)(react@19.1.0):
     optionalDependencies:
-      '@cloudflare/workers-types': 4.20250810.0
+      '@cloudflare/workers-types': 4.20250910.0
       '@opentelemetry/api': 1.9.0
       '@prisma/client': 5.22.0(prisma@5.22.0)
       '@types/better-sqlite3': 7.6.13
@@ -10270,8 +10217,6 @@ snapshots:
   esprima@4.0.1: {}
 
   estree-util-is-identifier-name@3.0.0: {}
-
-  estree-walker@2.0.2: {}
 
   estree-walker@3.0.3:
     dependencies:
@@ -11161,7 +11106,7 @@ snapshots:
 
   mimic-response@3.1.0: {}
 
-  miniflare@4.20250803.0:
+  miniflare@4.20250906.0:
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       acorn: 8.14.0
@@ -11171,7 +11116,7 @@ snapshots:
       sharp: 0.33.5
       stoppable: 1.1.0
       undici: 7.15.0
-      workerd: 1.20250803.0
+      workerd: 1.20250906.0
       ws: 8.18.0
       youch: 4.1.0-beta.10
       zod: 3.22.3
@@ -12424,7 +12369,7 @@ snapshots:
 
   undici@7.15.0: {}
 
-  unenv@2.0.0-rc.19:
+  unenv@2.0.0-rc.21:
     dependencies:
       defu: 6.1.4
       exsolve: 1.0.7
@@ -12671,13 +12616,13 @@ snapshots:
       siginfo: 2.0.0
       stackback: 0.0.2
 
-  workerd@1.20250803.0:
+  workerd@1.20250906.0:
     optionalDependencies:
-      '@cloudflare/workerd-darwin-64': 1.20250803.0
-      '@cloudflare/workerd-darwin-arm64': 1.20250803.0
-      '@cloudflare/workerd-linux-64': 1.20250803.0
-      '@cloudflare/workerd-linux-arm64': 1.20250803.0
-      '@cloudflare/workerd-windows-64': 1.20250803.0
+      '@cloudflare/workerd-darwin-64': 1.20250906.0
+      '@cloudflare/workerd-darwin-arm64': 1.20250906.0
+      '@cloudflare/workerd-linux-64': 1.20250906.0
+      '@cloudflare/workerd-linux-arm64': 1.20250906.0
+      '@cloudflare/workerd-windows-64': 1.20250906.0
 
   workers-ai-provider@0.7.1(zod@4.1.5):
     dependencies:
@@ -12686,18 +12631,18 @@ snapshots:
     transitivePeerDependencies:
       - zod
 
-  wrangler@4.28.1(@cloudflare/workers-types@4.20250810.0):
+  wrangler@4.35.0(@cloudflare/workers-types@4.20250910.0):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.4.0
-      '@cloudflare/unenv-preset': 2.6.0(unenv@2.0.0-rc.19)(workerd@1.20250803.0)
+      '@cloudflare/unenv-preset': 2.7.3(unenv@2.0.0-rc.21)(workerd@1.20250906.0)
       blake3-wasm: 2.1.5
       esbuild: 0.25.4
-      miniflare: 4.20250803.0
+      miniflare: 4.20250906.0
       path-to-regexp: 6.3.0
-      unenv: 2.0.0-rc.19
-      workerd: 1.20250803.0
+      unenv: 2.0.0-rc.21
+      workerd: 1.20250906.0
     optionalDependencies:
-      '@cloudflare/workers-types': 4.20250810.0
+      '@cloudflare/workers-types': 4.20250910.0
       fsevents: 2.3.3
     transitivePeerDependencies:
       - bufferutil

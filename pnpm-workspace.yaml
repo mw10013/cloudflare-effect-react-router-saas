@@ -7,11 +7,11 @@ catalog:
   "@ai-sdk/provider-utils": 3.0.0-beta.2
   "@ai-sdk/react": 2.0.0-beta.9
   "@aws-sdk/client-sesv2": 3.777.0
-  "@better-auth/cli": 1.3.4
+  "@better-auth/cli": 1.3.7
   "@better-auth/stripe": 1.3.7
-  "@cloudflare/vite-plugin": 1.11.2
-  "@cloudflare/vitest-pool-workers": 0.8.61
-  "@cloudflare/workers-types": 4.20250810.0
+  "@cloudflare/vite-plugin": 1.12.4
+  "@cloudflare/vitest-pool-workers": 0.8.71
+  "@cloudflare/workers-types": 4.20250910.0
   "@effect/language-service": 0.21.8
   "@epic-web/invariant": 1.0.0
   "@openauthjs/openauth": 0.4.3
@@ -37,7 +37,6 @@ catalog:
   isbot: 5.1.28
   jsonc-parser: 3.3.1
   lucide-react: 0.514.0
-  miniflare: 4.20250726.0
   openai: 5.8.2
   oxlint: 1.13.0
   playwright: 1.55.0
@@ -59,6 +58,6 @@ catalog:
   vite-tsconfig-paths: 5.1.4
   vitest: 3.2.4
   workers-ai-provider: 0.7.1
-  wrangler: 4.28.1
+  wrangler: 4.35.0
   zod: 4.1.5
   zx: 8.5.5
