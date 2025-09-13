@@ -32,7 +32,6 @@ pnpm -F s test --project d1 auth
 
 ## TODO
 
-- deploy
 - actor/agent
 - stripe
   - cancel -> subscribe -> another free trial!
@@ -47,6 +46,7 @@ pnpm -F s test --project d1 auth
 - css
   - invitations: pre overflow, main overflow, min-width-0?
   - sign out a11y in sidebar
+  - buttons in pricing
 - batch
   - scavenge expired verifications
 - secondary storage: https://www.better-auth.com/docs/concepts/database#secondary-storage
