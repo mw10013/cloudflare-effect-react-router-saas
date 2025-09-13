@@ -1,6 +1,7 @@
 {
   "name": "cloudflare-effect-react-router-saas",
   "private": true,
+  "type": "module",
   "scripts": {
     "test": "pnpm -r test",
     "test:ci": "pnpm -r test:ci",
@@ -9,16 +10,20 @@
     "clean:wrangler": "pnpm -r clean:wrangler",
     "clean:etc": "pnpm -r clean:etc",
     "format": "prettier --write .",
-    "lint": "oxlint . --ignore-pattern \"functions/s-\" --fix"
+    "lint": "eslint .",
+    "oxlint": "oxlint . --ignore-pattern \"functions/s-\" --fix"
   },
   "devDependencies": {
-    "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
     "@effect/language-service": "catalog:",
+    "@eslint/js": "^9.35.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
+    "eslint": "catalog:",
     "oxlint": "catalog:",
     "prettier": "3.4.2",
     "prettier-plugin-sql": "^0.18.1",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:"
   },
   "packageManager": "pnpm@10.4.0",
   "engines": {
