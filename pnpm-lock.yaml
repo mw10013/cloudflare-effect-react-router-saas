@@ -39,6 +39,9 @@ catalogs:
     '@epic-web/invariant':
       specifier: 1.0.0
       version: 1.0.0
+    '@eslint/js':
+      specifier: 9.35.0
+      version: 9.35.0
     '@openauthjs/openauth':
       specifier: 0.4.3
       version: 0.4.3
@@ -180,7 +183,7 @@ importers:
         specifier: 'catalog:'
         version: 0.21.8
       '@eslint/js':
-        specifier: ^9.35.0
+        specifier: 'catalog:'
         version: 9.35.0
       '@ianvs/prettier-plugin-sort-imports':
         specifier: ^4.4.1
