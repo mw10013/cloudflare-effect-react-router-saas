@@ -5,14 +5,14 @@ import { twMerge } from "tailwind-merge";
 import { disabledStyles, focusVisibleStyles } from "./oui-base";
 
 /**
- * Derived from shadcn Button
+ * Derived from shadcn Button.
  * Rac.Button does not support aria-invalid or have data-invalid.
  */
 export const buttonVariants = cva(
   [
     focusVisibleStyles,
     disabledStyles,
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0",
+    "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   ],
   {
     variants: {
@@ -20,9 +20,9 @@ export const buttonVariants = cva(
         default:
           "bg-primary text-primary-foreground shadow-xs data-[hovered]:bg-primary/90",
         destructive:
-          "bg-destructive text-white shadow-xs data-[hovered]:bg-destructive/90 data-[focus-visible]:ring-destructive/20 dark:data-[focus-visible]:ring-destructive/40 dark:bg-destructive/60",
+          "bg-destructive shadow-xs data-[hovered]:bg-destructive/90 data-[focus-visible]:ring-destructive/20 dark:data-[focus-visible]:ring-destructive/40 dark:bg-destructive/60 text-white",
         outline:
-          "border bg-background shadow-xs data-[hovered]:bg-accent data-[hovered]:text-accent-foreground dark:bg-input/30 dark:border-input dark:data-[hovered]:bg-input/50",
+          "bg-background shadow-xs data-[hovered]:bg-accent data-[hovered]:text-accent-foreground dark:bg-input/30 dark:border-input dark:data-[hovered]:bg-input/50 border",
         secondary:
           "bg-secondary text-secondary-foreground shadow-xs data-[hovered]:bg-secondary/80",
         ghost:
@@ -31,7 +31,7 @@ export const buttonVariants = cva(
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
+        sm: "h-8 gap-1.5 rounded-md px-3 has-[>svg]:px-2.5",
         lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
         icon: "size-9",
       },
@@ -56,16 +56,8 @@ export const buttonVariants = cva(
  */
 export const buttonClassName =
   (props: VariantProps<typeof buttonVariants>) =>
-  (
-    renderProps: Partial<
-      Parameters<
-        Extract<
-          React.ComponentProps<typeof Rac.Button>["className"],
-          (...args: any) => any
-        >
-      >[0]
-    >,
-  ) =>
+  // TypeScript allows excess props (isHovered, etc.) via usage inference
+  (renderProps: Parameters<typeof buttonVariants>[0]) =>
     buttonVariants({ ...renderProps, ...props });
 
 export interface ButtonProps

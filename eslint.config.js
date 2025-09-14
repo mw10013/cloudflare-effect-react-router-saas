@@ -16,6 +16,7 @@ export default defineConfig(
 
   eslint.configs.recommended,
   tseslint.configs.recommended,
+  tseslint.configs.stylistic,
   {
     rules: {
       "no-unused-vars": "off",
@@ -26,21 +27,3 @@ export default defineConfig(
     },
   },
 );
-
-// import js from "@eslint/js";
-// import { defineConfig, globalIgnores } from "eslint/config";
-
-// export default defineConfig([
-//   globalIgnores(["functions/s-/", "functions/shared/", "functions/ui/", "**/.wrangler/"]),
-//   {
-//     files: ["**/*.ts"],
-//     plugins: {
-//       js,
-//     },
-//     extends: ["js/recommended"],
-//     rules: {
-//       "no-unused-vars": "warn",
-//       "no-undef": "warn",
-//     },
-//   },
-// ]);

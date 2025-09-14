@@ -35,12 +35,7 @@ export function ListBoxItem<T extends object>({
         children,
         (
           children,
-          renderProps: Parameters<
-            Extract<
-              React.ComponentProps<typeof Rac.ListBoxItem>["children"],
-              (...args: any) => any
-            >
-          >[0],
+          renderProps,
         ) => (
           <>
             {renderProps.isSelected && (
@@ -97,7 +92,8 @@ export function ListBoxItemEx1Pagination<T extends object>({
             : undefined)
       }
       className={Rac.composeRenderProps(className, (className, renderProps) =>
-        twMerge("cursor-pointer",
+        twMerge(
+          "cursor-pointer",
           buttonVariants({
             ...renderProps,
             variant: renderProps.isSelected ? "outline" : "ghost",
