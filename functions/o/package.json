@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "@workspace/oui": "workspace:*",
-    "@workspace/shared": "workspace:*",
     "@workspace/ui": "workspace:*",
     "date-fns": "^3.6.0",
     "effect": "catalog:",

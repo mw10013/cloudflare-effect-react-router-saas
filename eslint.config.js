@@ -6,8 +6,6 @@ import tseslint from "typescript-eslint";
 
 export default defineConfig(
   globalIgnores([
-    "functions/s-/",
-    "functions/shared/",
     "functions/ui/",
     "**/.wrangler/",
     "**/worker-configuration.d.ts",

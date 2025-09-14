@@ -28,7 +28,7 @@ pnpm -F s test --project d1 auth
     - Build command: CLOUDFLARE_ENV=production pnpm -F <PACKAGE_NAME> build
     - Deploy command: pnpm -F <PACKAGE_NAME> exec wrangler deploy
   - Build watch paths
-    - Include paths: functions/<PACKAGE_NAME>/\* functions/oui/\* functions/shared/\* functions/ui/\*
+    - Include paths: functions/<PACKAGE_NAME>/\* functions/oui/\* functions/ui/\*
 
 ## TODO
 
@@ -48,7 +48,7 @@ pnpm -F s test --project d1 auth
   - sign out a11y in sidebar
   - buttons in pricing
 - d1
-  - strict tables: https://www.sqlite.org/stricttables.html, https://www.sqlite.org/stricttables.html  
+  - strict tables: https://www.sqlite.org/stricttables.html, https://www.sqlite.org/stricttables.html
 - batch
   - scavenge expired verifications
 - secondary storage: https://www.better-auth.com/docs/concepts/database#secondary-storage

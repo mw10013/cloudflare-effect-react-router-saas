@@ -9,7 +9,6 @@
       "./functions/o/app/**",
       "./functions/oui/src/**",
       "./functions/s/app/**",
-      "./functions/s-/app/**",
       "./functions/ui/src/**"
     ]
   },

@@ -11,7 +11,7 @@
     "clean:etc": "pnpm -r clean:etc",
     "format": "prettier --write .",
     "lint": "eslint",
-    "oxlint": "oxlint . --ignore-pattern \"functions/s-\" --fix"
+    "oxlint": "oxlint . --fix"
   },
   "devDependencies": {
     "@effect/language-service": "catalog:",

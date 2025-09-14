@@ -10,8 +10,6 @@
 - functions/o: Demo application for oui.
 - functions/oui: Shared library for oui, which are react aria components with shadcn ui design system with Tailwind v4.
 - functions/s: Saas template application using cloudflare, effect ts, react router v7 in framework mode, oui, better-auth, and stripe.
-- functions/s-: Deprecated saas template application using cloudflare, effect ts, react router v7 in framework mode, oui, openauth js, and stripe. Use for reference only.
-- functions/shared: Shared library with functions for Effect TS.
 - functions/ui: Shared library with shadcn ui components and Tailwind v4.
   - Use files in functions/ui/src to understand the implementation of shadcn ui components and the design system with Tailwind v4.
 
