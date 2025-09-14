@@ -69,16 +69,17 @@ function adapt({
 
 function adaptWhere({ where, modelId }: { where?: Where[]; modelId: string }): {
   whereClause?: string;
-  whereValues: any[];
+  // unknown[] to align with D1's bind(...values: unknown[]) method
+  whereValues: unknown[];
 } {
   if (!where || where.length === 0)
     return { whereClause: undefined, whereValues: [] };
 
-  const serializeWhereValue = (v: unknown) =>
+  const serializeWhereValue = (v: unknown): unknown =>
     v instanceof Date ? v.toISOString() : v;
 
   const clauses: string[] = [];
-  const whereValues: any[] = [];
+  const whereValues: unknown[] = [];
   for (const w of where) {
     const op = w.operator || "eq";
     const field = w.field === "id" ? modelId : w.field;
@@ -298,7 +299,7 @@ export const d1Adapter = (db: D1Database) =>
 
       const count: CustomAdapter["count"] = async ({ model, where }) => {
         const adapted = adapt({ model, where });
-        let sql = `select count(*) as count from ${adapted.model} ${adapted.whereClause ? `where ${adapted.whereClause}` : ""}`;
+        const sql = `select count(*) as count from ${adapted.model} ${adapted.whereClause ? `where ${adapted.whereClause}` : ""}`;
         const result = await db
           .prepare(sql)
           .bind(...adapted.whereValues)

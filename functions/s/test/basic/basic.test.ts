@@ -33,6 +33,6 @@ describe("basic", () => {
 
     const result = loader({ context });
 
-    expect(result).toBeDefined
+    expect(result).toBeDefined();
   });
 });
