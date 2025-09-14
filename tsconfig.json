@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.base.jsonc",
+  "include": [],
+  "references": [
+    { "path": "functions/s" },
+    { "path": "functions/o" },
+    { "path": "functions/oui" },
+    { "path": "functions/ui" }
+  ]
+}
