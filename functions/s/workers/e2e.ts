@@ -21,6 +21,16 @@ export function createE2eRoutes({
 
   e2e.post("/delete/user/:email", async (c) => {
     const email = c.req.param("email");
+
+    // Always delete Stripe customers by email since D1 database may be out of sync
+    const customers = await stripe.customers.list({
+      email,
+      expand: ["data.subscriptions"],
+    });
+    for (const customer of customers.data) {
+      await stripe.customers.del(customer.id);
+    }
+
     const user = await repository.getUser({ email });
     if (!user) {
       return c.json({
@@ -36,13 +46,6 @@ export function createE2eRoutes({
         },
         403,
       );
-    }
-    const customers = await stripe.customers.list({
-      email,
-      expand: ["data.subscriptions"],
-    });
-    for (const customer of customers.data) {
-      await stripe.customers.del(customer.id);
     }
     const results = await d1.batch([
       d1
