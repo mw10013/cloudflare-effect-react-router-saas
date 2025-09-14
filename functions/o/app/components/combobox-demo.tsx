@@ -9,14 +9,12 @@ import {
 import { Button } from "@workspace/ui/components/ui/button";
 import {
   Command,
-  CommandDialog,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
   CommandSeparator,
-  CommandShortcut,
 } from "@workspace/ui/components/ui/command";
 import {
   Popover,

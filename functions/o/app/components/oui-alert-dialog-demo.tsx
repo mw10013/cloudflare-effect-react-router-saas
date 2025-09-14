@@ -77,10 +77,8 @@ export function OuiAlertDialogDemo3() {
     });
 
     if (confirmed) {
-      // eslint-disable-next-line no-console
       console.log("Confirmed!");
     } else {
-      // eslint-disable-next-line no-console
       console.log("Cancelled!");
     }
   };

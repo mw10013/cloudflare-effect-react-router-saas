@@ -1,43 +1,46 @@
-import js from "@eslint/js";
-import { defineConfig, globalIgnores } from "eslint/config";
+// @ts-check
 
-export default defineConfig([
-  globalIgnores(["functions/s-/", "functions/shared/", "functions/ui/", "**/.wrangler/"]),
+import eslint from "@eslint/js";
+import { defineConfig, globalIgnores } from "eslint/config";
+import tseslint from "typescript-eslint";
+
+export default defineConfig(
+  globalIgnores([
+    "functions/s-/",
+    "functions/shared/",
+    "functions/ui/",
+    "**/.wrangler/",
+    "**/worker-configuration.d.ts",
+    "**/.react-router/",
+  ]),
+
+  eslint.configs.recommended,
+  tseslint.configs.recommended,
   {
-    files: ["**/*.ts"],
-    plugins: {
-      js,
-    },
-    extends: ["js/recommended"],
     rules: {
-      "no-unused-vars": "warn",
-      "no-undef": "warn",
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+      ],
     },
   },
-]);
+);
 
-// AI: For reference
-// import eslint from "@eslint/js";
-// import tseslint from "typescript-eslint";
+// import js from "@eslint/js";
+// import { defineConfig, globalIgnores } from "eslint/config";
 
-// export default tseslint.config(
-//   eslint.configs.recommended,
-//   ...tseslint.configs.recommendedTypeChecked,
+// export default defineConfig([
+//   globalIgnores(["functions/s-/", "functions/shared/", "functions/ui/", "**/.wrangler/"]),
 //   {
-//     files: ["**/*.{js,ts,tsx,mjs}"],
-//     languageOptions: {
-//       parserOptions: {
-//         project: [
-//           "./tsconfig.eslint.json",
-//           "./functions/**/tsconfig.json",
-//           "./functions/**/tsconfig.cloudflare.json",
-//         ],
-//         tsconfigRootDir: import.meta.dirname,
-//       },
+//     files: ["**/*.ts"],
+//     plugins: {
+//       js,
+//     },
+//     extends: ["js/recommended"],
+//     rules: {
+//       "no-unused-vars": "warn",
+//       "no-undef": "warn",
 //     },
 //   },
-//   {
-//     files: ["**/*.config.*"],
-//     extends: [tseslint.configs.disableTypeChecked],
-//   },
-// );
+// ]);
