@@ -204,6 +204,7 @@ export const d1Adapter = (db: D1Database) =>
             .prepare(sql)
             .bind(...adapted.whereValues)
             .first(),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ) as any; // Better-Auth has unconstrained type parameter but we are working with a Record shape.
       };
 
@@ -233,6 +234,7 @@ export const d1Adapter = (db: D1Database) =>
           .prepare(sql)
           .bind(...adapted.whereValues)
           .run();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return result.results.map(adapted.mapResult) as any[]; // Better-Auth has unconstrained type parameter but we are working with a Record shape.
       };
 
@@ -254,6 +256,7 @@ export const d1Adapter = (db: D1Database) =>
             .prepare(sql)
             .bind(...setValues, ...adapted.whereValues)
             .first(),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ) as any; // Better-Auth has unconstrained type parameter but we are working with a Record shape.
       };
 
