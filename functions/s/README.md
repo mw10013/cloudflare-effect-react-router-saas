@@ -47,6 +47,8 @@ pnpm -F s test --project d1 auth
   - invitations: pre overflow, main overflow, min-width-0?
   - sign out a11y in sidebar
   - buttons in pricing
+- d1
+  - strict tables: https://www.sqlite.org/stricttables.html, https://www.sqlite.org/stricttables.html  
 - batch
   - scavenge expired verifications
 - secondary storage: https://www.better-auth.com/docs/concepts/database#secondary-storage

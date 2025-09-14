@@ -230,7 +230,6 @@ function InvitationItem({
 }) {
   const fetcher = useFetcher<Route.ComponentProps["actionData"]>();
   const pending = fetcher.state !== "idle";
-  const result = fetcher.data;
   return (
     <li
       key={invitation.id}

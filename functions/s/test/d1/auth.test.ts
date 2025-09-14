@@ -32,6 +32,7 @@ async function createTestContext() {
     d1: env.D1,
     stripeService: createStripeService(),
     ses: {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       async sendEmail() {},
     },
     sendResetPassword: mockSendResetPassword,

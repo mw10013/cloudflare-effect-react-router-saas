@@ -19,11 +19,13 @@ async function createSeedContext({
     d1: cloudflare.env.D1,
     stripeService,
     ses: {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       async sendEmail() {},
     },
     sendMagicLink: async ({ email, token }) => {
       magicLinkTokens.set(email, token);
     },
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     sendInvitationEmail: async () => {},
   });
 
@@ -225,7 +227,9 @@ export async function loader({ context }: Route.ActionArgs) {
     {
       results: { inviterId: number; organizationId: number; status: string }[];
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     any,
   ];
 

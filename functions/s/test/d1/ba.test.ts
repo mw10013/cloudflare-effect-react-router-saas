@@ -21,6 +21,7 @@ describe("better-auth sign up flow", async () => {
       d1: env.D1,
       stripeService: createStripeService(),
       ses: {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         async sendEmail() {},
       },
       sendVerificationEmail: mockSendVerificationEmail,
@@ -55,6 +56,7 @@ describe("better-auth sign up flow", async () => {
     });
 
     expect(response.status).toBe(422);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(((await response.json()) as any)?.code).toBe(
       "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL",
     );
@@ -67,6 +69,7 @@ describe("better-auth sign up flow", async () => {
     });
 
     expect(response.status).toBe(403);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(((await response.json()) as any)?.code).toBe("EMAIL_NOT_VERIFIED");
     expect(mockSendVerificationEmail).toHaveBeenCalledTimes(2);
   });
@@ -124,6 +127,7 @@ describe("better-auth sign up flow", async () => {
     });
 
     expect(response.status).toBe(401);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(((await response.json()) as any)?.code).toBe(
       "INVALID_EMAIL_OR_PASSWORD",
     );
