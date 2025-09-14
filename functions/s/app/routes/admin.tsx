@@ -17,7 +17,9 @@ export const adminMiddleware: Route.unstable_MiddlewareFunction = async ({
     throw new Response("Forbidden", { status: 403 });
 };
 
-export const unstable_middleware = [adminMiddleware];
+export const unstable_middleware: Route.unstable_MiddlewareFunction[] = [
+  adminMiddleware,
+];
 
 const items = [
   {

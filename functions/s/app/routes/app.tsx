@@ -11,7 +11,9 @@ const appMiddleware: Route.unstable_MiddlewareFunction = async ({
     throw new Response("Forbidden", { status: 403 });
 };
 
-export const unstable_middleware = [appMiddleware];
+export const unstable_middleware: Route.unstable_MiddlewareFunction[] = [
+  appMiddleware,
+];
 
 export default function RouteComponent() {
   return <Outlet />;

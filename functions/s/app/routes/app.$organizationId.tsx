@@ -32,7 +32,9 @@ const middleware: Route.unstable_MiddlewareFunction = async ({
   context.set(appLoadContext, { ...alc, organization, organizations });
 };
 
-export const unstable_middleware = [middleware];
+export const unstable_middleware: Route.unstable_MiddlewareFunction[] = [
+  middleware,
+];
 
 export async function loader({
   context,
