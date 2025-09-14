@@ -1,4 +1,3 @@
-import * as React from "react";
 import * as Oui from "@workspace/oui";
 import {
   Breadcrumb,

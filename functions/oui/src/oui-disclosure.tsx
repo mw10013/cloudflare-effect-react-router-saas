@@ -1,4 +1,3 @@
-import React from "react";
 import { ChevronDown } from "lucide-react";
 import * as Rac from "react-aria-components";
 import {
