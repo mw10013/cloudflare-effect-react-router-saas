@@ -56,8 +56,14 @@ export const buttonVariants = cva(
  */
 export const buttonClassName =
   (props: VariantProps<typeof buttonVariants>) =>
-  // TypeScript allows excess props (isHovered, etc.) via usage inference
-  (renderProps: Parameters<typeof buttonVariants>[0]) =>
+  // The renderProps type omits variant props (variant, size) from the buttonVariants parameters,
+  // resulting in the RAC render props (isHovered, isPressed, etc.) for compatibility across components.
+  (
+    renderProps: Omit<
+      Parameters<typeof buttonVariants>[0],
+      keyof VariantProps<typeof buttonVariants>
+    >,
+  ) =>
     buttonVariants({ ...renderProps, ...props });
 
 export interface ButtonProps
