@@ -10,7 +10,7 @@
     "clean:wrangler": "pnpm -r clean:wrangler",
     "clean:etc": "pnpm -r clean:etc",
     "format": "prettier --write .",
-    "lint": "eslint .",
+    "lint": "eslint",
     "oxlint": "oxlint . --ignore-pattern \"functions/s-\" --fix"
   },
   "devDependencies": {

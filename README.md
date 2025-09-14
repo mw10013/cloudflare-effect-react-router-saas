@@ -7,6 +7,12 @@
   - Prettier will also follow rules specified in the ".gitignore" file if it exists in the same directory from which it is run.
 - pnpm prettier . --check
 
+## EsLint
+
+```
+pnpm eslint .
+```
+
 ## Etc
 
 - BUG: D1 local databases are not created with database_id: https://github.com/cloudflare/workers-sdk/issues/4548
