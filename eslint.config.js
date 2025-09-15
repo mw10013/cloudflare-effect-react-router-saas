@@ -22,7 +22,6 @@ export default defineConfig(
             "*.js",
             "*.ts",
             "*.mjs",
-            "functions/s/scripts/*.ts",
           ],
         },
       },

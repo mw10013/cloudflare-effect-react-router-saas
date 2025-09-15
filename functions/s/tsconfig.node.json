@@ -5,7 +5,8 @@
     "vitest.config.ts",
     "playwright.config.ts",
     "e2e/**/*",
-    "app/lib/domain.ts"
+    "app/lib/domain.ts",
+    "scripts/*.ts"
   ],
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
