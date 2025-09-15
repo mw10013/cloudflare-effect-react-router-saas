@@ -75,7 +75,7 @@ function createBetterAuthOptions({
         sendResetPassword ??
         (async ({ user, url, token }) => {
           console.log("sendResetPassword", { to: user.email, url, token });
-          ses.sendEmail({
+          await ses.sendEmail({
             to: user.email,
             from: env.COMPANY_EMAIL,
             subject: "Reset your password",
@@ -92,7 +92,7 @@ function createBetterAuthOptions({
         sendVerificationEmail ??
         (async ({ user, url, token }) => {
           console.log("sendVerificationEmail", { to: user.email, url, token });
-          ses.sendEmail({
+          await ses.sendEmail({
             to: user.email,
             from: env.COMPANY_EMAIL,
             subject: "Please verify your email",
@@ -108,18 +108,20 @@ function createBetterAuthOptions({
         create: {
           after:
             databaseHookUserCreateAfter ??
-            (async (user) => {
-              console.log("databaseHooks.user.create.after", user);
-            }),
+            ((user) =>
+              Promise.resolve(
+                console.log("databaseHooks.user.create.after", user),
+              )),
         },
       },
       session: {
         create: {
           before:
             databaseHookSessionCreateBefore ??
-            (async (session) => {
-              console.log("databaseHooks.session.create.before", session);
-            }),
+            ((session) =>
+              Promise.resolve(
+                console.log("databaseHooks.session.create.before", session),
+              )),
         },
       },
     },
@@ -147,7 +149,7 @@ function createBetterAuthOptions({
                 expirationTtl: 60,
               });
             }
-            ses.sendEmail({
+            await ses.sendEmail({
               to: data.email,
               from: env.COMPANY_EMAIL,
               subject: "Your Magic Link",
@@ -171,7 +173,7 @@ function createBetterAuthOptions({
           (async (data) => {
             console.log("sendInvitationEmail", data);
             const url = `${env.BETTER_AUTH_URL}/accept-invitation/${data.id}`;
-            ses.sendEmail({
+            await ses.sendEmail({
               to: data.email,
               from: env.COMPANY_EMAIL,
               subject: "You're invited!",
@@ -198,21 +200,24 @@ function createBetterAuthOptions({
               annualDiscountPriceId: plan.annualPriceId,
               freeTrial: {
                 days: plan.freeTrialDays,
-                onTrialStart: async (subscription) => {
-                  console.log(
-                    `stripe plugin: onTrialStart: ${plan.name} plan trial started for subscription ${subscription.id}`,
-                  );
-                },
-                onTrialEnd: async ({ subscription }) => {
-                  console.log(
-                    `stripe plugin: onTrialEnd: ${plan.name} plan trial ended for subscription ${subscription.id}`,
-                  );
-                },
-                onTrialExpired: async (subscription) => {
-                  console.log(
-                    `stripe plugin: onTrialExpired: ${plan.name} plan trial expired for subscription ${subscription.id}`,
-                  );
-                },
+                onTrialStart: (subscription) =>
+                  Promise.resolve(
+                    console.log(
+                      `stripe plugin: onTrialStart: ${plan.name} plan trial started for subscription ${subscription.id}`,
+                    ),
+                  ),
+                onTrialEnd: ({ subscription }) =>
+                  Promise.resolve(
+                    console.log(
+                      `stripe plugin: onTrialEnd: ${plan.name} plan trial ended for subscription ${subscription.id}`,
+                    ),
+                  ),
+                onTrialExpired: (subscription) =>
+                  Promise.resolve(
+                    console.log(
+                      `stripe plugin: onTrialExpired: ${plan.name} plan trial expired for subscription ${subscription.id}`,
+                    ),
+                  ),
               },
             }));
           },
@@ -230,42 +235,48 @@ function createBetterAuthOptions({
             );
             return result;
           },
-          onSubscriptionComplete: async ({ subscription, plan }) => {
-            console.log(
-              `stripe plugin: onSubscriptionComplete: subscription ${subscription.id} completed for plan ${plan.name}`,
-            );
-          },
-          onSubscriptionUpdate: async ({ subscription }) => {
-            console.log(
-              `stripe plugin: onSubscriptionUpdate: subscription ${subscription.id} updated`,
-            );
-          },
-          onSubscriptionCancel: async ({ subscription }) => {
-            console.log(
-              `stripe plugin: onSubscriptionCancel: subscription ${subscription.id} canceled`,
-            );
-          },
-          onSubscriptionDeleted: async ({ subscription }) => {
-            console.log(
-              `stripe plugin: onSubscriptionDeleted: subscription ${subscription.id} deleted`,
-            );
-          },
+          onSubscriptionComplete: ({ subscription, plan }) =>
+            Promise.resolve(
+              console.log(
+                `stripe plugin: onSubscriptionComplete: subscription ${subscription.id} completed for plan ${plan.name}`,
+              ),
+            ),
+          onSubscriptionUpdate: ({ subscription }) =>
+            Promise.resolve(
+              console.log(
+                `stripe plugin: onSubscriptionUpdate: subscription ${subscription.id} updated`,
+              ),
+            ),
+          onSubscriptionCancel: ({ subscription }) =>
+            Promise.resolve(
+              console.log(
+                `stripe plugin: onSubscriptionCancel: subscription ${subscription.id} canceled`,
+              ),
+            ),
+          onSubscriptionDeleted: ({ subscription }) =>
+            Promise.resolve(
+              console.log(
+                `stripe plugin: onSubscriptionDeleted: subscription ${subscription.id} deleted`,
+              ),
+            ),
         },
         schema: {
           subscription: {
             modelName: "Subscription",
           },
         },
-        onCustomerCreate: async ({ stripeCustomer, user }) => {
-          console.log(
-            `stripe plugin: onCustomerCreate: customer ${stripeCustomer.id} created for user ${user.email}`,
-          );
-        },
-        async onEvent(event) {
-          console.log(
-            `stripe plugin: onEvent: stripe event received: ${event.type}`,
-          );
-        },
+        onCustomerCreate: ({ stripeCustomer, user }) =>
+          Promise.resolve(
+            console.log(
+              `stripe plugin: onCustomerCreate: customer ${stripeCustomer.id} created for user ${user.email}`,
+            ),
+          ),
+        onEvent: (event) =>
+          Promise.resolve(
+            console.log(
+              `stripe plugin: onEvent: stripe event received: ${event.type}`,
+            ),
+          ),
       }),
     ],
   } satisfies BetterAuthOptions;
