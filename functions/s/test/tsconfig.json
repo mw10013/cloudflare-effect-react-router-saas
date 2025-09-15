@@ -1,6 +1,9 @@
 {
+  "extends": "../../tsconfig.base.jsonc",
   "include": ["**/*.ts", "../worker-configuration.d.ts"],
   "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "../node_modules/.tmp/tsconfig.test.tsbuildinfo",
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,

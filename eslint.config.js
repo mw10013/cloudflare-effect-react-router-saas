@@ -11,14 +11,13 @@ export default defineConfig(
   ]),
 
   eslint.configs.recommended,
-  // tseslint.configs.recommended,
   tseslint.configs.recommendedTypeChecked,
   tseslint.configs.stylistic,
   {
     languageOptions: {
       parserOptions: {
         projectService: {
-          allowDefaultProject: ["*.js", "*.ts"],
+          allowDefaultProject: ["*.js"],
         },
       },
     },

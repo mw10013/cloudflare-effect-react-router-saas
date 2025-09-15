@@ -3,7 +3,8 @@
   "files": [],
   "references": [
     { "path": "./tsconfig.node.json" },
-    { "path": "./tsconfig.cloudflare.json" }
+    { "path": "./tsconfig.cloudflare.json" },
+    { "path": "./test" }
   ],
   "compilerOptions": {
     "noEmit": true
