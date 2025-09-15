@@ -44,12 +44,6 @@ const config = {
     },
     // https://github.com/tailwindlabs/prettier-plugin-tailwindcss/issues/281
     {
-      files: ["./functions/i/**"],
-      options: {
-        tailwindStylesheet: "./functions/i/app/app.css",
-      },
-    },
-    {
       files: ["./functions/o/**"],
       options: {
         tailwindStylesheet: "./functions/o/app/app.css",
@@ -61,12 +55,6 @@ const config = {
         // For Tailwind v4, specify a representative stylesheet
         // Using project 'o's stylesheet as context for oui's own source files
         tailwindStylesheet: "./functions/o/app/app.css",
-      },
-    },
-    {
-      files: ["./functions/r1/**"],
-      options: {
-        tailwindStylesheet: "./functions/r1/app/app.css",
       },
     },
     {
