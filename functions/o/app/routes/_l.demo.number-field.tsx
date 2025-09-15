@@ -13,7 +13,9 @@ export const action = async ({ request }: { request: Request }) => {
       .positive("Must be > 0.")
       .int("Must be integer."),
   });
-  const parseResult = schema.safeParse(Object.fromEntries(await request.formData()));
+  const parseResult = schema.safeParse(
+    Object.fromEntries(await request.formData()),
+  );
   if (!parseResult.success) {
     const { formErrors, fieldErrors: validationErrors } = z.flattenError(
       parseResult.error,
@@ -36,7 +38,7 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
         validationErrors={actionData?.validationErrors}
         onSubmit={(e) => {
           e.preventDefault();
-          submit(e.currentTarget);
+          void submit(e.currentTarget);
         }}
         className="grid w-full max-w-sm gap-6"
       >
