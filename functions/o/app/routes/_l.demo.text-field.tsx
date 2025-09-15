@@ -9,7 +9,9 @@ export const action = async ({ request }: { request: Request }) => {
   const schema = z.object({
     username: z.string().nonempty("Required."),
   });
-  const parseResult = schema.safeParse(Object.fromEntries(await request.formData()));
+  const parseResult = schema.safeParse(
+    Object.fromEntries(await request.formData()),
+  );
   if (!parseResult.success) {
     const { formErrors, fieldErrors: validationErrors } = z.flattenError(
       parseResult.error,
@@ -33,6 +35,7 @@ export default function RouteComponent({ actionData }: Route.ComponentProps) {
         validationErrors={actionData?.validationErrors}
         onSubmit={(e) => {
           e.preventDefault();
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises -- React Router handles submission errors via actionData and error boundaries
           submit(e.currentTarget);
         }}
         className="grid w-full max-w-sm gap-6"

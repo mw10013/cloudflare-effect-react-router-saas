@@ -63,7 +63,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <Toaster />
         {/* <Oui.ToastRegionEx queue={toastQueue} /> */}
-        <Rac.RouterProvider navigate={navigate} useHref={useHrefEx}>
+        {/* useNavigate returns a Promise, but RouterProvider expects void; void ignores the Promise */}
+        <Rac.RouterProvider
+          navigate={(path, options) => void navigate(path, options)}
+          useHref={useHrefEx}
+        >
           <Oui.DialogEx1AlertProvider>{children}</Oui.DialogEx1AlertProvider>
           <ScrollRestoration />
           <Scripts />
