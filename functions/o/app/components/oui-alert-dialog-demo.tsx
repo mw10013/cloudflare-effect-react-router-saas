@@ -69,18 +69,21 @@ export function OuiAlertDialogDemo2() {
 export function OuiAlertDialogDemo3() {
   const alertDialog = Oui.useDialogEx1Alert();
 
-  const handleConfirm = async () => {
-    const confirmed = await alertDialog.show({
-      title: "Are you sure?",
-      children: "This action cannot be undone.",
-      confirmLabel: "Delete",
-    });
-
-    if (confirmed) {
-      console.log("Confirmed!");
-    } else {
-      console.log("Cancelled!");
-    }
+  // Use .then() to handle promise since onPress expects void return
+  const handleConfirm = () => {
+    void alertDialog
+      .show({
+        title: "Are you sure?",
+        children: "This action cannot be undone.",
+        confirmLabel: "Delete",
+      })
+      .then((confirmed) => {
+        if (confirmed) {
+          console.log("Confirmed!");
+        } else {
+          console.log("Cancelled!");
+        }
+      });
   };
 
   return (

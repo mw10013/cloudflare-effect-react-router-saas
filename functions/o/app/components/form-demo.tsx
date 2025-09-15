@@ -105,6 +105,7 @@ export function FormDemo() {
   return (
     <Form {...form}>
       <form
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={form.handleSubmit(onSubmit)}
         className="grid w-full max-w-sm gap-6"
       >
