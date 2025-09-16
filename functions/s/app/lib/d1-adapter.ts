@@ -81,7 +81,8 @@ function adaptWhere({ where, modelId }: { where?: Where[]; modelId: string }): {
   const clauses: string[] = [];
   const whereValues: unknown[] = [];
   for (const w of where) {
-    const op = w.operator || "eq";
+    type Operator = NonNullable<Where["operator"]>;
+    const op = (w.operator || "eq") as Operator;
     const field = w.field === "id" ? modelId : w.field;
     let sql = "";
     switch (op) {
@@ -127,18 +128,19 @@ function adaptWhere({ where, modelId }: { where?: Where[]; modelId: string }): {
         break;
       case "contains":
         sql = `${field} like ?`;
-        whereValues.push(`%${serializeWhereValue(w.value)}%`);
+        whereValues.push(`%${String(serializeWhereValue(w.value))}%`);
         break;
       case "starts_with":
         sql = `${field} like ?`;
-        whereValues.push(`${serializeWhereValue(w.value)}%`);
+        whereValues.push(`${String(serializeWhereValue(w.value))}%`);
         break;
       case "ends_with":
         sql = `${field} like ?`;
-        whereValues.push(`%${serializeWhereValue(w.value)}`);
+        whereValues.push(`%${String(serializeWhereValue(w.value))}`);
         break;
       default:
-        throw new Error(`Unsupported where operator: ${op}`);
+        void (op satisfies never);
+        throw new Error(`Unsupported where operator: ${String(op)}`);
     }
     clauses.push(sql);
   }
@@ -204,7 +206,7 @@ export const d1Adapter = (db: D1Database) =>
             .prepare(sql)
             .bind(...adapted.whereValues)
             .first(),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ) as any; // Better-Auth has unconstrained type parameter but we are working with a Record shape.
       };
 
@@ -256,7 +258,7 @@ export const d1Adapter = (db: D1Database) =>
             .prepare(sql)
             .bind(...setValues, ...adapted.whereValues)
             .first(),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ) as any; // Better-Auth has unconstrained type parameter but we are working with a Record shape.
       };
 
