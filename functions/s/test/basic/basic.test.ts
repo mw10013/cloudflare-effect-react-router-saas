@@ -15,7 +15,16 @@ describe("basic", () => {
     expect(env.D1).toBeDefined();
   });
 
-  const IncomingRequest = Request<unknown, IncomingRequestCfProperties>;
+  /**
+   * Cloudflare redefines Request as generic to include cf properties, but TypeScript sees the standard non-generic Request.
+   * This cast ensures type safety for IncomingRequestCfProperties in tests.
+   * 
+   * @see https://developers.cloudflare.com/workers/testing/vitest-integration/write-your-first-test/#unit-tests
+   */
+  const IncomingRequest = Request as new (
+    input: RequestInfo | URL,
+    init?: RequestInit,
+  ) => Request<unknown, IncomingRequestCfProperties>;
 
   it("dispatches fetch event", async () => {
     const request = new IncomingRequest("http://example.com");

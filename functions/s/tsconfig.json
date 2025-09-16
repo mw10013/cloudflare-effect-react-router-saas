@@ -4,6 +4,7 @@
   "include": [],
   "references": [
     { "path": "./tsconfig.node.json" },
-    { "path": "./tsconfig.cloudflare.json" }
+    { "path": "./tsconfig.cloudflare.json" },
+    { "path": "./tsconfig.test.json" }
   ]
 }
