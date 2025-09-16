@@ -1,5 +1,5 @@
+import type { User } from "better-auth/types";
 import { invariant } from "@epic-web/invariant";
-import { User } from "better-auth/types";
 import { env } from "cloudflare:workers";
 import { unstable_RouterContextProvider } from "react-router";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
@@ -72,7 +72,9 @@ async function createTestContext() {
       throw new Error("createUser: failed to signInMagicLink", {
         cause: signInMagicLinkResponse,
       });
-    const magicLinkToken = mockSendMagicLink.mock.calls[0][0].token;
+    const magicLinkToken = (
+      mockSendMagicLink.mock.calls[0][0] as { token: string }
+    ).token;
     mockSendMagicLink.mockReset();
     const magicLinkVerifyResponse = await auth.api.magicLinkVerify({
       asResponse: true,
@@ -142,7 +144,11 @@ describe("accept invitation flow", () => {
 
     expect(response.status).toBe(200);
     expect(c.mockSendInvitationEmail).toHaveBeenCalledTimes(1);
-    invitationId = c.mockSendInvitationEmail.mock.calls[0][0].invitation.id;
+    invitationId = (
+      c.mockSendInvitationEmail.mock.calls[0][0] as {
+        invitation: { id: string };
+      }
+    ).invitation.id;
     invariant(invitationId, "Expected invitationId");
   });
 
@@ -166,7 +172,8 @@ describe("accept invitation flow", () => {
 
     expect(result.role).toBe("admin");
     expect(c.mockSendInvitationEmail).toHaveBeenCalledTimes(1);
-    const sendInvitationEmailData = c.mockSendInvitationEmail.mock.calls[0][0];
+    const sendInvitationEmailData = c.mockSendInvitationEmail.mock
+      .calls[0][0] as { invitation: { id: string; role: string } };
     expect(sendInvitationEmailData).toBeDefined();
     expect(sendInvitationEmailData.invitation?.role).toBe("admin");
     const invitationId = sendInvitationEmailData.invitation?.id;
@@ -180,7 +187,7 @@ describe("accept invitation flow", () => {
   });
 
   it("detects unauthenticated user trying to accept invitation", async () => {
-    const result = await acceptInvitationLoader({
+    const result = acceptInvitationLoader({
       context: await c.context(),
       params: { invitationId },
     });
@@ -248,14 +255,18 @@ describe("reject invitation flow", () => {
       body: {
         email: inviteeEmail,
         role: "member",
-        organizationId: String(session!.session.activeOrganizationId!),
+        organizationId: String(session.session.activeOrganizationId),
         resend: true,
       },
     });
 
     expect(response.status).toBe(200);
     expect(c.mockSendInvitationEmail).toHaveBeenCalledTimes(1);
-    invitationId = c.mockSendInvitationEmail.mock.calls[0][0].invitation.id;
+    invitationId = (
+      c.mockSendInvitationEmail.mock.calls[0][0] as {
+        invitation: { id: string };
+      }
+    ).invitation.id;
     expect(invitationId).toBeDefined();
   });
 
@@ -317,7 +328,9 @@ describe("auth sign up flow", () => {
     );
 
     expect(c.mockSendVerificationEmail).toHaveBeenCalledTimes(1);
-    emailVerificationUrl = c.mockSendVerificationEmail.mock.calls[0][0].url;
+    emailVerificationUrl = (
+      c.mockSendVerificationEmail.mock.calls[0][0] as { url: string }
+    ).url;
     expect(emailVerificationUrl).toBeDefined();
   });
 
@@ -367,7 +380,9 @@ describe("auth sign up flow", () => {
     );
 
     expect(c.mockSendVerificationEmail).toHaveBeenCalledTimes(1);
-    emailVerificationUrl = c.mockSendVerificationEmail.mock.calls[0][0].url;
+    emailVerificationUrl = (
+      c.mockSendVerificationEmail.mock.calls[0][0] as { url: string }
+    ).url;
     expect(emailVerificationUrl).toBeDefined();
   });
 
@@ -478,9 +493,12 @@ describe("auth forgot password flow", () => {
     });
 
     expect(c.mockSendResetPassword).toHaveBeenCalledTimes(1);
-    resetPasswordUrl = c.mockSendResetPassword.mock.calls[0][0].url;
+    resetPasswordUrl = (
+      c.mockSendResetPassword.mock.calls[0][0] as { url: string }
+    ).url;
     expect(resetPasswordUrl).toBeDefined();
-    resetToken = c.mockSendResetPassword.mock.calls[0][0].token;
+    resetToken = (c.mockSendResetPassword.mock.calls[0][0] as { token: string })
+      .token;
     expect(resetToken).toBeDefined();
   });
 
@@ -566,7 +584,8 @@ describe("admin bootstrap", () => {
       params: {},
     });
     expect(c.mockSendMagicLink).toHaveBeenCalledTimes(1);
-    magicLinkUrl = c.mockSendMagicLink.mock.calls[0][0].url;
+    magicLinkUrl = (c.mockSendMagicLink.mock.calls[0][0] as { url: string })
+      .url;
   });
 
   it("signs in with magic link", async () => {
