@@ -42,10 +42,13 @@ export async function action({
 
   if (!response.ok) {
     // better-auth returns 422 UNPROCESSABLE_ENTITY with { code: 'USER_ALREADY_EXISTS', ... } when an existing user tries to sign up again
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
     if (response.status === 422) throw redirect("/signin");
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw response;
   }
   // With email verification enabled, there is no session cookie set on sign up so no need to pass headers here.
+  // eslint-disable-next-line @typescript-eslint/only-throw-error
   throw redirect("/");
 }
 

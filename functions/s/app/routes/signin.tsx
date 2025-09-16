@@ -40,9 +40,12 @@ export async function action({
   });
   // TODO: signin: handle 401: UNAUTHORIZED
   if (!response.ok) {
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
     if (response.status === 403) throw redirect("/email-verification");
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw response;
   }
+  // eslint-disable-next-line @typescript-eslint/only-throw-error
   throw redirect("/", { headers: response.headers });
 }
 

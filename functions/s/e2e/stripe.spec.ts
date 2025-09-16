@@ -223,7 +223,7 @@ class StripePom {
   async verifyNoSubscription() {
     await expect(async () => {
       await this.page.reload();
-      expect(this.page.getByText("No active subscription for")).toBeVisible({
+      await expect(this.page.getByText("No active subscription for")).toBeVisible({
         timeout: 100,
       });
     }).toPass({ timeout: 60_000 });
