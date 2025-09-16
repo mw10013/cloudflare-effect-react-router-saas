@@ -1,7 +1,7 @@
 import type { Route } from "./+types/email-verification";
 import { appLoadContext } from "~/lib/middleware";
 
-export async function loader({ request, context }: Route.LoaderArgs) {
+export function loader({ request, context }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const error = url.searchParams.get("error");
   if (error) return { error };

@@ -7,7 +7,7 @@ import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
 import { createRepository } from "~/lib/repository";
 
-async function createSeedContext({
+function createSeedContext({
   cloudflare,
   stripeService,
 }: {
@@ -15,18 +15,18 @@ async function createSeedContext({
   stripeService: AppLoadContext["stripeService"];
 }) {
   const magicLinkTokens = new Map<string, string>();
-  const auth = await createAuth({
+  const auth = createAuth({
     d1: cloudflare.env.D1,
     stripeService,
     ses: {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      async sendEmail() {},
+      async sendEmail() { },
     },
-    sendMagicLink: async ({ email, token }) => {
+    sendMagicLink: ({ email, token }) => {
       magicLinkTokens.set(email, token);
     },
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    sendInvitationEmail: async () => {},
+    sendInvitationEmail: async () => { },
   });
 
   const context = async ({ headers }: { headers?: Headers } = {}) => {
@@ -95,8 +95,8 @@ async function createSeedContext({
 export async function loader({ context }: Route.ActionArgs) {
   const { cloudflare, stripeService: stripe } = context.get(
     appLoadContext,
-  ) as AppLoadContext;
-  const c = await createSeedContext({ cloudflare, stripeService: stripe });
+  );
+  const c = createSeedContext({ cloudflare, stripeService: stripe });
 
   await stripe.ensureBillingPortalConfiguration();
 
@@ -217,7 +217,9 @@ export async function loader({ context }: Route.ActionArgs) {
   const db = cloudflare.env.D1;
   const [
     { results: invitations },
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     { results: organizations },
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     { results: users },
   ] = (await db.batch([
     db.prepare(`select * from Invitation`),
@@ -236,7 +238,9 @@ export async function loader({ context }: Route.ActionArgs) {
   return {
     invitationCount: invitations.length,
     invitations,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     organizations,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     users,
   };
 }
