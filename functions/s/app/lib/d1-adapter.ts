@@ -168,6 +168,7 @@ export const d1Adapter = (db: D1Database) =>
         if (field === "activeOrganizationId" && typeof data === "number") {
           return String(data);
         }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return data;
       },
     },
@@ -179,12 +180,14 @@ export const d1Adapter = (db: D1Database) =>
       }) => {
         const adapted = adapt({ model, select });
         const keys = Object.keys(data);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         const values = keys.map((k) => data[k]);
         const placeholders = keys.map(() => "?").join(",");
         const sql = `insert into ${adapted.model} (${keys.join(",")}) values (${placeholders}) returning ${adapted.selectClause}`;
         const result = adapted.mapResult<typeof data>(
           await db
             .prepare(sql)
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             .bind(...values)
             .first(),
         );
@@ -201,6 +204,7 @@ export const d1Adapter = (db: D1Database) =>
       }) => {
         const adapted = adapt({ model, select, where });
         const sql = `select ${adapted.selectClause} from ${adapted.model} ${adapted.whereClause ? `where ${adapted.whereClause}` : ""} limit 1`;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return adapted.mapResult<Record<string, unknown>>(
           await db
             .prepare(sql)
@@ -236,7 +240,7 @@ export const d1Adapter = (db: D1Database) =>
           .prepare(sql)
           .bind(...adapted.whereValues)
           .run();
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return
         return result.results.map(adapted.mapResult) as any[]; // Better-Auth has unconstrained type parameter but we are working with a Record shape.
       };
 
@@ -253,9 +257,11 @@ export const d1Adapter = (db: D1Database) =>
         const sql = `update ${adapted.model} set ${set} ${
           adapted.whereClause ? `where ${adapted.whereClause}` : ""
         } returning *`;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return adapted.mapResult(
           await db
             .prepare(sql)
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             .bind(...setValues, ...adapted.whereValues)
             .first(),
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -275,6 +281,7 @@ export const d1Adapter = (db: D1Database) =>
         const sql = `update ${adapted.model} set ${set} ${adapted.whereClause ? `where ${adapted.whereClause}` : ""}`;
         const result = await db
           .prepare(sql)
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           .bind(...setValues, ...adapted.whereValues)
           .run();
         return result.meta.changes;
