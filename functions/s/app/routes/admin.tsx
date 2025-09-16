@@ -8,7 +8,7 @@ import {
 import { Outlet, redirect } from "react-router";
 import { appLoadContext } from "~/lib/middleware";
 
-export const adminMiddleware: Route.unstable_MiddlewareFunction = ({
+export const adminMiddleware: Route.MiddlewareFunction = ({
   context,
 }) => {
   const { session } = context.get(appLoadContext);
@@ -19,7 +19,7 @@ export const adminMiddleware: Route.unstable_MiddlewareFunction = ({
     throw new Response("Forbidden", { status: 403 });
 };
 
-export const unstable_middleware: Route.unstable_MiddlewareFunction[] = [
+export const middleware: Route.MiddlewareFunction[] = [
   adminMiddleware,
 ];
 

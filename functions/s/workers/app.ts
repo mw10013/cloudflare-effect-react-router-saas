@@ -4,7 +4,8 @@ import type { StripeService } from "~/lib/stripe-service";
 import * as Hono from "hono";
 import {
   createRequestHandler,
-  unstable_RouterContextProvider,
+  RouterContextProvider,
+  type AppLoadContext,
 } from "react-router";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
@@ -56,7 +57,7 @@ export default {
     }
 
     hono.all("*", async (c) => {
-      const context = new unstable_RouterContextProvider();
+      const context = new RouterContextProvider();
       context.set(appLoadContext, {
         cloudflare: { env, ctx },
         auth,

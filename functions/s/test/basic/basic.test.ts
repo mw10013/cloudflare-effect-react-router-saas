@@ -3,7 +3,7 @@ import {
   env,
   waitOnExecutionContext,
 } from "cloudflare:test";
-import { unstable_RouterContextProvider } from "react-router";
+import { RouterContextProvider } from "react-router";
 import { describe, expect, it } from "vitest";
 import { appLoadContext } from "~/lib/middleware";
 import { loader } from "~/routes/_mkt";
@@ -35,7 +35,7 @@ describe("basic", () => {
   });
 
   it("loader returns result", () => {
-    const context = new unstable_RouterContextProvider();
+    const context = new RouterContextProvider();
     context.set(appLoadContext, {
       cloudflare: { env },
     });

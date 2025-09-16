@@ -2,7 +2,7 @@ import type { User } from "better-auth/types";
 import type { AppLoadContext } from "react-router";
 import type { Route } from "./+types/seed";
 import { invariant } from "@epic-web/invariant";
-import { unstable_RouterContextProvider } from "react-router";
+import { RouterContextProvider } from "react-router";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
 import { createRepository } from "~/lib/repository";
@@ -33,7 +33,7 @@ function createSeedContext({
     const session = headers
       ? ((await auth.api.getSession({ headers })) ?? undefined)
       : undefined;
-    const context = new unstable_RouterContextProvider();
+    const context = new RouterContextProvider();
     context.set(appLoadContext, {
       cloudflare,
       repository: createRepository(),

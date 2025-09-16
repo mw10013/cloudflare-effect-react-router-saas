@@ -18,7 +18,7 @@ import { Outlet, useNavigate } from "react-router";
 import { AppLogoIcon } from "~/components/AppLogoIcon";
 import { appLoadContext } from "~/lib/middleware";
 
-const middleware: Route.unstable_MiddlewareFunction = async ({
+const organizationMiddleware: Route.MiddlewareFunction = async ({
   request,
   context,
   params: { organizationId },
@@ -33,8 +33,8 @@ const middleware: Route.unstable_MiddlewareFunction = async ({
   context.set(appLoadContext, { ...alc, organization, organizations });
 };
 
-export const unstable_middleware: Route.unstable_MiddlewareFunction[] = [
-  middleware,
+export const middleware: Route.MiddlewareFunction[] = [
+  organizationMiddleware,
 ];
 
 export function loader({

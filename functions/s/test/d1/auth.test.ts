@@ -1,7 +1,7 @@
 import type { User } from "better-auth/types";
 import { invariant } from "@epic-web/invariant";
 import { env } from "cloudflare:workers";
-import { unstable_RouterContextProvider } from "react-router";
+import { RouterContextProvider } from "react-router";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
@@ -44,7 +44,7 @@ async function createTestContext() {
     const session = headers
       ? ((await auth.api.getSession({ headers })) ?? undefined)
       : undefined;
-    const context = new unstable_RouterContextProvider();
+    const context = new RouterContextProvider();
     context.set(appLoadContext, { auth, session, cloudflare: { env } });
     return context;
   };
