@@ -1,5 +1,6 @@
 {
-  "extends": "./tsconfig.json",
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.base.jsonc",
   "include": [
     "vite.config.ts",
     "vitest.config.ts",
