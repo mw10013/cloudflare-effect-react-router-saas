@@ -40,7 +40,6 @@ describe("basic", () => {
       cloudflare: { env },
     });
 
-    // @ts-expect-error - unstable_RouterContextProvider is not assignable to AppLoadContext due to missing index signature
     const result = loader({ context });
 
     expect(result).toBeDefined();
