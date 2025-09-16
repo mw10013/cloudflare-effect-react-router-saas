@@ -15,20 +15,25 @@ Command line args:
 // const wranglerJsoncPaths = ['wrangler.jsonc', '../worker/wrangler.jsonc']
 const wranglerJsoncPaths = ['wrangler.jsonc']
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const env = argv.env || 'local'
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
 const wranglerJsonc = await fs.readFile(wranglerJsoncPaths[0], 'utf-8')
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 const wranglerJsoncTree = jsonc.parseTree(wranglerJsonc)
 if (!wranglerJsoncTree) {
 	throw new Error(`Failed to parse jsonc: ${wranglerJsoncPaths[0]}`)
 }
 const nodeDatabaseName = jsonc.findNodeAtLocation(
 	wranglerJsoncTree,
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 	env === 'local' ? ['d1_databases', 0, 'database_name'] : ['env', env, 'd1_databases', 0, 'database_name']
 )
 const databaseName = nodeDatabaseName?.value && typeof nodeDatabaseName.value === 'string' ? nodeDatabaseName.value : undefined
 if (!databaseName) {
 	throw new Error(`Failed to find database name in wrangler.jsonc: ${wranglerJsoncPaths[0]} for env: ${env}`)
 }
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 console.log({ env, databaseName })
 
 if (env === 'local') {
@@ -63,7 +68,7 @@ pragma table_list`
 try {
 	await $`pnpm wrangler d1 delete ${databaseName} --skip-confirmation`
 } catch (p) {
-	console.error(`Ignoring execption: ${p}`)
+	console.error(`Ignoring execption: ${String(p)}`)
 }
 
 // Create database and extract database id from output.
@@ -76,20 +81,25 @@ console.log({ databaseId })
 
 for (const wranglerJsoncPath of wranglerJsoncPaths) {
 	console.log({ wranglerJsoncPath })
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
 	const wranglerJsonc = await fs.readFile(wranglerJsoncPath, 'utf-8')
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 	const wranglerJsoncTree = jsonc.parseTree(wranglerJsonc)
 	if (!wranglerJsoncTree) {
 		throw new Error(`Failed to parse jsonc: ${wranglerJsoncPath}`)
 	}
 	const nodePath = ['env', env, 'd1_databases', 0, 'database_id']
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 	const nodeDatabaseId = jsonc.findNodeAtLocation(wranglerJsoncTree, nodePath)
 	if (!nodeDatabaseId) {
 		throw new Error(`Failed to find database_id in jsonc: ${wranglerJsoncPath}`)
 	}
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 	const edit = jsonc.modify(wranglerJsonc, nodePath, databaseId, {})
 	if (!edit) {
 		throw new Error(`Failed to modify jsonc: ${wranglerJsoncPath}`)
 	}
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
 	await fs.writeFile(wranglerJsoncPath, jsonc.applyEdits(wranglerJsonc, edit))
 }
 
