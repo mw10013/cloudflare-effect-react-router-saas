@@ -6,7 +6,6 @@
     { "path": "./tsconfig.cloudflare.json" }
   ],
   "compilerOptions": {
-    "noEmit": true,
     "paths": {
       "~/*": ["./app/*"]
     }

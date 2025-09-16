@@ -1,11 +1,9 @@
 {
+  "$schema": "http://json.schemastore.org/tsconfig",
   "extends": "../../tsconfig.base.jsonc",
-  "files": [],
+  "include": [],
   "references": [
     { "path": "./tsconfig.node.json" },
     { "path": "./tsconfig.cloudflare.json" }
-  ],
-  "compilerOptions": {
-    "noEmit": true
-  }
+  ]
 }

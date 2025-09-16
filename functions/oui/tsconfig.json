@@ -9,8 +9,7 @@
     "isolatedModules": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "preserveWatchOutput": true,
-    "noEmit": true
+    "preserveWatchOutput": true
   },
   "exclude": ["node_modules"]
 }

@@ -23,11 +23,7 @@
     // Miscellaneoaus
     "skipLibCheck": true, // Skip type checking of third party libraries.
     "noErrorTruncation": true, // Do not truncate error messages.
-    "types": [], // Disable automatic loading of `@types/*` packages.
-    "baseUrl": ".",
-    "paths": {
-      "@workspace/oui": ["functions/oui/src"],
-      "@workspace/ui": ["functions/ui/src"]
-    }
+    "noEmit": true, // Prevent emitting files, for type-checking only.
+    "types": [] // Disable automatic loading of `@types/*` packages.
   }
 }

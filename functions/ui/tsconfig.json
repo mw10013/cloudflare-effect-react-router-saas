@@ -10,7 +10,6 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "preserveWatchOutput": true,
-    "noEmit": true,
     "paths": {
       "@workspace/ui/*": ["./src/*"]
     }
