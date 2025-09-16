@@ -12,7 +12,7 @@ import { redirect } from "react-router";
 import * as z from "zod";
 import { appLoadContext } from "~/lib/middleware";
 
-export async function loader({
+export function loader({
   context,
   params: { invitationId },
 }: Route.LoaderArgs) {

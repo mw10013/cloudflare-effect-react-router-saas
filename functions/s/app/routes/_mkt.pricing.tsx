@@ -34,6 +34,7 @@ export async function action({ request, context }: Route.ActionArgs) {
     return redirect("/login");
   }
   if (session.user.role !== "user")
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw new Response("Forbidden", { status: 403 });
   const schema = z.object({
     intent: z.string().nonempty("Missing intent"),

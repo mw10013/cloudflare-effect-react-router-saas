@@ -5,7 +5,7 @@ import { Outlet, useRouteLoaderData } from "react-router";
 import { AppLogoIcon } from "~/components/AppLogoIcon";
 import { appLoadContext } from "~/lib/middleware";
 
-export async function loader({ context }: Route.LoaderArgs) {
+export function loader({ context }: Route.LoaderArgs) {
   const { session } = context.get(appLoadContext);
   return {
     isSignedIn: Boolean(session?.user),
