@@ -91,6 +91,7 @@ export async function action({
         headers: request.headers,
         body: { userId: parseResult.data.userId },
       });
+      // eslint-disable-next-line @typescript-eslint/only-throw-error
       throw redirect("/app", { headers });
     }
     default:
@@ -133,9 +134,9 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
           placeholder="Filter by email..."
           defaultValue={loaderData?.filter ?? ""}
           name="filter"
-          onSubmit={(filter: string) => {
-            navigate(`./?filter=${encodeURIComponent(filter)}&page=1`);
-          }}
+          onSubmit={(filter: string) =>
+            void navigate(`./?filter=${encodeURIComponent(filter)}&page=1`)
+          }
         />
       </div>
 
@@ -180,7 +181,7 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
                       key="unban"
                       id="unban"
                       onAction={() => {
-                        fetcher.submit(
+                        void fetcher.submit(
                           {
                             intent: "unban",
                             userId: user.id,
@@ -206,7 +207,7 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
                     key="impersonate"
                     id="impersonate"
                     onAction={() => {
-                      fetcher.submit(
+                      void fetcher.submit(
                         {
                           intent: "impersonate",
                           userId: user.id,
