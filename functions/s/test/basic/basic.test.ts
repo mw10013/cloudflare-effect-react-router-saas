@@ -18,7 +18,7 @@ describe("basic", () => {
   /**
    * Cloudflare redefines Request as generic to include cf properties, but TypeScript sees the standard non-generic Request.
    * This cast ensures type safety for IncomingRequestCfProperties in tests.
-   * 
+   *
    * @see https://developers.cloudflare.com/workers/testing/vitest-integration/write-your-first-test/#unit-tests
    */
   const IncomingRequest = Request as new (
@@ -40,6 +40,7 @@ describe("basic", () => {
       cloudflare: { env },
     });
 
+    // @ts-expect-error - unstable_RouterContextProvider is not assignable to AppLoadContext due to missing index signature
     const result = loader({ context });
 
     expect(result).toBeDefined();
