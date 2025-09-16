@@ -166,12 +166,12 @@ function MemberItem({
               { id: "member", name: "Member" },
               { id: "admin", name: "Admin" },
             ]}
-            onSelectionChange={(key) => {
-              fetcher.submit(
+            onSelectionChange={(key) =>
+              void fetcher.submit(
                 { intent: "changeRole", memberId: member.id, role: key },
                 { method: "post" },
-              );
-            }}
+              )
+            }
             className="mt-2"
           >
             {(item) => <Oui.ListBoxItem>{item.name}</Oui.ListBoxItem>}

@@ -28,6 +28,7 @@ const middleware: Route.unstable_MiddlewareFunction = async ({
     headers: request.headers,
   });
   const organization = organizations.find((org) => org.id === organizationId);
+  // eslint-disable-next-line @typescript-eslint/only-throw-error
   if (!organization) throw new Response("Forbidden", { status: 403 });
   context.set(appLoadContext, { ...alc, organization, organizations });
 };
@@ -36,7 +37,7 @@ export const unstable_middleware: Route.unstable_MiddlewareFunction[] = [
   middleware,
 ];
 
-export async function loader({
+export function loader({
   context,
   params: { organizationId },
 }: Route.ActionArgs) {
@@ -138,9 +139,7 @@ export function OrganizationSwitcher({
   return (
     <Oui.MenuEx
       className="min-w-56 rounded-lg"
-      onAction={(key: React.Key) => {
-        navigate(`/app/${key}`);
-      }}
+      onAction={(key: React.Key) => void navigate(`/app/${key}`)}
       triggerElement={
         <Oui.Button
           variant="ghost"

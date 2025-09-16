@@ -8,12 +8,14 @@ import {
 import { Outlet, redirect } from "react-router";
 import { appLoadContext } from "~/lib/middleware";
 
-export const adminMiddleware: Route.unstable_MiddlewareFunction = async ({
+export const adminMiddleware: Route.unstable_MiddlewareFunction = ({
   context,
 }) => {
   const { session } = context.get(appLoadContext);
+  // eslint-disable-next-line @typescript-eslint/only-throw-error
   if (!session?.user) throw redirect("/login");
   if (session.user.role !== "admin")
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw new Response("Forbidden", { status: 403 });
 };
 
