@@ -22,8 +22,8 @@
     "paths": {
       "~/*": ["./app/*"]
     },
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "noEmit": false
+    "noEmit": false,
+    "outDir": "./node_modules/.tmp",
+    "declaration": true
   }
 }

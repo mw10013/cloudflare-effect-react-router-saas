@@ -13,8 +13,8 @@
     "allowJs": false, // If you touch this, a puppy dies.
     "erasableSyntaxOnly": true, // Allows to run directly with node and type removal
     // Emit source- & declaration maps.
-    "declarationMap": true,
-    "sourceMap": true,
+    // "declarationMap": true,
+    // "sourceMap": true,
     "strict": true,
     // "exactOptionalPropertyTypes": true,
     "noUnusedLocals": true,

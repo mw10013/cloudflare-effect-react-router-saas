@@ -5,7 +5,6 @@ import * as Hono from "hono";
 import {
   createRequestHandler,
   RouterContextProvider,
-  type AppLoadContext,
 } from "react-router";
 import { createAuth } from "~/lib/auth";
 import { appLoadContext } from "~/lib/middleware";
