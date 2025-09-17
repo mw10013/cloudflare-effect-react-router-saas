@@ -1,4 +1,5 @@
 import type { Route } from "./+types/accept-invitation.$invitationId";
+import { invariant } from "@epic-web/invariant";
 import * as Oui from "@workspace/oui";
 import {
   Card,
@@ -10,14 +11,15 @@ import {
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
 import * as z from "zod";
-import { appLoadContext } from "~/lib/middleware";
+import { requestContextKey } from "~/lib/request-context";
 
 export function loader({
   context,
   params: { invitationId },
 }: Route.LoaderArgs) {
-  const { session } = context.get(appLoadContext);
-  return { needsAuth: !session, invitationId };
+  const requestContext = context.get(requestContextKey);
+  invariant(requestContext, "Missing request context.");
+  return { needsAuth: !requestContext.session, invitationId };
 }
 
 export async function action({
@@ -30,7 +32,9 @@ export async function action({
   });
   const formData = await request.formData();
   const parseResult = schema.parse(Object.fromEntries(formData));
-  const { auth } = context.get(appLoadContext);
+  const requestContext = context.get(requestContextKey);
+  invariant(requestContext, "Missing request context.");
+  const { auth } = requestContext;
   if (parseResult.intent === "accept") {
     await auth.api.acceptInvitation({
       body: { invitationId },
@@ -45,9 +49,7 @@ export async function action({
   return redirect("/app");
 }
 
-export default function RouteComponent({
-  loaderData,
-}: Route.ComponentProps) {
+export default function RouteComponent({ loaderData }: Route.ComponentProps) {
   if (loaderData.needsAuth) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center">

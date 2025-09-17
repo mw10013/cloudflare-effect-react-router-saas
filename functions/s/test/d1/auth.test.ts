@@ -48,7 +48,9 @@ async function createTestContext() {
     context.set(requestContextKey, {
       cloudflare: { env },
       auth,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
       repository: {} as any,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
       stripeService: {} as any,
       session,
     });
@@ -193,7 +195,9 @@ describe("accept invitation flow", () => {
   });
 
   it("detects unauthenticated user trying to accept invitation", async () => {
+    invariant(invitationId, "Expected invitationId");
     const result = acceptInvitationLoader({
+      request: new Request("http://irrelevant.com"),
       context: await c.context(),
       params: { invitationId },
     });
@@ -202,7 +206,9 @@ describe("accept invitation flow", () => {
   });
 
   it("detects authenticated user trying to accept invitation", async () => {
-    const result = await acceptInvitationLoader({
+    invariant(invitationId, "Expected invitationId");
+    const result = acceptInvitationLoader({
+      request: new Request("http://irrelevant.com"),
       context: await inviteeUser.context(),
       params: { invitationId },
     });
@@ -213,12 +219,12 @@ describe("accept invitation flow", () => {
   it("accepts invitation", async () => {
     const form = new FormData();
     form.append("intent", "accept");
-    const request = new Request("http://localhost/accept-invitation", {
+    const request = new Request("http://irrelevant.com", {
       method: "POST",
       body: form,
       headers: inviteeUser.headers,
     });
-
+    invariant(invitationId, "Expected invitationId");
     const response = await acceptInvitationAction({
       request,
       context: await inviteeUser.context(),
@@ -279,11 +285,12 @@ describe("reject invitation flow", () => {
   it("reject invitation", async () => {
     const form = new FormData();
     form.append("intent", "reject");
-    const request = new Request("http://localhost/accept-invitation", {
+    const request = new Request("http://irrelevant.com", {
       method: "POST",
       body: form,
       headers: inviteeUser.headers,
     });
+    invariant(invitationId, "Expected invitationId");
 
     const response = await acceptInvitationAction({
       request,
@@ -436,10 +443,8 @@ describe("auth sign up flow", () => {
 
     await expect(
       signInAction({ request, context: await c.context(), params: {} }),
-    ).rejects.toThrow(
-      expect.objectContaining({
-        status: 401,
-      }),
+    ).rejects.toSatisfy(
+      (thrown: unknown) => thrown instanceof Response && thrown.status === 401,
     );
   });
 
