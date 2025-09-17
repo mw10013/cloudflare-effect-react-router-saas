@@ -4,7 +4,7 @@ import { env } from "cloudflare:workers";
 import { RouterContextProvider } from "react-router";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { createAuth } from "~/lib/auth";
-import { requestContextKey } from "~/lib/request-context";
+import { RequestContext } from "~/lib/request-context";
 import { createStripeService } from "~/lib/stripe-service";
 import {
   action as acceptInvitationAction,
@@ -45,7 +45,7 @@ async function createTestContext() {
       ? ((await auth.api.getSession({ headers })) ?? undefined)
       : undefined;
     const context = new RouterContextProvider();
-    context.set(requestContextKey, {
+    context.set(RequestContext, {
       env,
       auth,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any

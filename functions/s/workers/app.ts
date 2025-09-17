@@ -2,7 +2,7 @@ import * as Hono from "hono";
 import { createRequestHandler, RouterContextProvider } from "react-router";
 import { createAuth } from "~/lib/auth";
 import { createRepository } from "~/lib/repository";
-import { requestContextKey } from "~/lib/request-context";
+import { RequestContext } from "~/lib/request-context";
 import { createSes } from "~/lib/ses";
 import { createStripeService } from "~/lib/stripe-service";
 import { createE2eRoutes } from "./e2e";
@@ -36,7 +36,7 @@ export default {
 
     hono.all("*", async (c) => {
       const context = new RouterContextProvider();
-      context.set(requestContextKey, {
+      context.set(RequestContext, {
         env,
         auth,
         repository,

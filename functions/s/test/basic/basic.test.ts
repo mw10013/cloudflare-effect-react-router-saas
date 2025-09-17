@@ -8,7 +8,7 @@ import {
 } from "cloudflare:test";
 import { RouterContextProvider } from "react-router";
 import { describe, expect, it } from "vitest";
-import { requestContextKey } from "~/lib/request-context";
+import { RequestContext } from "~/lib/request-context";
 import { loader } from "~/routes/_mkt";
 import worker from "../test-worker";
 
@@ -39,7 +39,7 @@ describe("basic", () => {
 
   it("loader returns result", () => {
     const context = new RouterContextProvider();
-    context.set(requestContextKey, {
+    context.set(RequestContext, {
       env,
       auth: {} as Auth,
       repository: {} as Repository,
