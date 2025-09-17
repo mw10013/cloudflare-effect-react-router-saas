@@ -1,32 +1,11 @@
-import type { Auth } from "~/lib/auth";
-import type { Repository } from "~/lib/repository";
-import type { StripeService } from "~/lib/stripe-service";
 import * as Hono from "hono";
-import {
-  createRequestHandler,
-  RouterContextProvider,
-} from "react-router";
+import { createRequestHandler, RouterContextProvider } from "react-router";
 import { createAuth } from "~/lib/auth";
-import { appLoadContext } from "~/lib/middleware";
 import { createRepository } from "~/lib/repository";
+import { requestContextKey } from "~/lib/request-context";
 import { createSes } from "~/lib/ses";
 import { createStripeService } from "~/lib/stripe-service";
 import { createE2eRoutes } from "./e2e";
-
-declare module "react-router" {
-  export interface AppLoadContext {
-    cloudflare: {
-      env: Env;
-      ctx: ExecutionContext;
-    };
-    auth: Auth;
-    repository: Repository;
-    stripeService: StripeService;
-    session?: Auth["$Infer"]["Session"];
-    organization?: Auth["$Infer"]["Organization"];
-    organizations?: Auth["$Infer"]["Organization"][];
-  }
-}
 
 export default {
   async fetch(request, env, ctx) {
@@ -57,7 +36,7 @@ export default {
 
     hono.all("*", async (c) => {
       const context = new RouterContextProvider();
-      context.set(appLoadContext, {
+      context.set(requestContextKey, {
         cloudflare: { env, ctx },
         auth,
         repository,

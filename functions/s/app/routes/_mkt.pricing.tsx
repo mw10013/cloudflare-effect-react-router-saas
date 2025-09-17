@@ -11,10 +11,12 @@ import { env } from "cloudflare:workers";
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
 import * as z from "zod";
-import { appLoadContext } from "~/lib/middleware";
+import { requestContextKey } from "~/lib/request-context";
 
 export async function loader({ context }: Route.LoaderArgs) {
-  const { stripeService } = context.get(appLoadContext);
+  const requestContext = context.get(requestContextKey);
+  invariant(requestContext, "Missing request context.");
+  const { stripeService } = requestContext;
   const plans = await stripeService.getPlans();
   const subscriptions = (
     await env.D1.prepare(
@@ -29,7 +31,9 @@ inner join User u on u.userId = m.userId`,
 }
 
 export async function action({ request, context }: Route.ActionArgs) {
-  const { auth, session } = context.get(appLoadContext);
+  const requestContext = context.get(requestContextKey);
+  invariant(requestContext, "Missing request context.");
+  const { auth, session, stripeService } = requestContext;
   if (!session) {
     return redirect("/login");
   }
@@ -41,7 +45,6 @@ export async function action({ request, context }: Route.ActionArgs) {
   });
   const { intent } = schema.parse(Object.fromEntries(await request.formData()));
 
-  const { stripeService } = context.get(appLoadContext);
   const plans = await stripeService.getPlans();
   const plan = plans.find(
     (p) =>

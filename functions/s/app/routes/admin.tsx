@@ -1,4 +1,5 @@
 import type { Route } from "./+types/admin";
+import { invariant } from "@epic-web/invariant";
 import * as Oui from "@workspace/oui";
 import {
   Sidebar,
@@ -6,12 +7,12 @@ import {
   SidebarProvider,
 } from "@workspace/ui/components/ui/sidebar";
 import { Outlet, redirect } from "react-router";
-import { appLoadContext } from "~/lib/middleware";
+import { requestContextKey } from "~/lib/request-context";
 
-export const adminMiddleware: Route.MiddlewareFunction = ({
-  context,
-}) => {
-  const { session } = context.get(appLoadContext);
+export const adminMiddleware: Route.MiddlewareFunction = ({ context }) => {
+  const requestContext = context.get(requestContextKey);
+  invariant(requestContext, "Missing request context.");
+  const { session } = requestContext;
   // eslint-disable-next-line @typescript-eslint/only-throw-error
   if (!session?.user) throw redirect("/login");
   if (session.user.role !== "admin")
@@ -19,9 +20,7 @@ export const adminMiddleware: Route.MiddlewareFunction = ({
     throw new Response("Forbidden", { status: 403 });
 };
 
-export const middleware: Route.MiddlewareFunction[] = [
-  adminMiddleware,
-];
+export const middleware: Route.MiddlewareFunction[] = [adminMiddleware];
 
 const items = [
   {

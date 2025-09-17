@@ -11,7 +11,7 @@ import {
 import { useSubmit } from "react-router";
 import * as z from "zod";
 import { FormAlert } from "~/components/FormAlert";
-import { appLoadContext } from "~/lib/middleware";
+import { requestContextKey as appRequestContextKey } from "~/lib/request-context";
 import * as TechnicalDomain from "~/lib/technical-domain";
 
 export async function action({
@@ -31,10 +31,12 @@ export async function action({
       z.flattenError(parseResult.error);
     return { success: false, details, validationErrors };
   }
+  const requestContext = context.get(appRequestContextKey);
+  invariant(requestContext, "Missing request context");
   const {
     auth,
     cloudflare: { env },
-  } = context.get(appLoadContext);
+  } = requestContext;
   const result = await auth.api.signInMagicLink({
     headers: request.headers,
     body: { email: parseResult.data.email, callbackURL: "/magic-link" },

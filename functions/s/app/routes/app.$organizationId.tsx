@@ -16,32 +16,37 @@ import { ChevronsUpDown, LogOut } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { Outlet, useNavigate } from "react-router";
 import { AppLogoIcon } from "~/components/AppLogoIcon";
-import { appLoadContext } from "~/lib/middleware";
+import { requestContextKey } from "~/lib/request-context";
 
 const organizationMiddleware: Route.MiddlewareFunction = async ({
   request,
   context,
   params: { organizationId },
 }) => {
-  const alc = context.get(appLoadContext);
-  const organizations = await alc.auth.api.listOrganizations({
+  const requestContext = context.get(requestContextKey);
+  invariant(requestContext, "Missing request context.");
+  const organizations = await requestContext.auth.api.listOrganizations({
     headers: request.headers,
   });
   const organization = organizations.find((org) => org.id === organizationId);
   // eslint-disable-next-line @typescript-eslint/only-throw-error
   if (!organization) throw new Response("Forbidden", { status: 403 });
-  context.set(appLoadContext, { ...alc, organization, organizations });
+  context.set(requestContextKey, {
+    ...requestContext,
+    organization,
+    organizations,
+  });
 };
 
-export const middleware: Route.MiddlewareFunction[] = [
-  organizationMiddleware,
-];
+export const middleware: Route.MiddlewareFunction[] = [organizationMiddleware];
 
 export function loader({
   context,
   params: { organizationId },
 }: Route.ActionArgs) {
-  const { organization, organizations, session } = context.get(appLoadContext);
+  const requestContext = context.get(requestContextKey);
+  invariant(requestContext, "Missing request context.");
+  const { organization, organizations, session } = requestContext;
   invariant(organization, "Missing organization");
   invariant(organization.id === organizationId, "Organization ID mismatch");
   invariant(organizations, "Missing organizations");
