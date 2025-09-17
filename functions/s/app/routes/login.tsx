@@ -29,10 +29,10 @@ export async function action({
   if (!parseResult.success) {
     const { formErrors: details, fieldErrors: validationErrors } =
       z.flattenError(parseResult.error);
-    return { success: false, details, validationErrors };
+    return { success: false, details, validationErrors } satisfies TechnicalDomain.FormActionResult; // Let typescript infer the type.
   }
   const requestContext = context.get(appRequestContextKey);
-  invariant(requestContext, "Missing request context");
+  invariant(requestContext, "Missing request context.");
   const {
     auth,
     cloudflare: { env },

@@ -17,15 +17,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card"; // Use shadcn ui component not covered by Oui
-import * as Rac from "react-aria-components"; // Use Rac directly for components that don't need styles such as <Rac.Form>
+import * as Rac from "react-aria-components"; // Use Rac directly for components that don't need styles
 import { redirect } from "react-router";
-import { appLoadContext } from "~/lib/middleware";
+import { requestContextKey } from "~/lib/request-context";
 import * as z from "zod"; // If using zod for validation
 import * as Domain from "~/lib/domain";
+import type * as TechnicalDomain from "~/lib/technical-domain";
 
 // Use Route to type the loader arguments
 export async function loader({ request, context }: Route.LoaderArgs) {
-  const { auth, stripe } = context.get(appLoadContext); // Get better-auth auth and stripe from the appLoadContext
+  const requestContext = context.get(requestContextKey);
+  invariant(requestContext, "Missing request context.");
+  const { auth, stripe } = requestContext;
   const session = await auth.api.getSession({ headers: request.headers });
   return { isSignedIn: Boolean(session?.user), session }; // Let typescript infer the type.
 }
@@ -39,15 +42,17 @@ export async function action({ request, context }: Route.ActionArgs) {
     Object.fromEntries(await request.formData()),
   );
   if (!parseResult.success) {
-    const { formErrors, fieldErrors: validationErrors } = z.flattenError(
-      parseResult.error,
-    );
+    const { formErrors: details, fieldErrors: validationErrors } =
+      z.flattenError(parseResult.error);
     return {
-      formErrors, // For FormErrorAlert formErrors
-      validationErrors, // For Rac.Form validationErrors
-    }; // Let typescript infer the type.
+      success: false,
+      details,
+      validationErrors,
+    } satisfies TechnicalDomain.FormActionResult;
   }
-  const { auth, session } = context.get(appLoadContext); // appLoadContext has better-auth auth and session objects
+  const requestContext = context.get(requestContextKey);
+  invariant(requestContext, "Missing request context.");
+  const { auth, session } = requestContext;
   await auth.api.signInMagicLink({ // server-side better-auth api call.
     headers: request.headers,
     body: { email: parseResult.data.email, callbackURL: "/magic-link" },
