@@ -112,13 +112,13 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
   }>({ isOpen: false });
   const onOpenChangeBanDialog = useCallback(
     (isOpen: boolean) =>
-      setBanDialog((prev) =>
+      { setBanDialog((prev) =>
         prev.isOpen === isOpen
           ? prev
           : isOpen
             ? { ...prev, isOpen }
             : { isOpen: false, userId: undefined },
-      ),
+      ); },
     [setBanDialog],
   );
   const fetcher = useFetcher(); // Caution: shared fetcher for simplicity.
@@ -201,7 +201,7 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
                       key="ban"
                       id="ban"
                       onAction={() =>
-                        setBanDialog({ isOpen: true, userId: user.id })
+                        { setBanDialog({ isOpen: true, userId: user.id }); }
                       }
                     >
                       Ban

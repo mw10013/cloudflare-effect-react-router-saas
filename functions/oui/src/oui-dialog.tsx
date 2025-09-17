@@ -298,8 +298,8 @@ export function DialogEx1AlertProvider({ children }: { children: ReactNode }) {
         <DialogEx1Alert
           {...options}
           isOpen
-          onConfirm={() => handleClose(true)}
-          onCancel={() => handleClose(false)}
+          onConfirm={() => { handleClose(true); }}
+          onCancel={() => { handleClose(false); }}
         />
       )}
     </DialogEx1AlertContext.Provider>

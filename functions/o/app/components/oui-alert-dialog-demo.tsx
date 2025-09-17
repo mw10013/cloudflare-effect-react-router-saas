@@ -31,7 +31,7 @@ export function OuiAlertDialogDemo1() {
 
   return (
     <>
-      <Oui.Button variant="outline" onPress={() => setOpen(true)}>
+      <Oui.Button variant="outline" onPress={() => { setOpen(true); }}>
         Show Confirm
       </Oui.Button>
       <Oui.DialogEx1Alert
@@ -51,7 +51,7 @@ export function OuiAlertDialogDemo2() {
 
   return (
     <>
-      <Oui.Button variant="outline" onPress={() => setOpen(true)}>
+      <Oui.Button variant="outline" onPress={() => { setOpen(true); }}>
         Show Acknowledgement
       </Oui.Button>
       <Oui.DialogEx1Alert
