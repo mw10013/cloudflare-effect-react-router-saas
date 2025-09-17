@@ -4,10 +4,7 @@ import type { StripeService } from "~/lib/stripe-service";
 import { createContext } from "react-router";
 
 export interface RequestContext {
-  cloudflare: {
-    env: Env;
-    // ctx: ExecutionContext;
-  };
+  env: Env;
   auth: Auth;
   repository: Repository;
   stripeService: StripeService;

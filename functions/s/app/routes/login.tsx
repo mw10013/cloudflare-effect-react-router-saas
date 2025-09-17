@@ -29,14 +29,15 @@ export async function action({
   if (!parseResult.success) {
     const { formErrors: details, fieldErrors: validationErrors } =
       z.flattenError(parseResult.error);
-    return { success: false, details, validationErrors } satisfies TechnicalDomain.FormActionResult; // Let typescript infer the type.
+    return {
+      success: false,
+      details,
+      validationErrors,
+    } satisfies TechnicalDomain.FormActionResult;
   }
   const requestContext = context.get(appRequestContextKey);
   invariant(requestContext, "Missing request context.");
-  const {
-    auth,
-    cloudflare: { env },
-  } = requestContext;
+  const { auth, env } = requestContext;
   const result = await auth.api.signInMagicLink({
     headers: request.headers,
     body: { email: parseResult.data.email, callbackURL: "/magic-link" },
