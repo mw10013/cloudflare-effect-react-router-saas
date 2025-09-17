@@ -4,7 +4,7 @@ import { createAuth } from "~/lib/auth";
 import { createStripeService } from "~/lib/stripe-service";
 import { resetDb } from "../test-utils";
 
-describe("better-auth sign up flow", async () => {
+describe("better-auth sign up flow", () => {
   const email = "email@test.com";
   const password = "password";
   const name = "";
@@ -40,6 +40,7 @@ describe("better-auth sign up flow", async () => {
     });
     expect(response.ok).toBe(true);
     expect(mockSendVerificationEmail).toHaveBeenCalledTimes(1);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     emailVerificationUrl = mockSendVerificationEmail.mock.calls[0][0].url;
     expect(emailVerificationUrl).toBeDefined();
   });
@@ -56,7 +57,7 @@ describe("better-auth sign up flow", async () => {
     });
 
     expect(response.status).toBe(422);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
     expect(((await response.json()) as any)?.code).toBe(
       "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL",
     );
@@ -69,7 +70,7 @@ describe("better-auth sign up flow", async () => {
     });
 
     expect(response.status).toBe(403);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
     expect(((await response.json()) as any)?.code).toBe("EMAIL_NOT_VERIFIED");
     expect(mockSendVerificationEmail).toHaveBeenCalledTimes(2);
   });
@@ -127,7 +128,7 @@ describe("better-auth sign up flow", async () => {
     });
 
     expect(response.status).toBe(401);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
     expect(((await response.json()) as any)?.code).toBe(
       "INVALID_EMAIL_OR_PASSWORD",
     );
