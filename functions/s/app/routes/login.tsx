@@ -11,7 +11,7 @@ import {
 import { useSubmit } from "react-router";
 import * as z from "zod";
 import { FormAlert } from "~/components/FormAlert";
-import { RequestContext as appRequestContextKey } from "~/lib/request-context";
+import { RequestContext } from "~/lib/request-context";
 import * as TechnicalDomain from "~/lib/technical-domain";
 
 export async function action({
@@ -35,7 +35,7 @@ export async function action({
       validationErrors,
     } satisfies TechnicalDomain.FormActionResult;
   }
-  const requestContext = context.get(appRequestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { auth, env } = requestContext;
   const result = await auth.api.signInMagicLink({
