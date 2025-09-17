@@ -5,7 +5,10 @@ import {
 } from "cloudflare:test";
 import { RouterContextProvider } from "react-router";
 import { describe, expect, it } from "vitest";
-import { appLoadContext } from "~/lib/middleware";
+import type { Auth } from "~/lib/auth";
+import type { Repository } from "~/lib/repository";
+import type { StripeService } from "~/lib/stripe-service";
+import { requestContextKey } from "~/lib/request-context";
 import { loader } from "~/routes/_mkt";
 import worker from "../test-worker";
 
@@ -36,8 +39,11 @@ describe("basic", () => {
 
   it("loader returns result", () => {
     const context = new RouterContextProvider();
-    context.set(appLoadContext, {
+    context.set(requestContextKey, {
       cloudflare: { env },
+      auth: {} as Auth,
+      repository: {} as Repository,
+      stripeService: {} as StripeService,
     });
 
     const result = loader({ context });

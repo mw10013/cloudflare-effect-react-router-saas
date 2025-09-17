@@ -6,7 +6,7 @@ import { createContext } from "react-router";
 export interface RequestContext {
   cloudflare: {
     env: Env;
-    ctx: ExecutionContext;
+    // ctx: ExecutionContext;
   };
   auth: Auth;
   repository: Repository;

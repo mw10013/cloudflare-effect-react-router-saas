@@ -4,7 +4,7 @@ import { env } from "cloudflare:workers";
 import { RouterContextProvider } from "react-router";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { createAuth } from "~/lib/auth";
-import { appLoadContext } from "~/lib/middleware";
+import { requestContextKey } from "~/lib/request-context";
 import { createStripeService } from "~/lib/stripe-service";
 import {
   action as acceptInvitationAction,
@@ -45,7 +45,13 @@ async function createTestContext() {
       ? ((await auth.api.getSession({ headers })) ?? undefined)
       : undefined;
     const context = new RouterContextProvider();
-    context.set(appLoadContext, { auth, session, cloudflare: { env } });
+    context.set(requestContextKey, {
+      cloudflare: { env },
+      auth,
+      repository: {} as any,
+      stripeService: {} as any,
+      session,
+    });
     return context;
   };
 
