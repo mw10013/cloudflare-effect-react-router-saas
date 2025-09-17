@@ -124,7 +124,7 @@ export default function RouteComponent({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {members && members.length > 0 ? (
+          {members.length > 0 ? (
             <ul className="divide-y">
               {members.map((member) => (
                 <MemberItem

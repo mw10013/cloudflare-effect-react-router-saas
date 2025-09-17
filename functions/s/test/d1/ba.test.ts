@@ -1,3 +1,4 @@
+import { invariant } from "@epic-web/invariant";
 import { env } from "cloudflare:workers";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { createAuth } from "~/lib/auth";
@@ -88,8 +89,8 @@ describe("better-auth sign up flow", () => {
   });
 
   it("verifies email", async () => {
-    expect(emailVerificationUrl).toBeDefined();
-    const request = new Request(emailVerificationUrl!);
+    invariant(emailVerificationUrl, "Expected emailVerificationUrl.");
+    const request = new Request(emailVerificationUrl);
 
     const response = await auth.handler(request);
 
@@ -97,7 +98,8 @@ describe("better-auth sign up flow", () => {
     expect(response.headers.get("location")).toBe(callbackURL);
     expect(response.headers.has("Set-Cookie")).toBe(true);
 
-    const setCookieHeader = response.headers.get("Set-Cookie")!;
+    const setCookieHeader = response.headers.get("Set-Cookie");
+    invariant(setCookieHeader, "Expected Set-Cookie header.");
     const match = setCookieHeader.match(/better-auth\.session_token=([^;]+)/);
     const sessionCookie = match ? `better-auth.session_token=${match[1]}` : "";
     expect(sessionCookie).not.toBe("");
@@ -107,8 +109,8 @@ describe("better-auth sign up flow", () => {
   it("has valid session", async () => {
     const session = await auth.api.getSession({ headers });
 
-    expect(session).not.toBeNull();
-    expect(session!.user?.email).toBe(email);
+    invariant(session, "Expected session.");
+    expect(session.user.email).toBe(email);
   });
 
   it("signs out", async () => {

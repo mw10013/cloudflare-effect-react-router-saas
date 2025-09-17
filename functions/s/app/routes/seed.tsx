@@ -44,7 +44,8 @@ function createSeedContext({
   };
 
   const sessionCookie = (headers: Headers) => {
-    const setCookieHeader = headers.get("Set-Cookie")!;
+    const setCookieHeader = headers.get("Set-Cookie");
+    invariant(setCookieHeader, "Missing Set-Cookie header.");
     const match = setCookieHeader.match(/better-auth\.session_token=([^;]+)/);
     if (!match) throw new Error(`Missing session cookie: ${setCookieHeader}`);
     return `better-auth.session_token=${match[1]}`;

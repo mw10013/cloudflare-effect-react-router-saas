@@ -198,7 +198,7 @@ class StripePom {
     await expect(async () => {
       await this.page.reload();
       await expect(this.page.getByTestId("active-plan")).toContainText(
-        `${planName}`,
+        planName,
         { ignoreCase: true, timeout: 100 }, // Timeout short since data is static.
       );
       await expect(this.page.getByTestId("active-status")).toContainText(

@@ -71,11 +71,11 @@ const expiresIn = (expiresAt: Date): string => {
   if (diff <= 0) return "Expired";
   const m = Math.floor(diff / 60000);
   if (m < 1) return "in <1m";
-  if (m < 60) return `in ${m}m`;
+  if (m < 60) return `in ${String(m)}m`;
   const h = Math.floor(m / 60);
-  if (h < 24) return `in ${h}h`;
+  if (h < 24) return `in ${String(h)}h`;
   const d = Math.floor(h / 24);
-  return `in ${d}d`;
+  return `in ${String(d)}d`;
 };
 
 function InvitationItem({

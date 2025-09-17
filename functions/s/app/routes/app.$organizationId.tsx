@@ -144,7 +144,7 @@ export function OrganizationSwitcher({
   return (
     <Oui.MenuEx
       className="min-w-56 rounded-lg"
-      onAction={(key: React.Key) => void navigate(`/app/${key}`)}
+      onAction={(key: React.Key) => void navigate(`/app/${String(key)}`)}
       triggerElement={
         <Oui.Button
           variant="ghost"

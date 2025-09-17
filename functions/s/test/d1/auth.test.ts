@@ -58,7 +58,8 @@ async function createTestContext() {
   };
 
   const sessionCookie = (response: Response) => {
-    const setCookieHeader = response.headers.get("Set-Cookie")!;
+    const setCookieHeader = response.headers.get("Set-Cookie");
+    invariant(setCookieHeader, "Expected Set-Cookie header.");
     const match = setCookieHeader.match(/better-auth\.session_token=([^;]+)/);
     if (!match) throw new Error(`Missing session cookie: ${setCookieHeader}`);
     return `better-auth.session_token=${match[1]}`;
@@ -183,8 +184,8 @@ describe("accept invitation flow", () => {
     const sendInvitationEmailData = c.mockSendInvitationEmail.mock
       .calls[0][0] as { invitation: { id: string; role: string } };
     expect(sendInvitationEmailData).toBeDefined();
-    expect(sendInvitationEmailData.invitation?.role).toBe("admin");
-    const invitationId = sendInvitationEmailData.invitation?.id;
+    expect(sendInvitationEmailData.invitation.role).toBe("admin");
+    const invitationId = sendInvitationEmailData.invitation.id;
     invariant(invitationId, "Expected invitationId");
     const row = await c.db
       .prepare("select role from Invitation where invitationId = ? limit 1")
@@ -267,7 +268,7 @@ describe("reject invitation flow", () => {
       body: {
         email: inviteeEmail,
         role: "member",
-        organizationId: String(session.session.activeOrganizationId),
+        organizationId: session.session.activeOrganizationId,
         resend: true,
       },
     });

@@ -15,7 +15,7 @@ export async function loader({ request, context }: Route.LoaderArgs) {
   if (session?.user.role === "admin") return redirect("/admin");
   else if (session?.user.role === "user") return redirect("/app");
 
-  return { error: `Invalid role: ${session?.user.role}` };
+  return { error: `Invalid role: ${session?.user.role ?? "unknown"}` };
 }
 
 export default function RouteComponent({ loaderData }: Route.ComponentProps) {

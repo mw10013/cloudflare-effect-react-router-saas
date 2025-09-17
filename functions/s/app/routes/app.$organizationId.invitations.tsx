@@ -60,7 +60,7 @@ export async function action({
       emails: z
         .string()
         .transform((v) =>
-          String(v)
+          v
             .split(",")
             .map((i) => i.trim())
             .filter(Boolean),
@@ -200,7 +200,7 @@ export default function RouteComponent({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {invitations && invitations.length > 0 ? (
+          {invitations.length > 0 ? (
             <ul className="divide-y">
               {invitations.map((i) => (
                 <InvitationItem

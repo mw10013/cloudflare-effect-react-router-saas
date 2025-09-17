@@ -31,7 +31,7 @@ const nodeDatabaseName = jsonc.findNodeAtLocation(
 )
 const databaseName = nodeDatabaseName?.value && typeof nodeDatabaseName.value === 'string' ? nodeDatabaseName.value : undefined
 if (!databaseName) {
-	throw new Error(`Failed to find database name in wrangler.jsonc: ${wranglerJsoncPaths[0]} for env: ${env}`)
+	throw new Error(`Failed to find database name in wrangler.jsonc: ${wranglerJsoncPaths[0]} for env: ${String(env)}`)
 }
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 console.log({ env, databaseName })
@@ -96,7 +96,7 @@ for (const wranglerJsoncPath of wranglerJsoncPaths) {
 	}
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 	const edit = jsonc.modify(wranglerJsonc, nodePath, databaseId, {})
-	if (!edit) {
+	if (!Array.isArray(edit) || edit.length === 0) {
 		throw new Error(`Failed to modify jsonc: ${wranglerJsoncPath}`)
 	}
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
