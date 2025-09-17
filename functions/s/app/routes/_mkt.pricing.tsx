@@ -11,10 +11,10 @@ import { env } from "cloudflare:workers";
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
 import * as z from "zod";
-import { requestContextKey } from "~/lib/request-context";
+import { RequestContext } from "~/lib/request-context";
 
 export async function loader({ context }: Route.LoaderArgs) {
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { stripeService } = requestContext;
   const plans = await stripeService.getPlans();
@@ -31,7 +31,7 @@ inner join User u on u.userId = m.userId`,
 }
 
 export async function action({ request, context }: Route.ActionArgs) {
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { auth, session, stripeService } = requestContext;
   if (!session) {

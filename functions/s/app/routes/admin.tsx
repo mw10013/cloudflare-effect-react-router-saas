@@ -7,10 +7,10 @@ import {
   SidebarProvider,
 } from "@workspace/ui/components/ui/sidebar";
 import { Outlet, redirect } from "react-router";
-import { requestContextKey } from "~/lib/request-context";
+import { RequestContext } from "~/lib/request-context";
 
 export const adminMiddleware: Route.MiddlewareFunction = ({ context }) => {
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { session } = requestContext;
   // eslint-disable-next-line @typescript-eslint/only-throw-error

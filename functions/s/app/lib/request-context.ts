@@ -13,6 +13,7 @@ export interface RequestContext {
   organizations?: Auth["$Infer"]["Organization"][];
 }
 
-export const requestContextKey = createContext<RequestContext | undefined>(
+// RequestContext serves as both the context key (runtime) and type (TypeScript)
+export const RequestContext = createContext<RequestContext | undefined>(
   undefined,
 );

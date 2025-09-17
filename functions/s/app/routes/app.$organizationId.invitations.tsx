@@ -12,7 +12,7 @@ import {
 import { useFetcher, useSubmit } from "react-router";
 import * as z from "zod";
 import * as Domain from "~/lib/domain";
-import { requestContextKey } from "~/lib/request-context";
+import { RequestContext } from "~/lib/request-context";
 import * as TechnicalDomain from "~/lib/technical-domain";
 
 export async function loader({
@@ -20,7 +20,7 @@ export async function loader({
   context,
   params: { organizationId },
 }: Route.LoaderArgs) {
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { auth } = requestContext;
 
@@ -85,7 +85,7 @@ export async function action({
       z.flattenError(parseResult.error);
     return { success: false, details, validationErrors };
   }
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { auth, env } = requestContext;
   switch (parseResult.data.intent) {

@@ -1,12 +1,12 @@
 import type { Route } from "./+types/email-verification";
 import { invariant } from "@epic-web/invariant";
-import { requestContextKey } from "~/lib/request-context";
+import { RequestContext } from "~/lib/request-context";
 
 export async function loader({ request, context }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const error = url.searchParams.get("error");
   if (error) return { error };
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { auth } = requestContext;
   const session = await auth.api.getSession({ headers: request.headers });

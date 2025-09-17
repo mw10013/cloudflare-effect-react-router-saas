@@ -11,13 +11,13 @@ import {
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
 import * as z from "zod";
-import { requestContextKey } from "~/lib/request-context";
+import { RequestContext } from "~/lib/request-context";
 
 export function loader({
   context,
   params: { invitationId },
 }: Route.LoaderArgs) {
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   return { needsAuth: !requestContext.session, invitationId };
 }
@@ -32,7 +32,7 @@ export async function action({
   });
   const formData = await request.formData();
   const parseResult = schema.parse(Object.fromEntries(formData));
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { auth } = requestContext;
   if (parseResult.intent === "accept") {

@@ -1,13 +1,13 @@
 import type { Route } from "./+types/app";
 import { invariant } from "@epic-web/invariant";
 import { Outlet, redirect } from "react-router";
-import { requestContextKey } from "~/lib/request-context";
+import { RequestContext } from "~/lib/request-context";
 
 const appMiddleware: Route.MiddlewareFunction = async ({
   request,
   context,
 }) => {
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { auth } = requestContext;
   const session = await auth.api.getSession({ headers: request.headers });

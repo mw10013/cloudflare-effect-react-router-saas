@@ -11,14 +11,14 @@ import {
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
 import * as z from "zod";
-import { requestContextKey } from "~/lib/request-context";
+import { RequestContext } from "~/lib/request-context";
 
 export async function loader({
   request,
   params: { organizationId },
   context,
 }: Route.LoaderArgs) {
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { auth } = requestContext;
   const subscriptions = await auth.api.listActiveSubscriptions({
@@ -52,7 +52,7 @@ export async function action({
   const parseResult = schema.parse(
     Object.fromEntries(await request.formData()),
   );
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { auth } = requestContext;
   switch (parseResult.intent) {

@@ -5,7 +5,7 @@ import * as Oui from "@workspace/oui";
 import { redirect, useFetcher, useNavigate } from "react-router";
 import * as z from "zod";
 import { FormAlert } from "~/components/FormAlert";
-import { requestContextKey } from "~/lib/request-context";
+import { RequestContext } from "~/lib/request-context";
 import * as TechnicalDomain from "~/lib/technical-domain";
 
 export async function loader({ request, context }: Route.LoaderArgs) {
@@ -18,7 +18,7 @@ export async function loader({ request, context }: Route.LoaderArgs) {
   });
   const { page, filter } = schema.parse(params);
   const offset = (page - 1) * LIMIT;
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { auth } = requestContext;
   const result = await auth.api.listUsers({
@@ -70,7 +70,7 @@ export async function action({
       z.flattenError(parseResult.error);
     return { success: false, details, validationErrors };
   }
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { auth } = requestContext;
   switch (parseResult.data.intent) {

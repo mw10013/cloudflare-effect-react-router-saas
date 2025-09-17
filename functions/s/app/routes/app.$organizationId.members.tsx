@@ -10,14 +10,14 @@ import {
 } from "@workspace/ui/components/ui/card";
 import { redirect, useFetcher } from "react-router";
 import * as z from "zod";
-import { requestContextKey } from "~/lib/request-context";
+import { RequestContext } from "~/lib/request-context";
 
 export async function loader({
   request,
   context,
   params: { organizationId },
 }: Route.LoaderArgs) {
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { auth } = requestContext;
   const session = await auth.api.getSession({ headers: request.headers });
@@ -72,7 +72,7 @@ export async function action({
   const parseResult = schema.parse(
     Object.fromEntries(await request.formData()),
   );
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { auth } = requestContext;
   switch (parseResult.intent) {

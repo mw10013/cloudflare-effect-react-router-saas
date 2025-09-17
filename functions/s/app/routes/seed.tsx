@@ -1,11 +1,10 @@
-import type { RequestContext } from "~/lib/request-context";
 import type { User } from "better-auth/types";
 import type { Route } from "./+types/seed";
 import { invariant } from "@epic-web/invariant";
 import { RouterContextProvider } from "react-router";
 import { createAuth } from "~/lib/auth";
 import { createRepository } from "~/lib/repository";
-import { requestContextKey } from "~/lib/request-context";
+import { RequestContext } from "~/lib/request-context";
 
 function createSeedContext({
   env,
@@ -34,7 +33,7 @@ function createSeedContext({
       ? ((await auth.api.getSession({ headers })) ?? undefined)
       : undefined;
     const context = new RouterContextProvider();
-    context.set(requestContextKey, {
+    context.set(RequestContext, {
       env,
       repository: createRepository(),
       auth,
@@ -93,7 +92,7 @@ function createSeedContext({
 }
 
 export async function loader({ context }: Route.ActionArgs) {
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { env, stripeService: stripe } = requestContext;
   const c = createSeedContext({ env, stripeService: stripe });

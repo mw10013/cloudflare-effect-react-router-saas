@@ -3,10 +3,10 @@ import * as Oui from "@workspace/oui";
 import * as Rac from "react-aria-components";
 import { Outlet, useRouteLoaderData } from "react-router";
 import { AppLogoIcon } from "~/components/AppLogoIcon";
-import { requestContextKey } from "~/lib/request-context";
+import { RequestContext } from "~/lib/request-context";
 
 export function loader({ context }: Route.LoaderArgs) {
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   if (!requestContext) return { isSignedIn: false, sessionUser: null };
   const { session } = requestContext;
   return {

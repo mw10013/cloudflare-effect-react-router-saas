@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import { useFetcher } from "react-router";
-import { requestContextKey } from "~/lib/request-context";
+import { RequestContext } from "~/lib/request-context";
 
 export async function loader({
   request,
@@ -17,7 +17,7 @@ export async function loader({
   params: { organizationId },
 }: Route.LoaderArgs) {
   const MIN_TTL_MS = 5 * 60 * 1000;
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { auth } = requestContext;
   const session = await auth.api.getSession({ headers: request.headers });
@@ -50,7 +50,7 @@ export async function action({ request, context }: Route.ActionArgs) {
     typeof invitationId === "string" && invitationId.length > 0,
     "Missing invitationId",
   );
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { auth } = requestContext;
   if (intent === "accept")

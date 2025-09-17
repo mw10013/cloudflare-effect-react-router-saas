@@ -16,14 +16,14 @@ import { ChevronsUpDown, LogOut } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { Outlet, useNavigate } from "react-router";
 import { AppLogoIcon } from "~/components/AppLogoIcon";
-import { requestContextKey } from "~/lib/request-context";
+import { RequestContext } from "~/lib/request-context";
 
 const organizationMiddleware: Route.MiddlewareFunction = async ({
   request,
   context,
   params: { organizationId },
 }) => {
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const organizations = await requestContext.auth.api.listOrganizations({
     headers: request.headers,
@@ -31,7 +31,7 @@ const organizationMiddleware: Route.MiddlewareFunction = async ({
   const organization = organizations.find((org) => org.id === organizationId);
   // eslint-disable-next-line @typescript-eslint/only-throw-error
   if (!organization) throw new Response("Forbidden", { status: 403 });
-  context.set(requestContextKey, {
+  context.set(RequestContext, {
     ...requestContext,
     organization,
     organizations,
@@ -44,7 +44,7 @@ export function loader({
   context,
   params: { organizationId },
 }: Route.ActionArgs) {
-  const requestContext = context.get(requestContextKey);
+  const requestContext = context.get(RequestContext);
   invariant(requestContext, "Missing request context.");
   const { organization, organizations, session } = requestContext;
   invariant(organization, "Missing organization");
