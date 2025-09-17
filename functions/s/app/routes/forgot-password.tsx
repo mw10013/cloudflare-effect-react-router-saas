@@ -11,7 +11,7 @@ import {
 import { useSubmit } from "react-router";
 import * as z from "zod";
 import { FormAlert } from "~/components/FormAlert";
-import { appLoadContext } from "~/lib/middleware";
+import { requestContextKey } from "~/lib/request-context";
 import * as TechnicalDomain from "~/lib/technical-domain";
 
 export async function action({
@@ -29,7 +29,9 @@ export async function action({
       z.flattenError(parseResult.error);
     return { success: false, details, validationErrors };
   }
-  const { auth } = context.get(appLoadContext);
+  const requestContext = context.get(requestContextKey);
+  invariant(requestContext, "Missing request context.");
+  const { auth } = requestContext;
   const result = await auth.api.forgetPassword({
     body: { email: parseResult.data.email, redirectTo: "/reset-password" },
   });

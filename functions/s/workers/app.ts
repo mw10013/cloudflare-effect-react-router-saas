@@ -37,7 +37,7 @@ export default {
     hono.all("*", async (c) => {
       const context = new RouterContextProvider();
       context.set(requestContextKey, {
-        cloudflare: { env, ctx },
+        env,
         auth,
         repository,
         stripeService,

@@ -46,7 +46,7 @@ async function createTestContext() {
       : undefined;
     const context = new RouterContextProvider();
     context.set(requestContextKey, {
-      cloudflare: { env },
+      env,
       auth,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
       repository: {} as any,

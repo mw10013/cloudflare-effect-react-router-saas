@@ -40,7 +40,7 @@ describe("basic", () => {
   it("loader returns result", () => {
     const context = new RouterContextProvider();
     context.set(requestContextKey, {
-      cloudflare: { env },
+      env,
       auth: {} as Auth,
       repository: {} as Repository,
       stripeService: {} as StripeService,

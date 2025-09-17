@@ -1,13 +1,17 @@
 import type { Route } from "./+types/magic-link";
+import { invariant } from "@epic-web/invariant";
 import { redirect } from "react-router";
-import { appLoadContext } from "~/lib/middleware";
+import { requestContextKey } from "~/lib/request-context";
 
-export function loader({ request, context }: Route.LoaderArgs) {
+export async function loader({ request, context }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const error = url.searchParams.get("error");
   if (error) return { error };
 
-  const { session } = context.get(appLoadContext);
+  const requestContext = context.get(requestContextKey);
+  invariant(requestContext, "Missing request context.");
+  const { auth } = requestContext;
+  const session = await auth.api.getSession({ headers: request.headers });
   if (session?.user.role === "admin") return redirect("/admin");
   else if (session?.user.role === "user") return redirect("/app");
 

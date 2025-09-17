@@ -1,5 +1,6 @@
 import type { Route } from "./+types/app.$organizationId.invitations";
 import { useEffect, useRef } from "react";
+import { invariant } from "@epic-web/invariant";
 import * as Oui from "@workspace/oui";
 import {
   Card,
@@ -11,7 +12,7 @@ import {
 import { useFetcher, useSubmit } from "react-router";
 import * as z from "zod";
 import * as Domain from "~/lib/domain";
-import { appLoadContext } from "~/lib/middleware";
+import { requestContextKey } from "~/lib/request-context";
 import * as TechnicalDomain from "~/lib/technical-domain";
 
 export async function loader({
@@ -19,7 +20,9 @@ export async function loader({
   context,
   params: { organizationId },
 }: Route.LoaderArgs) {
-  const { auth } = context.get(appLoadContext);
+  const requestContext = context.get(requestContextKey);
+  invariant(requestContext, "Missing request context.");
+  const { auth } = requestContext;
 
   const { success: canManageInvitations } = await auth.api.hasPermission({
     headers: request.headers,
@@ -82,7 +85,9 @@ export async function action({
       z.flattenError(parseResult.error);
     return { success: false, details, validationErrors };
   }
-  const { auth } = context.get(appLoadContext);
+  const requestContext = context.get(requestContextKey);
+  invariant(requestContext, "Missing request context.");
+  const { auth, env } = requestContext;
   switch (parseResult.data.intent) {
     case "cancel":
       await auth.api.cancelInvitation({
@@ -103,12 +108,7 @@ export async function action({
         });
         // Workaround for better-auth createInvitation role bug
         if (result.role !== parseResult.data.role) {
-          const {
-            cloudflare: {
-              env: { D1 },
-            },
-          } = context.get(appLoadContext);
-          await D1.prepare(
+          await env.D1.prepare(
             "update Invitation set role = ? where invitationId = ?",
           )
             .bind(parseResult.data.role, Number(result.id))

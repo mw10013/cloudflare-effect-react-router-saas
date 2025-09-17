@@ -1,4 +1,5 @@
 import type { Route } from "./+types/app.$organizationId.billing";
+import { invariant } from "@epic-web/invariant";
 import * as Oui from "@workspace/oui";
 import {
   Card,
@@ -10,14 +11,16 @@ import {
 import * as Rac from "react-aria-components";
 import { redirect } from "react-router";
 import * as z from "zod";
-import { appLoadContext } from "~/lib/middleware";
+import { requestContextKey } from "~/lib/request-context";
 
 export async function loader({
   request,
   params: { organizationId },
   context,
 }: Route.LoaderArgs) {
-  const { auth } = context.get(appLoadContext);
+  const requestContext = context.get(requestContextKey);
+  invariant(requestContext, "Missing request context.");
+  const { auth } = requestContext;
   const subscriptions = await auth.api.listActiveSubscriptions({
     headers: request.headers,
     query: { referenceId: organizationId },
@@ -49,7 +52,9 @@ export async function action({
   const parseResult = schema.parse(
     Object.fromEntries(await request.formData()),
   );
-  const { auth } = context.get(appLoadContext);
+  const requestContext = context.get(requestContextKey);
+  invariant(requestContext, "Missing request context.");
+  const { auth } = requestContext;
   switch (parseResult.intent) {
     case "manage": {
       const result = await auth.api.createBillingPortal({

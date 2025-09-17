@@ -1,32 +1,32 @@
+import type { RequestContext } from "~/lib/request-context";
 import type { User } from "better-auth/types";
-import type { AppLoadContext } from "react-router";
 import type { Route } from "./+types/seed";
 import { invariant } from "@epic-web/invariant";
 import { RouterContextProvider } from "react-router";
 import { createAuth } from "~/lib/auth";
-import { appLoadContext } from "~/lib/middleware";
 import { createRepository } from "~/lib/repository";
+import { requestContextKey } from "~/lib/request-context";
 
 function createSeedContext({
-  cloudflare,
+  env,
   stripeService,
 }: {
-  cloudflare: AppLoadContext["cloudflare"];
-  stripeService: AppLoadContext["stripeService"];
+  env: RequestContext["env"];
+  stripeService: RequestContext["stripeService"];
 }) {
   const magicLinkTokens = new Map<string, string>();
   const auth = createAuth({
-    d1: cloudflare.env.D1,
+    d1: env.D1,
     stripeService,
     ses: {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      async sendEmail() { },
+      async sendEmail() {},
     },
     sendMagicLink: ({ email, token }) => {
       magicLinkTokens.set(email, token);
     },
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    sendInvitationEmail: async () => { },
+    sendInvitationEmail: async () => {},
   });
 
   const context = async ({ headers }: { headers?: Headers } = {}) => {
@@ -34,8 +34,8 @@ function createSeedContext({
       ? ((await auth.api.getSession({ headers })) ?? undefined)
       : undefined;
     const context = new RouterContextProvider();
-    context.set(appLoadContext, {
-      cloudflare,
+    context.set(requestContextKey, {
+      env,
       repository: createRepository(),
       auth,
       stripeService: stripeService,
@@ -93,10 +93,10 @@ function createSeedContext({
 }
 
 export async function loader({ context }: Route.ActionArgs) {
-  const { cloudflare, stripeService: stripe } = context.get(
-    appLoadContext,
-  );
-  const c = createSeedContext({ cloudflare, stripeService: stripe });
+  const requestContext = context.get(requestContextKey);
+  invariant(requestContext, "Missing request context.");
+  const { env, stripeService: stripe } = requestContext;
+  const c = createSeedContext({ env, stripeService: stripe });
 
   await stripe.ensureBillingPortalConfiguration();
 
@@ -214,7 +214,7 @@ export async function loader({ context }: Route.ActionArgs) {
     }
   }
 
-  const db = cloudflare.env.D1;
+  const db = env.D1;
   const [
     { results: invitations },
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
