@@ -17,8 +17,8 @@ export function OuiSelectDemo() {
   ];
 
   const largeListItems = Array.from({ length: 100 }).map((_, i) => ({
-    id: `item-${i}`,
-    name: `Item ${i}`,
+    id: `item-${String(i)}`,
+    name: `Item ${String(i)}`,
   }));
 
   const simpleItems = [

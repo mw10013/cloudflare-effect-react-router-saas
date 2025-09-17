@@ -137,7 +137,7 @@ export function OuiTableDemo1() {
                 }
                 onAction={(key) => {
                   // Placeholder for future action handling
-                  console.log(`Action: ${key} for invoice ${invoice.invoice}`);
+                  console.log(`Action: ${String(key)} for invoice ${invoice.invoice}`);
                 }}
               >
                 <Oui.MenuItem id="copyId">Copy payment ID</Oui.MenuItem>

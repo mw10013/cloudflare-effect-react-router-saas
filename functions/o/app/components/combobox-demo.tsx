@@ -289,16 +289,12 @@ function TimezoneCombobox({
           variant="outline"
           className="h-12 w-full justify-between px-2.5 md:max-w-[200px]"
         >
-          {selectedTimezone ? (
-            <div className="flex flex-col items-start gap-0.5">
-              <span className="text-muted-foreground text-xs font-normal">
-                {selectedGroup?.label}
-              </span>
-              <span>{selectedTimezoneLabel}</span>
-            </div>
-          ) : (
-            "Select timezone"
-          )}
+          <div className="flex flex-col items-start gap-0.5">
+            <span className="text-muted-foreground text-xs font-normal">
+              {selectedGroup?.label}
+            </span>
+            <span>{selectedTimezoneLabel}</span>
+          </div>
           <ChevronDownIcon className="text-muted-foreground" />
         </Button>
       </PopoverTrigger>
