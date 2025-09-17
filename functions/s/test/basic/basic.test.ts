@@ -1,3 +1,6 @@
+import type { Auth } from "~/lib/auth";
+import type { Repository } from "~/lib/repository";
+import type { StripeService } from "~/lib/stripe-service";
 import {
   createExecutionContext,
   env,
@@ -5,9 +8,6 @@ import {
 } from "cloudflare:test";
 import { RouterContextProvider } from "react-router";
 import { describe, expect, it } from "vitest";
-import type { Auth } from "~/lib/auth";
-import type { Repository } from "~/lib/repository";
-import type { StripeService } from "~/lib/stripe-service";
 import { requestContextKey } from "~/lib/request-context";
 import { loader } from "~/routes/_mkt";
 import worker from "../test-worker";
@@ -46,7 +46,11 @@ describe("basic", () => {
       stripeService: {} as StripeService,
     });
 
-    const result = loader({ context });
+    const result = loader({
+      request: new IncomingRequest("http://example.com"),
+      params: {},
+      context,
+    });
 
     expect(result).toBeDefined();
   });
