@@ -48,7 +48,9 @@ const allTypes = [
       toast.message("Event has been created", {
         action: {
           label: "Undo",
-          onClick: () => console.log("Undo"),
+          onClick: () => {
+            console.log("Undo");
+          },
         },
       }),
   },
@@ -58,7 +60,9 @@ const allTypes = [
       toast.message("Event has been created", {
         cancel: {
           label: "Cancel",
-          onClick: () => console.log("Cancel"),
+          onClick: () => {
+            console.log("Cancel");
+          },
         },
       }),
   },
@@ -109,7 +113,9 @@ export function OuiToastDemo() {
             description: "Sunday, December 03, 2023 at 9:00 AM",
             action: {
               label: "Undo",
-              onClick: () => console.log("Undo"),
+              onClick: () => {
+                console.log("Undo");
+              },
             },
           })
         }
