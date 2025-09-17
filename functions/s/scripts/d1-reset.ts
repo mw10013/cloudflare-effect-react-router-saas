@@ -16,7 +16,7 @@ Command line args:
 const wranglerJsoncPaths = ['wrangler.jsonc']
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const env = argv.env || 'local'
+const env = argv.env ?? 'local'
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
 const wranglerJsonc = await fs.readFile(wranglerJsoncPaths[0], 'utf-8')
 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument

@@ -55,7 +55,7 @@ function adapt({
     model,
     modelId,
     selectClause:
-      select && select.length
+      select?.length
         ? select.map((s) => (s === "id" ? modelId : s)).join(", ")
         : "*",
     ...adaptWhere({ where, modelId }),
@@ -82,7 +82,7 @@ function adaptWhere({ where, modelId }: { where?: Where[]; modelId: string }): {
   const whereValues: unknown[] = [];
   for (const w of where) {
     type Operator = NonNullable<Where["operator"]>;
-    const op = (w.operator || "eq") as Operator;
+    const op = (w.operator ?? "eq") as Operator;
     const field = w.field === "id" ? modelId : w.field;
     let sql = "";
     switch (op) {
@@ -146,7 +146,7 @@ function adaptWhere({ where, modelId }: { where?: Where[]; modelId: string }): {
   }
   let whereClause = clauses[0];
   for (let i = 1; i < clauses.length; i++) {
-    whereClause = `${whereClause} ${where[i].connector || "and"} ${clauses[i]}`;
+    whereClause = `${whereClause} ${where[i].connector ?? "and"} ${clauses[i]}`;
   }
   return { whereClause, whereValues };
 }

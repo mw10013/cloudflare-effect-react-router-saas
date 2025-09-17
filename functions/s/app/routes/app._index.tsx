@@ -8,7 +8,7 @@ export async function loader({ request, context }: Route.LoaderArgs) {
   invariant(requestContext, "Missing request context.");
   const { auth } = requestContext;
   const session = await auth.api.getSession({ headers: request.headers });
-  if (!session || !session.session.activeOrganizationId)
+  if (!session?.session.activeOrganizationId)
     throw new Error("Missing session or active organization");
   return redirect(`/app/${session.session.activeOrganizationId}`);
 }

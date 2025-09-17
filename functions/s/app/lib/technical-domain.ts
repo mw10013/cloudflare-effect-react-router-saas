@@ -24,5 +24,5 @@ export const onSubmit =
         nativeEvent.submitter instanceof HTMLInputElement)
         ? nativeEvent.submitter
         : null;
-    void submit(submitter || e.currentTarget, { method: "post" });
+    void submit(submitter ?? e.currentTarget, { method: "post" });
   };

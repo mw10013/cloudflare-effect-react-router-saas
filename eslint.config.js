@@ -12,7 +12,7 @@ export default defineConfig(
 
   eslint.configs.recommended,
   tseslint.configs.recommendedTypeChecked,
-  tseslint.configs.stylistic,
+  tseslint.configs.stylisticTypeChecked,
   {
     languageOptions: {
       parserOptions: {
@@ -29,6 +29,11 @@ export default defineConfig(
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
+      "@typescript-eslint/prefer-string-starts-ends-with": [
+        "error",
+        { allowSingleElementEquality: "always" },
+      ],
+      "@typescript-eslint/prefer-regexp-exec": "off",
     },
   },
 );

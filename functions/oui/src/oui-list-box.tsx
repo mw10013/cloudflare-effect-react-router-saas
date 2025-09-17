@@ -20,7 +20,7 @@ export function ListBoxItem<T extends object>({
     <Rac.ListBoxItem
       {...props}
       textValue={
-        props.textValue || (typeof children === "string" ? children : undefined)
+        props.textValue ?? (typeof children === "string" ? children : undefined)
       }
       className={composeTailwindRenderProps(className, [
         focusVisibleStyles,
@@ -84,7 +84,7 @@ export function ListBoxItemEx1Pagination<T extends object>({
     <Rac.ListBoxItem
       {...props}
       textValue={
-        props.textValue ||
+        props.textValue ??
         (typeof children === "string"
           ? children
           : typeof children === "number"
