@@ -136,7 +136,7 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
         <Oui.SearchFieldEx
           aria-label="Filter by email"
           placeholder="Filter by email..."
-          defaultValue={loaderData?.filter ?? ""}
+          defaultValue={loaderData.filter ?? ""}
           name="filter"
           onSubmit={(filter: string) =>
             void navigate(`./?filter=${encodeURIComponent(filter)}&page=1`)
@@ -229,11 +229,11 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
         </Oui.TableBody>
       </Oui.Table>
 
-      {loaderData && loaderData.pageCount > 1 && (
+      {loaderData.pageCount > 1 && (
         <Oui.ListBoxEx1Pagination selectedKeys={[loaderData.page]}>
           <Oui.ListBoxItemEx1Pagination
             id="prev"
-            href={`/admin/users?page=${loaderData.page > 1 ? loaderData.page - 1 : 1}${loaderData.filter ? `&filter=${encodeURIComponent(loaderData.filter)}` : ""}`}
+            href={`/admin/users?page=${String(loaderData.page > 1 ? loaderData.page - 1 : 1)}${loaderData.filter ? `&filter=${encodeURIComponent(loaderData.filter)}` : ""}`}
             isDisabled={loaderData.page <= 1}
           >
             Previous
@@ -241,15 +241,15 @@ export default function RouteComponent({ loaderData }: Route.ComponentProps) {
           {Array.from({ length: loaderData.pageCount }, (_, i) => (
             <Oui.ListBoxItemEx1Pagination
               key={i + 1}
-              id={i + 1}
-              href={`/admin/users?page=${i + 1}${loaderData.filter ? `&filter=${encodeURIComponent(loaderData.filter)}` : ""}`}
+              id={String(i + 1)}
+              href={`/admin/users?page=${String(i + 1)}${loaderData.filter ? `&filter=${encodeURIComponent(loaderData.filter)}` : ""}`}
             >
               {i + 1}
             </Oui.ListBoxItemEx1Pagination>
           ))}
           <Oui.ListBoxItemEx1Pagination
             id="next"
-            href={`/admin/users?page=${loaderData.page < loaderData.pageCount ? loaderData.page + 1 : loaderData.pageCount}${loaderData.filter ? `&filter=${encodeURIComponent(loaderData.filter)}` : ""}`}
+            href={`/admin/users?page=${String(loaderData.page < loaderData.pageCount ? loaderData.page + 1 : loaderData.pageCount)}${loaderData.filter ? `&filter=${encodeURIComponent(loaderData.filter)}` : ""}`}
             isDisabled={loaderData.page >= loaderData.pageCount}
           >
             Next
@@ -317,7 +317,7 @@ function BanDialog({
           defaultValue=""
           autoFocus
         />
-        <input type="hidden" name="userId" value={userId ?? ""} />
+        <input type="hidden" name="userId" value={userId} />
         <Oui.DialogFooter>
           <Oui.Button variant="outline" slot="close">
             Cancel
