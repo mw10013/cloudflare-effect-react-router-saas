@@ -108,6 +108,10 @@ export function AppSidebar({
       href: `/app/${organization.id}/billing`,
       "data-testid": "sidebar-billing",
     },
+    {
+      id: "Domain",
+      href: `/app/${organization.id}/domain`,
+    },
   ];
 
   return (
