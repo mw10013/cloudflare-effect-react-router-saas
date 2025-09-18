@@ -22,6 +22,10 @@ export class DomainDo extends DurableObject {
     return new Response("Method Not Allowed", { status: 405 });
   }
 
+  ping(): string {
+    return "pong";
+  }
+
   private async handleStatus(): Promise<Response> {
     const data = await this.ctx.storage.get("lastUpdated");
     return Response.json({

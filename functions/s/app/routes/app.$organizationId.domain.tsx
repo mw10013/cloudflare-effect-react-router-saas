@@ -1,3 +1,4 @@
+import type { DomainDo } from "../../workers/domain-do";
 import type { Route } from "./+types/app.$organizationId.domain";
 import {
   Card,
@@ -6,10 +7,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/ui/card";
+import { env } from "cloudflare:workers";
 
-export function loader() {
-  // Dummy data for domain
-  return { domain: "example.com" };
+export async function loader() {
+  // Type cast to resolve ESLint false positive for Cloudflare DO type
+  const domainDo = env.DOMAIN_DO as DurableObjectNamespace<DomainDo>;
+  const id = domainDo.idFromName("domain");
+  const stub = domainDo.get(id);
+  const pong = await stub.ping();
+  return { domain: "example.com", ping: pong };
 }
 
 export default function RouteComponent({ loaderData }: Route.ComponentProps) {
