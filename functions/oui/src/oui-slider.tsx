@@ -54,7 +54,7 @@ export function SliderTrack({
           <div
             className="bg-primary absolute top-[50%] h-1.5 translate-y-[-50%] rounded-full"
             style={{
-              width: state.getThumbPercent(0) * 100 + "%",
+              width: `${String(state.getThumbPercent(0) * 100)}%`,
             }}
           />
           {children}

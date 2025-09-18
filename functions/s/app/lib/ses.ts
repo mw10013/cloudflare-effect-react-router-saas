@@ -110,7 +110,7 @@ export function createSes(): Ses {
     if (!response.ok) {
       const text = await response.text();
       throw new Error(
-        `ses: error sending email: ${response.status} ${response.statusText} ${text}`,
+        `ses: error sending email: ${String(response.status)} ${response.statusText} ${text}`,
       );
     }
   };

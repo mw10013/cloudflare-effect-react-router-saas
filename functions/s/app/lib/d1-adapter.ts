@@ -54,10 +54,9 @@ function adapt({
   return {
     model,
     modelId,
-    selectClause:
-      select?.length
-        ? select.map((s) => (s === "id" ? modelId : s)).join(", ")
-        : "*",
+    selectClause: select?.length
+      ? select.map((s) => (s === "id" ? modelId : s)).join(", ")
+      : "*",
     ...adaptWhere({ where, modelId }),
     mapResult: <T extends Record<string, unknown>>(result?: T | null) => {
       if (!result) return null;
@@ -234,8 +233,8 @@ export const d1Adapter = (db: D1Database) =>
         let sql = `select * from ${adapted.model}`;
         if (adapted.whereClause) sql += ` where ${adapted.whereClause}`;
         if (sortBy) sql += ` order by ${sortBy.field} ${sortBy.direction}`;
-        sql += ` limit ${limit}`;
-        if (offset) sql += ` offset ${offset}`;
+        sql += ` limit ${String(limit)}`;
+        if (offset) sql += ` offset ${String(offset)}`;
         const result = await db
           .prepare(sql)
           .bind(...adapted.whereValues)

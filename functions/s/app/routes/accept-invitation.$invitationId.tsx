@@ -40,7 +40,7 @@ export async function action({
       body: { invitationId },
       headers: request.headers,
     });
-  } else if (parseResult.intent === "reject") {
+  } else {
     await auth.api.rejectInvitation({
       body: { invitationId },
       headers: request.headers,

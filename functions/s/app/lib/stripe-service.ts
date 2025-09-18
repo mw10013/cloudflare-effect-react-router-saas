@@ -81,7 +81,11 @@ export function createStripeService() {
         const prices = priceList.data.filter(isPriceWithLookupKey);
         invariant(
           prices.length === planData.length * 2,
-          `Count of prices not ${planData.length * 2} (${prices.length})`,
+          "Count of prices not " +
+            (planData.length * 2).toString() +
+            " (" +
+            prices.length.toString() +
+            ")",
         );
         return prices;
       }
@@ -127,8 +131,10 @@ export function createStripeService() {
     });
     if (configurations.data.length === 0) {
       const plans = await getPlans();
-      const basicPlan = plans.find((p) => p.name === "basic")!;
-      const proPlan = plans.find((p) => p.name === "pro")!;
+      const basicPlan = plans.find((p) => p.name === "basic");
+      invariant(basicPlan, "Missing basic plan");
+      const proPlan = plans.find((p) => p.name === "pro");
+      invariant(proPlan, "Missing pro plan");
       await stripe.billingPortal.configurations.create({
         business_profile: {
           headline: "Manage your subscription and billing information",

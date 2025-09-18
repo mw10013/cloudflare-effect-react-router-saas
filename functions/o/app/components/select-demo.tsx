@@ -40,7 +40,7 @@ export function SelectDemo() {
         </SelectTrigger>
         <SelectContent>
           {Array.from({ length: 100 }).map((_, i) => (
-            <SelectItem key={i} value={`item-${i}`}>
+            <SelectItem key={i} value={`item-${i.toString()}`}>
               Item {i}
             </SelectItem>
           ))}
