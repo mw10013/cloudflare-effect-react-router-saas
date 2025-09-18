@@ -1,4 +1,5 @@
 import eslint from "@eslint/js";
+import reactPlugin from "eslint-plugin-react";
 import { defineConfig, globalIgnores } from "eslint/config";
 import tseslint from "typescript-eslint";
 
@@ -34,6 +35,19 @@ export default defineConfig(
         { allowSingleElementEquality: "always" },
       ],
       "@typescript-eslint/prefer-regexp-exec": "off",
+    },
+  },
+  {
+    files: ["functions/o/**/*.tsx", "functions/s/**/*.tsx"],
+    ...reactPlugin.configs.flat.recommended,
+    ...reactPlugin.configs.flat["jsx-runtime"],
+    languageOptions: {
+      ...reactPlugin.configs.flat.recommended.languageOptions,
+    },
+    settings: {
+      react: {
+        version: "detect",
+      },
     },
   },
 );
