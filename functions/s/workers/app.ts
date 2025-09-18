@@ -5,7 +5,7 @@ import { createRepository } from "~/lib/repository";
 import { RequestContext } from "~/lib/request-context";
 import { createSes } from "~/lib/ses";
 import { createStripeService } from "~/lib/stripe-service";
-import { DomainDo as _DomainDo } from "./domain-do";
+import { DomainDo } from "./domain-do";
 import { createE2eRoutes } from "./e2e";
 
 export default {
@@ -57,3 +57,5 @@ export default {
     return response;
   },
 } satisfies ExportedHandler<Env>;
+
+export { DomainDo };
