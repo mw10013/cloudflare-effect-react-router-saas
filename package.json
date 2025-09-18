@@ -20,6 +20,7 @@
     "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
     "eslint": "catalog:",
     "eslint-plugin-react": "catalog:",
+    "eslint-plugin-react-hooks": "catalog:",
     "oxlint": "catalog:",
     "prettier": "3.4.2",
     "prettier-plugin-sql": "^0.18.1",
