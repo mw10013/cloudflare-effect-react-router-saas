@@ -46,7 +46,7 @@ function UserCombobox() {
                     alt={item.username}
                   />
                   <AvatarFallback>
-                    {item.username[0]?.toUpperCase()}
+                    {item.username[0].toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 {item.username}

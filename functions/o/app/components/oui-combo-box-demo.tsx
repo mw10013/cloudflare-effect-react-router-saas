@@ -133,7 +133,7 @@ function UserCombobox() {
                 src={`https://github.com/${item.username}.png`}
                 alt={item.username}
               />
-              <AvatarFallback>{item.username[0]?.toUpperCase()}</AvatarFallback>
+              <AvatarFallback>{item.username[0].toUpperCase()}</AvatarFallback>
             </Avatar>
             {item.username}
           </div>
