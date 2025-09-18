@@ -31,6 +31,20 @@
       "id": "kv-local"
     }
   ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "DOMAIN_DO",
+        "class_name": "DomainDo"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["DomainDo"]
+    }
+  ],
 
   "env": {
     "production": {
@@ -59,6 +73,20 @@
         {
           "binding": "KV",
           "id": "d3d0d87fecbf47c19230137e7a14ec97" // saas-kv-production
+        }
+      ],
+      "durable_objects": {
+        "bindings": [
+          {
+            "name": "DOMAIN_DO",
+            "class_name": "DomainDo"
+          }
+        ]
+      },
+      "migrations": [
+        {
+          "tag": "v1",
+          "new_sqlite_classes": ["DomainDo"]
         }
       ]
     }
