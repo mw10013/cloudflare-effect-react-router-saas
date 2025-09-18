@@ -260,7 +260,7 @@ export function FormDemo() {
                             <Checkbox
                               checked={field.value?.includes(item.id)}
                               onCheckedChange={(checked) => {
-                                return checked
+                                checked
                                   ? field.onChange([...field.value, item.id])
                                   : field.onChange(
                                       field.value?.filter(

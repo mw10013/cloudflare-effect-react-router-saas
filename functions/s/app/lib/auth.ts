@@ -108,20 +108,20 @@ function createBetterAuthOptions({
         create: {
           after:
             databaseHookUserCreateAfter ??
-            ((user) =>
-              Promise.resolve(
-                console.log("databaseHooks.user.create.after", user),
-              )),
+            ((user) => {
+              console.log("databaseHooks.user.create.after", user);
+              return Promise.resolve();
+            }),
         },
       },
       session: {
         create: {
           before:
             databaseHookSessionCreateBefore ??
-            ((session) =>
-              Promise.resolve(
-                console.log("databaseHooks.session.create.before", session),
-              )),
+            ((session) => {
+              console.log("databaseHooks.session.create.before", session);
+              return Promise.resolve();
+            }),
         },
       },
     },
@@ -200,24 +200,24 @@ function createBetterAuthOptions({
               annualDiscountPriceId: plan.annualPriceId,
               freeTrial: {
                 days: plan.freeTrialDays,
-                onTrialStart: (subscription) =>
-                  Promise.resolve(
-                    console.log(
-                      `stripe plugin: onTrialStart: ${plan.name} plan trial started for subscription ${subscription.id}`,
-                    ),
-                  ),
-                onTrialEnd: ({ subscription }) =>
-                  Promise.resolve(
-                    console.log(
-                      `stripe plugin: onTrialEnd: ${plan.name} plan trial ended for subscription ${subscription.id}`,
-                    ),
-                  ),
-                onTrialExpired: (subscription) =>
-                  Promise.resolve(
-                    console.log(
-                      `stripe plugin: onTrialExpired: ${plan.name} plan trial expired for subscription ${subscription.id}`,
-                    ),
-                  ),
+                onTrialStart: (subscription) => {
+                  console.log(
+                    `stripe plugin: onTrialStart: ${plan.name} plan trial started for subscription ${subscription.id}`,
+                  );
+                  return Promise.resolve();
+                },
+                onTrialEnd: ({ subscription }) => {
+                  console.log(
+                    `stripe plugin: onTrialEnd: ${plan.name} plan trial ended for subscription ${subscription.id}`,
+                  );
+                  return Promise.resolve();
+                },
+                onTrialExpired: (subscription) => {
+                  console.log(
+                    `stripe plugin: onTrialExpired: ${plan.name} plan trial expired for subscription ${subscription.id}`,
+                  );
+                  return Promise.resolve();
+                },
               },
             }));
           },
@@ -231,52 +231,52 @@ function createBetterAuthOptions({
                 .first(),
             );
             console.log(
-              `stripe plugin: authorizeReference: user ${user.id} is attempting to ${action} subscription for referenceId ${referenceId}, authorized: ${result}`,
+              `stripe plugin: authorizeReference: user ${user.id} is attempting to ${action} subscription for referenceId ${referenceId}, authorized: ${String(result)}`,
             );
             return result;
           },
-          onSubscriptionComplete: ({ subscription, plan }) =>
-            Promise.resolve(
-              console.log(
-                `stripe plugin: onSubscriptionComplete: subscription ${subscription.id} completed for plan ${plan.name}`,
-              ),
-            ),
-          onSubscriptionUpdate: ({ subscription }) =>
-            Promise.resolve(
-              console.log(
-                `stripe plugin: onSubscriptionUpdate: subscription ${subscription.id} updated`,
-              ),
-            ),
-          onSubscriptionCancel: ({ subscription }) =>
-            Promise.resolve(
-              console.log(
-                `stripe plugin: onSubscriptionCancel: subscription ${subscription.id} canceled`,
-              ),
-            ),
-          onSubscriptionDeleted: ({ subscription }) =>
-            Promise.resolve(
-              console.log(
-                `stripe plugin: onSubscriptionDeleted: subscription ${subscription.id} deleted`,
-              ),
-            ),
+          onSubscriptionComplete: ({ subscription, plan }) => {
+            console.log(
+              `stripe plugin: onSubscriptionComplete: subscription ${subscription.id} completed for plan ${plan.name}`,
+            );
+            return Promise.resolve();
+          },
+          onSubscriptionUpdate: ({ subscription }) => {
+            console.log(
+              `stripe plugin: onSubscriptionUpdate: subscription ${subscription.id} updated`,
+            );
+            return Promise.resolve();
+          },
+          onSubscriptionCancel: ({ subscription }) => {
+            console.log(
+              `stripe plugin: onSubscriptionCancel: subscription ${subscription.id} canceled`,
+            );
+            return Promise.resolve();
+          },
+          onSubscriptionDeleted: ({ subscription }) => {
+            console.log(
+              `stripe plugin: onSubscriptionDeleted: subscription ${subscription.id} deleted`,
+            );
+            return Promise.resolve();
+          },
         },
         schema: {
           subscription: {
             modelName: "Subscription",
           },
         },
-        onCustomerCreate: ({ stripeCustomer, user }) =>
-          Promise.resolve(
-            console.log(
-              `stripe plugin: onCustomerCreate: customer ${stripeCustomer.id} created for user ${user.email}`,
-            ),
-          ),
-        onEvent: (event) =>
-          Promise.resolve(
-            console.log(
-              `stripe plugin: onEvent: stripe event received: ${event.type}`,
-            ),
-          ),
+        onCustomerCreate: ({ stripeCustomer, user }) => {
+          console.log(
+            `stripe plugin: onCustomerCreate: customer ${stripeCustomer.id} created for user ${user.email}`,
+          );
+          return Promise.resolve();
+        },
+        onEvent: (event) => {
+          console.log(
+            `stripe plugin: onEvent: stripe event received: ${event.type}`,
+          );
+          return Promise.resolve();
+        },
       }),
     ],
   } satisfies BetterAuthOptions;
