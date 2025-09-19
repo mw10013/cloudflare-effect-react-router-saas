@@ -7,11 +7,9 @@ import {
   CardTitle,
 } from "@workspace/ui/components/ui/card";
 import { env } from "cloudflare:workers";
-import { asDomainDo } from "../../workers/domain-do";
 
 export async function loader() {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  const domainDo = asDomainDo(env.DOMAIN_DO);
+  const domainDo = env.DOMAIN_DO;
   const id = domainDo.idFromName("domain");
   const stub = domainDo.get(id);
   const pong = await stub.ping();
