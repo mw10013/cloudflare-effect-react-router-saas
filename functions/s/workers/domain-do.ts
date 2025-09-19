@@ -50,26 +50,3 @@ export class DomainDo extends DurableObject {
     });
   }
 }
-
-/**
- * Identity function used because the linter gets confused with
- * `DurableObjectNamespace<import("./workers/app").DomainDo>`.
- * @example
- *   // eslint-disable-next-line \@typescript-eslint/no-unsafe-argument
- *   const domainDo = asDomainDo(env.DOMAIN_DO);
- */
-export function asDomainDo(
-  v: Env["DOMAIN_DO"],
-): DurableObjectNamespace<DomainDo> {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return v;
-}
-
-/**
- * Type assertion function for Env["DOMAIN_DO"] to DurableObjectNamespace<DomainDo>.
- * Narrows the type of the passed value.
- * @param v The value to assert.
- */
-export function assertDomainDo(v: Env["DOMAIN_DO"]): asserts v is DurableObjectNamespace<DomainDo> {
-  // No runtime check needed - type assertion for structural compatibility.
-}

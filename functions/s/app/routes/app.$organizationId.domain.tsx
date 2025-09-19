@@ -9,11 +9,10 @@ import {
 import { env } from "cloudflare:workers";
 
 export async function loader() {
-  const domainDo = env.DOMAIN_DO;
-  const id = domainDo.idFromName("domain");
-  const stub = domainDo.get(id);
-  const pong = await stub.ping();
-  return { ping: pong };
+  const { DOMAIN_DO } = env;
+  const id = DOMAIN_DO.idFromName("domain");
+  const stub = DOMAIN_DO.get(id);
+  return { ping: await stub.ping() };
 }
 
 export default function RouteComponent({ loaderData }: Route.ComponentProps) {
