@@ -12,7 +12,7 @@ export async function loader() {
   const { DOMAIN_DO } = env;
   const id = DOMAIN_DO.idFromName("domain");
   const stub = DOMAIN_DO.get(id);
-  return { ping: await stub.ping() };
+  return { ping: await stub.ping(), high: await stub.high() };
 }
 
 export default function RouteComponent({ loaderData }: Route.ComponentProps) {

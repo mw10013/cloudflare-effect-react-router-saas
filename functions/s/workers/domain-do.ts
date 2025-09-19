@@ -1,6 +1,14 @@
+import { Storage } from "@cloudflare/actors/storage";
 import { DurableObject } from "cloudflare:workers";
 
 export class DomainDo extends DurableObject {
+  readonly #storage: Storage;
+
+  constructor(ctx: DurableObjectState, env: Env) {
+    super(ctx, env);
+    this.#storage = new Storage(ctx.storage);
+  }
+
   override async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
     const method = request.method;
@@ -24,6 +32,11 @@ export class DomainDo extends DurableObject {
 
   ping(): string {
     return "pong";
+  }
+
+  high(): string {
+    const result = this.#storage.sql<{ high: number }>`select 5 as high`;
+    return String(result[0].high);
   }
 
   private async handleStatus(): Promise<Response> {
