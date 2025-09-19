@@ -16,7 +16,8 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./app/*"]
+      "~/*": ["./app/*"],
+      "~workers/*": ["./workers/*"]
     },
     "rootDirs": [".", "./.react-router/types"]
   }
