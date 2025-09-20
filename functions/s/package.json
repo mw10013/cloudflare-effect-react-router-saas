@@ -35,6 +35,7 @@
   "dependencies": {
     "@better-auth/stripe": "catalog:",
     "@cloudflare/actors": "catalog:",
+    "@cloudflare/workers-types": "catalog:",
     "@epic-web/invariant": "catalog:",
     "@playwright/test": "catalog:",
     "@workspace/oui": "workspace:*",
