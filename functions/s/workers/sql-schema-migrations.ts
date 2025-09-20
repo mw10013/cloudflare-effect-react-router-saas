@@ -70,10 +70,15 @@ export class SQLSchemaMigrations {
       return result;
     }
 
-    // Get pending migrations
-    const migrationsToRun = this.#migrations.filter(
-      (m) => m.idMonotonicInc > this.#lastMigrationId,
+    // Find the index of the last successfully run migration (by exact ID match) to locate the start of pending ones
+    const lastRunIndex = this.#migrations.findIndex(
+      (m) => m.idMonotonicInc === this.#lastMigrationId,
     );
+    // If no exact match (e.g., none run yet), run all; otherwise, slice from the next migration
+    const migrationsToRun =
+      lastRunIndex === -1
+        ? this.#migrations
+        : this.#migrations.slice(lastRunIndex + 1);
 
     if (migrationsToRun.length > 0) {
       this.#config.storage.transactionSync(() => {
