@@ -68,7 +68,7 @@ export class DomainDo extends DurableObject {
 export interface SQLMigration {
   idMonotonicInc: number;
   description: string;
-  sql: string;
+  sql?: string;
 }
 
 export class SimpleSQLMigrations {
@@ -77,8 +77,12 @@ export class SimpleSQLMigrations {
   constructor(
     storage: DurableObjectStorage,
     migrations: SQLMigration[],
-    kvKey = "__sql_migrations_lastID",
+    options: {
+      sqlGen?: (idMonotonicInc: number) => string;
+      kvKey?: string;
+    } = {},
   ) {
+    const { sqlGen, kvKey = "__sql_migrations_lastID" } = options;
     // Sort migrations by ID to ensure monotonic order
     const sortedMigrations = [...migrations].toSorted(
       (a, b) => a.idMonotonicInc - b.idMonotonicInc,
@@ -112,7 +116,13 @@ export class SimpleSQLMigrations {
       // Run migrations synchronously in a transaction
       storage.transactionSync(() => {
         migrationsToRun.forEach((m) => {
-          storage.sql.exec(m.sql);
+          const query = m.sql ?? sqlGen?.(m.idMonotonicInc);
+          if (!query) {
+            throw new Error(
+              `migration with neither 'sql' nor 'sqlGen' provided: ${String(m.idMonotonicInc)}`,
+            );
+          }
+          storage.sql.exec(query);
         });
         // Update last ID to the highest ID run
         const newLastId =
