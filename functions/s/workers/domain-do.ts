@@ -79,13 +79,34 @@ export class SimpleSQLMigrations {
     migrations: SQLMigration[],
     kvKey = "__sql_migrations_lastID",
   ) {
+    // Sort migrations by ID to ensure monotonic order
+    const sortedMigrations = [...migrations].toSorted(
+      (a, b) => a.idMonotonicInc - b.idMonotonicInc,
+    );
+
+    // Validate IDs: no negatives, no duplicates
+    const idSeen = new Set<number>();
+    sortedMigrations.forEach((m) => {
+      if (m.idMonotonicInc < 0) {
+        throw new Error(
+          `Migration ID cannot be negative: ${String(m.idMonotonicInc)}`,
+        );
+      }
+      if (idSeen.has(m.idMonotonicInc)) {
+        throw new Error(
+          `Duplicate migration ID detected: ${String(m.idMonotonicInc)}`,
+        );
+      }
+      idSeen.add(m.idMonotonicInc);
+    });
+
     // Get last migration ID synchronously
     this.#lastMigrationId = storage.kv.get<number>(kvKey) ?? -1;
 
-    // Filter migrations to run (those with ID > lastId), then sort the filtered subset
-    const migrationsToRun = migrations
-      .filter((m) => m.idMonotonicInc > this.#lastMigrationId)
-      .toSorted((a, b) => a.idMonotonicInc - b.idMonotonicInc);
+    // Filter to migrations to run (already sorted, so no need to sort again)
+    const migrationsToRun = sortedMigrations.filter(
+      (m) => m.idMonotonicInc > this.#lastMigrationId,
+    );
 
     if (migrationsToRun.length > 0) {
       // Run migrations synchronously in a transaction
