@@ -5,25 +5,26 @@ export interface SQLMigration {
 }
 
 export class SQLSchemaMigrations {
+  #storage: DurableObjectStorage;
+  #sortedMigrations: SQLMigration[];
+  #kvKey: string;
   #lastMigrationId: number;
 
   constructor(
     storage: DurableObjectStorage,
     migrations: SQLMigration[],
-    options: {
-      sqlGen?: (idMonotonicInc: number) => string;
-      kvKey?: string;
-    } = {},
+    kvKey = "__sql_migrations_lastID",
   ) {
-    const { sqlGen, kvKey = "__sql_migrations_lastID" } = options;
+    this.#storage = storage;
+    this.#kvKey = kvKey;
     // Sort migrations by ID to ensure monotonic order
-    const sortedMigrations = [...migrations].toSorted(
+    this.#sortedMigrations = [...migrations].toSorted(
       (a, b) => a.idMonotonicInc - b.idMonotonicInc,
     );
 
     // Validate IDs: no negatives, no duplicates
     const idSeen = new Set<number>();
-    sortedMigrations.forEach((m) => {
+    this.#sortedMigrations.forEach((m) => {
       if (m.idMonotonicInc < 0) {
         throw new Error(
           `Migration ID cannot be negative: ${String(m.idMonotonicInc)}`,
@@ -38,16 +39,18 @@ export class SQLSchemaMigrations {
     });
 
     // Get last migration ID synchronously
-    this.#lastMigrationId = storage.kv.get<number>(kvKey) ?? -1;
+    this.#lastMigrationId = this.#storage.kv.get<number>(this.#kvKey) ?? -1;
+  }
 
+  runAll(sqlGen?: (idMonotonicInc: number) => string): void {
     // Filter to migrations to run (already sorted, so no need to sort again)
-    const migrationsToRun = sortedMigrations.filter(
+    const migrationsToRun = this.#sortedMigrations.filter(
       (m) => m.idMonotonicInc > this.#lastMigrationId,
     );
 
     if (migrationsToRun.length > 0) {
       // Run migrations synchronously in a transaction
-      storage.transactionSync(() => {
+      this.#storage.transactionSync(() => {
         migrationsToRun.forEach((m) => {
           const query = m.sql ?? sqlGen?.(m.idMonotonicInc);
           if (!query) {
@@ -55,12 +58,12 @@ export class SQLSchemaMigrations {
               `migration with neither 'sql' nor 'sqlGen' provided: ${String(m.idMonotonicInc)}`,
             );
           }
-          storage.sql.exec(query);
+          this.#storage.sql.exec(query);
         });
         // Update last ID to the highest ID run
         const newLastId =
           migrationsToRun[migrationsToRun.length - 1].idMonotonicInc;
-        storage.kv.put(kvKey, newLastId);
+        this.#storage.kv.put(this.#kvKey, newLastId);
         this.#lastMigrationId = newLastId;
       });
     }
