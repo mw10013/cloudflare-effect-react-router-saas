@@ -63,3 +63,46 @@ export class DomainDo extends DurableObject {
     });
   }
 }
+
+// Simplified synchronous migration runner
+export interface SQLMigration {
+  idMonotonicInc: number;
+  description: string;
+  sql: string;
+}
+
+export class SimpleSQLMigrations {
+  #lastMigrationId: number;
+
+  constructor(
+    storage: DurableObjectStorage,
+    migrations: SQLMigration[],
+    kvKey = "__sql_migrations_lastID",
+  ) {
+    // Get last migration ID synchronously
+    this.#lastMigrationId = storage.kv.get<number>(kvKey) ?? -1;
+
+    // Filter migrations to run (those with ID > lastId), then sort the filtered subset
+    const migrationsToRun = migrations
+      .filter((m) => m.idMonotonicInc > this.#lastMigrationId)
+      .toSorted((a, b) => a.idMonotonicInc - b.idMonotonicInc);
+
+    if (migrationsToRun.length > 0) {
+      // Run migrations synchronously in a transaction
+      storage.transactionSync(() => {
+        migrationsToRun.forEach((m) => {
+          storage.sql.exec(m.sql);
+        });
+        // Update last ID to the highest ID run
+        const newLastId =
+          migrationsToRun[migrationsToRun.length - 1].idMonotonicInc;
+        storage.kv.put(kvKey, newLastId);
+        this.#lastMigrationId = newLastId;
+      });
+    }
+  }
+
+  getLastMigrationId(): number {
+    return this.#lastMigrationId;
+  }
+}
