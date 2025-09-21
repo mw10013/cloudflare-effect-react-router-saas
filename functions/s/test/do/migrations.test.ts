@@ -1,4 +1,3 @@
-import type { DurableObjectState } from "@cloudflare/workers-types";
 import type { SQLMigration } from "../../workers/sql-schema-migrations";
 import type { Env } from "./test-worker";
 import { env, runInDurableObject } from "cloudflare:test";
@@ -14,6 +13,7 @@ function makeM(state: DurableObjectState, migrations: SQLMigration[]) {
 }
 
 declare module "cloudflare:test" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface ProvidedEnv extends Env {}
 }
 
@@ -36,6 +36,7 @@ describe("happy paths", () => {
         m.runAll();
 
         expect(state.storage.sql.databaseSize).toEqual(8192);
+        return Promise.resolve();
       },
     );
 
@@ -76,6 +77,7 @@ describe("happy paths", () => {
           rowsRead: 2,
           rowsWritten: 6,
         });
+        return Promise.resolve();
       },
     );
   });

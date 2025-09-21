@@ -21,9 +21,6 @@ catalogs:
     '@cloudflare/vitest-pool-workers':
       specifier: 0.9.3
       version: 0.9.3
-    '@cloudflare/workers-types':
-      specifier: 4.20250920.0
-      version: 4.20250920.0
     '@effect/language-service':
       specifier: 0.21.8
       version: 0.21.8
@@ -328,9 +325,6 @@ importers:
       '@cloudflare/actors':
         specifier: 'catalog:'
         version: 0.0.1-beta.6
-      '@cloudflare/workers-types':
-        specifier: 'catalog:'
-        version: 4.20250920.0
       '@epic-web/invariant':
         specifier: 'catalog:'
         version: 1.0.0
@@ -7114,7 +7108,8 @@ snapshots:
   '@cloudflare/workerd-windows-64@1.20250917.0':
     optional: true
 
-  '@cloudflare/workers-types@4.20250920.0': {}
+  '@cloudflare/workers-types@4.20250920.0':
+    optional: true
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:

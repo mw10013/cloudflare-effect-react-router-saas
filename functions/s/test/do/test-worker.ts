@@ -1,4 +1,3 @@
-import type { DurableObjectNamespace } from "@cloudflare/workers-types";
 import { DurableObject } from "cloudflare:workers";
 
 export interface Env {
