@@ -123,6 +123,10 @@ describe("happy paths", () => {
         ]);
 
         makeM(state, [
+          // Edge case but even if you do not provide the previous migrations
+          // it should run only from where it left off.
+          // WARNING: Do not do this in production since running these for a first time
+          // on a fresh DO will fail!!!
           {
             idMonotonicInc: 4,
             description: "data3",
@@ -137,7 +141,6 @@ describe("happy paths", () => {
           { name: "ironman", age: 100 },
           { name: "hulk", age: 5 },
         ]);
-
         return Promise.resolve();
       },
     );
@@ -199,19 +202,21 @@ describe("happy paths", () => {
       async (instance: SQLMigrationsDO, state: DurableObjectState) => {
         expect(makeM(state, []).hasMigrationsToRun()).toEqual(false);
 
-        const m1 = [
+        const migrations = [
           {
             idMonotonicInc: 1,
             description: "tbl1",
             sql: `CREATE TABLE users(name TEXT PRIMARY KEY, age INTEGER);`,
           },
         ];
-        // Reuse the same SQLSchemaMigrations instance otherwise `hasMigrationsToRun()`
-        // will always be true before running `runAll()`.
-        const m = makeM(state, m1);
+        const m = makeM(state, migrations);
         expect(m.hasMigrationsToRun()).toEqual(true);
         m.runAll();
         expect(m.hasMigrationsToRun()).toEqual(false);
+
+        const m1 = makeM(state, migrations);
+        expect(m1.hasMigrationsToRun()).toEqual(false);
+
         return Promise.resolve();
       },
     );
