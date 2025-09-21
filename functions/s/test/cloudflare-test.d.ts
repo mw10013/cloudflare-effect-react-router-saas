@@ -16,4 +16,9 @@ declare module "cloudflare:test" {
     stub: any,
     callback: (instance: any, state: any) => Promise<T>,
   ): Promise<T>;
+
+  /**
+   * Lists all Durable Object IDs for a given namespace
+   */
+  export function listDurableObjectIds(namespace: any): Promise<any[]>;
 }

@@ -1,6 +1,6 @@
 import type { SQLMigration } from "../../workers/sql-schema-migrations";
 import type { Env } from "./test-worker";
-import { env, runInDurableObject } from "cloudflare:test";
+import { env, listDurableObjectIds, runInDurableObject } from "cloudflare:test";
 import { describe, expect, it } from "vitest";
 import { SQLSchemaMigrations } from "../../workers/sql-schema-migrations";
 import { SQLMigrationsDO } from "./test-worker";
@@ -49,6 +49,12 @@ describe("happy paths", () => {
         );
       },
     );
+
+    // Check IDs can be listed
+    const ids = await listDurableObjectIds(env.SQL_MIGRATIONS_DO);
+    expect(ids.length).toBe(1);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    expect(ids[0].equals(id)).toBe(true);
   });
 
   it("multiple DDL", async () => {
