@@ -1,24 +1,24 @@
-export interface SQLMigration {
+export interface SQLSchemaMigration {
   idMonotonicInc: number;
   description: string;
   sql?: string;
 }
 
 export interface SQLSchemaMigrationsConfig {
-  storage: DurableObjectStorage;
-  migrations: SQLMigration[];
+  doStorage: DurableObjectStorage;
+  migrations: SQLSchemaMigration[];
   kvKey?: string;
 }
 
 export class SQLSchemaMigrations {
-  #config: SQLSchemaMigrationsConfig;
-  #migrations: SQLMigration[];
-  #kvKey: string;
-  #lastMigrationId: number;
+  #_config: SQLSchemaMigrationsConfig;
+  #_migrations: SQLSchemaMigration[];
+  #_kvKey: string;
+  #_lastMigrationId: number;
 
   constructor(config: SQLSchemaMigrationsConfig) {
-    this.#config = config;
-    this.#kvKey = config.kvKey ?? "__sql_migrations_lastID";
+    this.#_config = config;
+    this.#_kvKey = config.kvKey ?? "__sql_migrations_lastID";
 
     const migrations = [...config.migrations];
     migrations.sort((a, b) => a.idMonotonicInc - b.idMonotonicInc);
@@ -37,10 +37,10 @@ export class SQLSchemaMigrations {
       idSeen.add(m.idMonotonicInc);
     });
 
-    this.#migrations = migrations;
+    this.#_migrations = migrations;
 
-    this.#lastMigrationId =
-      this.#config.storage.kv.get<number>(this.#kvKey) ?? -1;
+    this.#_lastMigrationId =
+      this.#_config.doStorage.kv.get<number>(this.#_kvKey) ?? -1;
   }
 
   /**
@@ -48,12 +48,12 @@ export class SQLSchemaMigrations {
    * @returns `true` if there are pending migrations, `false` otherwise.
    */
   hasMigrationsToRun(): boolean {
-    if (!this.#migrations.length) {
+    if (!this.#_migrations.length) {
       return false;
     }
     return (
-      this.#lastMigrationId <
-      this.#migrations[this.#migrations.length - 1].idMonotonicInc
+      this.#_lastMigrationId <
+      this.#_migrations[this.#_migrations.length - 1].idMonotonicInc
     );
   }
 
@@ -71,17 +71,17 @@ export class SQLSchemaMigrations {
     }
 
     // Find the index of the last successfully run migration (by exact ID match) to locate the start of pending ones
-    const lastRunIndex = this.#migrations.findIndex(
-      (m) => m.idMonotonicInc === this.#lastMigrationId,
+    const lastRunIndex = this.#_migrations.findIndex(
+      (m) => m.idMonotonicInc === this.#_lastMigrationId,
     );
     // If no exact match (e.g., none run yet), run all; otherwise, slice from the next migration
     const migrationsToRun =
       lastRunIndex === -1
-        ? this.#migrations
-        : this.#migrations.slice(lastRunIndex + 1);
+        ? this.#_migrations
+        : this.#_migrations.slice(lastRunIndex + 1);
 
     if (migrationsToRun.length > 0) {
-      this.#config.storage.transactionSync(() => {
+      this.#_config.doStorage.transactionSync(() => {
         migrationsToRun.forEach((m) => {
           const query = m.sql ?? sqlGen?.(m.idMonotonicInc);
           if (!query) {
@@ -89,7 +89,7 @@ export class SQLSchemaMigrations {
               `migration with neither 'sql' nor 'sqlGen' provided: ${String(m.idMonotonicInc)}`,
             );
           }
-          const cursor = this.#config.storage.sql.exec(query);
+          const cursor = this.#_config.doStorage.sql.exec(query);
           // Consume the cursor for accurate rowsRead/rowsWritten tracking.
           cursor.toArray();
 
@@ -97,8 +97,8 @@ export class SQLSchemaMigrations {
           result.rowsWritten += cursor.rowsWritten;
         });
 
-        this.#config.storage.kv.put(
-          this.#kvKey,
+        this.#_config.doStorage.kv.put(
+          this.#_kvKey,
           migrationsToRun[migrationsToRun.length - 1].idMonotonicInc,
         );
       });
@@ -106,7 +106,7 @@ export class SQLSchemaMigrations {
       // If updated inside the transaction and it fails, the instance property
       // would be ahead of storage, causing hasMigrationsToRun() to incorrectly
       // return false on subsequent calls.
-      this.#lastMigrationId =
+      this.#_lastMigrationId =
         migrationsToRun[migrationsToRun.length - 1].idMonotonicInc;
     }
 

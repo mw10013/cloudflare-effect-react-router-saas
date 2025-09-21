@@ -1,13 +1,13 @@
-import type { SQLMigration } from "../../workers/sql-schema-migrations";
+import type { SQLSchemaMigration } from "../../workers/sql-schema-migrations";
 import type { Env } from "./test-worker";
 import { env, listDurableObjectIds, runInDurableObject } from "cloudflare:test";
 import { describe, expect, it } from "vitest";
 import { SQLSchemaMigrations } from "../../workers/sql-schema-migrations";
 import { SQLMigrationsDO } from "./test-worker";
 
-function makeM(state: DurableObjectState, migrations: SQLMigration[]) {
+function makeM(state: DurableObjectState, migrations: SQLSchemaMigration[]) {
   return new SQLSchemaMigrations({
-    storage: state.storage,
+    doStorage: state.storage,
     migrations: migrations,
   });
 }
