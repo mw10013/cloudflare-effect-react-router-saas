@@ -81,4 +81,187 @@ describe("happy paths", () => {
       },
     );
   });
+
+  it("multiple DDL and data inserts", async () => {
+    const id = env.SQL_MIGRATIONS_DO.idFromName("data-test");
+    const stub = env.SQL_MIGRATIONS_DO.get(id);
+
+    await runInDurableObject(
+      stub,
+      async (instance: SQLMigrationsDO, state: DurableObjectState) => {
+        makeM(state, [
+          {
+            idMonotonicInc: 1,
+            description: "tbl1",
+            sql: `CREATE TABLE users(name TEXT PRIMARY KEY, age INTEGER);`,
+          },
+          {
+            idMonotonicInc: 2,
+            description: "data",
+            sql: `INSERT INTO users VALUES ('ironman', 100); INSERT INTO users VALUES ('thor', 9000);`,
+          },
+          {
+            idMonotonicInc: 3,
+            description: "data2",
+            sql: `INSERT INTO users VALUES ('hulk', 5);`,
+          },
+        ]).runAll();
+
+        let rows = state.storage.sql
+          .exec<{ name: string; age: number }>(`SELECT * FROM users;`)
+          .toArray();
+        expect(rows).toEqual([
+          { name: "ironman", age: 100 },
+          { name: "thor", age: 9000 },
+          { name: "hulk", age: 5 },
+        ]);
+
+        makeM(state, [
+          {
+            idMonotonicInc: 4,
+            description: "data3",
+            sql: `DELETE FROM users WHERE name = 'thor';`,
+          },
+        ]).runAll();
+
+        rows = state.storage.sql
+          .exec<{ name: string; age: number }>(`SELECT * FROM users;`)
+          .toArray();
+        expect(rows).toEqual([
+          { name: "ironman", age: 100 },
+          { name: "hulk", age: 5 },
+        ]);
+
+        return Promise.resolve();
+      },
+    );
+  });
+
+  it("run migrations multiple times", async () => {
+    const id = env.SQL_MIGRATIONS_DO.idFromName("emptyDO");
+    const stub = env.SQL_MIGRATIONS_DO.get(id);
+
+    await runInDurableObject(
+      stub,
+      async (instance: SQLMigrationsDO, state: DurableObjectState) => {
+        const m1 = [
+          {
+            idMonotonicInc: 1,
+            description: "tbl1",
+            sql: `CREATE TABLE IF NOT EXISTS users(name TEXT PRIMARY KEY, age INTEGER);`,
+          },
+          {
+            idMonotonicInc: 2,
+            description: "tbl2",
+            sql: `CREATE TABLE IF NOT EXISTS usersActivities (activityType TEXT, userName TEXT, PRIMARY KEY (userName, activityType));`,
+          },
+        ];
+        const r1 = makeM(state, m1).runAll();
+
+        const m2 = m1.concat([
+          {
+            idMonotonicInc: 3,
+            description: "round 2",
+            sql: `
+                    CREATE TABLE IF NOT EXISTS marvel (heroName TEXT);
+                    CREATE TABLE IF NOT EXISTS marvelMovies (name TEXT PRIMARY KEY, releaseDateMs INTEGER);
+                    `,
+          },
+        ]);
+        const r2_1 = makeM(state, m2).runAll();
+
+        for (let i = 0; i < 5; i++) {
+          const r2_n = makeM(state, m2).runAll();
+          // Should have no effect running the same migrations.
+          expect(r2_n).toEqual({
+            rowsRead: 0,
+            rowsWritten: 0,
+          });
+        }
+
+        return Promise.resolve({ r1, r2: r2_1 });
+      },
+    );
+  });
+
+  it("hasMigrationsToRun", async () => {
+    const id = env.SQL_MIGRATIONS_DO.idFromName("hasMigrationsToRun");
+    const stub = env.SQL_MIGRATIONS_DO.get(id);
+
+    await runInDurableObject(
+      stub,
+      async (instance: SQLMigrationsDO, state: DurableObjectState) => {
+        expect(makeM(state, []).hasMigrationsToRun()).toEqual(false);
+
+        const m1 = [
+          {
+            idMonotonicInc: 1,
+            description: "tbl1",
+            sql: `CREATE TABLE users(name TEXT PRIMARY KEY, age INTEGER);`,
+          },
+        ];
+        // Reuse the same SQLSchemaMigrations instance otherwise `hasMigrationsToRun()`
+        // will always be true before running `runAll()`.
+        const m = makeM(state, m1);
+        expect(m.hasMigrationsToRun()).toEqual(true);
+        m.runAll();
+        expect(m.hasMigrationsToRun()).toEqual(false);
+        return Promise.resolve();
+      },
+    );
+  });
+});
+
+describe("expected exceptions", () => {
+  it("duplicate IDs", async () => {
+    const id = env.SQL_MIGRATIONS_DO.idFromName("emptyDO");
+    const stub = env.SQL_MIGRATIONS_DO.get(id);
+
+    await runInDurableObject(
+      stub,
+      async (instance: SQLMigrationsDO, state: DurableObjectState) => {
+        expect(() =>
+          makeM(state, [
+            {
+              idMonotonicInc: 1,
+              description: "tbl1",
+              sql: `CREATE TABLE users(name TEXT PRIMARY KEY, age INTEGER);`,
+            },
+            {
+              idMonotonicInc: 2,
+              description: "tbl1",
+              sql: `CREATE TABLE IF NOT EXISTS users(name TEXT PRIMARY KEY, age INTEGER);`,
+            },
+            {
+              idMonotonicInc: 1,
+              description: "tbl2",
+              sql: `CREATE TABLE IF NOT EXISTS usersActivities (activityType TEXT, userName TEXT, PRIMARY KEY (userName, activityType));`,
+            },
+          ]).runAll(),
+        ).toThrowError("Duplicate migration ID detected: 1");
+        return Promise.resolve();
+      },
+    );
+  });
+
+  it("negative IDs", async () => {
+    const id = env.SQL_MIGRATIONS_DO.idFromName("emptyDO");
+    const stub = env.SQL_MIGRATIONS_DO.get(id);
+
+    await runInDurableObject(
+      stub,
+      async (instance: SQLMigrationsDO, state: DurableObjectState) => {
+        expect(() =>
+          makeM(state, [
+            {
+              idMonotonicInc: -1,
+              description: "tbl1",
+              sql: `CREATE TABLE users(name TEXT PRIMARY KEY, age INTEGER);`,
+            },
+          ]).runAll(),
+        ).toThrowError("Migration ID cannot be negative: -1");
+        return Promise.resolve();
+      },
+    );
+  });
 });
