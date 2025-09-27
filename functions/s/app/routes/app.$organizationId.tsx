@@ -14,7 +14,7 @@ import {
 } from "@workspace/ui/components/ui/sidebar";
 import { ChevronsUpDown, LogOut } from "lucide-react";
 import * as Rac from "react-aria-components";
-import { Outlet, useNavigate } from "react-router";
+import { Outlet, useNavigate, useSubmit } from "react-router";
 import { AppLogoIcon } from "~/components/AppLogoIcon";
 import { RequestContext } from "~/lib/request-context";
 
@@ -185,6 +185,7 @@ export function NavUser({
     email: string;
   };
 }) {
+  const submit = useSubmit();
   return (
     <Oui.MenuEx
       className="min-w-56 rounded-lg"
@@ -206,13 +207,13 @@ export function NavUser({
         </Rac.Header>
       </Rac.MenuSection>
       <Oui.Separator variant="menu" />
-      <Oui.MenuItem id="signOut" textValue="Sign Out">
+      <Oui.MenuItem
+        id="signOut"
+        textValue="Sign Out"
+        onAction={() => void submit({}, { method: "post", action: "/signout" })}
+      >
         <LogOut className="mr-2 size-4" />
-        <Rac.Form action="/signout" method="post" className="contents">
-          <Oui.Button type="submit" variant="ghost">
-            Sign Out
-          </Oui.Button>
-        </Rac.Form>
+        Sign Out
       </Oui.MenuItem>
     </Oui.MenuEx>
   );

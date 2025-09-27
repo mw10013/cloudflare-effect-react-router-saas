@@ -23,3 +23,7 @@
 - pnpm -F <PACKAGE_NAME> exec shadcn add button
 - components.json
   - aliases currently point to @workspace/ui and may want to alias components, utils, and hooks to local
+
+  ## Design
+
+  - https://weberdominik.com/blog/rules-user-interfaces/
