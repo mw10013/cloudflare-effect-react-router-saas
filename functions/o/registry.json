@@ -4,13 +4,11 @@
   "homepage": "https://github.com/mw10013/cloudflare-effect-react-router-saas",
   "items": [
     {
-      "name": "autocomplete",
+      "name": "oui-autocomplete",
       "type": "registry:ui",
-      "title": "Autocomplete",
-      "description": "An autocomplete component",
       "files": [
         {
-          "path": "../../oui/src/oui-autocomplete.tsx",
+          "path": "../oui/src/oui-autocomplete.tsx",
           "type": "registry:component"
         }
       ],
@@ -18,13 +16,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "base",
+      "name": "oui-base",
       "type": "registry:ui",
-      "title": "Base",
-      "description": "A base component",
       "files": [
         {
-          "path": "../../oui/src/oui-base.tsx",
+          "path": "../oui/src/oui-base.tsx",
           "type": "registry:component"
         }
       ],
@@ -32,13 +28,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "button",
+      "name": "oui-button",
       "type": "registry:ui",
-      "title": "Button",
-      "description": "A button component",
       "files": [
         {
-          "path": "../../oui/src/oui-button.tsx",
+          "path": "../oui/src/oui-button.tsx",
           "type": "registry:component"
         }
       ],
@@ -46,13 +40,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "checkbox",
+      "name": "oui-checkbox",
       "type": "registry:ui",
-      "title": "Checkbox",
-      "description": "A checkbox component",
       "files": [
         {
-          "path": "../../oui/src/oui-checkbox.tsx",
+          "path": "../oui/src/oui-checkbox.tsx",
           "type": "registry:component"
         }
       ],
@@ -60,27 +52,23 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "checkbox-group",
+      "name": "oui-checkbox-group",
       "type": "registry:ui",
-      "title": "Checkbox Group",
-      "description": "A checkbox group component",
       "files": [
         {
-          "path": "../../oui/src/oui-checkbox-group.tsx",
+          "path": "../oui/src/oui-checkbox-group.tsx",
           "type": "registry:component"
         }
       ],
-      "registryDependencies": ["checkbox"],
+      "registryDependencies": ["oui-checkbox"],
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "combo-box",
+      "name": "oui-combo-box",
       "type": "registry:ui",
-      "title": "Combo Box",
-      "description": "A combo box component",
       "files": [
         {
-          "path": "../../oui/src/oui-combo-box.tsx",
+          "path": "../oui/src/oui-combo-box.tsx",
           "type": "registry:component"
         }
       ],
@@ -88,13 +76,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "dialog",
+      "name": "oui-dialog",
       "type": "registry:ui",
-      "title": "Dialog",
-      "description": "A dialog component",
       "files": [
         {
-          "path": "../../oui/src/oui-dialog.tsx",
+          "path": "../oui/src/oui-dialog.tsx",
           "type": "registry:component"
         }
       ],
@@ -102,13 +88,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "disclosure",
+      "name": "oui-disclosure",
       "type": "registry:ui",
-      "title": "Disclosure",
-      "description": "A disclosure component",
       "files": [
         {
-          "path": "../../oui/src/oui-disclosure.tsx",
+          "path": "../oui/src/oui-disclosure.tsx",
           "type": "registry:component"
         }
       ],
@@ -116,13 +100,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "field-error",
+      "name": "oui-field-error",
       "type": "registry:ui",
-      "title": "Field Error",
-      "description": "A field error component",
       "files": [
         {
-          "path": "../../oui/src/oui-field-error.tsx",
+          "path": "../oui/src/oui-field-error.tsx",
           "type": "registry:component"
         }
       ],
@@ -130,27 +112,23 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "form",
+      "name": "oui-form",
       "type": "registry:ui",
-      "title": "Form",
-      "description": "A form component",
       "files": [
         {
-          "path": "../../oui/src/oui-form.tsx",
+          "path": "../oui/src/oui-form.tsx",
           "type": "registry:component"
         }
       ],
-      "registryDependencies": ["button", "input"],
+      "registryDependencies": ["oui-button", "oui-input"],
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "group",
+      "name": "oui-group",
       "type": "registry:ui",
-      "title": "Group",
-      "description": "A group component",
       "files": [
         {
-          "path": "../../oui/src/oui-group.tsx",
+          "path": "../oui/src/oui-group.tsx",
           "type": "registry:component"
         }
       ],
@@ -158,13 +136,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "header",
+      "name": "oui-header",
       "type": "registry:ui",
-      "title": "Header",
-      "description": "A header component",
       "files": [
         {
-          "path": "../../oui/src/oui-header.tsx",
+          "path": "../oui/src/oui-header.tsx",
           "type": "registry:component"
         }
       ],
@@ -172,13 +148,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "heading",
+      "name": "oui-heading",
       "type": "registry:ui",
-      "title": "Heading",
-      "description": "A heading component",
       "files": [
         {
-          "path": "../../oui/src/oui-heading.tsx",
+          "path": "../oui/src/oui-heading.tsx",
           "type": "registry:component"
         }
       ],
@@ -186,13 +160,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "input",
+      "name": "oui-input",
       "type": "registry:ui",
-      "title": "Input",
-      "description": "An input component",
       "files": [
         {
-          "path": "../../oui/src/oui-input.tsx",
+          "path": "../oui/src/oui-input.tsx",
           "type": "registry:component"
         }
       ],
@@ -200,13 +172,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "keyboard",
+      "name": "oui-keyboard",
       "type": "registry:ui",
-      "title": "Keyboard",
-      "description": "A keyboard component",
       "files": [
         {
-          "path": "../../oui/src/oui-keyboard.tsx",
+          "path": "../oui/src/oui-keyboard.tsx",
           "type": "registry:component"
         }
       ],
@@ -214,13 +184,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "label",
+      "name": "oui-label",
       "type": "registry:ui",
-      "title": "Label",
-      "description": "A label component",
       "files": [
         {
-          "path": "../../oui/src/oui-label.tsx",
+          "path": "../oui/src/oui-label.tsx",
           "type": "registry:component"
         }
       ],
@@ -228,13 +196,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "link",
+      "name": "oui-link",
       "type": "registry:ui",
-      "title": "Link",
-      "description": "A link component",
       "files": [
         {
-          "path": "../../oui/src/oui-link.tsx",
+          "path": "../oui/src/oui-link.tsx",
           "type": "registry:component"
         }
       ],
@@ -242,13 +208,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "list-box",
+      "name": "oui-list-box",
       "type": "registry:ui",
-      "title": "List Box",
-      "description": "A list box component",
       "files": [
         {
-          "path": "../../oui/src/oui-list-box.tsx",
+          "path": "../oui/src/oui-list-box.tsx",
           "type": "registry:component"
         }
       ],
@@ -256,13 +220,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "menu",
+      "name": "oui-menu",
       "type": "registry:ui",
-      "title": "Menu",
-      "description": "A menu component",
       "files": [
         {
-          "path": "../../oui/src/oui-menu.tsx",
+          "path": "../oui/src/oui-menu.tsx",
           "type": "registry:component"
         }
       ],
@@ -270,13 +232,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "modal",
+      "name": "oui-modal",
       "type": "registry:ui",
-      "title": "Modal",
-      "description": "A modal component",
       "files": [
         {
-          "path": "../../oui/src/oui-modal.tsx",
+          "path": "../oui/src/oui-modal.tsx",
           "type": "registry:component"
         }
       ],
@@ -284,13 +244,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "number-field",
+      "name": "oui-number-field",
       "type": "registry:ui",
-      "title": "Number Field",
-      "description": "A number field component",
       "files": [
         {
-          "path": "../../oui/src/oui-number-field.tsx",
+          "path": "../oui/src/oui-number-field.tsx",
           "type": "registry:component"
         }
       ],
@@ -298,13 +256,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "popover",
+      "name": "oui-popover",
       "type": "registry:ui",
-      "title": "Popover",
-      "description": "A popover component",
       "files": [
         {
-          "path": "../../oui/src/oui-popover.tsx",
+          "path": "../oui/src/oui-popover.tsx",
           "type": "registry:component"
         }
       ],
@@ -312,13 +268,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "radio-group",
+      "name": "oui-radio-group",
       "type": "registry:ui",
-      "title": "Radio Group",
-      "description": "A radio group component",
       "files": [
         {
-          "path": "../../oui/src/oui-radio-group.tsx",
+          "path": "../oui/src/oui-radio-group.tsx",
           "type": "registry:component"
         }
       ],
@@ -326,13 +280,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "search-field",
+      "name": "oui-search-field",
       "type": "registry:ui",
-      "title": "Search Field",
-      "description": "A search field component",
       "files": [
         {
-          "path": "../../oui/src/oui-search-field.tsx",
+          "path": "../oui/src/oui-search-field.tsx",
           "type": "registry:component"
         }
       ],
@@ -340,13 +292,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "select",
+      "name": "oui-select",
       "type": "registry:ui",
-      "title": "Select",
-      "description": "A select component",
       "files": [
         {
-          "path": "../../oui/src/oui-select.tsx",
+          "path": "../oui/src/oui-select.tsx",
           "type": "registry:component"
         }
       ],
@@ -354,13 +304,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "separator",
+      "name": "oui-separator",
       "type": "registry:ui",
-      "title": "Separator",
-      "description": "A separator component",
       "files": [
         {
-          "path": "../../oui/src/oui-separator.tsx",
+          "path": "../oui/src/oui-separator.tsx",
           "type": "registry:component"
         }
       ],
@@ -368,13 +316,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "sidebar",
+      "name": "oui-sidebar",
       "type": "registry:ui",
-      "title": "Sidebar",
-      "description": "A sidebar component",
       "files": [
         {
-          "path": "../../oui/src/oui-sidebar.tsx",
+          "path": "../oui/src/oui-sidebar.tsx",
           "type": "registry:component"
         }
       ],
@@ -382,13 +328,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "slider",
+      "name": "oui-slider",
       "type": "registry:ui",
-      "title": "Slider",
-      "description": "A slider component",
       "files": [
         {
-          "path": "../../oui/src/oui-slider.tsx",
+          "path": "../oui/src/oui-slider.tsx",
           "type": "registry:component"
         }
       ],
@@ -396,13 +340,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "switch",
+      "name": "oui-switch",
       "type": "registry:ui",
-      "title": "Switch",
-      "description": "A switch component",
       "files": [
         {
-          "path": "../../oui/src/oui-switch.tsx",
+          "path": "../oui/src/oui-switch.tsx",
           "type": "registry:component"
         }
       ],
@@ -410,13 +352,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "table",
+      "name": "oui-table",
       "type": "registry:ui",
-      "title": "Table",
-      "description": "A table component",
       "files": [
         {
-          "path": "../../oui/src/oui-table.tsx",
+          "path": "../oui/src/oui-table.tsx",
           "type": "registry:component"
         }
       ],
@@ -424,13 +364,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "toast",
+      "name": "oui-toast",
       "type": "registry:ui",
-      "title": "Toast",
-      "description": "A toast component",
       "files": [
         {
-          "path": "../../oui/src/oui-toast.tsx",
+          "path": "../oui/src/oui-toast.tsx",
           "type": "registry:component"
         }
       ],
@@ -438,13 +376,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "text",
+      "name": "oui-text",
       "type": "registry:ui",
-      "title": "Text",
-      "description": "A text component",
       "files": [
         {
-          "path": "../../oui/src/oui-text.tsx",
+          "path": "../oui/src/oui-text.tsx",
           "type": "registry:component"
         }
       ],
@@ -452,13 +388,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "text-area",
+      "name": "oui-text-area",
       "type": "registry:ui",
-      "title": "Text Area",
-      "description": "A text area component",
       "files": [
         {
-          "path": "../../oui/src/oui-text-area.tsx",
+          "path": "../oui/src/oui-text-area.tsx",
           "type": "registry:component"
         }
       ],
@@ -466,13 +400,11 @@
       "dependencies": ["react-aria-components", "lucide-react"]
     },
     {
-      "name": "text-field",
+      "name": "oui-text-field",
       "type": "registry:ui",
-      "title": "Text Field",
-      "description": "A text field component",
       "files": [
         {
-          "path": "../../oui/src/oui-text-field.tsx",
+          "path": "../oui/src/oui-text-field.tsx",
           "type": "registry:component"
         }
       ],

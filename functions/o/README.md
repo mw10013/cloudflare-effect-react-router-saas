@@ -40,6 +40,7 @@
 
 pnpm -F o exec shadcn help
 pnpm -F o exec shadcn help build
+pnpm -F o registry:build
 ```
 
 ### Registry Plan
