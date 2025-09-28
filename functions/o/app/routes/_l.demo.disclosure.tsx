@@ -1,12 +1,12 @@
 import { AccordionDemo } from "~/components/accordion-demo";
 import { DemoContainer } from "~/components/demo-container";
-import { OuiAccordionDemo } from "~/components/oui-accordion-demo";
+import { OuiDisclosureDemo } from "~/components/oui-disclosure-demo";
 
 export default function RouteComponent() {
   return (
     <DemoContainer className="flex-row">
       <AccordionDemo />
-      <OuiAccordionDemo />
+      <OuiDisclosureDemo />
     </DemoContainer>
   );
 }

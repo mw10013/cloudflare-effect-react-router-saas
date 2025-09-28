@@ -1,7 +1,7 @@
 import * as Oui from "@workspace/oui";
 import * as Rac from "react-aria-components";
 
-export function OuiAccordionDemo() {
+export function OuiDisclosureDemo() {
   return (
     <div className="grid w-full max-w-xl gap-4">
       <Rac.DisclosureGroup className="w-full">

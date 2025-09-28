@@ -9,10 +9,6 @@ import { Outlet } from "react-router";
 
 const items: Oui.SidebarTreeNodeEx[] = [
   {
-    id: "Accordion",
-    href: "/demo/accordion",
-  },
-  {
     id: "Autocomplete",
     href: "/demo/autocomplete",
   },
@@ -32,6 +28,11 @@ const items: Oui.SidebarTreeNodeEx[] = [
     id: "Dialog",
     href: "/demo/dialog",
   },
+  {
+    id: "Disclosure",
+    href: "/demo/disclosure",
+  },
+
   {
     id: "Form",
     href: "/demo/form",
