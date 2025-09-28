@@ -15,7 +15,8 @@
     "clean:node": "rm -rf node_modules",
     "clean:wrangler": "rm -rf .wrangler",
     "clean:etc": "rm -rf .react-router build dist",
-    "tail:PRODUCTION": "wrangler tail oui-demo-production"
+    "tail:PRODUCTION": "wrangler tail oui-demo-production",
+    "registry:build": "shadcn build"
   },
   "dependencies": {
     "@workspace/oui": "workspace:*",
