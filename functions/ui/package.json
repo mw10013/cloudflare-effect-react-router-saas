@@ -33,7 +33,7 @@
     "lucide-react": "catalog:",
     "next-themes": "^0.4.6",
     "radix-ui": "catalog:",
-    "react-day-picker": "9.8.1",
+    "react-day-picker": "9.11.0",
     "react-hook-form": "^7.62.0",
     "react-markdown": "catalog:",
     "react-resizable-panels": "^2.1.9",

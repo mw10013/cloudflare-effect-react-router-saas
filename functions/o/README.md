@@ -27,3 +27,18 @@
   ## Design
 
   - https://weberdominik.com/blog/rules-user-interfaces/
+
+  ## Registry
+
+```
+#fetch https://ui.shadcn.com/docs/registry/getting-started
+#fetch https://ui.shadcn.com/docs/registry/registry-json
+#fetch https://ui.shadcn.com/schema/registry.json
+#fetch https://ui.shadcn.com/schema/registry-item.json
+```
+
+
+```
+https://ui.shadcn.com/r
+```
+
