@@ -10,7 +10,7 @@
       "description": "An autocomplete component",
       "files": [
         {
-          "path": "../oui/src/oui-autocomplete.tsx",
+          "path": "../../oui/src/oui-autocomplete.tsx",
           "type": "registry:component"
         }
       ],
@@ -24,7 +24,7 @@
       "description": "A base component",
       "files": [
         {
-          "path": "../oui/src/oui-base.tsx",
+          "path": "../../oui/src/oui-base.tsx",
           "type": "registry:component"
         }
       ],
@@ -38,7 +38,7 @@
       "description": "A button component",
       "files": [
         {
-          "path": "../oui/src/oui-button.tsx",
+          "path": "../../oui/src/oui-button.tsx",
           "type": "registry:component"
         }
       ],
@@ -52,7 +52,7 @@
       "description": "A checkbox component",
       "files": [
         {
-          "path": "../oui/src/oui-checkbox.tsx",
+          "path": "../../oui/src/oui-checkbox.tsx",
           "type": "registry:component"
         }
       ],
@@ -66,7 +66,7 @@
       "description": "A checkbox group component",
       "files": [
         {
-          "path": "../oui/src/oui-checkbox-group.tsx",
+          "path": "../../oui/src/oui-checkbox-group.tsx",
           "type": "registry:component"
         }
       ],
@@ -80,7 +80,7 @@
       "description": "A combo box component",
       "files": [
         {
-          "path": "../oui/src/oui-combo-box.tsx",
+          "path": "../../oui/src/oui-combo-box.tsx",
           "type": "registry:component"
         }
       ],
@@ -94,7 +94,7 @@
       "description": "A dialog component",
       "files": [
         {
-          "path": "../oui/src/oui-dialog.tsx",
+          "path": "../../oui/src/oui-dialog.tsx",
           "type": "registry:component"
         }
       ],
@@ -108,7 +108,7 @@
       "description": "A disclosure component",
       "files": [
         {
-          "path": "../oui/src/oui-disclosure.tsx",
+          "path": "../../oui/src/oui-disclosure.tsx",
           "type": "registry:component"
         }
       ],
@@ -122,7 +122,7 @@
       "description": "A field error component",
       "files": [
         {
-          "path": "../oui/src/oui-field-error.tsx",
+          "path": "../../oui/src/oui-field-error.tsx",
           "type": "registry:component"
         }
       ],
@@ -136,7 +136,7 @@
       "description": "A form component",
       "files": [
         {
-          "path": "../oui/src/oui-form.tsx",
+          "path": "../../oui/src/oui-form.tsx",
           "type": "registry:component"
         }
       ],
@@ -150,7 +150,7 @@
       "description": "A group component",
       "files": [
         {
-          "path": "../oui/src/oui-group.tsx",
+          "path": "../../oui/src/oui-group.tsx",
           "type": "registry:component"
         }
       ],
@@ -164,7 +164,7 @@
       "description": "A header component",
       "files": [
         {
-          "path": "../oui/src/oui-header.tsx",
+          "path": "../../oui/src/oui-header.tsx",
           "type": "registry:component"
         }
       ],
@@ -178,7 +178,7 @@
       "description": "A heading component",
       "files": [
         {
-          "path": "../oui/src/oui-heading.tsx",
+          "path": "../../oui/src/oui-heading.tsx",
           "type": "registry:component"
         }
       ],
@@ -192,7 +192,7 @@
       "description": "An input component",
       "files": [
         {
-          "path": "../oui/src/oui-input.tsx",
+          "path": "../../oui/src/oui-input.tsx",
           "type": "registry:component"
         }
       ],
@@ -206,7 +206,7 @@
       "description": "A keyboard component",
       "files": [
         {
-          "path": "../oui/src/oui-keyboard.tsx",
+          "path": "../../oui/src/oui-keyboard.tsx",
           "type": "registry:component"
         }
       ],
@@ -220,7 +220,7 @@
       "description": "A label component",
       "files": [
         {
-          "path": "../oui/src/oui-label.tsx",
+          "path": "../../oui/src/oui-label.tsx",
           "type": "registry:component"
         }
       ],
@@ -234,7 +234,7 @@
       "description": "A link component",
       "files": [
         {
-          "path": "../oui/src/oui-link.tsx",
+          "path": "../../oui/src/oui-link.tsx",
           "type": "registry:component"
         }
       ],
@@ -248,7 +248,7 @@
       "description": "A list box component",
       "files": [
         {
-          "path": "../oui/src/oui-list-box.tsx",
+          "path": "../../oui/src/oui-list-box.tsx",
           "type": "registry:component"
         }
       ],
@@ -262,7 +262,7 @@
       "description": "A menu component",
       "files": [
         {
-          "path": "../oui/src/oui-menu.tsx",
+          "path": "../../oui/src/oui-menu.tsx",
           "type": "registry:component"
         }
       ],
@@ -276,7 +276,7 @@
       "description": "A modal component",
       "files": [
         {
-          "path": "../oui/src/oui-modal.tsx",
+          "path": "../../oui/src/oui-modal.tsx",
           "type": "registry:component"
         }
       ],
@@ -290,7 +290,7 @@
       "description": "A number field component",
       "files": [
         {
-          "path": "../oui/src/oui-number-field.tsx",
+          "path": "../../oui/src/oui-number-field.tsx",
           "type": "registry:component"
         }
       ],
@@ -304,7 +304,7 @@
       "description": "A popover component",
       "files": [
         {
-          "path": "../oui/src/oui-popover.tsx",
+          "path": "../../oui/src/oui-popover.tsx",
           "type": "registry:component"
         }
       ],
@@ -318,7 +318,7 @@
       "description": "A radio group component",
       "files": [
         {
-          "path": "../oui/src/oui-radio-group.tsx",
+          "path": "../../oui/src/oui-radio-group.tsx",
           "type": "registry:component"
         }
       ],
@@ -332,7 +332,7 @@
       "description": "A search field component",
       "files": [
         {
-          "path": "../oui/src/oui-search-field.tsx",
+          "path": "../../oui/src/oui-search-field.tsx",
           "type": "registry:component"
         }
       ],
@@ -346,7 +346,7 @@
       "description": "A select component",
       "files": [
         {
-          "path": "../oui/src/oui-select.tsx",
+          "path": "../../oui/src/oui-select.tsx",
           "type": "registry:component"
         }
       ],
@@ -360,7 +360,7 @@
       "description": "A separator component",
       "files": [
         {
-          "path": "../oui/src/oui-separator.tsx",
+          "path": "../../oui/src/oui-separator.tsx",
           "type": "registry:component"
         }
       ],
@@ -374,7 +374,7 @@
       "description": "A sidebar component",
       "files": [
         {
-          "path": "../oui/src/oui-sidebar.tsx",
+          "path": "../../oui/src/oui-sidebar.tsx",
           "type": "registry:component"
         }
       ],
@@ -388,7 +388,7 @@
       "description": "A slider component",
       "files": [
         {
-          "path": "../oui/src/oui-slider.tsx",
+          "path": "../../oui/src/oui-slider.tsx",
           "type": "registry:component"
         }
       ],
@@ -402,7 +402,7 @@
       "description": "A switch component",
       "files": [
         {
-          "path": "../oui/src/oui-switch.tsx",
+          "path": "../../oui/src/oui-switch.tsx",
           "type": "registry:component"
         }
       ],
@@ -416,7 +416,7 @@
       "description": "A table component",
       "files": [
         {
-          "path": "../oui/src/oui-table.tsx",
+          "path": "../../oui/src/oui-table.tsx",
           "type": "registry:component"
         }
       ],
@@ -430,7 +430,7 @@
       "description": "A toast component",
       "files": [
         {
-          "path": "../oui/src/oui-toast.tsx",
+          "path": "../../oui/src/oui-toast.tsx",
           "type": "registry:component"
         }
       ],
@@ -444,7 +444,7 @@
       "description": "A text component",
       "files": [
         {
-          "path": "../oui/src/oui-text.tsx",
+          "path": "../../oui/src/oui-text.tsx",
           "type": "registry:component"
         }
       ],
@@ -458,7 +458,7 @@
       "description": "A text area component",
       "files": [
         {
-          "path": "../oui/src/oui-text-area.tsx",
+          "path": "../../oui/src/oui-text-area.tsx",
           "type": "registry:component"
         }
       ],
@@ -472,7 +472,7 @@
       "description": "A text field component",
       "files": [
         {
-          "path": "../oui/src/oui-text-field.tsx",
+          "path": "../../oui/src/oui-text-field.tsx",
           "type": "registry:component"
         }
       ],
