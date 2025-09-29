@@ -8,7 +8,7 @@ export default function RouteComponent() {
         width="1308"
       />
       <div className="absolute inset-0 bg-[url(/img/grid.svg)] bg-top [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
-      <div className="relative w-full bg-white px-6 py-12 shadow-xl shadow-slate-700/10 ring-1 ring-gray-900/5 md:mx-auto md:max-w-3xl lg:max-w-4xl lg:pb-28 lg:pt-16">
+      <div className="relative w-full bg-white px-6 py-12 shadow-xl shadow-slate-700/10 ring-1 ring-gray-900/5 md:mx-auto md:max-w-3xl lg:max-w-4xl lg:pb-28 lg:pt-16 dark:bg-slate-900">
         <div className="mx-auto max-w-prose lg:text-lg">
           <svg className="h-6" fill="none" viewBox="0 0 297 24">
             <path
@@ -27,7 +27,7 @@ export default function RouteComponent() {
             ></path>
           </svg>
         </div>
-        <div className="prose prose-slate lg:prose-lg prose-invert mx-auto mt-8">
+        <div className="prose prose-slate lg:prose-lg dark:prose-invert mx-auto mt-8">
           <p className="lead">
             Until now, trying to style an article, document, or blog post with
             Tailwind has been a tedious task that required a keen eye for
