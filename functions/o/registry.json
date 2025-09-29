@@ -13,7 +13,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-base",
@@ -25,7 +25,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-button",
@@ -37,7 +37,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-checkbox",
@@ -61,7 +61,7 @@
         }
       ],
       "registryDependencies": ["oui-checkbox"],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-combo-box",
@@ -109,7 +109,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-form",
@@ -121,7 +121,7 @@
         }
       ],
       "registryDependencies": ["oui-button", "oui-input"],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-group",
@@ -133,7 +133,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-header",
@@ -145,7 +145,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-heading",
@@ -157,7 +157,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-input",
@@ -169,7 +169,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-keyboard",
@@ -181,7 +181,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-label",
@@ -193,7 +193,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-link",
@@ -205,7 +205,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-list-box",
@@ -241,7 +241,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-number-field",
@@ -265,7 +265,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-radio-group",
@@ -289,7 +289,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-select",
@@ -313,7 +313,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-sidebar",
@@ -337,7 +337,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-switch",
@@ -349,7 +349,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-table",
@@ -357,18 +357,6 @@
       "files": [
         {
           "path": "../oui/src/oui-table.tsx",
-          "type": "registry:component"
-        }
-      ],
-      "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
-    },
-    {
-      "name": "oui-toast",
-      "type": "registry:ui",
-      "files": [
-        {
-          "path": "../oui/src/oui-toast.tsx",
           "type": "registry:component"
         }
       ],
@@ -385,7 +373,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-text-area",
@@ -397,7 +385,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     },
     {
       "name": "oui-text-field",
@@ -409,7 +397,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": ["react-aria-components"]
     }
   ]
 }
