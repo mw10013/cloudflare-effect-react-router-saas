@@ -48,8 +48,6 @@ function useHrefEx(href: string) {
   return resolvedHref;
 }
 
-export const toastQueue = new Rac.UNSTABLE_ToastQueue<Oui.ToastContentEx>();
-
 export function Layout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   return (
@@ -62,7 +60,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <Toaster />
-        {/* <Oui.ToastRegionEx queue={toastQueue} /> */}
         {/* useNavigate returns a Promise, but RouterProvider expects void; void ignores the Promise */}
         <Rac.RouterProvider
           navigate={(path, options) => void navigate(path, options)}

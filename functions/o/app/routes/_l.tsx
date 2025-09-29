@@ -90,14 +90,6 @@ const items: Oui.SidebarTreeNodeEx[] = [
     href: "/demo/separator",
   },
   {
-    id: "Sidebar",
-    href: "/demo/sidebar",
-  },
-  {
-    id: "Sidebar1",
-    href: "/demo/sidebar1",
-  },
-  {
     id: "Slider",
     href: "/demo/slider",
   },
@@ -117,10 +109,6 @@ const items: Oui.SidebarTreeNodeEx[] = [
     id: "Text Field",
     href: "/demo/text-field",
   },
-  // {
-  //   id: "Toast",
-  //   href: "/demo/toast",
-  // },
 ];
 
 export function AppSidebar() {
