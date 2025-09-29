@@ -10,7 +10,9 @@
 ## Tailwind
 
 - **Utility Class:** A class applying a specific, predefined style rule.
-- **Variant (Condition):** Controls when a utility applies (e.g., `hover:`, `md:`, `:dark`).
+- **Variant (Condition):** Controls when a utility applies (e.g., `hover:`, `md:`, `dark:`).
 - **Modifier (Adjustment):** Adjusts a utility's value or behavior (e.g., `/50`, `-`, `!`).
 - **Property:** The standard CSS property name targeted by utilities or used in arbitrary syntax (`[property:value]`).
 - **Theme Mapping:** Maps semantic utility names (e.g., `primary`) via `@theme` (e.g., `--color-primary`) to CSS variables (e.g., `var(--primary)`) holding the actual values.
+
+- https://nicolasgallagher.com/about-html-semantics-front-end-architecture/#component-modifiers
