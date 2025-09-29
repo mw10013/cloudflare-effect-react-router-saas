@@ -24,7 +24,7 @@ catalog:
   "@react-router/fs-routes": 7.9.1
   "@standard-schema/spec": 1.0.0-beta.3
   "@tailwindcss/cli": 4.1.13
-  "@tailwindcss/typography": 0.5.16
+  "@tailwindcss/typography": 0.5.19
   "@tailwindcss/vite": 4.1.13
   "@types/node": 22.13.14
   "@types/react": 19.1.0
