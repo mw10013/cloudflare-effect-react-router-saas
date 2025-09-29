@@ -109,6 +109,10 @@ const items: Oui.SidebarTreeNodeEx[] = [
     id: "Text Field",
     href: "/demo/text-field",
   },
+  {
+    id: "Typography",
+    href: "/demo/typography",
+  },
 ];
 
 export function AppSidebar() {
