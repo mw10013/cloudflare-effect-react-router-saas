@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "oui-search-field",
+  "type": "registry:ui",
+  "dependencies": [
+    "react-aria-components"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../oui/src/oui-search-field.tsx",
+      "content": "import * as Rac from \"react-aria-components\";\nimport { composeTailwindRenderProps } from \"./oui-base\";\nimport { FieldError } from \"./oui-field-error\";\nimport { Input } from \"./oui-input\";\nimport { Label } from \"./oui-label\";\nimport { Text } from \"./oui-text\";\n\n/**\n * Derived styles from shadcn FormItem\n */\nexport function SearchField({ className, ...props }: Rac.SearchFieldProps) {\n  return (\n    <Rac.SearchField\n      className={composeTailwindRenderProps(className, \"group grid gap-2\")}\n      {...props}\n    />\n  );\n}\n\nexport interface SearchFieldExProps extends Rac.SearchFieldProps {\n  label?: React.ReactNode;\n  description?: React.ReactNode;\n  errorMessage?: string | ((validation: Rac.ValidationResult) => string);\n  placeholder?: string;\n}\n\nexport function SearchFieldEx({\n  label,\n  description,\n  errorMessage,\n  placeholder,\n  ...rest\n}: SearchFieldExProps) {\n  return (\n    <SearchField {...rest}>\n      {label && <Label>{label}</Label>}\n      <Input\n        placeholder={placeholder}\n        className=\"[&::-webkit-search-cancel-button]:hidden\"\n      />\n      {description && <Text slot=\"description\">{description}</Text>}\n      <FieldError>{errorMessage}</FieldError>\n    </SearchField>\n  );\n}\n",
+      "type": "registry:component"
+    }
+  ]
+}
