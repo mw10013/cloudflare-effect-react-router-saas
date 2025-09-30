@@ -11,7 +11,7 @@
     {
       "path": "../oui/src/oui-combo-box.tsx",
       "content": "import { ChevronsUpDown } from \"lucide-react\";\nimport * as Rac from \"react-aria-components\";\nimport { Button } from \"./oui-button\";\nimport { FieldError } from \"./oui-field-error\";\nimport { Group } from \"./oui-group\";\nimport { Input } from \"./oui-input\";\nimport { Label } from \"./oui-label\";\nimport { Popover } from \"./oui-popover\";\nimport { Text } from \"./oui-text\";\n\nexport interface ComboBoxExProps<T extends object>\n  extends Omit<Rac.ComboBoxProps<T>, \"children\"> {\n  label?: React.ReactNode;\n  description?: React.ReactNode;\n  errorMessage?: string | ((validation: Rac.ValidationResult) => string);\n  placeholder?: string;\n  items?: Iterable<T>;\n  children: React.ReactNode | ((item: T) => React.ReactNode);\n}\n\nexport function ComboBoxEx<T extends object>({\n  label,\n  description,\n  errorMessage,\n  placeholder,\n  items,\n  children,\n  ...props\n}: ComboBoxExProps<T>) {\n  return (\n    <Rac.ComboBox {...props}>\n      {label && <Label>{label}</Label>}\n      <Group>\n        <Input variant=\"ghost\" placeholder={placeholder} />\n        <Button variant=\"ghost\" size=\"icon\">\n          <ChevronsUpDown className=\"size-4 shrink-0 opacity-50\" />\n        </Button>\n      </Group>\n      {description && <Text slot=\"description\">{description}</Text>}\n      <FieldError>{errorMessage}</FieldError>\n      <Popover>\n        <Rac.ListBox items={items}>{children}</Rac.ListBox>\n      </Popover>\n    </Rac.ComboBox>\n  );\n}\n",
-      "type": "registry:component"
+      "type": "registry:ui"
     }
   ]
 }

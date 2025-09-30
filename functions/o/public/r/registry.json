@@ -9,7 +9,7 @@
       "files": [
         {
           "path": "../oui/src/oui-autocomplete.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -21,11 +21,11 @@
       "files": [
         {
           "path": "../oui/src/oui-base.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components"]
+      "dependencies": ["react-aria-components", "tailwind-merge"]
     },
     {
       "name": "oui-button",
@@ -33,10 +33,10 @@
       "files": [
         {
           "path": "../oui/src/oui-button.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
-      "registryDependencies": [],
+      "registryDependencies": ["http://localhost:5173/r/oui-base.json"],
       "dependencies": ["react-aria-components"]
     },
     {
@@ -45,7 +45,7 @@
       "files": [
         {
           "path": "../oui/src/oui-checkbox.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -57,7 +57,7 @@
       "files": [
         {
           "path": "../oui/src/oui-checkbox-group.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": ["oui-checkbox"],
@@ -69,7 +69,7 @@
       "files": [
         {
           "path": "../oui/src/oui-combo-box.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -81,7 +81,7 @@
       "files": [
         {
           "path": "../oui/src/oui-dialog.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -93,7 +93,7 @@
       "files": [
         {
           "path": "../oui/src/oui-disclosure.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -105,7 +105,7 @@
       "files": [
         {
           "path": "../oui/src/oui-field-error.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -117,7 +117,7 @@
       "files": [
         {
           "path": "../oui/src/oui-form.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": ["oui-button", "oui-input"],
@@ -129,7 +129,7 @@
       "files": [
         {
           "path": "../oui/src/oui-group.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -141,7 +141,7 @@
       "files": [
         {
           "path": "../oui/src/oui-header.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -153,7 +153,7 @@
       "files": [
         {
           "path": "../oui/src/oui-heading.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -165,7 +165,7 @@
       "files": [
         {
           "path": "../oui/src/oui-input.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -177,7 +177,7 @@
       "files": [
         {
           "path": "../oui/src/oui-keyboard.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -189,7 +189,7 @@
       "files": [
         {
           "path": "../oui/src/oui-label.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -201,7 +201,7 @@
       "files": [
         {
           "path": "../oui/src/oui-link.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -213,7 +213,7 @@
       "files": [
         {
           "path": "../oui/src/oui-list-box.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -225,7 +225,7 @@
       "files": [
         {
           "path": "../oui/src/oui-menu.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -237,7 +237,7 @@
       "files": [
         {
           "path": "../oui/src/oui-modal.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -249,7 +249,7 @@
       "files": [
         {
           "path": "../oui/src/oui-number-field.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -261,7 +261,7 @@
       "files": [
         {
           "path": "../oui/src/oui-popover.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -273,7 +273,7 @@
       "files": [
         {
           "path": "../oui/src/oui-radio-group.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -285,7 +285,7 @@
       "files": [
         {
           "path": "../oui/src/oui-search-field.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -297,7 +297,7 @@
       "files": [
         {
           "path": "../oui/src/oui-select.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -309,7 +309,7 @@
       "files": [
         {
           "path": "../oui/src/oui-separator.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -321,7 +321,7 @@
       "files": [
         {
           "path": "../oui/src/oui-sidebar.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -333,7 +333,7 @@
       "files": [
         {
           "path": "../oui/src/oui-slider.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -345,7 +345,7 @@
       "files": [
         {
           "path": "../oui/src/oui-switch.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -357,7 +357,7 @@
       "files": [
         {
           "path": "../oui/src/oui-table.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -369,7 +369,7 @@
       "files": [
         {
           "path": "../oui/src/oui-text.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -381,7 +381,7 @@
       "files": [
         {
           "path": "../oui/src/oui-text-area.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],
@@ -393,7 +393,7 @@
       "files": [
         {
           "path": "../oui/src/oui-text-field.tsx",
-          "type": "registry:component"
+          "type": "registry:ui"
         }
       ],
       "registryDependencies": [],

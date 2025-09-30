@@ -10,7 +10,7 @@
     {
       "path": "../oui/src/oui-group.tsx",
       "content": "import * as Rac from \"react-aria-components\";\nimport { composeTailwindRenderProps, focusVisibleStyles } from \"./oui-base\";\n\n/**\n * Derived from shadcn Input\n */\nexport function Group({ className, ...props }: Rac.GroupProps) {\n  return (\n    <Rac.Group\n      className={composeTailwindRenderProps(className, [\n        focusVisibleStyles,\n        \"border-input inline-flex h-9 w-full items-center overflow-hidden whitespace-nowrap rounded-md border\",\n        \"data-[invalid]:ring-destructive/20 dark:data-[invalid]:ring-destructive/40 data-[invalid]:border-destructive\",\n      ])}\n      {...props}\n    />\n  );\n}\n",
-      "type": "registry:component"
+      "type": "registry:ui"
     }
   ]
 }
