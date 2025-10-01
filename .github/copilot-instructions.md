@@ -12,6 +12,7 @@
 - functions/s: Saas template application using cloudflare, effect ts, react router v7 in framework mode, oui, better-auth, and stripe.
 - functions/ui: Shared library with shadcn ui components and Tailwind v4.
   - Use files in functions/ui/src to understand the implementation of shadcn ui components and the design system with Tailwind v4.
+- function/x: Demo and registry for Oui, React Aria Components with Shadcn Characteristics.
 
 ## TypeScript Guidelines
 

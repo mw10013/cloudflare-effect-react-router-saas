@@ -1,0 +1,403 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "oui",
+  "homepage": "https://github.com/mw10013/cloudflare-effect-react-router-saas",
+  "items": [
+    {
+      "name": "oui-autocomplete",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-autocomplete.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-base",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-base.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components", "tailwind-merge"]
+    },
+    {
+      "name": "oui-button",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-button.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-base.json"],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-checkbox",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-checkbox.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components", "lucide-react"]
+    },
+    {
+      "name": "oui-checkbox-group",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-checkbox-group.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": ["oui-checkbox"],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-combo-box",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-combo-box.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components", "lucide-react"]
+    },
+    {
+      "name": "oui-dialog",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-dialog.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components", "lucide-react"]
+    },
+    {
+      "name": "oui-disclosure",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-disclosure.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components", "lucide-react"]
+    },
+    {
+      "name": "oui-field-error",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-field-error.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-form",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-form.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": ["oui-button", "oui-input"],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-group",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-group.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-header",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-header.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-heading",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-heading.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-input",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-input.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-keyboard",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-keyboard.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-label",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-label.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-link",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-link.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-list-box",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-list-box.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components", "lucide-react"]
+    },
+    {
+      "name": "oui-menu",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-menu.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components", "lucide-react"]
+    },
+    {
+      "name": "oui-modal",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-modal.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-number-field",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-number-field.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components", "lucide-react"]
+    },
+    {
+      "name": "oui-popover",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-popover.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-radio-group",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-radio-group.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components", "lucide-react"]
+    },
+    {
+      "name": "oui-search-field",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-search-field.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-select",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-select.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components", "lucide-react"]
+    },
+    {
+      "name": "oui-separator",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-separator.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-sidebar",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-sidebar.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components", "lucide-react"]
+    },
+    {
+      "name": "oui-slider",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-slider.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-switch",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-switch.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-table",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-table.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components", "lucide-react"]
+    },
+    {
+      "name": "oui-text",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-text.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-text-area",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-text-area.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-text-field",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "../oui/src/oui-text-field.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components"]
+    }
+  ]
+}
