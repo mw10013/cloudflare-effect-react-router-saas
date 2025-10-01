@@ -64,6 +64,12 @@ const config = {
       },
     },
     {
+      files: ["./functions/x/**"],
+      options: {
+        tailwindStylesheet: "./functions/x/app/app.css",
+      },
+    },
+    {
       files: ["*.jsonc"],
       options: {
         trailingComma: "none",

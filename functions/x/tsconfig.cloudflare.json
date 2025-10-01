@@ -6,6 +6,8 @@
     "app/**/*",
     "app/**/.server/**/*",
     "app/**/.client/**/*",
+    "components/**/*",
+    "registry/**/*",
     "workers/**/*",
     "worker-configuration.d.ts",
     "react-router.config.ts"

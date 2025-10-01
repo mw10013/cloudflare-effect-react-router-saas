@@ -12,6 +12,7 @@ import {
   useNavigate,
 } from "react-router";
 import "@/app/app.css";
+import Header from "@/components/header";
 
 declare module "react-aria-components" {
   interface RouterConfig {
@@ -64,7 +65,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         >
           <div className="overflow-hidden px-4 supports-[overflow:clip]:overflow-clip sm:px-6">
             <div className="relative flex min-h-screen flex-col">
-              {/* <Header /> */}
+              <Header />
               <main className="grow">{children}</main>
               {/* <Footer /> */}
             </div>
