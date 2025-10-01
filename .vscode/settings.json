@@ -10,7 +10,8 @@
       "./functions/oui/src/**",
       "./functions/s/app/**",
       "./functions/ui/src/**"
-    ]
+    ],
+    "./functions/x/app/app.css": ["./functions/x/**"]
   },
   "tailwindCSS.classFunctions": [
     "tw",
