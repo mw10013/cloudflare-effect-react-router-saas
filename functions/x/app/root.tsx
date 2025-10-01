@@ -1,6 +1,5 @@
 import type { NavigateOptions } from "react-router";
 import type { Route } from "./+types/root";
-import * as Oui from "@workspace/oui";
 import * as Rac from "react-aria-components";
 import {
   isRouteErrorResponse,
@@ -12,7 +11,6 @@ import {
   useHref,
   useNavigate,
 } from "react-router";
-import { Toaster } from "sonner";
 import "@workspace/ui/app.css";
 
 declare module "react-aria-components" {
@@ -51,7 +49,7 @@ function useHrefEx(href: string) {
 export function Layout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -59,13 +57,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <Toaster />
         {/* useNavigate returns a Promise, but RouterProvider expects void; void ignores the Promise */}
         <Rac.RouterProvider
           navigate={(path, options) => void navigate(path, options)}
           useHref={useHrefEx}
         >
-          <Oui.DialogEx1AlertProvider>{children}</Oui.DialogEx1AlertProvider>
+          <div className="overflow-hidden px-4 supports-[overflow:clip]:overflow-clip sm:px-6">
+            <div className="relative flex min-h-screen flex-col">
+              {/* <Header /> */}
+              <main className="grow">{children}</main>
+              {/* <Footer /> */}
+            </div>
+          </div>
           <ScrollRestoration />
           <Scripts />
         </Rac.RouterProvider>
