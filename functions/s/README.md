@@ -160,3 +160,7 @@ To test Stripe payments, use the following test card details:
 - Card Number: `4242 4242 4242 4242`
 - Expiration: Any future date
 - CVC: Any 3-digit number
+
+## Sqlite
+
+- https://emschwartz.me/subtleties-of-sqlite-indexes/?utm_source=tldrwebdev
