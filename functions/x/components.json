@@ -12,8 +12,8 @@
   },
   "aliases": {
     "components": "@/registry/components",
+    "ui": "@/registry/components/ui",
     "utils": "@/registry/lib/utils",
-    "ui": "@/registry/ui",
     "lib": "@/registry/lib",
     "hooks": "@/registry/hooks"
   },

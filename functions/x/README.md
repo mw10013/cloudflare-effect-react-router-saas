@@ -1,6 +1,6 @@
-# o
+# x
 
-- oui-demo
+- Oui
 
 ## Local Dev
 
@@ -16,17 +16,17 @@
     - Build command: CLOUDFLARE_ENV=production pnpm -F <PACKAGE_NAME> build
     - Deploy command: pnpm -F <PACKAGE_NAME> exec wrangler deploy
   - Build watch paths
-    - Include paths: functions/<PACKAGE_NAME>/\* functions/oui/\*
+    - Include paths: functions/<PACKAGE_NAME>/\*
 
 ## Shadcn
 
 - pnpm -F <PACKAGE_NAME> exec shadcn add button
 
-  ## Design
+## Design
 
-  - https://weberdominik.com/blog/rules-user-interfaces/
+- https://weberdominik.com/blog/rules-user-interfaces/
 
-  ## Registry
+## Registry
 
 ```
 #fetch https://ui.shadcn.com/docs/registry/getting-started

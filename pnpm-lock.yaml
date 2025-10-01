@@ -63,6 +63,9 @@ catalogs:
     class-variance-authority:
       specifier: 0.7.1
       version: 0.7.1
+    clsx:
+      specifier: 2.1.1
+      version: 2.1.1
     effect:
       specifier: 3.16.12
       version: 3.16.12
@@ -540,6 +543,12 @@ importers:
 
   functions/x:
     dependencies:
+      class-variance-authority:
+        specifier: 'catalog:'
+        version: 0.7.1
+      clsx:
+        specifier: 'catalog:'
+        version: 2.1.1
       isbot:
         specifier: 'catalog:'
         version: 5.1.28

@@ -1,4 +1,4 @@
-import { Link } from "@/registry/ui/oui-link";
+import { Link } from "@/registry/components/ui/oui-link";
 
 export default function Header() {
   return (
