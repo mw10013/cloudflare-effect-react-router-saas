@@ -1,12 +1,5 @@
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/registry/components/ui/card";
+import { categories } from "@/config/components";
+import { Link } from "@/registry/components/ui/oui-link";
 
 export default function RouteComponent() {
   return (
@@ -21,19 +14,66 @@ export default function RouteComponent() {
         {/* <SearchButton /> */}
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Card Title</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-          <CardAction>Card Action</CardAction>
-        </CardHeader>
-        <CardContent>
-          <p>Card Content</p>
-        </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
-      </Card>
+      <div className="relative my-16">
+        <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {categories
+            .sort((a, b) => {
+              if (a.isNew && !b.isNew) return -1;
+              if (!a.isNew && b.isNew) return 1;
+              return 0;
+            })
+            .map((category) => (
+              <CategoryCard
+                key={category.slug}
+                slug={category.slug}
+                name={category.name}
+                componentsCount={category.components.length}
+                isNew={category.isNew}
+              />
+            ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface CategoryCardProps {
+  slug: string;
+  name: string;
+  componentsCount?: number;
+  isNew?: boolean;
+}
+
+function CategoryCard({
+  slug,
+  name,
+  componentsCount,
+  // isNew = false,
+}: CategoryCardProps) {
+  const href = `/${slug}`;
+  // const imageBasePath = `/thumbs/${slug}`;
+  // const alt = `${name} components`;
+  // const isComingSoon = componentsCount === undefined;
+
+  return (
+    <div className="space-y-3 text-center">
+      {/* <Link
+        href={href}
+        className="peer relative inline-flex overflow-hidden rounded-xl border sm:flex dark:border-zinc-700/80"
+      >
+        <ImageComponent imageBasePath={imageBasePath} alt={alt} />
+      </Link> */}
+
+      <div className="[&_a]:peer-hover:underline">
+        <h2>
+          <Link href={href} underline="hover" className="text-sm">
+            {name}
+          </Link>
+        </h2>
+        <p className="text-[13px] text-muted-foreground">
+          {componentsCount} {componentsCount === 1 ? "Component" : "Components"}
+        </p>
+      </div>
     </div>
   );
 }
