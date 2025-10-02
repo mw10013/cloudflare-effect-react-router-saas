@@ -8,7 +8,7 @@
       "type": "registry:ui",
       "files": [
         {
-          "path": "../oui/src/oui-base.tsx",
+          "path": "registry/components/ui/oui-base.tsx",
           "type": "registry:ui"
         }
       ],
@@ -20,7 +20,19 @@
       "type": "registry:ui",
       "files": [
         {
-          "path": "../oui/src/oui-button.tsx",
+          "path": "registry/components/ui/oui-button.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-base.json"],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-link",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "registry/components/ui/oui-link.tsx",
           "type": "registry:ui"
         }
       ],

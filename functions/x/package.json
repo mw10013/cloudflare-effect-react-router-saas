@@ -19,6 +19,7 @@
     "registry:build": "shadcn build"
   },
   "dependencies": {
+    "@epic-web/invariant": "catalog:",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
     "isbot": "catalog:",
