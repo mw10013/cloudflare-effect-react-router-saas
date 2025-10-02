@@ -2,7 +2,7 @@ import { getComponentsByNames } from "@/lib/utils";
 import type { Route } from "./+types/$category";
 import { getCategory } from "@/config/components";
 import ButtonDemo from "@/registry/components/button-demo";
-import ButtonDisabledDemo from "@/registry/components/button-disabled-demo";
+import ButtonDisabledDemo from "@/registry/components/button-demo-disabled";
 import { invariant } from "@epic-web/invariant";
 
 export function loader({ params }: Route.LoaderArgs) {
