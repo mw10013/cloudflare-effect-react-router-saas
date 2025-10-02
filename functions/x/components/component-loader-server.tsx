@@ -3,15 +3,11 @@
 import type { RegistryItem } from "shadcn/schema";
 import { lazy, Suspense } from "react";
 
-interface ComponentLoaderProps {
-  component: RegistryItem;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
-export default function ComponentLoader<TProps extends object>({
+export default function ComponentLoader({
   component,
-  ...props
-}: ComponentLoaderProps & TProps) {
+}: {
+  component: RegistryItem;
+}) {
   if (!component.name) {
     return null;
   }
@@ -22,8 +18,8 @@ export default function ComponentLoader<TProps extends object>({
   );
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Component {...(props as TProps)} currentPage={1} totalPages={10} />
+    <Suspense>
+      <Component />
     </Suspense>
   );
 }
