@@ -2,7 +2,6 @@ export interface ComponentCategory {
   slug: string;
   name: string;
   components: { name: string }[];
-  isNew?: boolean;
 }
 
 export const categories: ComponentCategory[] = [

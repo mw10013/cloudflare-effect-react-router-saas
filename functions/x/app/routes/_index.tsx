@@ -16,21 +16,14 @@ export default function RouteComponent() {
 
       <div className="relative my-16">
         <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {categories
-            .sort((a, b) => {
-              if (a.isNew && !b.isNew) return -1;
-              if (!a.isNew && b.isNew) return 1;
-              return 0;
-            })
-            .map((category) => (
-              <CategoryCard
-                key={category.slug}
-                slug={category.slug}
-                name={category.name}
-                componentsCount={category.components.length}
-                isNew={category.isNew}
-              />
-            ))}
+          {categories.map((category) => (
+            <CategoryCard
+              key={category.slug}
+              slug={category.slug}
+              name={category.name}
+              componentCount={category.components.length}
+            />
+          ))}
         </div>
       </div>
     </div>
@@ -40,20 +33,13 @@ export default function RouteComponent() {
 interface CategoryCardProps {
   slug: string;
   name: string;
-  componentsCount?: number;
-  isNew?: boolean;
+  componentCount?: number;
 }
 
-function CategoryCard({
-  slug,
-  name,
-  componentsCount,
-  // isNew = false,
-}: CategoryCardProps) {
+function CategoryCard({ slug, name, componentCount: componentsCount }: CategoryCardProps) {
   const href = `/${slug}`;
   // const imageBasePath = `/thumbs/${slug}`;
   // const alt = `${name} components`;
-  // const isComingSoon = componentsCount === undefined;
 
   return (
     <div className="space-y-3 text-center">

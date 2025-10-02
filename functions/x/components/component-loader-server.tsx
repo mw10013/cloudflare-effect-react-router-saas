@@ -18,8 +18,7 @@ export default function ComponentLoader<TProps extends object>({
 
   // https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#limitations
   const Component = lazy(
-    () =>
-      import(/* @vite-ignore */ `../registry/components/${component.name}.tsx`),
+    () => import(`../registry/components/${component.name}.tsx`),
   );
 
   return (
