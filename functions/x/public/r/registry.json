@@ -1,0 +1,73 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "oui",
+  "homepage": "https://github.com/mw10013/cloudflare-effect-react-router-saas",
+  "items": [
+    {
+      "name": "oui-base",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "registry/components/ui/oui-base.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": [],
+      "dependencies": ["react-aria-components", "tailwind-merge"]
+    },
+    {
+      "name": "oui-button",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "registry/components/ui/oui-button.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-base.json"],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "oui-link",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "registry/components/ui/oui-link.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-base.json"],
+      "dependencies": ["react-aria-components"]
+    },
+    {
+      "name": "button-demo-disabled",
+      "type": "registry:component",
+      "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
+      "files": [
+        {
+          "path": "registry/components/button-demo-disabled.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "meta": {
+        "tags": ["button"],
+        "style": 2
+      }
+    },
+    {
+      "name": "button-demo",
+      "type": "registry:component",
+      "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
+      "files": [
+        {
+          "path": "registry/components/button-demo.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "meta": {
+        "tags": ["button"],
+        "style": 2
+      }
+    }
+  ]
+}
