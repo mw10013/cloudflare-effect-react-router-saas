@@ -1,4 +1,5 @@
 import type { Route } from "./+types/$category";
+import ComponentLoader from "@/components/component-loader-server";
 import ComponentCard from "@/components/components-card";
 import PageGrid from "@/components/page-grid";
 import { getCategory } from "@/config/components";
@@ -27,8 +28,8 @@ export default function RouteComponent({
         {components.map((component) => (
           <ComponentCard key={component.name} component={component}>
             {component.name}
-            {/* <ComponentLoader component={component} />
-            <ComponentDetails component={component} /> */}
+            <ComponentLoader component={component} />
+            {/* <ComponentDetails component={component} /> */}
           </ComponentCard>
         ))}
       </PageGrid>
