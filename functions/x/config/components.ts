@@ -17,3 +17,7 @@ export const categories: ComponentCategory[] = [
     components: [],
   },
 ];
+
+export function getCategory(slug: string): ComponentCategory | undefined {
+  return categories.find((category) => category.slug === slug)
+}
