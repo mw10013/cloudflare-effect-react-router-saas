@@ -1,5 +1,16 @@
 import type { RegistryItem } from "shadcn/schema";
-import { lazy, Suspense } from "react";
+import { lazy } from "react";
+import registry from "../registry.json";
+
+const componentMap = registry.items
+  .filter((item) => item.type === "registry:component")
+  .reduce<
+    Record<string, React.LazyExoticComponent<React.ComponentType<unknown>>>
+  >((map, item) => {
+    const path = `../${item.files[0].path}`;
+    map[item.name] = lazy(() => import(path));
+    return map;
+  }, {});
 
 export default function ComponentLoader({
   component,
@@ -10,14 +21,11 @@ export default function ComponentLoader({
     return null;
   }
 
-  // https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#limitations
-  const Component = lazy(
-    () => import(`../registry/components/${component.name}.tsx`),
-  );
+  const Component = componentMap[component.name];
 
-  return (
-    <Suspense>
-      <Component />
-    </Suspense>
-  );
+  if (!Component) {
+    return null;
+  }
+
+  return <Component />;
 }
