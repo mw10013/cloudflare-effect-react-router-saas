@@ -1,5 +1,3 @@
-"use client";
-
 import type { RegistryItem } from "shadcn/schema";
 import { lazy, Suspense } from "react";
 
