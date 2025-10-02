@@ -1,9 +1,19 @@
 import type { Route } from "./+types/$category";
+import { getCategory } from "@/config/components";
+import ButtonDemo from "@/registry/components/button-demo";
+import ButtonDisabledDemo from "@/registry/components/button-disabled-demo";
 
 export function loader({ params }: Route.LoaderArgs) {
-  return { category: params.category };
+  const category = getCategory(params.category);
+  return { category };
 }
 
 export default function RouteComponent({ loaderData }: Route.ComponentProps) {
-  return <div>Category: {loaderData.category}</div>;
+  return (
+    <div className="p-6">
+      <ButtonDemo />
+      <ButtonDisabledDemo />
+      <pre>{JSON.stringify(loaderData.category, null, 2)}</pre>
+    </div>
+  );
 }
