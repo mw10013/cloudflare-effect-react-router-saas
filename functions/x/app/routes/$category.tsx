@@ -1,6 +1,6 @@
 import type { Route } from "./+types/$category";
 import ComponentLoader from "@/components/component-loader-server";
-import ComponentCard from "@/components/components-card";
+import ComponentCard from "@/components/component-card";
 import PageGrid from "@/components/page-grid";
 import { getCategory } from "@/config/categories";
 import { getComponentsByNames } from "@/lib/utils";

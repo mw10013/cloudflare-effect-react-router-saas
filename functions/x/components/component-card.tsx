@@ -5,7 +5,7 @@ import { twJoin, twMerge } from "tailwind-merge";
  * Renders a component card with configurable layout and styling.
  * @param isSearchPage - Whether the card is displayed on a search page.
  * @param children - The content to render inside the card.
- * @param component - The registry item metadata, including colSpan and style (1: flex center, 2: text center).
+ * @param component - The registry item metadata, including colSpan and style ("flex-center" | "text-center").
  * @param className - Additional CSS classes.
  */
 export default function ComponentCard({
@@ -38,9 +38,9 @@ export default function ComponentCard({
   };
 
   const styleClasses =
-    component.meta?.style === 1
+    component.meta?.style === "flex-center"
       ? "flex justify-center items-center"
-      : component.meta?.style === 2
+      : component.meta?.style === "text-center"
         ? "text-center"
         : "";
 
