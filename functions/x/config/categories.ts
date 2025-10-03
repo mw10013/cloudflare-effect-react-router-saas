@@ -1,10 +1,10 @@
-export interface ComponentCategory {
+export interface Category {
   slug: string;
   name: string;
   components: { name: string }[];
 }
 
-export const categories: ComponentCategory[] = [
+export const categories: Category[] = [
   {
     slug: "autocomplete",
     name: "Autocomplete",
@@ -174,6 +174,6 @@ export const categories: ComponentCategory[] = [
   },
 ];
 
-export function getCategory(slug: string): ComponentCategory | undefined {
+export function getCategory(slug: string): Category | undefined {
   return categories.find((category) => category.slug === slug);
 }
