@@ -28,6 +28,18 @@
       "dependencies": ["react-aria-components"]
     },
     {
+      "name": "oui-input",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "registry/components/ui/oui-input.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-base.json"],
+      "dependencies": ["react-aria-components"]
+    },
+    {
       "name": "oui-link",
       "type": "registry:ui",
       "files": [
@@ -67,6 +79,48 @@
       "meta": {
         "tags": ["button"],
         "style": 2
+      }
+    },
+    {
+      "name": "input-demo-disabled",
+      "type": "registry:component",
+      "registryDependencies": ["http://localhost:5173/r/oui-input.json"],
+      "files": [
+        {
+          "path": "registry/components/input-demo-disabled.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "meta": {
+        "tags": ["input"]
+      }
+    },
+    {
+      "name": "input-demo-password",
+      "type": "registry:component",
+      "registryDependencies": ["http://localhost:5173/r/oui-input.json"],
+      "files": [
+        {
+          "path": "registry/components/input-demo-password.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "meta": {
+        "tags": ["input"]
+      }
+    },
+    {
+      "name": "input-demo",
+      "type": "registry:component",
+      "registryDependencies": ["http://localhost:5173/r/oui-input.json"],
+      "files": [
+        {
+          "path": "registry/components/input-demo.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "meta": {
+        "tags": ["input"]
       }
     }
   ]

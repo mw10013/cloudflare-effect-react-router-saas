@@ -8,9 +8,15 @@ export const categories: ComponentCategory[] = [
   {
     slug: "button",
     name: "Button",
+    components: [{ name: "button-demo" }, { name: "button-demo-disabled" }],
+  },
+  {
+    slug: "input",
+    name: "Input",
     components: [
-      { name: "button-demo" },
-      { name: "button-demo-disabled" },
+      { name: "input-demo" },
+      { name: "input-demo-password" },
+      { name: "input-demo-disabled" },
     ],
   },
   {
@@ -21,5 +27,5 @@ export const categories: ComponentCategory[] = [
 ];
 
 export function getCategory(slug: string): ComponentCategory | undefined {
-  return categories.find((category) => category.slug === slug)
+  return categories.find((category) => category.slug === slug);
 }
