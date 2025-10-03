@@ -1,4 +1,4 @@
-import { categories } from "@/config/components";
+import { categories } from "@/config/categories";
 import { Link } from "@/registry/components/ui/oui-link";
 
 export default function RouteComponent() {
@@ -36,7 +36,11 @@ interface CategoryCardProps {
   componentCount?: number;
 }
 
-function CategoryCard({ slug, name, componentCount: componentsCount }: CategoryCardProps) {
+function CategoryCard({
+  slug,
+  name,
+  componentCount: componentsCount,
+}: CategoryCardProps) {
   const href = `/${slug}`;
   // const imageBasePath = `/thumbs/${slug}`;
   // const alt = `${name} components`;
