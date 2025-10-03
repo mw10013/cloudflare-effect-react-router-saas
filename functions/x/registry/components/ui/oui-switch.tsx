@@ -1,0 +1,100 @@
+import React from "react";
+import * as Rac from "react-aria-components";
+import { twMerge } from "tailwind-merge";
+import {
+  composeTailwindRenderProps,
+  groupFocusVisibleStyles,
+} from "./oui-base";
+import { labelComponentStyles } from "./oui-label";
+import { Text } from "./oui-text";
+
+export function Switch({ className, ...props }: Rac.SwitchProps) {
+  return (
+    <Rac.Switch
+      {...props}
+      className={composeTailwindRenderProps(className, [
+        labelComponentStyles,
+        "group",
+      ])}
+    />
+  );
+}
+
+/**
+ * Derived from shadcn SwitchPrimitive.Root and SwitchPrimitive.Thumb
+ */
+export function SwitchIndicator({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={twMerge(
+        groupFocusVisibleStyles,
+        "bg-input group-data-[selected]:bg-primary dark:bg-input/80 dark:group-data-[selected]:bg-primary shadow-xs inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full border border-transparent transition-all",
+        className,
+      )}
+      {...props}
+    >
+      <span className="bg-background dark:bg-foreground dark:group-data-[selected]:bg-primary-foreground pointer-events-none block size-4 rounded-full ring-0 transition-transform translate-x-0 group-data-[selected]:translate-x-[calc(100%-2px)]" />
+    </div>
+  );
+}
+
+export interface SwitchExProps extends Rac.SwitchProps {
+  indicatorPosition?: "start" | "end";
+  indicatorClassName?: string;
+  descriptionClassName?: string;
+  description?: React.ReactNode;
+  containerClassName?: string;
+}
+
+export function SwitchEx({
+  indicatorPosition = "start",
+  className,
+  indicatorClassName,
+  descriptionClassName,
+  description,
+  children,
+  containerClassName,
+  ...props
+}: SwitchExProps) {
+  const descriptionId = description ? React.useId() : undefined;
+  return (
+    // Derived fromshadcn FormDemo div
+    <div className={twMerge("flex flex-col gap-0.5", containerClassName)}>
+      <Switch
+        {...props}
+        className={composeTailwindRenderProps(className, [
+          "peer",
+          indicatorPosition === "end" && "justify-between",
+        ])}
+        aria-describedby={descriptionId}
+      >
+        {(renderProps) => (
+          <>
+            {indicatorPosition === "start" && (
+              <SwitchIndicator className={indicatorClassName} />
+            )}
+            {typeof children === "function" ? children(renderProps) : children}
+            {indicatorPosition === "end" && (
+              <SwitchIndicator className={indicatorClassName} />
+            )}
+          </>
+        )}
+      </Switch>
+      {description && (
+        <Text
+          id={descriptionId}
+          slot="description"
+          className={twMerge(
+            "peer-data-[disabled]:opacity-60",
+            descriptionClassName,
+          )}
+        >
+          {description}
+        </Text>
+      )}
+    </div>
+  );
+}
