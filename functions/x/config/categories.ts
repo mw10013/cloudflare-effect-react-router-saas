@@ -13,7 +13,7 @@ export const categories: ComponentCategory[] = [
   {
     slug: "button",
     name: "Button",
-    components: [{ name: "button-demo" }, { name: "button-demo-disabled" }],
+    components: [{ name: "oui-button-demo" }, { name: "oui-button-demo-disabled" }],
   },
   {
     slug: "checkbox",
@@ -69,9 +69,9 @@ export const categories: ComponentCategory[] = [
     slug: "input",
     name: "Input",
     components: [
-      { name: "input-demo" },
-      { name: "input-demo-password" },
-      { name: "input-demo-disabled" },
+      { name: "oui-input-demo" },
+      { name: "oui-input-demo-password" },
+      { name: "oui-input-demo-disabled" },
     ],
   },
   {
@@ -167,7 +167,7 @@ export const categories: ComponentCategory[] = [
   {
     slug: "text-field",
     name: "Text Field",
-    components: [{ name: "text-field-ex" }],
+    components: [{ name: "oui-text-field-ex" }],
   },
 ];
 

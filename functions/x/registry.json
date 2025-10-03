@@ -532,12 +532,12 @@
       "dependencies": ["react-aria-components"]
     },
     {
-      "name": "button-demo-disabled",
+      "name": "oui-button-demo-disabled",
       "type": "registry:component",
       "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
       "files": [
         {
-          "path": "registry/components/button-demo-disabled.tsx",
+          "path": "registry/components/oui-button-demo-disabled.tsx",
           "type": "registry:component"
         }
       ],
@@ -547,12 +547,12 @@
       }
     },
     {
-      "name": "button-demo",
+      "name": "oui-button-demo",
       "type": "registry:component",
       "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
       "files": [
         {
-          "path": "registry/components/button-demo.tsx",
+          "path": "registry/components/oui-button-demo.tsx",
           "type": "registry:component"
         }
       ],
@@ -562,12 +562,12 @@
       }
     },
     {
-      "name": "input-demo-disabled",
+      "name": "oui-input-demo-disabled",
       "type": "registry:component",
       "registryDependencies": ["http://localhost:5173/r/oui-input.json"],
       "files": [
         {
-          "path": "registry/components/input-demo-disabled.tsx",
+          "path": "registry/components/oui-input-demo-disabled.tsx",
           "type": "registry:component"
         }
       ],
@@ -576,12 +576,12 @@
       }
     },
     {
-      "name": "input-demo-password",
+      "name": "oui-input-demo-password",
       "type": "registry:component",
       "registryDependencies": ["http://localhost:5173/r/oui-input.json"],
       "files": [
         {
-          "path": "registry/components/input-demo-password.tsx",
+          "path": "registry/components/oui-input-demo-password.tsx",
           "type": "registry:component"
         }
       ],
@@ -590,17 +590,31 @@
       }
     },
     {
-      "name": "input-demo",
+      "name": "oui-input-demo",
       "type": "registry:component",
       "registryDependencies": ["http://localhost:5173/r/oui-input.json"],
       "files": [
         {
-          "path": "registry/components/input-demo.tsx",
+          "path": "registry/components/oui-input-demo.tsx",
           "type": "registry:component"
         }
       ],
       "meta": {
         "tags": ["input"]
+      }
+    },
+    {
+      "name": "oui-text-field-ex",
+      "type": "registry:component",
+      "registryDependencies": ["http://localhost:5173/r/oui-text-field.json"],
+      "files": [
+        {
+          "path": "registry/components/oui-text-field-ex.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "meta": {
+        "tags": ["text field"]
       }
     }
   ]
