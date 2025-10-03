@@ -2,13 +2,6 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "oui-text-field-ex1",
   "type": "registry:component",
-  "registryDependencies": [
-    "http://localhost:5173/r/oui-text-field.json",
-    "http://localhost:5173/r/oui-input.json",
-    "http://localhost:5173/r/oui-label.json",
-    "http://localhost:5173/r/oui-field-error.json",
-    "http://localhost:5173/r/oui-text.json"
-  ],
   "files": [
     {
       "path": "registry/components/oui-text-field-ex1.tsx",
@@ -17,6 +10,13 @@
     }
   ],
   "meta": {
+    "registryDependencies": [
+      "http://localhost:5173/r/oui-text-field.json",
+      "http://localhost:5173/r/oui-input.json",
+      "http://localhost:5173/r/oui-label.json",
+      "http://localhost:5173/r/oui-field-error.json",
+      "http://localhost:5173/r/oui-text.json"
+    ],
     "tags": [
       "text field"
     ]

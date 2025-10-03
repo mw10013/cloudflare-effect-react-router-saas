@@ -534,13 +534,13 @@
     {
       "name": "oui-button-demo-disabled",
       "type": "registry:component",
-      "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
       "files": [
         {
           "path": "registry/components/oui-button-demo-disabled.tsx",
           "type": "registry:component"
         }
       ],
+      "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
       "meta": {
         "tags": ["button"],
         "style": "text-center"
@@ -549,13 +549,13 @@
     {
       "name": "oui-button-demo",
       "type": "registry:component",
-      "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
       "files": [
         {
           "path": "registry/components/oui-button-demo.tsx",
           "type": "registry:component"
         }
       ],
+      "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
       "meta": {
         "tags": ["button"],
         "style": "text-center"
@@ -564,13 +564,13 @@
     {
       "name": "oui-input-demo-disabled",
       "type": "registry:component",
-      "registryDependencies": ["http://localhost:5173/r/oui-input.json"],
       "files": [
         {
           "path": "registry/components/oui-input-demo-disabled.tsx",
           "type": "registry:component"
         }
       ],
+      "registryDependencies": ["http://localhost:5173/r/oui-input.json"],
       "meta": {
         "tags": ["input"]
       }
@@ -578,13 +578,13 @@
     {
       "name": "oui-input-demo-password",
       "type": "registry:component",
-      "registryDependencies": ["http://localhost:5173/r/oui-input.json"],
       "files": [
         {
           "path": "registry/components/oui-input-demo-password.tsx",
           "type": "registry:component"
         }
       ],
+      "registryDependencies": ["http://localhost:5173/r/oui-input.json"],
       "meta": {
         "tags": ["input"]
       }
@@ -592,13 +592,13 @@
     {
       "name": "oui-input-demo",
       "type": "registry:component",
-      "registryDependencies": ["http://localhost:5173/r/oui-input.json"],
       "files": [
         {
           "path": "registry/components/oui-input-demo.tsx",
           "type": "registry:component"
         }
       ],
+      "registryDependencies": ["http://localhost:5173/r/oui-input.json"],
       "meta": {
         "tags": ["input"]
       }
@@ -606,18 +606,18 @@
     {
       "name": "oui-text-field-ex",
       "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-text-field-ex.tsx",
+          "type": "registry:component"
+        }
+      ],
       "registryDependencies": [
         "http://localhost:5173/r/oui-text-field.json",
         "http://localhost:5173/r/oui-input.json",
         "http://localhost:5173/r/oui-label.json",
         "http://localhost:5173/r/oui-field-error.json",
         "http://localhost:5173/r/oui-text.json"
-      ],
-      "files": [
-        {
-          "path": "registry/components/oui-text-field-ex.tsx",
-          "type": "registry:component"
-        }
       ],
       "meta": {
         "tags": ["text field"]
@@ -626,13 +626,6 @@
     {
       "name": "oui-text-field-ex1",
       "type": "registry:component",
-      "registryDependencies": [
-        "http://localhost:5173/r/oui-text-field.json",
-        "http://localhost:5173/r/oui-input.json",
-        "http://localhost:5173/r/oui-label.json",
-        "http://localhost:5173/r/oui-field-error.json",
-        "http://localhost:5173/r/oui-text.json"
-      ],
       "files": [
         {
           "path": "registry/components/oui-text-field-ex1.tsx",
@@ -640,6 +633,13 @@
         }
       ],
       "meta": {
+        "registryDependencies": [
+          "http://localhost:5173/r/oui-text-field.json",
+          "http://localhost:5173/r/oui-input.json",
+          "http://localhost:5173/r/oui-label.json",
+          "http://localhost:5173/r/oui-field-error.json",
+          "http://localhost:5173/r/oui-text.json"
+        ],
         "tags": ["text field"]
       }
     }
