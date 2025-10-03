@@ -36,12 +36,13 @@ Here is the breakdown by property:
   - For example, this import `import { disabledStyles, focusVisibleStyles } from "@/registry/components/ui/oui-base";` indicates a dependency on `oui-base`, so the array should include `"http://localhost:5173/r/oui-base.json"`.
 - `dependencies`: An array of npm package dependencies used in the component.
   - Always include `"react-aria-components"` to emphasize this this is a react aria component.
-  - Never include `"react"`, `"react-dom"`, `"class-variance-authority"`,or `"tailwind-merge"` as these are provided by the environment.
-  - If `lucide-react` components are used, include `"lucide-react"`.
+  - Never include `"react"`, `"react-dom"` as these are provided by the environment.
+  - Example, if `lucide-react` components are used, include `"lucide-react"`.
 
 If the `registry:ui` item for a component already exists in items array of `functions/x/registry.json`, ensure it is accurate and correct based on the above rules.
 
 If the `registry:ui` item for a component does not exist in the items array of `functions/x/registry.json`
-  - Add it to the items array in the `functions/x/registry.json` file.
-  - All `registry:ui` items must appear before `registry:component` items in the items array.
-  - Ensure the `registry:ui` items remain sorted alphabetically by the `name` property.
+
+- Add it to the items array in the `functions/x/registry.json` file.
+- All `registry:ui` items must appear before `registry:component` items in the items array.
+- Ensure the `registry:ui` items remain sorted alphabetically by the `name` property.
