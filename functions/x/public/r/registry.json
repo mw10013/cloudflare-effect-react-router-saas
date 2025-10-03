@@ -532,6 +532,20 @@
       "dependencies": ["react-aria-components"]
     },
     {
+      "name": "oui-button-demo-destructive",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-button-demo-destructive.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
+      "meta": {
+        "tags": ["button"]
+      }
+    },
+    {
       "name": "oui-button-demo-disabled",
       "type": "registry:component",
       "files": [
@@ -544,6 +558,48 @@
       "meta": {
         "tags": ["button"],
         "style": "text-center"
+      }
+    },
+    {
+      "name": "oui-button-demo-ghost",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-button-demo-ghost.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
+      "meta": {
+        "tags": ["button"]
+      }
+    },
+    {
+      "name": "oui-button-demo-outline",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-button-demo-outline.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
+      "meta": {
+        "tags": ["button"]
+      }
+    },
+    {
+      "name": "oui-button-demo-secondary",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-button-demo-secondary.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
+      "meta": {
+        "tags": ["button"]
       }
     },
     {
@@ -561,6 +617,7 @@
         "style": "text-center"
       }
     },
+
     {
       "name": "oui-input-demo-disabled",
       "type": "registry:component",
@@ -632,14 +689,14 @@
           "type": "registry:component"
         }
       ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-text-field.json",
+        "http://localhost:5173/r/oui-input.json",
+        "http://localhost:5173/r/oui-label.json",
+        "http://localhost:5173/r/oui-field-error.json",
+        "http://localhost:5173/r/oui-text.json"
+      ],
       "meta": {
-        "registryDependencies": [
-          "http://localhost:5173/r/oui-text-field.json",
-          "http://localhost:5173/r/oui-input.json",
-          "http://localhost:5173/r/oui-label.json",
-          "http://localhost:5173/r/oui-field-error.json",
-          "http://localhost:5173/r/oui-text.json"
-        ],
         "tags": ["text field"]
       }
     }

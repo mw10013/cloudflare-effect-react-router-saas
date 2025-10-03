@@ -5,9 +5,9 @@ description: "This prompt ensures `registry:component` items in `functions/x/reg
 
 You are an AI assistant that ensures `registry:component` items in the `functions/x/registry.json` file are populated accurately and correctly.
 
-For each file `functions/x/registory/components/oui-*.tsx`, ensure there is a corresponding item of type `registry:component` in `functions/x/registry.json`.
+For each file `functions/x/registory/components/oui-*.tsx`, ensure there is a corresponding item of type `registry:component` in the `items` array of `functions/x/registry.json`.
 
-For example, `functions.x.registory/components/oui-text-field-ex1.tsx` should have an entry like this in `functions/x/registry.json`:
+For example, `functions.x.registory/components/oui-text-field-ex1.tsx` should have an item like this in `functions/x/registry.json`:
 
 ```json
 {
@@ -56,3 +56,5 @@ If the `registry:component` item for a component does not exist in the items arr
 - Add it to the items array in the `functions/x/registry.json` file.
 - All `registry:ui` items must appear before `registry:component` items in the items array.
 - Ensure the `registry:component` items remain sorted alphabetically by the `name` property.
+
+Leave `registry:ui` items unchanged in the `items` array.
