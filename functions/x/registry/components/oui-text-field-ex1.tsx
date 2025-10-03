@@ -5,35 +5,47 @@ import { Text } from "@/registry/components/ui/oui-text";
 import { TextField } from "@/registry/components/ui/oui-text-field";
 import * as Rac from "react-aria-components";
 
-export interface TextFieldExProps extends Rac.TextFieldProps {
+export interface TextFieldEx1Props extends Rac.TextFieldProps {
   label?: React.ReactNode;
   description?: React.ReactNode;
   errorMessage?: string | ((validation: Rac.ValidationResult) => string);
   placeholder?: string;
 }
 
-export function TextFieldEx({
+/**
+ * A TextField component where the label and input are arranged side-by-side.
+ */
+export function TextFieldEx1({
   label,
   description,
   errorMessage,
   placeholder,
   children,
   ...props
-}: TextFieldExProps) {
+}: TextFieldEx1Props) {
   return (
     <TextField {...props}>
       {(renderProps) => (
         <>
-          {label && typeof label === "string" ? <Label>{label}</Label> : label}
-          {children ? (
-            typeof children === "function" ? (
-              children(renderProps)
+          <div className="grid grid-cols-3 items-center gap-4">
+            {label && typeof label === "string" ? (
+              <Label>{label}</Label>
             ) : (
-              children
-            )
-          ) : (
-            <Input placeholder={placeholder} />
-          )}
+              label
+            )}
+            {children ? (
+              typeof children === "function" ? (
+                children(renderProps)
+              ) : (
+                children
+              )
+            ) : (
+              <Input
+                placeholder={placeholder}
+                className={label ? "col-span-2" : "col-span-3"}
+              />
+            )}
+          </div>
           {description && <Text slot="description">{description}</Text>}
           <FieldError>{errorMessage}</FieldError>
         </>
@@ -44,7 +56,7 @@ export function TextFieldEx({
 
 export default function Component() {
   return (
-    <TextFieldEx
+    <TextFieldEx1
       label="Label"
       placeholder="Placeholder"
       description="This is a text field."
