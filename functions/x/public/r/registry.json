@@ -606,7 +606,13 @@
     {
       "name": "oui-text-field-ex",
       "type": "registry:component",
-      "registryDependencies": ["http://localhost:5173/r/oui-text-field.json"],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-text-field.json",
+        "http://localhost:5173/r/oui-input.json",
+        "http://localhost:5173/r/oui-label.json",
+        "http://localhost:5173/r/oui-field-error.json",
+        "http://localhost:5173/r/oui-text.json"
+      ],
       "files": [
         {
           "path": "registry/components/oui-text-field-ex.tsx",
