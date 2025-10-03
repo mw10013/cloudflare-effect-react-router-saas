@@ -4,7 +4,8 @@
   "type": "registry:ui",
   "dependencies": [
     "react-aria-components",
-    "lucide-react"
+    "lucide-react",
+    "tailwind-merge"
   ],
   "registryDependencies": [
     "http://localhost:5173/r/oui-base.json"

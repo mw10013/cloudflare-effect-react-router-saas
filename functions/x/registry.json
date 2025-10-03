@@ -37,7 +37,11 @@
         }
       ],
       "registryDependencies": ["http://localhost:5173/r/oui-base.json"],
-      "dependencies": ["react-aria-components"]
+      "dependencies": [
+        "react-aria-components",
+        "class-variance-authority",
+        "tailwind-merge"
+      ]
     },
     {
       "name": "oui-checkbox",
@@ -52,7 +56,11 @@
         "http://localhost:5173/r/oui-label.json",
         "http://localhost:5173/r/oui-text.json"
       ],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": [
+        "react-aria-components",
+        "lucide-react",
+        "tailwind-merge"
+      ]
     },
     {
       "name": "oui-checkbox-group",
@@ -105,7 +113,12 @@
         "http://localhost:5173/r/oui-heading.json",
         "http://localhost:5173/r/oui-modal.json"
       ],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": [
+        "react-aria-components",
+        "lucide-react",
+        "class-variance-authority",
+        "tailwind-merge"
+      ]
     },
     {
       "name": "oui-disclosure",
@@ -141,7 +154,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components"]
+      "dependencies": ["react-aria-components", "tailwind-merge"]
     },
     {
       "name": "oui-group",
@@ -165,7 +178,11 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components"]
+      "dependencies": [
+        "react-aria-components",
+        "class-variance-authority",
+        "tailwind-merge"
+      ]
     },
     {
       "name": "oui-heading",
@@ -177,7 +194,11 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components"]
+      "dependencies": [
+        "react-aria-components",
+        "class-variance-authority",
+        "tailwind-merge"
+      ]
     },
     {
       "name": "oui-input",
@@ -189,7 +210,11 @@
         }
       ],
       "registryDependencies": ["http://localhost:5173/r/oui-base.json"],
-      "dependencies": ["react-aria-components"]
+      "dependencies": [
+        "react-aria-components",
+        "class-variance-authority",
+        "tailwind-merge"
+      ]
     },
     {
       "name": "oui-keyboard",
@@ -201,7 +226,7 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components"]
+      "dependencies": ["react-aria-components", "tailwind-merge"]
     },
     {
       "name": "oui-label",
@@ -213,7 +238,7 @@
         }
       ],
       "registryDependencies": ["http://localhost:5173/r/oui-base.json"],
-      "dependencies": ["react-aria-components"]
+      "dependencies": ["react-aria-components", "tailwind-merge"]
     },
     {
       "name": "oui-link",
@@ -225,7 +250,11 @@
         }
       ],
       "registryDependencies": ["http://localhost:5173/r/oui-base.json"],
-      "dependencies": ["react-aria-components"]
+      "dependencies": [
+        "react-aria-components",
+        "class-variance-authority",
+        "tailwind-merge"
+      ]
     },
     {
       "name": "oui-list-box",
@@ -237,7 +266,11 @@
         }
       ],
       "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": [
+        "react-aria-components",
+        "lucide-react",
+        "tailwind-merge"
+      ]
     },
     {
       "name": "oui-menu",
@@ -253,7 +286,12 @@
         "http://localhost:5173/r/oui-button.json",
         "http://localhost:5173/r/oui-popover.json"
       ],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": [
+        "react-aria-components",
+        "class-variance-authority",
+        "lucide-react",
+        "tailwind-merge"
+      ]
     },
     {
       "name": "oui-modal",
@@ -265,7 +303,11 @@
         }
       ],
       "registryDependencies": ["http://localhost:5173/r/oui-base.json"],
-      "dependencies": ["react-aria-components"]
+      "dependencies": [
+        "react-aria-components",
+        "class-variance-authority",
+        "tailwind-merge"
+      ]
     },
     {
       "name": "oui-number-field",
@@ -299,7 +341,11 @@
         "http://localhost:5173/r/oui-button.json",
         "http://localhost:5173/r/oui-dialog.json"
       ],
-      "dependencies": ["react-aria-components"]
+      "dependencies": [
+        "react-aria-components",
+        "class-variance-authority",
+        "tailwind-merge"
+      ]
     },
     {
       "name": "oui-radio-group",
@@ -315,7 +361,11 @@
         "http://localhost:5173/r/oui-label.json",
         "http://localhost:5173/r/oui-text.json"
       ],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": [
+        "react-aria-components",
+        "lucide-react",
+        "tailwind-merge"
+      ]
     },
     {
       "name": "oui-search-field",
@@ -350,7 +400,11 @@
         "http://localhost:5173/r/oui-popover.json",
         "http://localhost:5173/r/oui-text.json"
       ],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": [
+        "react-aria-components",
+        "lucide-react",
+        "tailwind-merge"
+      ]
     },
     {
       "name": "oui-separator",
@@ -362,7 +416,11 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components"]
+      "dependencies": [
+        "react-aria-components",
+        "class-variance-authority",
+        "tailwind-merge"
+      ]
     },
     {
       "name": "oui-sidebar",
@@ -377,7 +435,12 @@
         "http://localhost:5173/r/oui-base.json",
         "http://localhost:5173/r/oui-button.json"
       ],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": [
+        "react-aria-components",
+        "class-variance-authority",
+        "lucide-react",
+        "tailwind-merge"
+      ]
     },
     {
       "name": "oui-slider",
@@ -404,7 +467,7 @@
         "http://localhost:5173/r/oui-label.json",
         "http://localhost:5173/r/oui-text.json"
       ],
-      "dependencies": ["react-aria-components"]
+      "dependencies": ["react-aria-components", "tailwind-merge"]
     },
     {
       "name": "oui-table",
@@ -416,7 +479,11 @@
         }
       ],
       "registryDependencies": ["http://localhost:5173/r/oui-base.json"],
-      "dependencies": ["react-aria-components", "lucide-react"]
+      "dependencies": [
+        "react-aria-components",
+        "lucide-react",
+        "tailwind-merge"
+      ]
     },
     {
       "name": "oui-text",
@@ -428,7 +495,11 @@
         }
       ],
       "registryDependencies": [],
-      "dependencies": ["react-aria-components"]
+      "dependencies": [
+        "react-aria-components",
+        "class-variance-authority",
+        "tailwind-merge"
+      ]
     },
     {
       "name": "oui-text-area",

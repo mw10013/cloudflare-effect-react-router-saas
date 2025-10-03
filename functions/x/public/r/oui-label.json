@@ -3,7 +3,8 @@
   "name": "oui-label",
   "type": "registry:ui",
   "dependencies": [
-    "react-aria-components"
+    "react-aria-components",
+    "tailwind-merge"
   ],
   "registryDependencies": [
     "http://localhost:5173/r/oui-base.json"

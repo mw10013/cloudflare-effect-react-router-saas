@@ -3,7 +3,8 @@
   "name": "oui-form",
   "type": "registry:ui",
   "dependencies": [
-    "react-aria-components"
+    "react-aria-components",
+    "tailwind-merge"
   ],
   "registryDependencies": [],
   "files": [

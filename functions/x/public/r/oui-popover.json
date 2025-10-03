@@ -3,7 +3,9 @@
   "name": "oui-popover",
   "type": "registry:ui",
   "dependencies": [
-    "react-aria-components"
+    "react-aria-components",
+    "class-variance-authority",
+    "tailwind-merge"
   ],
   "registryDependencies": [
     "http://localhost:5173/r/oui-button.json",

@@ -3,7 +3,9 @@
   "name": "oui-separator",
   "type": "registry:ui",
   "dependencies": [
-    "react-aria-components"
+    "react-aria-components",
+    "class-variance-authority",
+    "tailwind-merge"
   ],
   "registryDependencies": [],
   "files": [

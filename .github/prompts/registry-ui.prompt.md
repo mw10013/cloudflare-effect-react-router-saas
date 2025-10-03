@@ -38,6 +38,7 @@ Here is the breakdown by property:
   - Always include `"react-aria-components"` to emphasize this this is a react aria component.
   - Never include `"react"`, `"react-dom"` as these are provided by the environment.
   - Example, if `lucide-react` components are used, include `"lucide-react"`.
+  - Be sure to include `"class-variance-authority"` and `"tailwind-merge"` if there are imports from these packages.
 
 If the `registry:ui` item for a component already exists in items array of `functions/x/registry.json`, ensure it is accurate and correct based on the above rules.
 
