@@ -1,8 +1,8 @@
 import * as Rac from "react-aria-components";
-import { composeTailwindRenderProps } from "./oui-base";
-import { FieldError } from "./oui-field-error";
-import { Label } from "./oui-label";
-import { Text } from "./oui-text";
+import { composeTailwindRenderProps } from "@/registry/components/ui/oui-base";
+import { FieldError } from "@/registry/components/ui/oui-field-error";
+import { Label } from "@/registry/components/ui/oui-label";
+import { Text } from "@/registry/components/ui/oui-text";
 
 export interface CheckboxGroupExProps extends Rac.CheckboxGroupProps {
   labelClassName?: string;

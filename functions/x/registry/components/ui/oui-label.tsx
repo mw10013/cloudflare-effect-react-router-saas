@@ -1,6 +1,6 @@
 import * as Rac from "react-aria-components";
 import { twJoin, twMerge } from "tailwind-merge";
-import { tw } from "./oui-base";
+import { tw } from "@/registry/components/ui/oui-base";
 
 /**
  * Derived from shadcn Label and FormLabel

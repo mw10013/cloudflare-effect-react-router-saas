@@ -6,11 +6,11 @@ import {
   composeTailwindRenderProps,
   disabledStyles,
   focusVisibleStyles,
-} from "./oui-base";
-import { FieldError } from "./oui-field-error";
-import { Label } from "./oui-label";
-import { Popover } from "./oui-popover";
-import { Text } from "./oui-text";
+} from "@/registry/components/ui/oui-base";
+import { FieldError } from "@/registry/components/ui/oui-field-error";
+import { Label } from "@/registry/components/ui/oui-label";
+import { Popover } from "@/registry/components/ui/oui-popover";
+import { Text } from "@/registry/components/ui/oui-text";
 
 export function Select<T extends object>({
   className,

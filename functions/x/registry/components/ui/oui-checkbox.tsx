@@ -5,9 +5,9 @@ import { twMerge } from "tailwind-merge";
 import {
   composeTailwindRenderProps,
   groupFocusVisibleStyles,
-} from "./oui-base";
-import { labelComponentStyles } from "./oui-label";
-import { Text } from "./oui-text";
+} from "@/registry/components/ui/oui-base";
+import { labelComponentStyles } from "@/registry/components/ui/oui-label";
+import { Text } from "@/registry/components/ui/oui-text";
 
 export interface CheckboxProps extends Rac.CheckboxProps {
   indicatorClassName?: string;

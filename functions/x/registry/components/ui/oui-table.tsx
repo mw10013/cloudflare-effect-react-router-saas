@@ -2,7 +2,7 @@ import * as React from "react";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
-import { composeTailwindRenderProps } from "./oui-base";
+import { composeTailwindRenderProps } from "@/registry/components/ui/oui-base";
 
 // Table is not interactive on first click in SSR : https://github.com/adobe/react-spectrum/issues/8239
 

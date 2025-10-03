@@ -3,9 +3,9 @@ import { cva } from "class-variance-authority";
 import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
-import { composeTailwindRenderProps } from "./oui-base";
-import { Button } from "./oui-button";
-import { Popover } from "./oui-popover";
+import { composeTailwindRenderProps } from "@/registry/components/ui/oui-base";
+import { Button } from "@/registry/components/ui/oui-button";
+import { Popover } from "@/registry/components/ui/oui-popover";
 
 /**
  * Derived from shadcn DropdownMenuContent

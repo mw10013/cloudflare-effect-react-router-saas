@@ -1,5 +1,5 @@
 import * as Rac from "react-aria-components";
-import { SearchFieldEx } from "./oui-search-field";
+import { SearchFieldEx } from "@/registry/components/ui/oui-search-field";
 
 export interface AutocompleteExProps
   extends Omit<Rac.AutocompleteProps, "children"> {

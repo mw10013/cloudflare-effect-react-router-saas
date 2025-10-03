@@ -5,8 +5,8 @@ import {
   composeTailwindRenderProps,
   disabledStyles,
   focusVisibleStyles,
-} from "./oui-base";
-import { buttonVariants } from "./oui-button";
+} from "@/registry/components/ui/oui-base";
+import { buttonVariants } from "@/registry/components/ui/oui-button";
 
 /** Styles derived from shadcn SelectItem.
  * https://github.com/adobe/react-spectrum/issues/7601

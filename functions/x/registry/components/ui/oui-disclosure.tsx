@@ -4,8 +4,8 @@ import {
   composeTailwindRenderProps,
   disabledStyles,
   focusVisibleStyles,
-} from "./oui-base";
-import { Heading } from "./oui-heading";
+} from "@/registry/components/ui/oui-base";
+import { Heading } from "@/registry/components/ui/oui-heading";
 
 /**
  * Derived from shadcn AccordionItem

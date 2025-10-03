@@ -2,7 +2,7 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
-import { composeTailwindRenderProps } from "./oui-base";
+import { composeTailwindRenderProps } from "@/registry/components/ui/oui-base";
 
 /**
  * Derived from shadcn DialogOverlay.

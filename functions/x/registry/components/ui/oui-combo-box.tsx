@@ -1,12 +1,12 @@
 import { ChevronsUpDown } from "lucide-react";
 import * as Rac from "react-aria-components";
-import { Button } from "./oui-button";
-import { FieldError } from "./oui-field-error";
-import { Group } from "./oui-group";
-import { Input } from "./oui-input";
-import { Label } from "./oui-label";
-import { Popover } from "./oui-popover";
-import { Text } from "./oui-text";
+import { Button } from "@/registry/components/ui/oui-button";
+import { FieldError } from "@/registry/components/ui/oui-field-error";
+import { Group } from "@/registry/components/ui/oui-group";
+import { Input } from "@/registry/components/ui/oui-input";
+import { Label } from "@/registry/components/ui/oui-label";
+import { Popover } from "@/registry/components/ui/oui-popover";
+import { Text } from "@/registry/components/ui/oui-text";
 
 export interface ComboBoxExProps<T extends object>
   extends Omit<Rac.ComboBoxProps<T>, "children"> {

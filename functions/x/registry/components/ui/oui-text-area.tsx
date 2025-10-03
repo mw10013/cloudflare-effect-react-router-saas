@@ -4,7 +4,7 @@ import {
   composeTailwindRenderProps,
   disabledStyles,
   focusVisibleStyles,
-} from "./oui-base";
+} from "@/registry/components/ui/oui-base";
 
 /**
  * TextArea component for multi-line text input.

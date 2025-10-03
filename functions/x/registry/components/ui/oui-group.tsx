@@ -1,5 +1,5 @@
 import * as Rac from "react-aria-components";
-import { composeTailwindRenderProps, focusVisibleStyles } from "./oui-base";
+import { composeTailwindRenderProps, focusVisibleStyles } from "@/registry/components/ui/oui-base";
 
 /**
  * Derived from shadcn Input

@@ -4,8 +4,8 @@ import {
   composeTailwindRenderProps,
   disabledStyles,
   focusVisibleStyles,
-} from "./oui-base";
-import { Label } from "./oui-label";
+} from "@/registry/components/ui/oui-base";
+import { Label } from "@/registry/components/ui/oui-label";
 
 // TODO: Slider: vertical, multiple
 export function Slider({ className, ...props }: Rac.SliderProps) {

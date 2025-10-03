@@ -1,8 +1,8 @@
 import { cva } from "class-variance-authority";
 import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
-import { Button } from "./oui-button";
-import { Dialog } from "./oui-dialog";
+import { Button } from "@/registry/components/ui/oui-button";
+import { Dialog } from "@/registry/components/ui/oui-dialog";
 
 /**
  * Styles for the Popover component, derived from shadcn UI's `DropdownMenuContent` and `SelectContent`.

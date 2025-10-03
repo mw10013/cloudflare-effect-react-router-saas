@@ -10,9 +10,9 @@ import React, {
 import { XIcon } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { twJoin, twMerge } from "tailwind-merge";
-import { Button } from "./oui-button";
-import { Heading } from "./oui-heading";
-import { ModalEx, ModalEx1, sheetModalVariants } from "./oui-modal";
+import { Button } from "@/registry/components/ui/oui-button";
+import { Heading } from "@/registry/components/ui/oui-heading";
+import { ModalEx, ModalEx1, sheetModalVariants } from "@/registry/components/ui/oui-modal";
 
 export interface DialogProps extends Rac.DialogProps {
   /**

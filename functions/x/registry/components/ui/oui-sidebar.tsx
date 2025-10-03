@@ -1,12 +1,12 @@
 import type { VariantProps } from "class-variance-authority";
 import * as React from "react";
-import { useSidebar } from "@workspace/ui/components/ui/sidebar";
+import { useSidebar } from "@/registry/components/ui/sidebar";
 import { cva } from "class-variance-authority";
 import { ChevronRight, PanelLeftIcon } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
-import { composeTailwindRenderProps } from "./oui-base";
-import { Button } from "./oui-button";
+import { composeTailwindRenderProps } from "@/registry/components/ui/oui-base";
+import { Button } from "@/registry/components/ui/oui-button";
 
 export function SidebarTrigger({
   "aria-label": ariaLabel,

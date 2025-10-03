@@ -1,5 +1,5 @@
 import * as Rac from "react-aria-components";
-import { composeTailwindRenderProps } from "./oui-base";
+import { composeTailwindRenderProps } from "@/registry/components/ui/oui-base";
 
 /**
  * Derived from shadcn FormMessage
