@@ -12,11 +12,11 @@ export function loader({ params }: Route.LoaderArgs) {
   const components = getComponentsByNames(
     category.components.map((item) => item.name),
   );
-  return { components };
+  return { category, components };
 }
 
 export default function RouteComponent({
-  loaderData: { components },
+  loaderData: { category, components },
 }: Route.ComponentProps) {
   return (
     <div className="p-6">
@@ -27,7 +27,7 @@ export default function RouteComponent({
           </ComponentCard>
         ))}
       </PageGrid>
-      {/* <pre>{JSON.stringify({ components }, null, 2)}</pre> */}
+      <pre>{JSON.stringify({ category, components }, null, 2)}</pre>
     </div>
   );
 }

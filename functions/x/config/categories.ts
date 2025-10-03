@@ -167,7 +167,7 @@ export const categories: ComponentCategory[] = [
   {
     slug: "text-field",
     name: "Text Field",
-    components: [],
+    components: [{ name: "text-field-ex" }],
   },
 ];
 
