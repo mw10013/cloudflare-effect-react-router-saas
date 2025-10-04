@@ -18,6 +18,7 @@
   "meta": {
     "tags": [
       "dialog"
-    ]
+    ],
+    "style": "flex-center"
   }
 }
