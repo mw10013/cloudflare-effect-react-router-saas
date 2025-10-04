@@ -7,12 +7,16 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { ModalEx } from "@/registry/components/oui-modal-ex";
+import { Button } from "@/registry/components/ui/oui-button";
+import { Heading } from "@/registry/components/ui/oui-heading";
+import {
+  ModalEx1,
+  sheetModalVariants,
+} from "@/registry/components/ui/oui-modal";
 import { XIcon } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { twJoin, twMerge } from "tailwind-merge";
-import { Button } from "@/registry/components/ui/oui-button";
-import { Heading } from "@/registry/components/ui/oui-heading";
-import { ModalEx, ModalEx1, sheetModalVariants } from "@/registry/components/ui/oui-modal";
 
 export interface DialogProps extends Rac.DialogProps {
   /**
@@ -44,9 +48,9 @@ export function Dialog({
             <Rac.Button
               slot="close"
               className={twJoin(
-                "absolute right-4 top-4 rounded-sm p-1 opacity-70 transition-opacity",
+                "absolute top-4 right-4 rounded-sm p-1 opacity-70 transition-opacity",
                 "data-[hovered]:bg-accent data-[hovered]:text-muted-foreground data-[hovered]:opacity-100",
-                "data-[focus-visible]:ring-ring data-[focus-visible]:ring-offset-background data-[focus-visible]:outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-offset-2",
+                "data-[focus-visible]:ring-2 data-[focus-visible]:ring-ring data-[focus-visible]:ring-offset-2 data-[focus-visible]:ring-offset-background data-[focus-visible]:outline-none",
                 "data-[disabled]:pointer-events-none",
               )}
             >
@@ -106,67 +110,9 @@ export function DialogDescription({
   return (
     <p
       {...props}
-      className={twMerge("text-muted-foreground text-sm", className)}
+      className={twMerge("text-sm text-muted-foreground", className)}
     />
   );
-}
-
-export interface DialogExProps
-  extends DialogProps,
-    Partial<
-      Pick<Rac.ModalOverlayProps, "isOpen" | "defaultOpen" | "onOpenChange">
-    > {
-  triggerElement?: string | ReactElement;
-  modalClassName?: string;
-}
-
-/**
- * A modal dialog that can be opened via a trigger element or programmatically.
- *
- * If `triggerElement` is provided, it will be rendered and will open the dialog
- * when pressed.
- *
- * If `triggerElement` is omitted, the dialog must be controlled programmatically.
- *
- * In both cases, the open state can be uncontrolled (using `defaultOpen`) or
- * controlled (using `isOpen` and `onOpenChange`).
- */
-export function DialogEx({
-  triggerElement,
-  modalClassName,
-  isOpen,
-  defaultOpen,
-  onOpenChange,
-  ...props
-}: DialogExProps) {
-  const modal = (
-    <ModalEx
-      className={modalClassName}
-      isDismissable={props.role !== "alertdialog"}
-      isOpen={isOpen}
-      defaultOpen={defaultOpen}
-      onOpenChange={onOpenChange}
-    >
-      <Dialog {...props} />
-    </ModalEx>
-  );
-  if (triggerElement) {
-    return (
-      <Rac.DialogTrigger
-        isOpen={isOpen}
-        defaultOpen={defaultOpen}
-        onOpenChange={onOpenChange}
-      >
-        {typeof triggerElement === "string" ? (
-          <Button variant="ghost">{triggerElement}</Button>
-        ) : (
-          triggerElement
-        )}
-        {modal}
-      </Rac.DialogTrigger>
-    );
-  }
-  return modal;
 }
 
 export interface DialogEx1AlertProps
@@ -298,8 +244,12 @@ export function DialogEx1AlertProvider({ children }: { children: ReactNode }) {
         <DialogEx1Alert
           {...options}
           isOpen
-          onConfirm={() => { handleClose(true); }}
-          onCancel={() => { handleClose(false); }}
+          onConfirm={() => {
+            handleClose(true);
+          }}
+          onCancel={() => {
+            handleClose(false);
+          }}
         />
       )}
     </DialogEx1AlertContext.Provider>
