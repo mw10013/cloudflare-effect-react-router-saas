@@ -562,11 +562,71 @@
       }
     },
     {
+      "name": "oui-button-demo-disabled-animation",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-button-demo-disabled-animation.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
+      "meta": {
+        "tags": ["button"],
+        "style": "text-center"
+      }
+    },
+    {
       "name": "oui-button-demo-ghost",
       "type": "registry:component",
       "files": [
         {
           "path": "registry/components/oui-button-demo-ghost.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
+      "meta": {
+        "tags": ["button"],
+        "style": "text-center"
+      }
+    },
+    {
+      "name": "oui-button-demo-icon-left",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-button-demo-icon-left.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
+      "meta": {
+        "tags": ["button"],
+        "style": "text-center"
+      }
+    },
+    {
+      "name": "oui-button-demo-icon-right",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-button-demo-icon-right.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
+      "meta": {
+        "tags": ["button"],
+        "style": "text-center"
+      }
+    },
+    {
+      "name": "oui-button-demo-lg",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-button-demo-lg.tsx",
           "type": "registry:component"
         }
       ],
@@ -597,6 +657,21 @@
       "files": [
         {
           "path": "registry/components/oui-button-demo-outline.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
+      "meta": {
+        "tags": ["button"],
+        "style": "text-center"
+      }
+    },
+    {
+      "name": "oui-button-demo-sm",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-button-demo-sm.tsx",
           "type": "registry:component"
         }
       ],

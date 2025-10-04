@@ -20,7 +20,12 @@ export const categories: Category[] = [
       { name: "oui-button-demo-destructive" },
       { name: "oui-button-demo-secondary" },
       { name: "oui-button-demo-link" },
+      { name: "oui-button-demo-icon-left" },
+      { name: "oui-button-demo-icon-right" },
       { name: "oui-button-demo-disabled" },
+      { name: "oui-button-demo-disabled-animation" },
+      { name: "oui-button-demo-sm" },
+      { name: "oui-button-demo-lg" },
     ],
   },
   {
