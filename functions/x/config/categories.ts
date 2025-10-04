@@ -120,7 +120,10 @@ export const categories: Category[] = [
   {
     name: "Modal",
     slug: "modal",
-    components: [{ name: "oui-modal-ex" }, { name: "oui-modal-ex-demo-alert" }],
+    components: [
+      { name: "oui-modal-ex" },
+      { name: "oui-modal-ex-demo-confirm" },
+    ],
   },
   {
     name: "Number Field",

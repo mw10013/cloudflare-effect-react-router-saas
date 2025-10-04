@@ -900,11 +900,11 @@
       }
     },
     {
-      "name": "oui-modal-ex-demo-alert",
+      "name": "oui-modal-ex-demo-confirm",
       "type": "registry:component",
       "files": [
         {
-          "path": "registry/components/oui-modal-ex-demo-alert.tsx",
+          "path": "registry/components/oui-modal-ex-demo-confirm.tsx",
           "type": "registry:component"
         }
       ],
