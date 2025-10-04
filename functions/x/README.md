@@ -2,6 +2,11 @@
 
 - Oui
 
+## TODO
+
+- registry:build: delete r/*
+- tags
+
 ## Local Dev
 
 - pnpm i

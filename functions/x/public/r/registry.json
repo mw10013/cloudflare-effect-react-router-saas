@@ -558,10 +558,11 @@
         }
       ],
       "registryDependencies": [
-        "http://localhost:5173/r/oui-dialog.json",
         "http://localhost:5173/r/oui-button.json",
-        "http://localhost:5173/r/oui-text-field-ex.json",
-        "http://localhost:5173/r/oui-heading.json"
+        "http://localhost:5173/r/oui-dialog.json",
+        "http://localhost:5173/r/oui-dialog-ex.json",
+        "http://localhost:5173/r/oui-heading.json",
+        "http://localhost:5173/r/oui-text-field-ex.json"
       ],
       "meta": {
         "tags": ["dialog", "dialog ex"],

@@ -6,13 +6,13 @@ export interface Category {
 
 export const categories: Category[] = [
   {
-    slug: "autocomplete",
     name: "Autocomplete",
+    slug: "autocomplete",
     components: [],
   },
   {
-    slug: "button",
     name: "Button",
+    slug: "button",
     components: [
       { name: "oui-button-demo" },
       { name: "oui-button-demo-outline" },
@@ -29,61 +29,61 @@ export const categories: Category[] = [
     ],
   },
   {
-    slug: "checkbox",
     name: "Checkbox",
+    slug: "checkbox",
     components: [],
   },
   {
-    slug: "checkbox-group",
     name: "Checkbox Group",
+    slug: "checkbox-group",
     components: [],
   },
   {
-    slug: "combo-box",
     name: "Combo Box",
+    slug: "combo-box",
     components: [],
   },
   {
-    slug: "dialog",
     name: "Dialog",
+    slug: "dialog",
     components: [
       { name: "oui-dialog-ex" },
       { name: "oui-dialog-ex-demo-form" },
     ],
   },
   {
-    slug: "disclosure",
     name: "Disclosure",
+    slug: "disclosure",
     components: [],
   },
   {
-    slug: "field-error",
     name: "Field Error",
+    slug: "field-error",
     components: [],
   },
   {
-    slug: "form",
     name: "Form",
+    slug: "form",
     components: [],
   },
   {
-    slug: "group",
     name: "Group",
+    slug: "group",
     components: [],
   },
   {
-    slug: "header",
     name: "Header",
+    slug: "header",
     components: [],
   },
   {
-    slug: "heading",
     name: "Heading",
+    slug: "heading",
     components: [],
   },
   {
-    slug: "input",
     name: "Input",
+    slug: "input",
     components: [
       { name: "oui-input-demo" },
       { name: "oui-input-demo-password" },
@@ -91,98 +91,98 @@ export const categories: Category[] = [
     ],
   },
   {
-    slug: "keyboard",
     name: "Keyboard",
+    slug: "keyboard",
     components: [],
   },
   {
-    slug: "label",
     name: "Label",
+    slug: "label",
     components: [],
   },
   {
-    slug: "link",
     name: "Link",
+    slug: "link",
     components: [],
   },
   {
-    slug: "list-box",
     name: "List Box",
+    slug: "list-box",
     components: [],
   },
   {
-    slug: "menu",
     name: "Menu",
+    slug: "menu",
     components: [],
   },
   {
-    slug: "modal",
     name: "Modal",
+    slug: "modal",
     components: [{ name: "oui-modal-ex" }],
   },
   {
-    slug: "number-field",
     name: "Number Field",
+    slug: "number-field",
     components: [],
   },
   {
-    slug: "popover",
     name: "Popover",
+    slug: "popover",
     components: [],
   },
   {
-    slug: "radio-group",
     name: "Radio Group",
+    slug: "radio-group",
     components: [],
   },
   {
-    slug: "search-field",
     name: "Search Field",
+    slug: "search-field",
     components: [],
   },
   {
-    slug: "select",
     name: "Select",
+    slug: "select",
     components: [],
   },
   {
-    slug: "separator",
     name: "Separator",
+    slug: "separator",
     components: [],
   },
   {
-    slug: "sidebar",
     name: "Sidebar",
+    slug: "sidebar",
     components: [],
   },
   {
-    slug: "slider",
     name: "Slider",
+    slug: "slider",
     components: [],
   },
   {
-    slug: "switch",
     name: "Switch",
+    slug: "switch",
     components: [],
   },
   {
-    slug: "table",
     name: "Table",
+    slug: "table",
     components: [],
   },
   {
-    slug: "text",
     name: "Text",
+    slug: "text",
     components: [],
   },
   {
-    slug: "text-area",
     name: "Text Area",
+    slug: "text-area",
     components: [],
   },
   {
-    slug: "text-field",
     name: "Text Field",
+    slug: "text-field",
     components: [{ name: "oui-text-field-ex" }, { name: "oui-text-field-ex1" }],
   },
 ];
