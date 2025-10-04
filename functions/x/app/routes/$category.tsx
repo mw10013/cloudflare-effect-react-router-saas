@@ -1,6 +1,6 @@
 import type { Route } from "./+types/$category";
-import ComponentLoader from "@/components/component-loader-server";
 import ComponentCard from "@/components/component-card";
+import ComponentLoader from "@/components/component-loader-server";
 import PageGrid from "@/components/page-grid";
 import { getCategory } from "@/config/categories";
 import { getComponentsByNames } from "@/lib/utils";
@@ -16,7 +16,7 @@ export function loader({ params }: Route.LoaderArgs) {
 }
 
 export default function RouteComponent({
-  loaderData: { components },
+  loaderData: { category, components },
 }: Route.ComponentProps) {
   return (
     <div className="p-6">
@@ -27,7 +27,7 @@ export default function RouteComponent({
           </ComponentCard>
         ))}
       </PageGrid>
-      {/* <pre>{JSON.stringify({ category, components }, null, 2)}</pre> */}
+      <pre>{JSON.stringify({ category, components }, null, 2)}</pre>
     </div>
   );
 }

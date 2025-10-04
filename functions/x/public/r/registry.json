@@ -532,6 +532,66 @@
       "dependencies": ["react-aria-components"]
     },
     {
+      "name": "dialog-ex",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-dialog-ex.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-dialog.json",
+        "http://localhost:5173/r/oui-button.json"
+      ],
+      "meta": {
+        "tags": ["dialog", "dialog ex"]
+      }
+    },
+    {
+      "name": "oui-modal-ex",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-modal-ex.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-modal.json"],
+      "meta": {
+        "tags": ["modal", "modal ex"]
+      }
+    },
+    {
+      "name": "oui-modal-ex1-sheet",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-modal-ex1-sheet.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-modal.json"],
+      "meta": {
+        "tags": ["modal", "modal ex1", "sheet"]
+      }
+    },
+    {
+      "name": "oui-button-demo",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-button-demo.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
+      "meta": {
+        "tags": ["button"],
+        "style": "text-center"
+      }
+    },
+    {
       "name": "oui-button-demo-destructive",
       "type": "registry:component",
       "files": [
@@ -667,21 +727,6 @@
       }
     },
     {
-      "name": "oui-button-demo-sm",
-      "type": "registry:component",
-      "files": [
-        {
-          "path": "registry/components/oui-button-demo-sm.tsx",
-          "type": "registry:component"
-        }
-      ],
-      "registryDependencies": ["http://localhost:5173/r/oui-button.json"],
-      "meta": {
-        "tags": ["button"],
-        "style": "text-center"
-      }
-    },
-    {
       "name": "oui-button-demo-secondary",
       "type": "registry:component",
       "files": [
@@ -697,11 +742,11 @@
       }
     },
     {
-      "name": "oui-button-demo",
+      "name": "oui-button-demo-sm",
       "type": "registry:component",
       "files": [
         {
-          "path": "registry/components/oui-button-demo.tsx",
+          "path": "registry/components/oui-button-demo-sm.tsx",
           "type": "registry:component"
         }
       ],
@@ -711,7 +756,20 @@
         "style": "text-center"
       }
     },
-
+    {
+      "name": "oui-input-demo",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-input-demo.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-input.json"],
+      "meta": {
+        "tags": ["input"]
+      }
+    },
     {
       "name": "oui-input-demo-disabled",
       "type": "registry:component",
@@ -732,20 +790,6 @@
       "files": [
         {
           "path": "registry/components/oui-input-demo-password.tsx",
-          "type": "registry:component"
-        }
-      ],
-      "registryDependencies": ["http://localhost:5173/r/oui-input.json"],
-      "meta": {
-        "tags": ["input"]
-      }
-    },
-    {
-      "name": "oui-input-demo",
-      "type": "registry:component",
-      "files": [
-        {
-          "path": "registry/components/oui-input-demo.tsx",
           "type": "registry:component"
         }
       ],

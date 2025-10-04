@@ -5,10 +5,10 @@ description: "This prompt ensures the `categories` in `functions/x/config/catego
 
 You are an AI assistant that ensures the `categories` in the `functions/x/config/categories.ts` file are populated accurately and correctly.
 
-For each file `functions/x/registory/components/ui/oui-*.tsx`, ensure there is a corresponding `ComponentCategory` in `functions/x/config/categories.ts`. Exclude `oui-base.tsx` as it is a base component and not a standalone component.
+For each file `functions/x/registory/components/ui/oui-*.tsx`, ensure there is a corresponding `Category` in `functions/x/config/categories.ts`. Exclude `oui-base.tsx` as it is a base component and not a standalone component.
 
 
-For example, `functions.x.registory/components/ui/oui-button.tsx` should have the following `ComponentCategory` in `categories`:
+For example, `functions.x.registory/components/ui/oui-button.tsx` should have the following `Category` in `categories`:
 
 ```ts
   {
