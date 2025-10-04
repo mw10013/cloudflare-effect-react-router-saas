@@ -532,7 +532,7 @@
       "dependencies": ["react-aria-components"]
     },
     {
-      "name": "dialog-ex",
+      "name": "oui-dialog-ex",
       "type": "registry:component",
       "files": [
         {
@@ -546,6 +546,26 @@
       ],
       "meta": {
         "tags": ["dialog", "dialog ex"]
+      }
+    },
+    {
+      "name": "oui-dialog-ex-demo-form",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-dialog-ex-demo-form.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-dialog.json",
+        "http://localhost:5173/r/oui-button.json",
+        "http://localhost:5173/r/oui-text-field-ex.json",
+        "http://localhost:5173/r/oui-heading.json"
+      ],
+      "meta": {
+        "tags": ["dialog", "dialog ex"],
+        "style": "flex-center"
       }
     },
     {
