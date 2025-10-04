@@ -1,5 +1,5 @@
 import { Button } from "@/registry/components/ui/oui-button"
 
 export default function Component() {
-  return <Button isDisabled>Button</Button>
+  return <Button isDisabled>Disabled</Button>
 }

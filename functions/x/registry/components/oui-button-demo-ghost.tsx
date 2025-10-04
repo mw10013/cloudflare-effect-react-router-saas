@@ -1,5 +1,5 @@
 import { Button } from "@/registry/components/ui/oui-button";
 
 export default function Component() {
-  return <Button variant="ghost">Button</Button>;
+  return <Button variant="ghost">Ghost</Button>;
 }

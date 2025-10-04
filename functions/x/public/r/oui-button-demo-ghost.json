@@ -8,13 +8,14 @@
   "files": [
     {
       "path": "registry/components/oui-button-demo-ghost.tsx",
-      "content": "import { Button } from \"@/registry/components/ui/oui-button\";\n\nexport default function Component() {\n  return <Button variant=\"ghost\">Button</Button>;\n}\n",
+      "content": "import { Button } from \"@/registry/components/ui/oui-button\";\n\nexport default function Component() {\n  return <Button variant=\"ghost\">Ghost</Button>;\n}\n",
       "type": "registry:component"
     }
   ],
   "meta": {
     "tags": [
       "button"
-    ]
+    ],
+    "style": "text-center"
   }
 }

@@ -15,6 +15,11 @@ export const categories: Category[] = [
     name: "Button",
     components: [
       { name: "oui-button-demo" },
+      { name: "oui-button-demo-outline" },
+      { name: "oui-button-demo-ghost" },
+      { name: "oui-button-demo-destructive" },
+      { name: "oui-button-demo-secondary" },
+      { name: "oui-button-demo-link" },
       { name: "oui-button-demo-disabled" },
     ],
   },
