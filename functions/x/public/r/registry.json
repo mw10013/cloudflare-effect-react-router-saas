@@ -858,6 +858,25 @@
       "meta": {
         "tags": ["text field"]
       }
+    },
+    {
+      "name": "oui-dialog-ex-demo-scrollable-content",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-dialog-ex-demo-scrollable-content.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-button.json",
+        "http://localhost:5173/r/oui-dialog.json",
+        "http://localhost:5173/r/oui-dialog-ex.json",
+        "http://localhost:5173/r/oui-heading.json"
+      ],
+      "meta": {
+        "tags": ["dialog"]
+      }
     }
   ]
 }

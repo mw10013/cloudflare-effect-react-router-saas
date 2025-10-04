@@ -49,6 +49,7 @@ export const categories: Category[] = [
     components: [
       { name: "oui-dialog-ex" },
       { name: "oui-dialog-ex-demo-form" },
+      { name: "oui-dialog-ex-demo-scrollable-content" },
     ],
   },
   {
