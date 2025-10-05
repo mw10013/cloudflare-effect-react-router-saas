@@ -1074,6 +1074,20 @@
       "meta": {
         "tags": ["switch"]
       }
+    },
+    {
+      "name": "oui-switch-ex-demo-blue",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-switch-ex-demo-blue.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-switch-ex.json"],
+      "meta": {
+        "tags": ["switch"]
+      }
     }
   ]
 }
