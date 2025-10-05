@@ -52,6 +52,7 @@ export const categories: Category[] = [
       { name: "oui-dialog-ex-demo-sticky-footer" },
       { name: "oui-dialog-ex" },
       { name: "oui-dialog-ex-alert" },
+      { name: "oui-dialog-ex-sheet" },
     ],
   },
   {

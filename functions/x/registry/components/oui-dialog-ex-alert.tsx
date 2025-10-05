@@ -157,3 +157,7 @@ export function DialogExAlertProvider({ children }: { children: ReactNode }) {
     </DialogExAlertContext.Provider>
   );
 }
+
+export default function Component() {
+  return <div className="p-4">DialogExAlert</div>;
+}

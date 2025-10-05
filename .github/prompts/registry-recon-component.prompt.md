@@ -119,3 +119,9 @@ With example filename of `oui-dialog-ex-demo-form.tsx`, the reconciled or new ca
   ],
 }
 ```
+
+**Important Guidelines:**
+
+- When editing `functions/x/registry.json` or `functions/x/config/categories.ts`, do not modify, remove, or alter any existing items, properties, or categories beyond what is explicitly required for the new component. Preserve all existing data intact.
+- If reconciling an existing item, only update the specified fields (e.g., `registryDependencies`, `meta.tags`) and leave others unchanged.
+- Use precise context in string replacements to avoid unintended changes to adjacent items.

@@ -918,6 +918,43 @@
         "tags": ["modal"],
         "style": "flex-center"
       }
+    },
+    {
+      "name": "oui-dialog-ex-alert",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-dialog-ex-alert.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-button.json",
+        "http://localhost:5173/r/oui-dialog.json",
+        "http://localhost:5173/r/oui-heading.json",
+        "http://localhost:5173/r/oui-modal-ex.json"
+      ],
+      "meta": {
+        "tags": ["dialog"]
+      }
+    },
+    {
+      "name": "oui-dialog-ex-sheet",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-dialog-ex-sheet.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-button.json",
+        "http://localhost:5173/r/oui-dialog.json",
+        "http://localhost:5173/r/oui-modal-ex-sheet.json"
+      ],
+      "meta": {
+        "tags": ["dialog"]
+      }
     }
   ]
 }

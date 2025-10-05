@@ -8,7 +8,7 @@ import { Dialog, type DialogProps } from "@/registry/components/ui/oui-dialog";
 import * as Rac from "react-aria-components";
 import type { ReactElement } from "react";
 
-export interface DialogEx2SheetProps
+export interface DialogExSheetProps
   extends Omit<DialogProps, "role">, // Prevent 'alertdialog' role
     Pick<VariantProps<typeof sheetModalVariants>, "side"> {
   triggerElement: string | ReactElement;
@@ -20,13 +20,13 @@ export interface DialogEx2SheetProps
  * A sheet modal that slides in from a side of the screen.
  * The modal is always dismissable via an outside press.
  */
-export function DialogEx2Sheet({
+export function DialogExSheet({
   triggerElement,
   modalClassName,
   overlayClassName,
   side,
   ...props
-}: DialogEx2SheetProps) {
+}: DialogExSheetProps) {
   return (
     <Rac.DialogTrigger>
       {typeof triggerElement === "string" ? (
