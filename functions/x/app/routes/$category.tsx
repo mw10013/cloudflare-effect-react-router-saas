@@ -16,7 +16,7 @@ export function loader({ params }: Route.LoaderArgs) {
 }
 
 export default function RouteComponent({
-  loaderData: { category, components },
+  loaderData: { components },
 }: Route.ComponentProps) {
   return (
     <div className="p-6">
@@ -27,7 +27,7 @@ export default function RouteComponent({
           </ComponentCard>
         ))}
       </PageGrid>
-      <pre>{JSON.stringify({ category, components }, null, 2)}</pre>
+      {/* <pre>{JSON.stringify({ category, components }, null, 2)}</pre> */}
     </div>
   );
 }
