@@ -146,7 +146,10 @@ export const categories: Category[] = [
   {
     name: "Search Field",
     slug: "search-field",
-    components: [{ name: "oui-search-field-ex" }],
+    components: [
+      { name: "oui-search-field-ex-demo" },
+      { name: "oui-search-field-ex" },
+    ],
   },
   {
     name: "Select",
