@@ -7,21 +7,16 @@ export default function Component() {
 
   return (
     <>
-      <Button
-        variant="outline"
-        onPress={() => {
-          setOpen(true);
-        }}
-      >
-        Confirm Alert
+      <Button variant="outline" onPress={() => { setOpen(true); }}>
+        Ack Alert
       </Button>
       <DialogExAlert
         isOpen={isOpen}
         onOpenChange={setOpen}
-        title="Are you absolutely sure?"
+        type="acknowledge"
+        title="Session Expired"
       >
-        This action cannot be undone. This will permanently delete your account
-        and remove your data from our servers.
+        Your session has expired. Please log in again to continue.
       </DialogExAlert>
     </>
   );
