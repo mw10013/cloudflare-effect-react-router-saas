@@ -5,9 +5,8 @@
 ## TODO
 
 - DialogEx1Alert -> DialogExAlert
-- DialogEx2Sheet -> DialogExSheet
-- ModalEx1 -> ModalExSheet
-- registry:build: delete r/*
+- DialogExSheet/ModalExSheet
+- registry:build: delete r/\*
 - tags
 
 ## Local Dev
@@ -47,4 +46,3 @@ pnpm -F x exec shadcn help
 pnpm -F x exec shadcn help build
 pnpm -F x registry:build
 ```
-

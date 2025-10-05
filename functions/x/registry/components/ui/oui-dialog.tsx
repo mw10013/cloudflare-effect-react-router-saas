@@ -1,5 +1,4 @@
-import type { VariantProps } from "class-variance-authority";
-import type { ReactElement, ReactNode } from "react";
+import type { ReactNode } from "react";
 import React, {
   createContext,
   useCallback,
@@ -10,10 +9,6 @@ import React, {
 import { ModalEx } from "@/registry/components/oui-modal-ex";
 import { Button } from "@/registry/components/ui/oui-button";
 import { Heading } from "@/registry/components/ui/oui-heading";
-import {
-  ModalEx1,
-  sheetModalVariants,
-} from "@/registry/components/ui/oui-modal";
 import { XIcon } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { twJoin, twMerge } from "tailwind-merge";
@@ -253,43 +248,5 @@ export function DialogEx1AlertProvider({ children }: { children: ReactNode }) {
         />
       )}
     </DialogEx1AlertContext.Provider>
-  );
-}
-
-export interface DialogEx2SheetProps
-  extends Omit<DialogProps, "role">, // Prevent 'alertdialog' role
-    Pick<VariantProps<typeof sheetModalVariants>, "side"> {
-  triggerElement: string | ReactElement;
-  modalClassName?: string;
-  overlayClassName?: string;
-}
-
-/**
- * A sheet modal that slides in from a side of the screen.
- * The modal is always dismissable via an outside press.
- */
-export function DialogEx2Sheet({
-  triggerElement,
-  modalClassName,
-  overlayClassName,
-  side,
-  ...props
-}: DialogEx2SheetProps) {
-  return (
-    <Rac.DialogTrigger>
-      {typeof triggerElement === "string" ? (
-        <Button variant="ghost">{triggerElement}</Button>
-      ) : (
-        triggerElement
-      )}
-      <ModalEx1
-        className={modalClassName}
-        overlayClassName={overlayClassName}
-        side={side}
-        isDismissable
-      >
-        <Dialog {...props} />
-      </ModalEx1>
-    </Rac.DialogTrigger>
   );
 }
