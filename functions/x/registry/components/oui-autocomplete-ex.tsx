@@ -1,5 +1,5 @@
 import * as Rac from "react-aria-components";
-import { SearchFieldEx } from "@/registry/components/ui/oui-search-field";
+import { SearchFieldEx } from "@/registry/components/oui-search-field-ex";
 
 export interface AutocompleteExProps
   extends Omit<Rac.AutocompleteProps, "children"> {
@@ -39,3 +39,8 @@ export function AutocompleteEx({
     </Rac.Autocomplete>
   );
 }
+
+export default function Component() {
+  return <div className="p-4">AutocompleteEx</div>;
+}
+
