@@ -841,11 +841,11 @@
       }
     },
     {
-      "name": "oui-text-field-ex1",
+      "name": "oui-text-field-ex-horizontal",
       "type": "registry:component",
       "files": [
         {
-          "path": "registry/components/oui-text-field-ex1.tsx",
+          "path": "registry/components/oui-text-field-ex-horizontal.tsx",
           "type": "registry:component"
         }
       ],
@@ -1022,6 +1022,22 @@
       ],
       "registryDependencies": [
         "http://localhost:5173/r/oui-text-field-ex.json"
+      ],
+      "meta": {
+        "tags": ["text-field"]
+      }
+    },
+    {
+      "name": "oui-text-field-ex-horizontal-demo",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-text-field-ex-horizontal-demo.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-text-field-ex-horizontal.json"
       ],
       "meta": {
         "tags": ["text-field"]

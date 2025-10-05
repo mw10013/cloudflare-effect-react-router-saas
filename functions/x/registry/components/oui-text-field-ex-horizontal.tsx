@@ -5,7 +5,7 @@ import { Text } from "@/registry/components/ui/oui-text";
 import { TextField } from "@/registry/components/ui/oui-text-field";
 import * as Rac from "react-aria-components";
 
-export interface TextFieldEx1Props extends Rac.TextFieldProps {
+export interface TextFieldExHorizontalProps extends Rac.TextFieldProps {
   label?: React.ReactNode;
   description?: React.ReactNode;
   errorMessage?: string | ((validation: Rac.ValidationResult) => string);
@@ -15,14 +15,14 @@ export interface TextFieldEx1Props extends Rac.TextFieldProps {
 /**
  * A TextField component where the label and input are arranged side-by-side.
  */
-export function TextFieldEx1({
+export function TextFieldExHorizontal({
   label,
   description,
   errorMessage,
   placeholder,
   children,
   ...props
-}: TextFieldEx1Props) {
+}: TextFieldExHorizontalProps) {
   return (
     <TextField {...props}>
       {(renderProps) => (
@@ -55,11 +55,5 @@ export function TextFieldEx1({
 }
 
 export default function Component() {
-  return (
-    <TextFieldEx1
-      label="Label"
-      placeholder="Placeholder"
-      description="This is a text field."
-    />
-  );
+  return <div className="p-4">TextFieldExHorizontal</div>;
 }
