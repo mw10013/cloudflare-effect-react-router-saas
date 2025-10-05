@@ -1,14 +1,11 @@
-import type React from "react";
-import { CircleIcon } from "lucide-react";
-import * as Rac from "react-aria-components";
-import { twMerge } from "tailwind-merge";
 import {
   composeTailwindRenderProps,
   groupFocusVisibleStyles,
 } from "@/registry/components/ui/oui-base";
-import { FieldError } from "@/registry/components/ui/oui-field-error";
-import { Label, labelComponentStyles } from "@/registry/components/ui/oui-label";
-import { Text } from "@/registry/components/ui/oui-text";
+import { labelComponentStyles } from "@/registry/components/ui/oui-label";
+import { CircleIcon } from "lucide-react";
+import * as Rac from "react-aria-components";
+import { twMerge } from "tailwind-merge";
 
 /**
  * Derived from shadcn RadioGroup
@@ -52,8 +49,8 @@ export function Radio({
             className={twMerge(
               [
                 groupFocusVisibleStyles,
-                "border-input text-primary dark:bg-input/30 shadow-xs relative aspect-square size-4 shrink-0 rounded-full border transition-[color,box-shadow]",
-                "group-data-[invalid]:ring-destructive/20 group-data-[invalid]:dark:ring-destructive/40 group-data-[invalid]:border-destructive",
+                "relative aspect-square size-4 shrink-0 rounded-full border border-input text-primary shadow-xs transition-[color,box-shadow] dark:bg-input/30",
+                "group-data-[invalid]:border-destructive group-data-[invalid]:ring-destructive/20 group-data-[invalid]:dark:ring-destructive/40",
               ],
               radioGroupItemClassName,
             )}
@@ -61,7 +58,7 @@ export function Radio({
             {renderProps.isSelected && (
               <CircleIcon
                 data-slot="radio-group-indicator"
-                className="fill-primary absolute left-1/2 top-1/2 size-2 -translate-x-1/2 -translate-y-1/2"
+                className="absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 fill-primary"
               />
             )}
           </div>
@@ -69,32 +66,5 @@ export function Radio({
         </>
       )}
     </Rac.Radio>
-  );
-}
-
-export interface RadioGroupExProps extends Rac.RadioGroupProps {
-  label?: React.ReactNode;
-  description?: React.ReactNode;
-  errorMessage?: string | ((validation: Rac.ValidationResult) => string);
-}
-
-export function RadioGroupEx({
-  label,
-  description,
-  errorMessage,
-  children,
-  ...props
-}: RadioGroupExProps) {
-  return (
-    <RadioGroup {...props}>
-      {(renderProps) => (
-        <>
-          {label && <Label className="">{label}</Label>}
-          {description && <Text slot="description">{description}</Text>}
-          {typeof children === "function" ? children(renderProps) : children}
-          <FieldError>{errorMessage}</FieldError>
-        </>
-      )}
-    </RadioGroup>
   );
 }
