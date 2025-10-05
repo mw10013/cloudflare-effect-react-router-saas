@@ -4,8 +4,8 @@
 
 ## TODO
 
-- oui-text-field-ex-demo, oui-text-field-ex-horizontal
 - DialogExSheet/ModalExSheet/Demos
+- registry recon component prompt: handle depdencies
 - registry:build: delete r/\*
 - tags
 

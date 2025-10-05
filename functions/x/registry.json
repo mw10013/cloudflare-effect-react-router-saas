@@ -1305,6 +1305,22 @@
       "meta": {
         "tags": ["select"]
       }
+    },
+    {
+      "name": "oui-autocomplete-ex",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-autocomplete-ex.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-search-field-ex.json"
+      ],
+      "meta": {
+        "tags": ["autocomplete"]
+      }
     }
   ]
 }

@@ -4,18 +4,6 @@
   "homepage": "https://github.com/mw10013/cloudflare-effect-react-router-saas",
   "items": [
     {
-      "name": "oui-autocomplete",
-      "type": "registry:ui",
-      "files": [
-        {
-          "path": "registry/components/ui/oui-autocomplete.tsx",
-          "type": "registry:ui"
-        }
-      ],
-      "registryDependencies": ["http://localhost:5173/r/oui-search-field.json"],
-      "dependencies": ["react-aria-components"]
-    },
-    {
       "name": "oui-base",
       "type": "registry:ui",
       "files": [
@@ -1316,6 +1304,22 @@
       ],
       "meta": {
         "tags": ["select"]
+      }
+    },
+    {
+      "name": "oui-autocomplete-ex",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-autocomplete-ex.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-search-field-ex.json"
+      ],
+      "meta": {
+        "tags": ["autocomplete"]
       }
     }
   ]
