@@ -174,6 +174,7 @@ export const categories: Category[] = [
     components: [
       { name: "oui-switch-ex-demo" },
       { name: "oui-switch-ex-demo-blue" },
+      { name: "oui-switch-ex-demo-description" },
       { name: "oui-switch-ex" },
     ],
   },
