@@ -50,6 +50,7 @@ export const categories: Category[] = [
       { name: "oui-dialog-ex-demo-form" },
       { name: "oui-dialog-ex-demo-scrollable-content" },
       { name: "oui-dialog-ex-demo-sticky-footer" },
+      { name: "oui-dialog-ex-demo-alert" },
       { name: "oui-dialog-ex" },
       { name: "oui-dialog-ex-alert" },
       { name: "oui-dialog-ex-sheet" },
