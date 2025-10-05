@@ -1205,6 +1205,46 @@
       "meta": {
         "tags": ["radio-group"]
       }
+    },
+    {
+      "name": "oui-select-ex",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-select-ex.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-field-error.json",
+        "http://localhost:5173/r/oui-label.json",
+        "http://localhost:5173/r/oui-popover.json",
+        "http://localhost:5173/r/oui-select.json",
+        "http://localhost:5173/r/oui-text.json"
+      ],
+      "meta": {
+        "tags": ["select"]
+      }
+    },
+    {
+      "name": "oui-select-ex-popover",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-select-ex-popover.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-field-error.json",
+        "http://localhost:5173/r/oui-label.json",
+        "http://localhost:5173/r/oui-popover.json",
+        "http://localhost:5173/r/oui-select.json",
+        "http://localhost:5173/r/oui-text.json"
+      ],
+      "meta": {
+        "tags": ["select"]
+      }
     }
   ]
 }
