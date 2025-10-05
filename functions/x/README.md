@@ -4,7 +4,6 @@
 
 ## TODO
 
-- DialogEx1Alert -> DialogExAlert
 - DialogExSheet/ModalExSheet
 - registry:build: delete r/\*
 - tags
