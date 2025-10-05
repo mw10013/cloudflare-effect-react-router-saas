@@ -584,17 +584,17 @@
       }
     },
     {
-      "name": "oui-modal-ex1-sheet",
+      "name": "oui-modal-ex-sheet",
       "type": "registry:component",
       "files": [
         {
-          "path": "registry/components/oui-modal-ex1-sheet.tsx",
+          "path": "registry/components/oui-modal-ex-sheet.tsx",
           "type": "registry:component"
         }
       ],
       "registryDependencies": ["http://localhost:5173/r/oui-modal.json"],
       "meta": {
-        "tags": ["modal", "modal ex1", "sheet"]
+        "tags": ["modal"]
       }
     },
     {

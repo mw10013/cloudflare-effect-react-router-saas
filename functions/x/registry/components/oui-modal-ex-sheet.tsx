@@ -31,7 +31,7 @@ export const sheetModalVariants = cva(
   },
 );
 
-export interface ModalEx1SheetProps
+export interface ModalExSheetProps
   extends Rac.ModalOverlayProps,
     Pick<VariantProps<typeof sheetModalVariants>, "side"> {
   overlayClassName?: Rac.ModalOverlayProps["className"];
@@ -42,13 +42,13 @@ export interface ModalEx1SheetProps
  * Derived from shadcn SheetContent.
  * @param side - The side of the screen from which the modal will enter.
  */
-export function ModalEx1Sheet({
+export function ModalExSheet({
   className,
   overlayClassName,
   children,
   side,
   ...props
-}: ModalEx1SheetProps) {
+}: ModalExSheetProps) {
   return (
     <ModalOverlay className={overlayClassName} {...props}>
       <Modal
@@ -63,5 +63,5 @@ export function ModalEx1Sheet({
 }
 
 export default function Component() {
-  return <div className="p-4">ModalEx1</div>;
+  return <div className="p-4">ModalExSheet</div>;
 }
