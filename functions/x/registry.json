@@ -1119,6 +1119,7 @@
       "registryDependencies": [
         "http://localhost:5173/r/oui-field-error.json",
         "http://localhost:5173/r/oui-label.json",
+        "http://localhost:5173/r/oui-input.json",
         "http://localhost:5173/r/oui-search-field.json",
         "http://localhost:5173/r/oui-text.json"
       ],

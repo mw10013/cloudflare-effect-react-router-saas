@@ -3,7 +3,7 @@ import { SearchField } from "@/registry/components/ui/oui-search-field";
 import { Text } from "@/registry/components/ui/oui-text";
 import * as Rac from "react-aria-components";
 import { Label } from "@/registry/components/ui/oui-label";
-import { Input } from "@/registry/components/ui/input";
+import { Input } from "@/registry/components/ui/oui-input";
 import { FieldError } from "@/registry/components/ui/oui-field-error";
 
 export interface SearchFieldExProps extends Rac.SearchFieldProps {
