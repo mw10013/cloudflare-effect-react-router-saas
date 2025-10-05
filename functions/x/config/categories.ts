@@ -38,11 +38,6 @@ export const categories: Category[] = [
     components: [],
   },
   {
-    name: "Checkbox Group",
-    slug: "checkbox-group",
-    components: [],
-  },
-  {
     name: "Combo Box",
     slug: "combo-box",
     components: [],

@@ -51,23 +51,6 @@
       ]
     },
     {
-      "name": "oui-checkbox-group",
-      "type": "registry:ui",
-      "files": [
-        {
-          "path": "registry/components/ui/oui-checkbox-group.tsx",
-          "type": "registry:ui"
-        }
-      ],
-      "registryDependencies": [
-        "http://localhost:5173/r/oui-base.json",
-        "http://localhost:5173/r/oui-field-error.json",
-        "http://localhost:5173/r/oui-label.json",
-        "http://localhost:5173/r/oui-text.json"
-      ],
-      "dependencies": ["react-aria-components"]
-    },
-    {
       "name": "oui-combo-box",
       "type": "registry:ui",
       "files": [
