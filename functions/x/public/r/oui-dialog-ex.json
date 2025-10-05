@@ -4,7 +4,8 @@
   "type": "registry:component",
   "registryDependencies": [
     "http://localhost:5173/r/oui-dialog.json",
-    "http://localhost:5173/r/oui-button.json"
+    "http://localhost:5173/r/oui-button.json",
+    "http://localhost:5173/r/oui-modal-ex.json"
   ],
   "files": [
     {
