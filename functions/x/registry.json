@@ -1332,7 +1332,7 @@
         }
       ],
       "registryDependencies": [
-        "http://localhost:5173/r/avatar.json",
+        "https://ui.shadcn.com/r/styles/new-york/avatar.json",
         "http://localhost:5173/r/oui-autocomplete-ex.json",
         "http://localhost:5173/r/oui-list-box.json",
         "http://localhost:5173/r/oui-select-ex-popover.json"
