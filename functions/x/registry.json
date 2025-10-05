@@ -991,6 +991,24 @@
         "tags": ["dialog"],
         "style": "flex-center"
       }
+    },
+    {
+      "name": "oui-dialog-ex-alert-demo-programmatic",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-dialog-ex-alert-demo-programmatic.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-button.json",
+        "http://localhost:5173/r/oui-dialog-ex-alert.json"
+      ],
+      "meta": {
+        "tags": ["dialog"],
+        "style": "flex-center"
+      }
     }
   ]
 }
