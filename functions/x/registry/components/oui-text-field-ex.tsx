@@ -43,11 +43,5 @@ export function TextFieldEx({
 }
 
 export default function Component() {
-  return (
-    <TextFieldEx
-      label="Label"
-      placeholder="Placeholder"
-      description="This is a text field."
-    />
-  );
+  return <div className="p-4">TextFieldEx</div>;
 }

@@ -4,6 +4,7 @@
 
 ## TODO
 
+- oui-text-field-ex-demo, oui-text-field-ex-horizontal
 - DialogExSheet/ModalExSheet/Demos
 - registry:build: delete r/\*
 - tags
