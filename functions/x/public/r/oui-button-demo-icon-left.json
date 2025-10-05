@@ -2,6 +2,9 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "oui-button-demo-icon-left",
   "type": "registry:component",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "http://localhost:5173/r/oui-button.json"
   ],
