@@ -33,6 +33,18 @@ const spec: Spec = {
 };
 ```
 
+Another example, filename `oui-select-ex-demo-icon.tsx` would yield:
+
+```ts
+const spec: Spec = {
+  componentName: "oui-select-ex-demo-icon",
+  categoryName: "Select",
+  categorySlug: "select",
+  path: "registry/components/oui-select-ex-demo-icon.tsx",
+  tag: "select",
+};
+```
+
 Display the derived Spec object.
 
 Check the `items` array in `functions/x/registry.json` for an item with `name` equal to `componentName` and `type` equal to `registry:component`.
@@ -58,6 +70,13 @@ The reconciled or new item should have the following shape:
     // For each import from "@/registry/components/oui-<COMPONENT-NAME>", add
     // "http://localhost:5173/r/oui-<COMPONENT-NAME>.json" to this array.
     // Ensure no duplicates and sort alphabetically.
+  ],
+  "dependencies": [
+    // List of npm package dependencies used in the component.
+    // Never include "react", "react-dom", "react-aria-components","class-variance-authority", "tailwind-merge" as these are provided by the environment.
+    // Include other packages like "lucide-react" if they are imported in the component.
+    // Ensure no duplicates and sort alphabetically.
+    // If there are no dependencies, omit this property.
   ],
   "meta": {
     "tags": [`${spec.tag}`] // Leave existing tags unchanged if they exist.
@@ -89,6 +108,29 @@ With example filename of `oui-dialog-ex-demo-form.tsx`, the reconciled or new it
   }
 }
 ```
+
+With example filename of `oui-select-ex-demo-icon.tsx`, the reconciled or new item would look like:
+
+```json
+{
+      "name": "oui-select-ex-demo-icon",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-select-ex-demo-icon.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-list-box.json",
+        "http://localhost:5173/r/oui-select-ex.json"
+      ],
+      "dependencies": ["lucide-react"],
+      "meta": {
+        "tags": ["select"]
+      }
+}
+``` 
 
 Check `functions/x/config/categories.ts` for a category with `name` equal to `spec.categoryName`.
 If it exists, reconcile it with the Spec object. If it doesn't exist, create a new category at the end.

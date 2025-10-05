@@ -4,6 +4,7 @@
 
 ## TODO
 
+- Autocomplete busted
 - DialogExSheet/ModalExSheet/Demos
 - registry recon component prompt: handle depdencies
 - registry:build: delete r/\*
