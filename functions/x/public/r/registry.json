@@ -1188,6 +1188,23 @@
       "meta": {
         "tags": ["radio-group"]
       }
+    },
+    {
+      "name": "oui-radio-group-ex-demo-description",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-radio-group-ex-demo-description.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-radio-group-ex.json",
+        "http://localhost:5173/r/oui-radio-group.json"
+      ],
+      "meta": {
+        "tags": ["radio-group"]
+      }
     }
   ]
 }
