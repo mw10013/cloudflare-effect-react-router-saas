@@ -900,26 +900,6 @@
       }
     },
     {
-      "name": "oui-modal-ex-demo-confirm",
-      "type": "registry:component",
-      "files": [
-        {
-          "path": "registry/components/oui-modal-ex-demo-confirm.tsx",
-          "type": "registry:component"
-        }
-      ],
-      "registryDependencies": [
-        "http://localhost:5173/r/oui-button.json",
-        "http://localhost:5173/r/oui-dialog.json",
-        "http://localhost:5173/r/oui-dialog-ex.json",
-        "http://localhost:5173/r/oui-heading.json"
-      ],
-      "meta": {
-        "tags": ["modal"],
-        "style": "flex-center"
-      }
-    },
-    {
       "name": "oui-dialog-ex-alert",
       "type": "registry:component",
       "files": [
