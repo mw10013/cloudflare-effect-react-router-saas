@@ -1373,6 +1373,20 @@
       "meta": {
         "tags": ["checkbox"]
       }
+    },
+    {
+      "name": "oui-checkbox-demo-disabled",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-checkbox-demo-disabled.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-checkbox.json"],
+      "meta": {
+        "tags": ["checkbox"]
+      }
     }
   ]
 }
