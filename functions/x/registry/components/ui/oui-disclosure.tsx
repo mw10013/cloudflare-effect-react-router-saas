@@ -1,11 +1,10 @@
-import { ChevronDown } from "lucide-react";
-import * as Rac from "react-aria-components";
 import {
   composeTailwindRenderProps,
   disabledStyles,
   focusVisibleStyles,
 } from "@/registry/components/ui/oui-base";
-import { Heading } from "@/registry/components/ui/oui-heading";
+import { ChevronDown } from "lucide-react";
+import * as Rac from "react-aria-components";
 
 /**
  * Derived from shadcn AccordionItem
@@ -43,7 +42,7 @@ export function DisclosureButton({
       {(renderProps) => (
         <>
           {typeof children === "function" ? children(renderProps) : children}
-          <ChevronDown className="text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200 group-data-[expanded]:rotate-180" />
+          <ChevronDown className="pointer-events-none size-4 shrink-0 translate-y-0.5 text-muted-foreground transition-transform duration-200 group-data-[expanded]:rotate-180" />
         </>
       )}
     </Rac.Button>
@@ -65,30 +64,13 @@ export function DisclosurePanel({
     <Rac.DisclosurePanel
       className={composeTailwindRenderProps(
         className,
-        "grid text-sm transition-[grid-template-rows] duration-200 ease-out [grid-template-rows:0fr] group-data-[expanded]:[grid-template-rows:1fr]",
+        "grid [grid-template-rows:0fr] text-sm transition-[grid-template-rows] duration-200 ease-out group-data-[expanded]:[grid-template-rows:1fr]",
       )}
       {...props}
     >
       <div className="overflow-hidden">
-        <div className="pb-4 pt-0">{children}</div>
+        <div className="pt-0 pb-4">{children}</div>
       </div>
     </Rac.DisclosurePanel>
-  );
-}
-
-export interface DisclosureExProps
-  extends Omit<Rac.DisclosureProps, "children"> {
-  title?: string;
-  children?: Rac.DisclosurePanelProps["children"];
-}
-
-export function DisclosureEx({ title, children, ...props }: DisclosureExProps) {
-  return (
-    <Disclosure {...props}>
-      <Heading variant="disclosure">
-        <DisclosureButton>{title}</DisclosureButton>
-      </Heading>
-      <DisclosurePanel>{children}</DisclosurePanel>
-    </Disclosure>
   );
 }
