@@ -1589,6 +1589,28 @@
       "meta": {
         "tags": ["menu"]
       }
+    },
+    {
+      "name": "oui-menu-ex-demo",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-menu-ex-demo.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-button.json",
+        "http://localhost:5173/r/oui-header.json",
+        "http://localhost:5173/r/oui-keyboard.json",
+        "http://localhost:5173/r/oui-menu.json",
+        "http://localhost:5173/r/oui-menu-ex.json",
+        "http://localhost:5173/r/oui-popover.json",
+        "http://localhost:5173/r/oui-separator.json"
+      ],
+      "meta": {
+        "tags": ["menu"]
+      }
     }
   ]
 }
