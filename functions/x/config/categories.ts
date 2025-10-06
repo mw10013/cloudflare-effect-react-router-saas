@@ -153,7 +153,10 @@ export const categories: Category[] = [
   {
     name: "List Box",
     slug: "list-box",
-    components: [],
+    components: [
+      { name: "oui-list-box-ex-pagination-demo" },
+      { name: "oui-list-box-ex-pagination" },
+    ],
   },
   {
     name: "Menu",
