@@ -44,3 +44,7 @@ export function ComboBoxEx<T extends object>({
     </Rac.ComboBox>
   );
 }
+
+export default function Component() {
+  return <div className="p-4">ComboBoxEx</div>;
+}
