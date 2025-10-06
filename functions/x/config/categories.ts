@@ -161,7 +161,10 @@ export const categories: Category[] = [
   {
     name: "Number Field",
     slug: "number-field",
-    components: [],
+    components: [
+      { name: "oui-number-field-ex-demo" },
+      { name: "oui-number-field-ex" },
+    ],
   },
   {
     name: "Popover",

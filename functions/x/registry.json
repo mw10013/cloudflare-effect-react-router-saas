@@ -1750,6 +1750,45 @@
       "meta": {
         "tags": ["popover"]
       }
+    },
+    {
+      "name": "oui-number-field-ex",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-number-field-ex.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-field-error.json",
+        "http://localhost:5173/r/oui-group.json",
+        "http://localhost:5173/r/oui-input.json",
+        "http://localhost:5173/r/oui-label.json",
+        "http://localhost:5173/r/oui-number-field.json",
+        "http://localhost:5173/r/oui-text.json"
+      ],
+      "dependencies": ["lucide-react"],
+      "meta": {
+        "tags": ["number-field"]
+      }
+    },
+    {
+      "name": "oui-number-field-ex-demo",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-number-field-ex-demo.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-button.json",
+        "http://localhost:5173/r/oui-number-field-ex.json"
+      ],
+      "meta": {
+        "tags": ["number-field"]
+      }
     }
   ]
 }
