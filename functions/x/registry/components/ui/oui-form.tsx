@@ -7,6 +7,7 @@ import { twMerge } from "tailwind-merge";
  * If you don't want default styles, use Rac.Form directly.
  */
 export function Form({ className, ...props }: ComponentProps<typeof Rac.Form>) {
+  // "grid" vs "flex flex-col"
   return (
     <Rac.Form
       className={twMerge("flex flex-col gap-6", className)}

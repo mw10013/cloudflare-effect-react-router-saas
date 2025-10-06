@@ -4,11 +4,17 @@
 
 ## TODO
 
-- Autocomplete busted
+- tooltip
+- ex: form, slider, sidebar
+- demo:
 - DialogExSheet/ModalExSheet/Demos
-- registry recon component prompt: handle depdencies
+- registry recon component prompt: handle shadcn new-york
 - registry:build: delete r/\*
 - tags
+- install
+- code
+- search
+- index
 
 ## Local Dev
 

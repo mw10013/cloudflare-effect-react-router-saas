@@ -94,7 +94,7 @@ export const categories: Category[] = [
   {
     name: "Form",
     slug: "form",
-    components: [],
+    components: [{ name: "oui-form-demo" }],
   },
   {
     name: "Group",
