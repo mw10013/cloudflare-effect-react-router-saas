@@ -1875,6 +1875,90 @@
       "meta": {
         "tags": ["label"]
       }
+    },
+    {
+      "name": "oui-link-demo",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-link-demo.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-link.json"],
+      "meta": {
+        "tags": ["link"]
+      }
+    },
+    {
+      "name": "oui-link-demo-hover",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-link-demo-hover.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-link.json"],
+      "meta": {
+        "tags": ["link"]
+      }
+    },
+    {
+      "name": "oui-link-demo-always",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-link-demo-always.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-link.json"],
+      "meta": {
+        "tags": ["link"]
+      }
+    },
+    {
+      "name": "oui-link-demo-current",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-link-demo-current.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-link.json"],
+      "meta": {
+        "tags": ["link"]
+      }
+    },
+    {
+      "name": "oui-link-demo-focus",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-link-demo-focus.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-link.json"],
+      "meta": {
+        "tags": ["link"]
+      }
+    },
+    {
+      "name": "oui-link-demo-disabled",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-link-demo-disabled.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-link.json"],
+      "meta": {
+        "tags": ["link"]
+      }
     }
   ]
 }

@@ -136,7 +136,14 @@ export const categories: Category[] = [
   {
     name: "Link",
     slug: "link",
-    components: [],
+    components: [
+      { name: "oui-link-demo" },
+      { name: "oui-link-demo-hover" },
+      { name: "oui-link-demo-always" },
+      { name: "oui-link-demo-current" },
+      { name: "oui-link-demo-focus" },
+      { name: "oui-link-demo-disabled" },
+    ],
   },
   {
     name: "List Box",

@@ -126,7 +126,7 @@ export function OuiLinkDemo() {
       <Oui.Link href="#" underline="focus">
         Focus Link
       </Oui.Link>
-      <Oui.Link href="/play" isDisabled>
+      <Oui.Link href="#" isDisabled>
         Disabled Link
       </Oui.Link>
       <Oui.Link href="#" className={Oui.buttonClassName({})}>
