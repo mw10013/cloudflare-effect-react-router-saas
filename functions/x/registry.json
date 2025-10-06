@@ -1571,6 +1571,24 @@
       "meta": {
         "tags": ["disclosure"]
       }
+    },
+    {
+      "name": "oui-menu-ex",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-menu-ex.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-button.json",
+        "http://localhost:5173/r/oui-menu.json",
+        "http://localhost:5173/r/oui-popover.json"
+      ],
+      "meta": {
+        "tags": ["menu"]
+      }
     }
   ]
 }

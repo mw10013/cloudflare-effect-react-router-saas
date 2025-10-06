@@ -1,11 +1,8 @@
-import React from "react";
+import { composeTailwindRenderProps } from "@/registry/components/ui/oui-base";
 import { cva } from "class-variance-authority";
 import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react";
 import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
-import { composeTailwindRenderProps } from "@/registry/components/ui/oui-base";
-import { Button } from "@/registry/components/ui/oui-button";
-import { Popover } from "@/registry/components/ui/oui-popover";
 
 /**
  * Derived from shadcn DropdownMenuContent
@@ -18,7 +15,7 @@ export function Menu<T extends object>({
     <Rac.Menu
       className={composeTailwindRenderProps(
         className,
-        "w-full min-w-[8rem] overflow-y-auto overflow-x-hidden p-1",
+        "w-full min-w-[8rem] overflow-x-hidden overflow-y-auto p-1",
       )}
       {...props}
     />
@@ -30,8 +27,8 @@ export function Menu<T extends object>({
  */
 export const menuItemVariants = cva(
   [
-    "relative flex cursor-default select-none items-center gap-x-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors",
-    '[&_svg:not([class*="text-"])]:text-muted-foreground [&_svg:not([class*="size-"])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0',
+    "relative flex cursor-default items-center gap-x-2 rounded-sm px-2 py-1.5 text-sm transition-colors outline-none select-none",
+    '[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4 [&_svg:not([class*="text-"])]:text-muted-foreground',
     "data-[focused]:bg-accent data-[focused]:text-accent-foreground",
     "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
   ],
@@ -112,31 +109,5 @@ export function MenuItem<T extends object>({
         );
       }}
     </Rac.MenuItem>
-  );
-}
-
-interface MenuExProps<T> extends Rac.MenuProps<T> {
-  triggerElement: string | React.ReactElement;
-}
-
-/**
- * If `triggerElement` is a string, it's rendered as a ghost `Button`.
- */
-export function MenuEx<T extends object>({
-  triggerElement,
-  children,
-  ...rest
-}: MenuExProps<T>) {
-  return (
-    <Rac.MenuTrigger>
-      {typeof triggerElement === "string" ? (
-        <Button variant="ghost">{triggerElement}</Button>
-      ) : (
-        triggerElement
-      )}
-      <Popover>
-        <Menu {...rest}>{children}</Menu>
-      </Popover>
-    </Rac.MenuTrigger>
   );
 }
