@@ -1486,6 +1486,24 @@
       "meta": {
         "tags": ["combo-box"]
       }
+    },
+    {
+      "name": "oui-combo-box-ex-demo-avatar",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-combo-box-ex-demo-avatar.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "https://ui.shadcn.com/r/styles/new-york/avatar.json",
+        "http://localhost:5173/r/oui-combo-box-ex.json",
+        "http://localhost:5173/r/oui-list-box.json"
+      ],
+      "meta": {
+        "tags": ["combo-box"]
+      }
     }
   ]
 }

@@ -56,6 +56,7 @@ export const categories: Category[] = [
     slug: "combo-box",
     components: [
       { name: "oui-combo-box-ex-demo" },
+      { name: "oui-combo-box-ex-demo-avatar" },
       { name: "oui-combo-box-ex" },
     ],
   },
