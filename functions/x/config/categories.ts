@@ -57,6 +57,7 @@ export const categories: Category[] = [
     components: [
       { name: "oui-combo-box-ex-demo" },
       { name: "oui-combo-box-ex-demo-avatar" },
+      { name: "oui-combo-box-ex-demo-header" },
       { name: "oui-combo-box-ex" },
     ],
   },
