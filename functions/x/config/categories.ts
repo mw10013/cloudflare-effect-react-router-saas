@@ -166,7 +166,7 @@ export const categories: Category[] = [
   {
     name: "Popover",
     slug: "popover",
-    components: [],
+    components: [{ name: "oui-popover-ex-demo" }, { name: "oui-popover-ex" }],
   },
   {
     name: "Radio Group",

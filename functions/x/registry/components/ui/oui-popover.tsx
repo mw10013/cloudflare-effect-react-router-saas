@@ -1,8 +1,6 @@
 import { cva } from "class-variance-authority";
 import * as Rac from "react-aria-components";
 import { twMerge } from "tailwind-merge";
-import { Button } from "@/registry/components/ui/oui-button";
-import { Dialog } from "@/registry/components/ui/oui-dialog";
 
 /**
  * Styles for the Popover component, derived from shadcn UI's `DropdownMenuContent` and `SelectContent`.
@@ -29,7 +27,7 @@ const placement = {
 
 export const popoverVariants = cva(
   [
-    "bg-popover text-popover-foreground relative min-w-[8rem] overflow-y-auto overflow-x-hidden rounded-md border shadow-md outline-none",
+    "relative min-w-[8rem] overflow-x-hidden overflow-y-auto rounded-md border bg-popover text-popover-foreground shadow-md outline-none",
     "data-[entering]:animate-in data-[entering]:fade-in-0 data-[entering]:zoom-in-95",
     "data-[exiting]:animate-out data-[exiting]:fade-out-0 data-[exiting]:zoom-out-95",
   ],
@@ -72,38 +70,5 @@ export function Popover({ className, offset = 4, ...props }: Rac.PopoverProps) {
       )}
       {...props}
     />
-  );
-}
-
-export interface PopoverExProps extends Omit<Rac.PopoverProps, "children"> {
-  triggerElement: string | React.ReactElement;
-  dialogClassName?: string;
-  children?: Rac.DialogProps["children"];
-}
-
-/**
- * A modal dialog.
- * If `triggerElement` is a string, it's rendered as a ghost `Button`.
- * The dialog is dismissable via an outside press if `role` is not "alertdialog".
- */
-export function PopoverEx({
-  triggerElement,
-  dialogClassName,
-  children,
-  ...props
-}: PopoverExProps) {
-  return (
-    <Rac.DialogTrigger>
-      {typeof triggerElement === "string" ? (
-        <Button variant="ghost">{triggerElement}</Button>
-      ) : (
-        triggerElement
-      )}
-      <Popover {...props}>
-        <Dialog className={dialogClassName} hideCloseButtonForNonAlert>
-          {children}
-        </Dialog>
-      </Popover>
-    </Rac.DialogTrigger>
   );
 }
