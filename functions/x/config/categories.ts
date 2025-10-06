@@ -143,6 +143,10 @@ export const categories: Category[] = [
       { name: "oui-link-demo-current" },
       { name: "oui-link-demo-focus" },
       { name: "oui-link-demo-disabled" },
+      { name: "oui-link-demo-button" },
+      { name: "oui-link-demo-button-outline" },
+      { name: "oui-link-demo-button-destructive" },
+      { name: "oui-link-demo-button-disabled" },
     ],
   },
   {

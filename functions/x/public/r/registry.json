@@ -1959,6 +1959,74 @@
       "meta": {
         "tags": ["link"]
       }
+    },
+    {
+      "name": "oui-link-demo-button",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-link-demo-button.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-button.json",
+        "http://localhost:5173/r/oui-link.json"
+      ],
+      "meta": {
+        "tags": ["link"]
+      }
+    },
+    {
+      "name": "oui-link-demo-button-outline",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-link-demo-button-outline.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-button.json",
+        "http://localhost:5173/r/oui-link.json"
+      ],
+      "meta": {
+        "tags": ["link"]
+      }
+    },
+    {
+      "name": "oui-link-demo-button-destructive",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-link-demo-button-destructive.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-button.json",
+        "http://localhost:5173/r/oui-link.json"
+      ],
+      "meta": {
+        "tags": ["link"]
+      }
+    },
+    {
+      "name": "oui-link-demo-button-disabled",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-link-demo-button-disabled.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-button.json",
+        "http://localhost:5173/r/oui-link.json"
+      ],
+      "meta": {
+        "tags": ["link"]
+      }
     }
   ]
 }
