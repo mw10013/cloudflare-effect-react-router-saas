@@ -143,7 +143,11 @@ export const categories: Category[] = [
   {
     name: "Menu",
     slug: "menu",
-    components: [{ name: "oui-menu-ex-demo" }, { name: "oui-menu-ex" }],
+    components: [
+      { name: "oui-menu-ex-demo" },
+      { name: "oui-menu-ex-demo-checkboxes" },
+      { name: "oui-menu-ex" },
+    ],
   },
   {
     name: "Modal",
