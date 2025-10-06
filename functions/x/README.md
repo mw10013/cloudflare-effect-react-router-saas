@@ -4,9 +4,8 @@
 
 ## TODO
 
+- demo: link
 - tooltip
-- ex: form, slider, sidebar
-- demo:
 - DialogExSheet/ModalExSheet/Demos
 - registry recon component prompt: handle shadcn new-york
 - registry:build: delete r/\*
@@ -15,6 +14,8 @@
 - code
 - search
 - index
+- browser console.log errors
+- sidebar-ex: SidebarTreeEx, SidebarTrigger?, probably not SidebarListBox
 
 ## Local Dev
 

@@ -205,11 +205,11 @@ export const categories: Category[] = [
     slug: "separator",
     components: [],
   },
-  {
-    name: "Sidebar",
-    slug: "sidebar",
-    components: [],
-  },
+  // {
+  //   name: "Sidebar",
+  //   slug: "sidebar",
+  //   components: [],
+  // },
   {
     name: "Slider",
     slug: "slider",
