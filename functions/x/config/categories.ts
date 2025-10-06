@@ -149,6 +149,7 @@ export const categories: Category[] = [
       { name: "oui-menu-ex-demo-radio-group" },
       { name: "oui-menu-ex-demo-avatar" },
       { name: "oui-menu-ex-demo-avatar-only" },
+      { name: "oui-menu-ex-demo-icon" },
       { name: "oui-menu-ex" },
     ],
   },
