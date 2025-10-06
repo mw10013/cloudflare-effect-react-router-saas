@@ -1671,6 +1671,27 @@
       "meta": {
         "tags": ["menu"]
       }
+    },
+    {
+      "name": "oui-menu-ex-demo-avatar-only",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-menu-ex-demo-avatar-only.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "https://ui.shadcn.com/r/styles/new-york/avatar.json",
+        "http://localhost:5173/r/oui-button.json",
+        "http://localhost:5173/r/oui-menu.json",
+        "http://localhost:5173/r/oui-menu-ex.json",
+        "http://localhost:5173/r/oui-separator.json"
+      ],
+      "dependencies": ["lucide-react"],
+      "meta": {
+        "tags": ["menu"]
+      }
     }
   ]
 }
