@@ -2027,6 +2027,26 @@
       "meta": {
         "tags": ["link"]
       }
+    },
+    {
+      "name": "oui-link-demo-login",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-link-demo-login.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "https://ui.shadcn.com/r/styles/new-york/card.json",
+        "http://localhost:5173/r/oui-button.json",
+        "http://localhost:5173/r/oui-label.json",
+        "http://localhost:5173/r/oui-link.json",
+        "http://localhost:5173/r/oui-text-field-ex.json"
+      ],
+      "meta": {
+        "tags": ["link"]
+      }
     }
   ]
 }

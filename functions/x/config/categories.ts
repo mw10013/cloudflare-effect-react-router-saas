@@ -147,6 +147,7 @@ export const categories: Category[] = [
       { name: "oui-link-demo-button-outline" },
       { name: "oui-link-demo-button-destructive" },
       { name: "oui-link-demo-button-disabled" },
+      { name: "oui-link-demo-login" },
     ],
   },
   {
