@@ -5,7 +5,6 @@ import {
   disabledStyles,
   focusVisibleStyles,
 } from "@/registry/components/ui/oui-base";
-import { Label } from "@/registry/components/ui/oui-label";
 
 // TODO: Slider: vertical, multiple
 export function Slider({ className, ...props }: Rac.SliderProps) {
