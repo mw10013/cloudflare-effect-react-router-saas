@@ -54,7 +54,10 @@ export const categories: Category[] = [
   {
     name: "Combo Box",
     slug: "combo-box",
-    components: [{ name: "oui-combo-box-ex" }],
+    components: [
+      { name: "oui-combo-box-ex-demo" },
+      { name: "oui-combo-box-ex" },
+    ],
   },
   {
     name: "Dialog",
