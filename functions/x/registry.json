@@ -1816,6 +1816,23 @@
       "meta": {
         "tags": ["form"]
       }
+    },
+    {
+      "name": "oui-slider-ex",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-slider-ex.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-label.json",
+        "http://localhost:5173/r/oui-slider.json"
+      ],
+      "meta": {
+        "tags": ["slider"]
+      }
     }
   ]
 }

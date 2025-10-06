@@ -213,7 +213,7 @@ export const categories: Category[] = [
   {
     name: "Slider",
     slug: "slider",
-    components: [],
+    components: [{ name: "oui-slider-ex" }],
   },
   {
     name: "Switch",
