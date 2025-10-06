@@ -146,6 +146,7 @@ export const categories: Category[] = [
     components: [
       { name: "oui-menu-ex-demo" },
       { name: "oui-menu-ex-demo-checkboxes" },
+      { name: "oui-menu-ex-demo-radio-group" },
       { name: "oui-menu-ex" },
     ],
   },

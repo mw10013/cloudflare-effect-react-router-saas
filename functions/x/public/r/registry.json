@@ -1631,6 +1631,25 @@
       "meta": {
         "tags": ["menu"]
       }
+    },
+    {
+      "name": "oui-menu-ex-demo-radio-group",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-menu-ex-demo-radio-group.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-button.json",
+        "http://localhost:5173/r/oui-header.json",
+        "http://localhost:5173/r/oui-menu.json",
+        "http://localhost:5173/r/oui-menu-ex.json"
+      ],
+      "meta": {
+        "tags": ["menu"]
+      }
     }
   ]
 }
