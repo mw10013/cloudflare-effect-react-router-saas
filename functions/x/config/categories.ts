@@ -218,7 +218,7 @@ export const categories: Category[] = [
   {
     name: "Separator",
     slug: "separator",
-    components: [],
+    components: [{ name: "oui-separator-demo" }],
   },
   // {
   //   name: "Sidebar",
