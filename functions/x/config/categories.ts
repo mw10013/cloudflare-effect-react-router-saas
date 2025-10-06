@@ -44,6 +44,11 @@ export const categories: Category[] = [
     ],
   },
   {
+    name: "Checkbox Group",
+    slug: "checkbox-group",
+    components: [{ name: "oui-checkbox-group-ex" }],
+  },
+  {
     name: "Combo Box",
     slug: "combo-box",
     components: [],
