@@ -386,26 +386,6 @@
       ]
     },
     {
-      "name": "oui-sidebar",
-      "type": "registry:ui",
-      "files": [
-        {
-          "path": "registry/components/ui/oui-sidebar.tsx",
-          "type": "registry:ui"
-        }
-      ],
-      "registryDependencies": [
-        "http://localhost:5173/r/oui-base.json",
-        "http://localhost:5173/r/oui-button.json"
-      ],
-      "dependencies": [
-        "react-aria-components",
-        "class-variance-authority",
-        "lucide-react",
-        "tailwind-merge"
-      ]
-    },
-    {
       "name": "oui-slider",
       "type": "registry:ui",
       "files": [
@@ -1860,6 +1840,40 @@
       "registryDependencies": ["http://localhost:5173/r/oui-slider-ex.json"],
       "meta": {
         "tags": ["slider"]
+      }
+    },
+    {
+      "name": "oui-label-demo",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-label-demo.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-input.json",
+        "http://localhost:5173/r/oui-label.json"
+      ],
+      "meta": {
+        "tags": ["label"]
+      }
+    },
+    {
+      "name": "oui-label-demo-disabled",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-label-demo-disabled.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-input.json",
+        "http://localhost:5173/r/oui-label.json"
+      ],
+      "meta": {
+        "tags": ["label"]
       }
     }
   ]

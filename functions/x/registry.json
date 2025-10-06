@@ -1841,6 +1841,40 @@
       "meta": {
         "tags": ["slider"]
       }
+    },
+    {
+      "name": "oui-label-demo",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-label-demo.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-input.json",
+        "http://localhost:5173/r/oui-label.json"
+      ],
+      "meta": {
+        "tags": ["label"]
+      }
+    },
+    {
+      "name": "oui-label-demo-disabled",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-label-demo-disabled.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-input.json",
+        "http://localhost:5173/r/oui-label.json"
+      ],
+      "meta": {
+        "tags": ["label"]
+      }
     }
   ]
 }

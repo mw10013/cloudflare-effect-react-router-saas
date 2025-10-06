@@ -128,7 +128,10 @@ export const categories: Category[] = [
   {
     name: "Label",
     slug: "label",
-    components: [],
+    components: [
+      { name: "oui-label-demo" },
+      { name: "oui-label-demo-disabled" },
+    ],
   },
   {
     name: "Link",
