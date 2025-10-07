@@ -2145,6 +2145,44 @@
       "meta": {
         "tags": ["text-area"]
       }
+    },
+
+    {
+      "name": "oui-table-demo",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-table-demo.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-table.json"],
+      "meta": {
+        "tags": ["table"]
+      }
+    },
+
+    {
+      "name": "oui-table-demo-action-menu",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-table-demo-action-menu.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-button.json",
+        "http://localhost:5173/r/oui-checkbox.json",
+        "http://localhost:5173/r/oui-menu-ex.json",
+        "http://localhost:5173/r/oui-menu.json",
+        "http://localhost:5173/r/oui-separator.json",
+        "http://localhost:5173/r/oui-table.json"
+      ],
+      "dependencies": ["lucide-react"],
+      "meta": {
+        "tags": ["table"]
+      }
     }
   ]
 }

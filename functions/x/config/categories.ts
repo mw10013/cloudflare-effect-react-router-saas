@@ -251,7 +251,10 @@ export const categories: Category[] = [
   {
     name: "Table",
     slug: "table",
-    components: [],
+    components: [
+      { name: "oui-table-demo" },
+      { name: "oui-table-demo-action-menu" },
+    ],
   },
   {
     name: "Text",
