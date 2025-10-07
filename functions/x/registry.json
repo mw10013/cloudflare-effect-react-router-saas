@@ -2094,6 +2094,57 @@
       "meta": {
         "tags": ["separator"]
       }
+    },
+
+    {
+      "name": "oui-text-area-demo",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-text-area-demo.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": ["http://localhost:5173/r/oui-text-area.json"],
+      "meta": {
+        "tags": ["text-area"]
+      }
+    },
+
+    {
+      "name": "oui-text-area-demo-text-field",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-text-area-demo-text-field.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-text-area.json",
+        "http://localhost:5173/r/oui-text-field-ex.json"
+      ],
+      "meta": {
+        "tags": ["text-area"]
+      }
+    },
+
+    {
+      "name": "oui-text-area-demo-disabled",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-text-area-demo-disabled.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-text-area.json",
+        "http://localhost:5173/r/oui-text-field-ex.json"
+      ],
+      "meta": {
+        "tags": ["text-area"]
+      }
     }
   ]
 }

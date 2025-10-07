@@ -4,9 +4,9 @@
 
 ## TODO
 
-- demo: link
-- tooltip
+- demo: text area, table, sheets
 - DialogExSheet/ModalExSheet/Demos
+- tooltip
 - registry recon component prompt: handle shadcn new-york
 - registry:build: delete r/\*
 - tags
