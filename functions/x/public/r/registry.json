@@ -2203,6 +2203,25 @@
       "meta": {
         "tags": ["dialog"]
       }
+    },
+    {
+      "name": "oui-dialog-ex-sheet-demo-sides",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/components/oui-dialog-ex-sheet-demo-sides.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "http://localhost:5173/r/oui-button.json",
+        "http://localhost:5173/r/oui-dialog.json",
+        "http://localhost:5173/r/oui-dialog-ex-sheet.json",
+        "http://localhost:5173/r/oui-heading.json"
+      ],
+      "meta": {
+        "tags": ["dialog"]
+      }
     }
   ]
 }
