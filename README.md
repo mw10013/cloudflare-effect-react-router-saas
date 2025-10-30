@@ -1,5 +1,11 @@
 # cloudflare-effect-react-router
 
+- commit with effect and d1 read replica
+```
+git checkout f367c28d7f41b22676fe98f0d486a345cb969fdb
+git checkout main
+```
+
 ## Prettier
 
 - pnpm add -D --save-exact prettier --workspace-root
